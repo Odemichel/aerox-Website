@@ -21,9 +21,21 @@ const {
 ---
 
 {
-  items && items.length > 0 && (
+  items.length > 0 && (
     <div class={containerClass}>
-      {items.map(({ title, description, icon, classes: itemClasses = {} }, index = 0) => (
+      {items.map((
+        {
+          title,
+          description,
+          icon,
+          classes: itemClasses = {},
+          // ✅ flags par item
+          expandable = false,
+          moreLabel = 'En savoir plus',
+          defaultOpen = false,
+        },
+        index
+      ) => (
         <div
           class={twMerge(
             'flex intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade',
@@ -31,26 +43,51 @@ const {
             itemClasses?.panel
           )}
         >
+          {/* Colonne icône + ligne verticale */}
           <div class="flex flex-col items-center mr-4 rtl:mr-0 rtl:ml-4">
-            <div>
-              <div class="flex items-center justify-center">
-                {(icon || defaultIcon) && (
-                  <Icon
-                    name={icon || defaultIcon}
-                    class={twMerge('w-10 h-10 p-2 rounded-full border-2', defaultIconClass, itemClasses?.icon)}
-                  />
-                )}
-              </div>
+            <div class="flex items-center justify-center">
+              {(icon || defaultIcon) && (
+                <Icon
+                  name={icon || defaultIcon}
+                  class={twMerge('w-10 h-10 p-2 rounded-full border-2', defaultIconClass, itemClasses?.icon)}
+                />
+              )}
             </div>
             {index !== items.length - 1 && <div class="w-px h-full bg-black/10 dark:bg-slate-400/50" />}
           </div>
+
+          {/* Contenu texte */}
           <div class={`pt-1 ${index !== items.length - 1 ? 'pb-8' : ''}`}>
-            {title && <p class={twMerge('text-xl font-bold', titleClass, itemClasses?.title)} set:html={title} />}
-            {description && (
+            {title && (
               <p
-                class={twMerge('text-muted mt-2', descriptionClass, itemClasses?.description)}
-                set:html={description}
+                class={twMerge('text-xl font-bold', titleClass, itemClasses?.title)}
+                set:html={title}
               />
+            )}
+
+            {description && (
+              expandable ? (
+                <details class={twMerge('mt-1 group', itemClasses?.more)} open={defaultOpen}>
+                  <summary
+                    class={twMerge(
+                      'cursor-pointer inline-flex items-center gap-3 dark:text-muted hover:underline select-none list-none marker:hidden',
+                      itemClasses?.summary
+                    )}
+                  >
+                    {moreLabel}
+                    <Icon name="tabler:chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180" />
+                  </summary>
+                  <div
+                    class={twMerge('pt-2 text-muted', descriptionClass, itemClasses?.description)}
+                    set:html={description}
+                  />
+                </details>
+              ) : (
+                <p
+                  class={twMerge('text-muted mt-2', descriptionClass, itemClasses?.description)}
+                  set:html={description}
+                />
+              )
             )}
           </div>
         </div>

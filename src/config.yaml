@@ -1,6 +1,6 @@
 site:
-  name: AstroWind
-  site: 'https://astrowind.vercel.app'
+  name: AeroX
+  site: 'https://aeroxbefaster.com'
   base: '/'
   trailingSlash: false
 
@@ -9,9 +9,9 @@ site:
 # Default SEO metadata
 metadata:
   title:
-    default: AstroWind
-    template: '%s — AstroWind'
-  description: "\U0001F680 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs."
+    default: AeroX — Be Faster
+    template: '%s — AeroX'
+  description: "🚴 AeroX entraîne ton aérodynamisme avec une simple webcam. Gagne 2–3 km/h à watts égaux grâce à un feedback en temps réel."
   robots:
     index: true
     follow: true
@@ -23,12 +23,12 @@ metadata:
         height: 628
     type: website
   twitter:
-    handle: '@arthelokyo'
-    site: '@arthelokyo'
+    handle: ''
+    site: ''
     cardType: summary_large_image
 
 i18n:
-  language: en
+  language: fr
   textDirection: ltr
 
 apps:
@@ -69,4 +69,4 @@ analytics:
       id: null # or "G-XXXXXXXXXX"
 
 ui:
-  theme: 'system' # Values: "system" | "light" | "dark" | "light:only" | "dark:only"
+  theme: 'dark:only' # Values: "system" | "light" | "dark" | "light:only" | "dark:only"

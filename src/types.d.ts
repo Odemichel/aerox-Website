@@ -1,5 +1,5 @@
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
-import type { HTMLAttributes, ImageMetadata } from 'astro/types';
+import type { HTMLAttributes, HTMLInputTypeAttribute, ImageMetadata } from 'astro/types';
 
 export interface Post {
   /** A unique ID number that identifies a post. */
@@ -136,7 +136,18 @@ export interface Item {
   title?: string;
   description?: string;
   icon?: string;
-  classes?: Record<string, string>;
+  classes?: {
+    panel?: string;
+    icon?: string;
+    title?: string;
+    description?: string;
+    actionClass?: string;
+    more?: string;        // <- style du bloc <details>
+    summary?: string;     // <- style du <summary>
+  };
+  expandable?: boolean;    // <- active “En savoir plus”
+  moreLabel?: string;      // <- texte du bouton (default: "En savoir plus")
+  defaultOpen?: boolean;   // <- ouvert par défaut ?
   callToAction?: CallToAction;
   image?: Image;
 }

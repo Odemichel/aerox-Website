@@ -1,20 +1,20 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 
-import Hero from '~/components/widgets/Hero.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
+import Hero from '~/components/widgets/Hero.astro';
 
-import Features2 from '~/components/widgets/Features2.astro';
-import Features from '~/components/widgets/Features.astro';
-import Stats from '~/components/widgets/Stats.astro';
-import Features3 from '~/components/widgets/Features3.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
 import Brands from '~/components/widgets/Brands.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import Features from '~/components/widgets/Features.astro';
+import Features2 from '~/components/widgets/Features2.astro';
+import Features3 from '~/components/widgets/Features3.astro';
+import Stats from '~/components/widgets/Stats.astro';
 
 import { YouTube } from 'astro-embed';
 
 const metadata = {
-  title: 'Startup Landing Page',
+  title: 'AeroX Landing Page',
 };
 ---
 
@@ -22,27 +22,28 @@ const metadata = {
   <!-- Hero Widget ******************* -->
 
   <Hero
-    tagline="Startup Web Demo"
     actions={[
       {
         variant: 'primary',
         target: '_blank',
-        text: 'Get templates',
-        href: 'https://github.com/onwidget/astrowind',
+        text: 'Télécharge AeroX',
+       // href: 'https://github.com/onwidget/astrowind',
         icon: 'tabler:download',
       },
       { text: 'Learn more', href: '#features' },
     ]}
   >
     <Fragment slot="title">
-      Improve <span class="hidden sm:inline">the online presence of</span> your <span
-        class="text-accent dark:text-white">Startup</span
-      > with Astrowind templates
+      Améliore <span class="text-accent dark:text-white">ta vitesse</span>
+      <span class="hidden sm:inline">en intégrant l'aérodynamisme dans ton entrainement</span> avec <span
+        class="text-accent dark:text-white">AeroX</span
+      >
     </Fragment>
 
     <Fragment slot="subtitle">
-      Step into the spotlight with <span class="font-semibold">Astrowind</span> templates, your pathway to fortifying your
-      startup's digital footprint, fostering credibility, and expanding your reach.
+      <span class="font-semibold text-primary">Gagne plus de 3km/h, économise 40W</span> avec
+      <span class="font-semibold text-accent">AeroX</span>, la seule application qui intègre l'aérodynamisme dans ton
+      entrainement sur home-trainer.<br />
     </Fragment>
 
     <Fragment slot="image">

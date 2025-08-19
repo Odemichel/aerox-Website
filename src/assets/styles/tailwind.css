@@ -18,6 +18,19 @@
   .text-muted {
     color: var(--aw-color-text-muted);
   }
+   .bg-gradient-primary {
+    /* utilise directement les variables (déjà hsl(...)) */
+    background-image: linear-gradient(135deg, var(--aw-color-primary), var(--aw-color-accent));
+  }
+.border-primary-light {
+    border-color: var(--aw-color-primary-light);
+  }
+  .text-gradient-primary {
+    background-image: linear-gradient(135deg, var(--aw-color-primary), var(--aw-color-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }
 
 @layer components {
@@ -26,8 +39,18 @@
   }
 
   .btn-primary {
-    @apply btn font-semibold bg-primary text-white border-primary hover:bg-secondary hover:border-secondary hover:text-white dark:text-white dark:bg-primary dark:border-primary dark:hover:border-secondary dark:hover:bg-secondary;
+ /* IMPORTANT: AUCUN bg-* ici, on met le gradient directement */
+    @apply btn font-semibold text-[hsl(var(--primary-foreground))] 
+    dark:text-secondary hover:dark:text-secondary border-primary
+        dark:border-primary-light dark:hover:border-primary ;
+    background-image: linear-gradient(135deg, var(--aw-color-primary), var(--aw-color-primary-dark));
+   }   
+.dark .btn-primary:hover {
+    box-shadow: var(--shadow-glow);
+        background-image: linear-gradient(135deg, var(--aw-color-primary-light),var(--aw-color-primary), var(--aw-color-primary-light));    filter: brightness(1.06);
   }
+
+  /* Optionnel: gradient spécifique en dark (sinon garde le même) */
 
   .btn-secondary {
     @apply btn;

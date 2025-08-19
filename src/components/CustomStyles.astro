@@ -1,63 +1,59 @@
----
-import '@fontsource-variable/inter';
-
-// 'DM Sans'
-// Nunito
-// Dosis
-// Outfit
-// Roboto
-// Literata
-// 'IBM Plex Sans'
-// Karla
-// Poppins
-// 'Fira Sans'
-// 'Libre Franklin'
-// Inconsolata
-// Raleway
-// Oswald
-// 'Space Grotesk'
-// Urbanist
----
-
 <style is:inline>
   :root {
-    --aw-font-sans: 'Inter Variable';
-    --aw-font-serif: 'Inter Variable';
-    --aw-font-heading: 'Inter Variable';
+    /* Fonts – si tu veux Outfit/Manrope/Sora plutôt qu’Inter */
+    --aw-font-sans: 'Outfit', 'Manrope', 'Sora', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    --aw-font-serif: 'Outfit', system-ui, serif;
+    --aw-font-heading: 'Outfit', 'Sora', system-ui, sans-serif;
 
-    --aw-color-primary: rgb(1 97 239);
-    --aw-color-secondary: rgb(1 84 207);
-    --aw-color-accent: rgb(109 40 217);
+    /* AeroX – Thème clair (HSL) */
+    /* Ton ancien DS utilisait HSL → on met directement tes teintes ici */
+    --aw-color-primary: hsl(35 95% 58%); /* orange AeroX */
+    --aw-color-secondary: hsl(210 10% 8%); /* bleu foncé surfacique */
 
-    --aw-color-text-heading: rgb(0 0 0);
-    --aw-color-text-default: rgb(16 16 16);
-    --aw-color-text-muted: rgb(16 16 16 / 66%);
-    --aw-color-bg-page: rgb(255 255 255);
+    --aw-color-secondary-light: hsl(210 15% 25%); /* bleu foncé surfacique */
+    --aw-color-accent: hsl(35 75% 35%); /* même que primary si souhaité */
 
-    --aw-color-bg-page-dark: rgb(3 6 32);
+    --aw-color-text-heading: hsl(210 40% 10%); /* titre sombre lisible */
+    --aw-color-text-default: hsl(210 30% 12%);
+    --aw-color-text-muted: hsl(210 15% 65%);
+    --aw-color-bg-page: hsl(210 30% 12%); /* background foncé */
+    --aw-color-bg-page-dark: hsl(210 25% 15%); /* fond "dark" profond */
+
+    /* (Optionnel) Si tu utilises ces dégradés dans ton CSS */
+    --gradient-secondary: linear-gradient(180deg, hsl(209, 57%, 73%), hsl(210 25% 15%));
+    --gradient-primary: linear-gradient(135deg, var(--aw-color-primary), var(--aw-color-accent));
 
     ::selection {
-      background-color: lavender;
+      background-color: hsl(35 95% 58% / 0.3);
+      color: hsl(210 10% 8%);
     }
   }
 
   .dark {
-    --aw-font-sans: 'Inter Variable';
-    --aw-font-serif: 'Inter Variable';
-    --aw-font-heading: 'Inter Variable';
+    /* AeroX – Thème sombre */
+    --aw-font-sans: 'Outfit', 'Manrope', 'Sora', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    --aw-font-serif: 'Outfit', system-ui, serif;
+    --aw-font-heading: 'Outfit', 'Sora', system-ui, sans-serif;
+    --aw-color-primary-light: hsl(35 100% 80%);
 
-    --aw-color-primary: rgb(1 97 239);
-    --aw-color-secondary: rgb(1 84 207);
-    --aw-color-accent: rgb(109 40 217);
+    --aw-color-primary: hsl(35 95% 58%);
+    --aw-color-secondary: hsl(210 10% 8%);
+    --aw-color-secondary-light: hsl(209, 42%, 52%); /* bleu foncé surfacique */
 
-    --aw-color-text-heading: rgb(247, 248, 248);
-    --aw-color-text-default: rgb(229 236 246);
-    --aw-color-text-muted: rgb(229 236 246 / 66%);
-    --aw-color-bg-page: rgb(3 6 32);
+    --aw-color-accent: hsl(210 40% 98%);
+    --aw-color-primary-dark: hsl(35 70% 30%);
+
+    --gradient-secondary: linear-gradient(180deg, var(--aw-color-secondary-light), var(--aw-color-secondary));
+    --gradient-primary: linear-gradient(135deg, var(--aw-color-primary), var(--aw-color-accent));
+
+    --aw-color-text-heading: hsl(210 40% 98%);
+    --aw-color-text-default: hsl(210 40% 90%);
+    --aw-color-text-muted: hsl(210 15% 65%);
+    --aw-color-bg-page: hsl(210 10% 8%);
 
     ::selection {
-      background-color: black;
-      color: snow;
+      background-color: hsl(35 95% 58% / 0.25);
+      color: hsl(210 40% 98%);
     }
   }
 </style>

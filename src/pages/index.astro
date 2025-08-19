@@ -1,19 +1,19 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 
-import Hero from '~/components/widgets/Hero.astro';
-import Note from '~/components/widgets/Note.astro';
+import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import Content from '~/components/widgets/Content.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
 import Features from '~/components/widgets/Features.astro';
 import Features2 from '~/components/widgets/Features2.astro';
-import Steps from '~/components/widgets/Steps.astro';
-import Content from '~/components/widgets/Content.astro';
-import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
+import Hero from '~/components/widgets/Hero.astro';
+import Note from '~/components/widgets/Note.astro';
 import Stats from '~/components/widgets/Stats.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
+import Steps from '~/components/widgets/Steps.astro';
 
 const metadata = {
-  title: 'AstroWind — Free template for creating websites with Astro + Tailwind CSS',
+  title: 'AeroX — Analyse et améliore ton aérodynamisme à vélo',
   ignoreTitleTemplate: true,
 };
 ---
@@ -25,42 +25,39 @@ const metadata = {
     actions={[
       {
         variant: 'primary',
-        text: 'Get template',
-        href: 'https://github.com/onwidget/astrowind',
         target: '_blank',
+        text: 'Télécharge AeroX',
+        href: 'https://github.com/onwidget/astrowind',
         icon: 'tabler:download',
       },
-      { text: 'Learn more', href: '#features' },
+      { text: 'En savoir plus', href: '#features' },
     ]}
     image={{ src: '~/assets/images/hero-image.png', alt: 'AstroWind Hero Image' }}
   >
     <Fragment slot="title">
-      Free template for <span class="hidden xl:inline">creating websites with</span>
-      <span class="text-accent dark:text-white"> Astro 5.0</span> + Tailwind CSS
+      Libère ta <span class="font-semibold text-primary">vitesse</span>
+      <span class="">avec AeroX</span>
     </Fragment>
 
     <Fragment slot="subtitle">
-      <span class="hidden sm:inline">
-        <span class="font-semibold">AstroWind</span> is a free, customizable and production-ready template for Astro 5.0
-        + Tailwind CSS.</span
-      >
-      <span class="block mb-1 sm:hidden font-bold text-blue-600">AstroWind: Production-ready.</span>
-      Suitable for Startups, Small Business, SaaS websites, Professional Portfolios, Marketing websites, Landing Pages &
-      Blogs.
+      <span class="font-semibold text-accent">Gagne plus de 3km/h et économise 40W</span> en intègrant l'aérodynamisme dans
+      tes entraînements. <br />
+      <span class="font-semibold text-accent">AeroX</span> est l'unique application qui mesure et analyse ton aérodynamisme
+      en tremps réel pendant tes sessions home-trainer.<br />
     </Fragment>
   </Hero>
 
   <!-- Note Widget ******************* -->
 
-  <Note title="Philosophy:" description="Simplicity, Best Practices and High Performance" />
+  <Note title="Notre Philosophie:" description="Innovation, simplicité, efficacité" />
 
   <!-- Features Widget *************** -->
 
   <Features
     id="features"
-    tagline="Features"
-    title="What you get with AstroWind"
-    subtitle="One of the most professional and comprehensive templates currently on the market. Most starred & forked Astro theme in 2022, 2023 and 2024."
+    tagline="Fonctionnalités"
+    title="Ce que tu peux faire avec AeroX "
+    subtitle="L'application la plus innovante du marché pour améliorer tes performances à vélo. Que tu sois amateur ou professionnel, AeroX t'accompagne dans ta quête de progression et de performance."
     items={[
       {
         title: 'Astro + Tailwind CSS Integration',
@@ -217,28 +214,61 @@ const metadata = {
   <!-- Steps Widget ****************** -->
 
   <Steps
-    title="Get your dream website up and running in no time with AstroWind."
+    title="Mise en place simple, rapide."
     items={[
       {
-        title: 'Step 1: <span class="font-medium">Download</span>',
-        description:
-          "Kickstart with GitHub! Either fork the AstroWind template or simply click 'Use this template'. Your canvas awaits, ready for your digital masterpiece. In just a few clicks, you've already set the foundation.",
+        title: 'Étape 1: <span class="font-medium">Télécharge</span>',
+        description: 'Windows ou MacOs: choisis, installe et lance AeroX.',
         icon: 'tabler:package',
+         expandable: true, // ✅ active “En savoir plus”
+        moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
+        defaultOpen: false, // (optionnel) ouvert par défaut
+        classes: {
+          summary: 'text-accent hover:underline', // (optionnel) style du <summary>
+          more: 'mt-3', // (optionnel) style du <details>
+        },
       },
       {
-        title: 'Step 2: <span class="font-medium">Add content</span>',
+        title: 'Étape 2: <span class="font-medium">Installe ta caméra (30 s)</span>',
         description:
-          "Pour your vision into it. Add images, text, and all that jazz to breathe life into your digital space. Remember, it's the content that tells your story, so make it captivating.",
-        icon: 'tabler:letter-case',
+          "Positionne ta webcam environs 1m30 devant ton home-trainer. Vérifie sur AeroX que tu es entièrement visible lorsque tu es sur ton vélo, c'est tout. Tu peux utiliser n'importe quelle webcam si elle peut se connecter à ton ordi, même ton téléphone via le wifi foncitonne. Pas d'excuse tu as tout ce qu'il te faut à la maison.",
+        icon: 'tabler:camera',
+        expandable: true, // ✅ active “En savoir plus”
+        moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
+        defaultOpen: false, // (optionnel) ouvert par défaut
+        classes: {
+          summary: 'text-accent hover:underline', // (optionnel) style du <summary>
+          more: 'mt-3', // (optionnel) style du <details>
+        },
       },
       {
-        title: 'Step 3: <span class="font-medium">Customize styles</span>',
+        title: 'Étape 3: <span class="font-medium">Calibre-la en 2 clics (10 sec)</span>',
         description:
-          'Give it your personal touch. Tailor colors, fonts, and layouts until it feels just right. Your unique flair, amplified by AstroWind! Precision in design ensures a seamless user experience.',
-        icon: 'tabler:paint',
+          "La calibration se fait simplement en cliquant sur les 2 extrémités de ton cintre. La première fois, mesure la largeur de ton cintre et la distance caméra-cintre. Ajuste ces valeurs si besoin sur AeroX… et c’est prêt. Ces réglages resteront enregistrées et tu n'auras plus à les modifier si ton setup ne change pas.",
+        icon: 'tabler:adjustments',
+         expandable: true, // ✅ active “En savoir plus”
+        moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
+        defaultOpen: false, // (optionnel) ouvert par défaut
+        classes: {
+          summary: 'text-accent hover:underline', // (optionnel) style du <summary>
+          more: 'mt-3', // (optionnel) style du <details>
+        },
       },
       {
-        title: 'Ready!',
+        title: 'Étape 4: <span class="font-medium">Connecte ton home-trainer (20 sec)</span>',
+        description:
+          'La détection se fait en Bluetooth — rapide et sans configuration complexe. AeroX détecte ton home-trainer et ton cardio. Choisis tes équipements, la connexion sera ensuite automatique. Compatible avec Wahoo, Elite, Tacx, Saris, Kickr, Suito, Zwift, etc. Fonctionne avec Garmin, Polar, Suunto pour la fréquence cardiaque.',
+        icon: 'tabler:plug-connected',
+         expandable: true, // ✅ active “En savoir plus”
+        moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
+        defaultOpen: false, // (optionnel) ouvert par défaut
+        classes: {
+          summary: 'text-accent hover:underline', // (optionnel) style du <summary>
+          more: 'mt-3', // (optionnel) style du <details>
+        },
+      },
+      {
+        title: 'Prêt!',
         icon: 'tabler:check',
       },
     ]}
