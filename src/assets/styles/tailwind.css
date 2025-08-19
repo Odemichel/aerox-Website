@@ -1,6 +1,9 @@
+@import "@fontsource/manrope/index.css"; /* ou /400.css etc. */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 @layer utilities {
   .bg-page {

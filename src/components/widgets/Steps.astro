@@ -1,9 +1,10 @@
 ---
-import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
-import Timeline from '~/components/ui/Timeline.astro';
-import Headline from '~/components/ui/Headline.astro';
 import Image from '~/components/common/Image.astro';
+import Headline from '~/components/ui/Headline.astro';
+import Timeline from '~/components/ui/Timeline.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import type { Steps as Props } from '~/types';
+import Button from '../ui/Button.astro';
 
 const {
   title = await Astro.slots.render('title'),
@@ -12,6 +13,7 @@ const {
   items = [],
   image = await Astro.slots.render('image'),
   isReversed = false,
+  actions = await Astro.slots.render('actions'),
 
   id,
   isDark = false,
@@ -34,7 +36,23 @@ const {
         }}
       />
       <Timeline items={items} classes={classes?.items as Record<string, never>} />
+         {
+      actions && (
+        <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-2 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+          {Array.isArray(actions) ? (
+            actions.map((action) => (
+              <div class="flex w-full sm:w-auto">
+                <Button {...(action || {})} class="w-full sm:mb-10" />
+              </div>
+            ))
+          ) : (
+            <Fragment set:html={actions} />
+          )}
+        </div>
+      )
+    }
     </div>
+   
     {
       image && (
         <div class="relative md:basis-1/2">

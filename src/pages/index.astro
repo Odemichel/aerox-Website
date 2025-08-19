@@ -40,14 +40,12 @@ const metadata = {
     </Fragment>
 
     <Fragment slot="subtitle">
-      
-       L'unique application qui analyse ton aérodynamisme
-      en tremps réel.<br />
+      L'unique application qui analyse ton aérodynamisme en tremps réel.<br />
     </Fragment>
-        <Fragment slot="paragraph">
-      Gagne jusqu'à <span class="font-bold text-accent"> 3 km/h</span> et économise <span class="font-bold text-accent"> 40 W </span> en intègrant l'aérodynamisme dans
-      ton plan d'entraînement. <br />
- 
+    <Fragment slot="paragraph">
+      Gagne jusqu'à <span class="font-bold text-accent"> 3 km/h</span> et économise <span class="font-bold text-accent">
+        40 W
+      </span> en intègrant l'aérodynamisme dans ton plan d'entraînement. <br />
     </Fragment>
   </Hero>
 
@@ -221,10 +219,10 @@ const metadata = {
     title="Mise en place simple, rapide."
     items={[
       {
-        title: 'Étape 1: <span class="font-medium">Télécharge</span>',
+        title: 'Étape 1: <span class="font-semibold">Télécharge AeroX</span>',
         description: 'Windows ou MacOs: choisis, installe et lance AeroX.',
         icon: 'tabler:package',
-         expandable: true, // ✅ active “En savoir plus”
+        expandable: true, // ✅ active “En savoir plus”
         moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
         defaultOpen: false, // (optionnel) ouvert par défaut
         classes: {
@@ -233,7 +231,7 @@ const metadata = {
         },
       },
       {
-        title: 'Étape 2: <span class="font-medium">Installe ta caméra (30 s)</span>',
+        title: 'Étape 2: <span class="font-semibold">Positionne ta caméra (30 s)</span>',
         description:
           "Positionne ta webcam environs 1m30 devant ton home-trainer. Vérifie sur AeroX que tu es entièrement visible lorsque tu es sur ton vélo, c'est tout. Tu peux utiliser n'importe quelle webcam si elle peut se connecter à ton ordi, même ton téléphone via le wifi foncitonne. Pas d'excuse tu as tout ce qu'il te faut à la maison.",
         icon: 'tabler:camera',
@@ -246,11 +244,11 @@ const metadata = {
         },
       },
       {
-        title: 'Étape 3: <span class="font-medium">Calibre-la en 2 clics (10 sec)</span>',
+        title: 'Étape 3: <span class="font-semibold">Calibre-la en 2 clics (10 sec)</span>',
         description:
           "La calibration se fait simplement en cliquant sur les 2 extrémités de ton cintre. La première fois, mesure la largeur de ton cintre et la distance caméra-cintre. Ajuste ces valeurs si besoin sur AeroX… et c’est prêt. Ces réglages resteront enregistrées et tu n'auras plus à les modifier si ton setup ne change pas.",
         icon: 'tabler:adjustments',
-         expandable: true, // ✅ active “En savoir plus”
+        expandable: true, // ✅ active “En savoir plus”
         moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
         defaultOpen: false, // (optionnel) ouvert par défaut
         classes: {
@@ -259,11 +257,11 @@ const metadata = {
         },
       },
       {
-        title: 'Étape 4: <span class="font-medium">Connecte ton home-trainer (20 sec)</span>',
+        title: 'Étape 4: <span class="font-semibold">Connecte ton home-trainer (20 sec)</span>',
         description:
           'La détection se fait en Bluetooth — rapide et sans configuration complexe. AeroX détecte ton home-trainer et ton cardio. Choisis tes équipements, la connexion sera ensuite automatique. Compatible avec Wahoo, Elite, Tacx, Saris, Kickr, Suito, Zwift, etc. Fonctionne avec Garmin, Polar, Suunto pour la fréquence cardiaque.',
         icon: 'tabler:plug-connected',
-         expandable: true, // ✅ active “En savoir plus”
+        expandable: true, // ✅ active “En savoir plus”
         moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
         defaultOpen: false, // (optionnel) ouvert par défaut
         classes: {
@@ -276,6 +274,17 @@ const metadata = {
         icon: 'tabler:check',
       },
     ]}
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Télécharge AeroX',
+        href: 'https://github.com/onwidget/astrowind',
+        target: '_blank',
+        icon: 'tabler:download',
+      },
+    ]}
+  
+
     image={{
       src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
       alt: 'Steps image',

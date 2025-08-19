@@ -2,6 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import { twMerge } from 'tailwind-merge';
 import type { Item } from '~/types';
+import Button from './Button.astro';
 
 export interface Props {
   items?: Array<Item>;
@@ -33,6 +34,7 @@ const {
           expandable = false,
           moreLabel = 'En savoir plus',
           defaultOpen = false,
+           callToAction,    
         },
         index
       ) => (
@@ -58,12 +60,22 @@ const {
 
           {/* Contenu texte */}
           <div class={`pt-1 ${index !== items.length - 1 ? 'pb-8' : ''}`}>
-            {title && (
+            {/* ✅ CTA quand contenu non dépliable */}
+                {callToAction && (
+                  <div class={twMerge( itemClasses?.actionClass)}>
+                    <Button {...callToAction} />
+                  </div>
+                )}
+                {title && (
               <p
                 class={twMerge('text-xl font-bold', titleClass, itemClasses?.title)}
                 set:html={title}
+                
               />
+              
+              
             )}
+            
 
             {description && (
               expandable ? (
@@ -81,14 +93,15 @@ const {
                     class={twMerge('pt-2 text-muted', descriptionClass, itemClasses?.description)}
                     set:html={description}
                   />
+                
                 </details>
-              ) : (
-                <p
-                  class={twMerge('text-muted mt-2', descriptionClass, itemClasses?.description)}
-                  set:html={description}
-                />
-              )
-            )}
+              ) :  (
+              <>
+                <p class={twMerge('text-muted mt-2', descriptionClass, itemClasses?.description)} set:html={description} />
+                
+              </>
+            )
+          )}
           </div>
         </div>
       ))}
