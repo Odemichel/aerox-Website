@@ -53,7 +53,7 @@ const {
         )}
       </div>
       <div class="mt-0.5">
-        {title && <h3 class={twMerge('text-xl font-bold', titleClass, itemClasses?.title)}>{title}</h3>}
+        {title && <h3 class={twMerge('text-md md:text-xl font-bold', titleClass, itemClasses?.title)}>{title}</h3>}
 
         {description && (
           expandable ? (
@@ -71,7 +71,7 @@ const {
                 <Icon name="tabler:chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180" />
               </summary>
               <div
-                class={twMerge('pt-2 text-muted', descriptionClass, itemClasses?.description)}
+                class={twMerge('pt-2 text-xl md:text-xl text-muted', descriptionClass, itemClasses?.description)}
                 set:html={description}
               />
             </details>

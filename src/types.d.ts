@@ -276,6 +276,8 @@ export interface Faqs extends Omit<Headline, 'classes'>, Widget {
 export interface Steps extends Omit<Headline, 'classes'>, Widget {
   items?: Array<Item>;
   actions?: string | CallToAction[];
+    callToAction?: string | CallToAction;
+
   image?: string | Image;
   isReversed?: boolean;
 }
