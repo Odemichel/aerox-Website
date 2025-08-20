@@ -1,4 +1,5 @@
 ---
+import heroVideo from '~/assets/images/hero_aerox.mp4';
 import Layout from '~/layouts/PageLayout.astro';
 
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
@@ -21,7 +22,7 @@ const metadata = {
 <Layout metadata={metadata}>
   <!-- Hero Widget ******************* -->
 
-  <Hero
+  <Hero video={{ src: heroVideo, alt: 'Démonstration AeroX' }} 
     actions={[
       {
         variant: 'primary',
@@ -31,7 +32,7 @@ const metadata = {
         icon: 'tabler:download',
       },
     ]}
-    image={{ src: '~/assets/images/hero-image.png', alt: 'AstroWind Hero Image' }}
+    image={{ src: '~/assets/images/hero_aerox.mp4', alt: 'AstroWind Hero Image' }}
   >
     <Fragment slot="title">
       <span class="font-semibold text-primary">AeroX</span> transforme ta position en <span
@@ -40,8 +41,8 @@ const metadata = {
     </Fragment>
 
     <Fragment slot="subtitle">
-      L'unique application qui analyse ton aérodynamisme en tremps réel.<br />AeroX te montre et te fait ressentir ce
-      que tu gagnes, simplement, sans capteurs couteux.
+      L'unique application qui analyse ton aérodynamisme en temps réel.<br />AeroX te montre et te fait ressentir ce
+      que tu gagnes, simplement, sans capteurs coûteux.
     </Fragment>
     <Fragment slot="paragraph">
       Gagne jusqu'à <span class="font-bold text-accent"> 3km/h</span> et économise <span class="font-bold text-accent">
@@ -271,7 +272,7 @@ const metadata = {
       {
         title: 'Étape 1: <span class="font-semibold">Télécharge AeroX</span>',
         description: 'Windows ou MacOs: choisis, installe et lance AeroX.',
-        icon: 'tabler:package',
+        icon: 'tabler:download',
         expandable: true, // ✅ active “En savoir plus”
         moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
         defaultOpen: false, // (optionnel) ouvert par défaut
@@ -284,7 +285,7 @@ const metadata = {
         title: 'Étape 2: <span class="font-semibold">Positionne ta caméra (30 s)</span>',
         description:
           "Positionne ta webcam environs 1m30 devant ton home-trainer. Vérifie sur AeroX que tu es entièrement visible lorsque tu es sur ton vélo, c'est tout. Tu peux utiliser n'importe quelle webcam si elle peut se connecter à ton ordi, même ton téléphone via le wifi foncitonne. Pas d'excuse tu as tout ce qu'il te faut à la maison.",
-        icon: 'tabler:camera',
+        icon: 'tabler:video',
         expandable: true, // ✅ active “En savoir plus”
         moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
         defaultOpen: false, // (optionnel) ouvert par défaut
