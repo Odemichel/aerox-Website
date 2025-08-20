@@ -26,26 +26,31 @@ const metadata = {
       {
         variant: 'primary',
         target: '_blank',
-        text: 'Télécharge AeroX',
+        text: 'Découvre tes km/h cachés',
         href: 'https://github.com/onwidget/astrowind',
         icon: 'tabler:download',
+
       },
-      { text: 'En savoir plus', href: '#features' },
     ]}
     image={{ src: '~/assets/images/hero-image.png', alt: 'AstroWind Hero Image' }}
   >
     <Fragment slot="title">
-      Libère ta <span class="font-semibold text-primary">vitesse</span>
-      <span class="">avec AeroX</span>
+     <span class="font-semibold text-primary">AeroX</span>  transforme ta position en <span class="font-semibold text-primary">vitesse</span>
+      
     </Fragment>
 
     <Fragment slot="subtitle">
-      L'unique application qui analyse ton aérodynamisme en tremps réel.<br />
+      L'unique application qui analyse ton aérodynamisme en tremps réel.<br />AeroX te montre et te fait ressentir ce que tu gagnes, simplement, sans capteurs couteux.
     </Fragment>
     <Fragment slot="paragraph">
       Gagne jusqu'à <span class="font-bold text-accent"> 3km/h</span> et économise <span class="font-bold text-accent">
         40W
       </span> en intègrant l'aérodynamisme dans ton plan d'entraînement. <br />
+    </Fragment>
+
+          
+<Fragment slot="content">
+      AeroX est un projet français et indépendant. Construis-le avec nous.
     </Fragment>
   </Hero>
 
@@ -57,47 +62,47 @@ const metadata = {
 
   <Features
     id="features"
-    tagline="Fonctionnalités"
-    title="Pourquoi choisir AeroX ?"
-    subtitle="Que tu sois amateur ou professionnel, AeroX est l'application la plus innovante du marché pour progresser et améliorer tes performances à vélo."
-    items={[
-      {
-        title: 'Astro + Tailwind CSS Integration',
-        description:
-          'A seamless integration between two great frameworks that offer high productivity, performance and versatility.',
-        icon: 'tabler:brand-tailwind',
-      },
-      {
-        title: 'Ready-to-use Components',
-        description:
-          'Widgets made with Tailwind CSS ready to be used in Marketing Websites, SaaS, Blogs, Personal Profiles, Small Business...',
-        icon: 'tabler:components',
-      },
-      {
-        title: 'Best Practices',
-        description:
-          'Creating secure, efficient, and user-friendly websites that deliver exceptional experiences and lasting value.',
-        icon: 'tabler:list-check',
-      },
-      {
-        title: 'Excellent Page Speed',
-        description:
-          'Having a good page speed impacts organic search ranking, improves user experience (UI/UX) and increase conversion rates.',
-        icon: 'tabler:rocket',
-      },
-      {
-        title: 'Search Engine Optimization (SEO)',
-        description:
-          "SEO lies in its ability to enhance a website's visibility, driving organic traffic and enabling it to reach a wider audience.",
-        icon: 'tabler:arrows-right-left',
-      },
-      {
-        title: 'Open to new ideas and contributions',
-        description:
-          'Embracing a culture that is open to new ideas and contributions is integral fostering innovation, collaboration, and a dynamic user experience.',
-        icon: 'tabler:bulb',
-      },
-    ]}
+    title="Pourquoi intégrer l'aérodynamisme à ton entrainement ?"
+    subtitle="Parce que chaque watt compte, l’aérodynamisme doit devenir un paramètre aussi suivi que la puissance ou la fréquence cardiaque.<br /> AeroX: l'innovation qui traduit ta position en données objectives à chaque instant."
+  items={[
+  {
+    title: 'Pour rouler plus vite, à puissance égale ',
+    description:
+      "Une position optimisée, c'est +1 km/h gagné à  25 km/h. À 40 km/h : jusqu’à +5 km/h. ➝ AeroX te montre en temps réel la vitesse que tu laisses filer.",
+    icon: 'tabler:brand-speedtest',
+  },
+  {
+    title: "Pour développer une nouvelle compétence",
+    description:
+      "Sur home-trainer, beaucoup développent la puissance d'avatars virtuels. Apprendre à maitriser ton aérodynamisme te rend plus rapide, dans la vraie vie.",
+    icon: 'tabler:chart-dots',
+  },
+  {
+    title: 'Pour ne rien laisser au hasard',
+    description:
+      "Sans données aérodynamiques, tu ignores où tu perds tes watts. Travailler ton aérodynamisme c'est rouler plus vite sans ne plus jamais douter.",
+    icon: 'tabler:bike',
+  },
+  {
+    title: 'Pour valoriser ton matériel',
+    description:
+      "Vélo haut de gamme, roues profilées, casque aéro… Si la position n’est pas optimisée, ces investissements sont gâchés. AeroX t'aide à tirer le maximum de ton matériel.",
+    icon: 'tabler:currency-euro',
+  },
+  {
+    title: 'Pour un entraînement complet',
+    description:
+      "Puissance, cardio et aérodynamisme : les trois piliers de la performance à vélo. En négliger un, c’est limiter ton potentiel.",
+    icon: 'tabler:chart-line',
+  },
+  {
+    title: 'Conçu par, pour et avec des athlètes exigeants',
+    description:
+      "AeroX, créé par un triathlète, nourri par vos retours. AeroX évolue avec ceux qui l’utilisent",
+    icon: 'tabler:users',
+  },
+]}
+
   />
 
   <!-- Content Widget **************** -->
