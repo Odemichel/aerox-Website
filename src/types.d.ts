@@ -149,7 +149,7 @@ export interface Item {
   expandable?: boolean;    // <- active “En savoir plus”
   moreLabel?: string;      // <- texte du bouton (default: "En savoir plus")
   defaultOpen?: boolean;   // <- ouvert par défaut ?
-  callToAction?: CallToAction;
+  callToAction?: CallToAction | CallToAction[];
   image?: Image;
 }
 
@@ -250,9 +250,20 @@ export interface Testimonials extends Omit<Headline, 'classes'>, Widget {
   callToAction?: CallToAction;
 }
 
-export interface Brands extends Omit<Headline, 'classes'>, Widget {
-  icons?: Array<string>;
-  images?: Array<Image>;
+export interface Features extends Omit<Headline, 'classes'>, Widget {
+  image?: string | unknown;
+  video?: Video;
+  items?: Array<Item>;
+  columns?: number;
+  defaultIcon?: string;
+
+  // ⬇️ autoriser 1 CTA, plusieurs CTAs, ou du HTML via slot
+  callToAction1?: CallToAction | CallToAction[] | string;
+  callToAction2?: CallToAction | CallToAction[] | string;
+
+  isReversed?: boolean;
+  isBeforeContent?: boolean;
+  isAfterContent?: boolean;
 }
 
 export interface Features extends Omit<Headline, 'classes'>, Widget {
