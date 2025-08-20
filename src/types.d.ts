@@ -135,6 +135,7 @@ export interface Stat {
 export interface Item {
   title?: string;
   description?: string;
+  education?:string;
   icon?: string;
   classes?: {
     panel?: string;

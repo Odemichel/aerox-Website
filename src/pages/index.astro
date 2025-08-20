@@ -29,18 +29,19 @@ const metadata = {
         text: 'Découvre tes km/h cachés',
         href: 'https://github.com/onwidget/astrowind',
         icon: 'tabler:download',
-
       },
     ]}
     image={{ src: '~/assets/images/hero-image.png', alt: 'AstroWind Hero Image' }}
   >
     <Fragment slot="title">
-     <span class="font-semibold text-primary">AeroX</span>  transforme ta position en <span class="font-semibold text-primary">vitesse</span>
-      
+      <span class="font-semibold text-primary">AeroX</span> transforme ta position en <span
+        class="font-semibold text-primary">vitesse</span
+      >
     </Fragment>
 
     <Fragment slot="subtitle">
-      L'unique application qui analyse ton aérodynamisme en tremps réel.<br />AeroX te montre et te fait ressentir ce que tu gagnes, simplement, sans capteurs couteux.
+      L'unique application qui analyse ton aérodynamisme en tremps réel.<br />AeroX te montre et te fait ressentir ce
+      que tu gagnes, simplement, sans capteurs couteux.
     </Fragment>
     <Fragment slot="paragraph">
       Gagne jusqu'à <span class="font-bold text-accent"> 3km/h</span> et économise <span class="font-bold text-accent">
@@ -48,10 +49,7 @@ const metadata = {
       </span> en intègrant l'aérodynamisme dans ton plan d'entraînement. <br />
     </Fragment>
 
-          
-<Fragment slot="content">
-      AeroX est un projet français et indépendant. Construis-le avec nous.
-    </Fragment>
+    <Fragment slot="content"> AeroX est un projet français et indépendant. Construis-le avec nous. </Fragment>
   </Hero>
 
   <!-- Note Widget ******************* -->
@@ -59,50 +57,97 @@ const metadata = {
   <Note title="Notre Philosophie:" description="Innovation, simplicité, efficacité" />
 
   <!-- Features Widget *************** -->
-
   <Features
     id="features"
-    title="Pourquoi intégrer l'aérodynamisme à ton entrainement ?"
-    subtitle="Parce que chaque watt compte, l’aérodynamisme doit devenir un paramètre aussi suivi que la puissance ou la fréquence cardiaque.<br /> AeroX: l'innovation qui traduit ta position en données objectives à chaque instant."
-  items={[
-  {
-    title: 'Pour rouler plus vite, à puissance égale ',
-    description:
-      "Une position optimisée, c'est +1 km/h gagné à  25 km/h. À 40 km/h : jusqu’à +5 km/h. ➝ AeroX te montre en temps réel la vitesse que tu laisses filer.",
-    icon: 'tabler:brand-speedtest',
-  },
-  {
-    title: "Pour développer une nouvelle compétence",
-    description:
-      "Sur home-trainer, beaucoup développent la puissance d'avatars virtuels. Apprendre à maitriser ton aérodynamisme te rend plus rapide, dans la vraie vie.",
-    icon: 'tabler:chart-dots',
-  },
-  {
-    title: 'Pour ne rien laisser au hasard',
-    description:
-      "Sans données aérodynamiques, tu ignores où tu perds tes watts. Travailler ton aérodynamisme c'est rouler plus vite sans ne plus jamais douter.",
-    icon: 'tabler:bike',
-  },
-  {
-    title: 'Pour valoriser ton matériel',
-    description:
-      "Vélo haut de gamme, roues profilées, casque aéro… Si la position n’est pas optimisée, ces investissements sont gâchés. AeroX t'aide à tirer le maximum de ton matériel.",
-    icon: 'tabler:currency-euro',
-  },
-  {
-    title: 'Pour un entraînement complet',
-    description:
-      "Puissance, cardio et aérodynamisme : les trois piliers de la performance à vélo. En négliger un, c’est limiter ton potentiel.",
-    icon: 'tabler:chart-line',
-  },
-  {
-    title: 'Conçu par, pour et avec des athlètes exigeants',
-    description:
-      "AeroX, créé par un triathlète, nourri par vos retours. AeroX évolue avec ceux qui l’utilisent",
-    icon: 'tabler:users',
-  },
-]}
+    title="Pourquoi intégrer l'aérodynamisme à ton entraînement ?"
+    subtitle="Parce que chaque watt compte, l’aérodynamisme doit devenir un paramètre aussi suivi que la puissance ou la fréquence cardiaque.<br /> AeroX : l'innovation qui traduit ta position en données objectives à chaque instant."
+    items={[
+      {
+        title: 'Gagne +1 à +5 km/h sans plus d’effort',
+        description:
+          'AeroX révèle en temps réel les km/h que ta position te fais perdre… Ne laisse plus rien au hasard, optimise ta position et ta vitesse.',
+        icon: 'tabler:brand-speedtest',
+        education:
+          'Dès 25 km/h, l’air absorbe ~80 % de ton énergie, et à 45 km/h, jusqu’à 95 %. Ton corps agit comme un parachute : AeroX mesure sa taille (surface frontale) et calcule ton gain quand tu le refermes. Résultat : ~+1 km/h à 25, jusqu’à +5 km/h à 45. Plie les coudes, rentre la tête, rapproche tes prolongateurs : chaque détail devient de la vitesse gratuite.',
+        expandable: true,
+        moreLabel: 'En savoir plus…',
+        defaultOpen: false,
+        classes: {
+          summary: 'text-accent hover:underline',
+          more: 'mt-3',
+        },
+      },
 
+      {
+        title: "Gagne en vitesse réelle, pas en puissance virtuelle",
+        description:
+          'Sur home-trainer, beaucoup deviennent forts…<br />dans un monde virtuel...<br /> Avec AeroX, tu deviens plus rapide dans la vraie vie !',
+        icon: 'tabler:chart-dots',
+        education:
+          "Sur home-trainer, ton seul objectif est d'améliorer ta puissance. Et c'est très bien... pour les courses virtuelles. Mais dehors, tu n’es pas plus rapide, parfois même moins et ta position aéro est inconfortable. S'entrainer avec un feedback aérodynamique en temps réel a le double avantage: d'optimiser ta position et en faire un automatisme pour performer sur de vraies courses.",
+        expandable: true,
+        moreLabel: 'En savoir plus…',
+        defaultOpen: false,
+        classes: {
+          summary: 'text-accent hover:underline',
+          more: 'mt-3',
+        },
+      },
+      {
+        title: 'Entraine-toi mieux que les pros',
+        description:
+          "Les meilleurs pros maîtrisent les 3 piliers de la performance: puissance, cardio et aéro. Et toi ?<br /> AeroX articule ces 3 piliers pour une méthodologie d'entrainement innovante, performante.",
+        icon: 'tabler:recycle',
+        education:
+          'Les plans d’entraînement classiques se limitent à la puissance et au cardio. Mais Evenepoel n’est pas champion du monde de CLM juste grâce à ses watts: il a appris à rester puissant dans une position aéro optimale. Désormais, toi aussi tu peux t’entraîner comme les pros, simplement avec AeroX.',
+        expandable: true,
+        moreLabel: 'En savoir plus…',
+        defaultOpen: false,
+        classes: {
+          summary: 'text-accent hover:underline',
+          more: 'mt-3',
+        },
+      },
+      {
+        title: 'Accède à l’aéro sans budget élite',
+        description:
+        "Souffleries, vélodromes, capteurs : des outils à plusieurs milliers d’€ réservés aux pros. AeroX démocratise la science aéro : une simple webcam, ton home-trainer, et des données exploitables en temps réel.",
+        icon: 'tabler:wind',
+        education:
+          'Jusqu’ici, tester son aérodynamisme était réservé aux pros : souffleries, vélodromes, capteurs onéreux… inaccessible pour 99 % des cyclistes. AeroX change la donne : depuis ton home-trainer, avec une simple webcam, tu accèdes à ces données en temps réel pour une optimisation instantanée. <br /><br />Progresser comme un pro — sans budget élite.',
+        expandable: true,
+        moreLabel: 'En savoir plus…',
+        defaultOpen: false,
+        classes: {
+          summary: 'text-accent hover:underline',
+          more: 'mt-3',
+        },
+      },
+
+      {
+        title: 'Tu dépenses des milliers d’€ pour 0,5 km/h ?',
+        description:
+          "90 % de ton aéro, c’est ta position. Pas ton vélo. Pas tes roues. Pas ton casque. AeroX t'apprend à l'optimiser pour moins cher qu'une paire de chaussette aéro !",
+        icon: 'tabler:currency-euro',
+
+        education:
+          'Roues profilées, cadre haut de gamme, casque dernier cri… tout ça coûte des milliers d’euros pour quelques watts. Mais 90 % de la résistance aérodynamique vient de ton corps, pas du matériel. Avec AeroX, tu investis là où ça paie vraiment : ta position. <br /><br />Ton équipement haut de gamme mérite un entraînement haut de gamme.',
+        expandable: true,
+        moreLabel: 'En savoir plus…',
+        defaultOpen: false,
+        classes: {
+          summary: 'text-accent hover:underline',
+          more: 'mt-3',
+        },
+      },
+
+      {
+        title: 'Créé par des athlètes, pour des athlètes',
+        description:
+          'AeroX est né d’un triathlète qui voulait progresser, vraiment. Résultat: +3km/h sur son premier triathlon. Utilise AeroX, et améliore-le à ton image !',
+        icon: 'tabler:users',
+      },
+    ]}
   />
 
   <!-- Content Widget **************** -->
@@ -288,8 +333,6 @@ const metadata = {
         icon: 'tabler:download',
       },
     ]}
-  
-
     image={{
       src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
       alt: 'Steps image',
