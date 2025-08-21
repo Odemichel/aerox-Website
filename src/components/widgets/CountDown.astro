@@ -1,0 +1,35 @@
+---
+const { targetDate } = Astro.props as { targetDate: string };
+---
+
+<span data-target-date={targetDate} class="inline-block font-bold text-accent"></span>
+
+<script is:inline>
+  (function () {
+    const el = document.currentScript?.previousElementSibling;
+    if (!el) return;
+
+    const attr = el.getAttribute('data-target-date');
+    if (!attr) { el.textContent = '0j 00h 00m 00s'; return; }
+
+    const target = new Date(attr).getTime();
+    const pad = (n) => String(n).padStart(2, '0');
+
+    function tick() {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        el.textContent = '0j 00h 00m 00s';
+        clearInterval(interval);
+        return;
+      }
+      const j = Math.floor(diff / 86400000);
+      const h = Math.floor((diff / 3600000) % 24);
+      const m = Math.floor((diff / 60000) % 60);
+      const s = Math.floor((diff / 1000) % 60);
+      el.textContent = `${j}j ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
+    }
+
+    tick();
+    const interval = setInterval(tick, 1000);
+  })();
+</script>

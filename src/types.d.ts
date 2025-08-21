@@ -257,10 +257,11 @@ export interface Features extends Omit<Headline, 'classes'>, Widget {
   columns?: number;
   defaultIcon?: string;
 
+
+
   // ⬇️ autoriser 1 CTA, plusieurs CTAs, ou du HTML via slot
   callToAction1?: CallToAction | CallToAction[] | string;
   callToAction2?: CallToAction | CallToAction[] | string;
-
   isReversed?: boolean;
   isBeforeContent?: boolean;
   isAfterContent?: boolean;

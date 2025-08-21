@@ -12,7 +12,6 @@ const {
   items = [],
   columns = 2,
   callToAction1 = await Astro.slots.render('actions'),
-
   defaultIcon,
 
   id,
@@ -38,17 +37,26 @@ const {
   
   {
     callToAction1 && (
-      <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-2 mt-8 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+      <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center  mt-8 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
         {Array.isArray(callToAction1) ? (
           callToAction1.map((action) => (
             <div class="flex w-full sm:w-auto">
-              <Button {...(action || {})} class="w-full sm:mb-10" />
+              <Button {...(action || {})} class="w-full " />
             </div>
           ))
         ) : (
           <Fragment set:html={callToAction1} />
         )}
+
       </div>
+              
+
     )
+    
   }
+                <div class="m-auto motion-safe:md:opacity-0 text-center motion-safe:md:intersect:animate-fade mt-4 mb-10">
+
+    <slot name="ctaDetails" />
+  </div>
+
 </WidgetWrapper>

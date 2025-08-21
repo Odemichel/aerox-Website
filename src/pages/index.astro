@@ -5,6 +5,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import Content from '~/components/widgets/Content.astro';
+import CountDown from '~/components/widgets/CountDown.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Features from '~/components/widgets/Features.astro';
 import Features2 from '~/components/widgets/Features2.astro';
@@ -28,7 +29,7 @@ const metadata = {
       {
         variant: 'primary',
         target: '_blank',
-        text: 'Découvre tes km/h cachés',
+        text: 'Rejoins notre équipe de testeurs',
         href: 'https://github.com/onwidget/astrowind',
         icon: 'tabler:download',
       },
@@ -50,7 +51,9 @@ const metadata = {
       </span> en intègrant l'aérodynamisme dans ton plan d'entraînement. <br />
     </Fragment>
 
-    <Fragment slot="content"> AeroX est un projet français et indépendant. Construis-le avec nous. </Fragment>
+    <Fragment slot="content">
+       Plus que <CountDown targetDate="2025-09-30T00:00:00" /> pour profiter <span class="font-bold text-accent">d'avantages exclusifs</span>!
+    </Fragment>
   </Hero>
 
   <!-- Note Widget ******************* -->
@@ -66,7 +69,7 @@ const metadata = {
       {
         variant: 'primary',
         target: '_blank',
-        text: "Fais partie des 100 premiers testeurs",
+        text: 'Rejoins notre équipe de testeurs',
         href: 'https://github.com/onwidget/astrowind',
         icon: 'tabler:download',
       },
@@ -78,7 +81,7 @@ const metadata = {
           "AeroX révèle en temps réel les km/h que ta position te fait perdre… Même à 25 km/h tu peux gagner 1km/h ! Mieux qu'un nouveau cadre à 5000 €...<br /> Ne laisse plus rien au hasard, optimise ta position et ta vitesse.",
         icon: 'tabler:brand-speedtest',
         education:
-          'Dès 25 km/h, l’air absorbe ~70 % de ta puissance, et à 45 km/h, jusqu’à 95 %. Ton corps agit comme un parachute : AeroX mesure sa taille (surface frontale) et calcule ton gain quand tu le refermes. Résultat : ~+1 km/h à 25, jusqu’à +5 km/h à 45. Plie les coudes, rentre la tête, rapproche tes prolongateurs : chaque détail devient de la vitesse gratuite.',
+          "Dès 25 km/h, l’air absorbe ~70 % de ta puissance, et à 45 km/h, jusqu’à 95 %. Ton corps agit comme un parachute : AeroX mesure sa taille (surface frontale) et calcule ton gain quand tu le refermes. Résultat : ~+1 km/h à 25, jusqu’à +5 km/h à 45. Plie les coudes, rentre la tête, rapproche tes prolongateurs : chaque détail devient de la vitesse gratuite. <br /><br />👉 Imagine finir ta sortie en rentrant plus vite que d’habitude, sans un watt de plus. Juste la sensation de fendre l'air… plus que de la performance, du plaisir.",
         expandable: true,
         moreLabel: 'En savoir plus…',
         defaultOpen: false,
@@ -94,7 +97,7 @@ const metadata = {
           'Sur home-trainer, beaucoup progressent… dans un monde virtuel.<br /> Avec AeroX, tu deviens plus rapide dans la vraie vie !',
         icon: 'tabler:chart-dots',
         education:
-          "Sur home-trainer, ton seul objectif est d'améliorer ta puissance. Et c'est très bien… pour t'amuser sur des courses virtuelles. Mais dehors, tu n’es pas plus rapide, parfois même moins et ta position aéro est inconfortable. S'entraîner avec un feedback aérodynamique en temps réel a le double avantage: d'optimiser ta position et en faire un automatisme pour performer sur de vraies courses, là où ça compte.",
+          "Sur home-trainer, ton seul objectif est d'améliorer ta puissance. Et c'est très bien… pour t'amuser sur des courses virtuelles. Mais dehors, tu n’es pas plus rapide, parfois même moins et ta position aéro est inconfortable. S'entraîner avec un feedback aérodynamique en temps réel a le double avantage: optimiser ta position et en faire un automatisme pour performer sur de vraies courses, là où ça compte.",
         expandable: true,
         moreLabel: 'En savoir plus…',
         defaultOpen: false,
@@ -103,14 +106,15 @@ const metadata = {
           more: 'mt-3',
         },
       },
-      
-{
+
+      {
         title: 'Entraîne-toi comme un pro, sans budget élite',
         description:
-                  "Les pros maîtrisent le triptyque: puissance, cardio et aéro. Mais à quel prix ? AeroX te donne le même avantage: tu apprends à rester puissant dans une position aérodynamique efficace, grâce à une technologie simple et économique.",
+          'Les pros maîtrisent le triptyque: puissance, cardio et aéro. Mais à quel prix ? AeroX te donne le même avantage: tu apprends à rester puissant dans une position aérodynamique efficace, grâce à une technologie simple et économique.',
         icon: 'tabler:trophy',
-       education: "Les plans d’entraînement classiques se limitent à la puissance et au cardio. Mais Evenepoel n’est pas champion du monde de CLM juste grâce à ses watts : il a appris à rester puissant dans une position aéro optimale.<br/><br/>  Malheureusement, tester son aérodynamisme reste inaccessible pour 99 % des cyclistes (souffleries, vélodromes, capteurs coûtent très chers).<br/><br/> AeroX change la donne : depuis ton home-trainer, avec une simple webcam, tu accèdes à ces données en temps réel pour optimiser ta position à l'entraînement. Résultat : tu intègres l'aéro au quotidien, comme les pros, sans leur budget !",
-  expandable: true,
+        education:
+          "Les plans d’entraînement classiques se limitent à la puissance et au cardio. Mais Evenepoel n’est pas champion du monde de CLM juste grâce à ses watts : il a appris à rester puissant dans une position aéro optimale.<br/><br/>  Malheureusement, tester son aérodynamisme reste inaccessible pour 99 % des cyclistes (souffleries, vélodromes, capteurs coûtent très chers).<br/><br/> AeroX change la donne : depuis ton home-trainer, avec une simple webcam, tu accèdes à ces données en temps réel pour optimiser ta position à l'entraînement. <br/><br/>👉 Ce que les pros paient des milliers d’euros, tu peux maintenant l’avoir chez toi. Et tu ressens ce petit frisson: 'je m’entraîne comme eux'.",
+        expandable: true,
         moreLabel: 'En savoir plus…',
         defaultOpen: false,
         classes: {
@@ -126,7 +130,7 @@ const metadata = {
         icon: 'tabler:currency-euro',
 
         education:
-          "Roues profilées, cadre haut de gamme, casque dernier cri… Les effets marketing te font dépenser des milliers d’euros chaque année pour gagner watts. Mais en réalité, 90 % de la résistance aérodynamique vient de ton corps, pas du matériel. Le meilleur vélo du monde ne compensera jamais une position que tu ne tiens pas plus de 5 minutes, autant rouler en vélib'. Avec AeroX, tu investis là où ça paie vraiment : ta position. <br />Ton équipement haut de gamme mérite un entraînement haut de gamme.",
+          "Roues profilées, cadre haut de gamme, casque dernier cri… Les effets marketing te font dépenser des milliers d’euros chaque année pour gagner quelques watts. Mais en réalité, 90 % de la résistance aérodynamique vient de ton corps, pas du matériel. Le meilleur vélo du monde ne compensera jamais une position que tu ne tiens pas plus de 5 minutes, autant rouler en vélib'. Avec AeroX, tu investis là où ça paie vraiment : ta position. <br />Ton équipement haut de gamme mérite un entraînement haut de gamme.",
         expandable: true,
         moreLabel: 'En savoir plus…',
         defaultOpen: false,
@@ -138,11 +142,12 @@ const metadata = {
 
       {
         title: 'Créé par des athlètes, pour tous les athlètes',
-        description: 'Avec AeroX, j’ai gagné +3 km/h, de 36 à 39 km/h, avec un vélo de 2008 (700 €). — Olivier D., triathlète, fondateur d’AeroX',
+        description:
+          'Avec AeroX, j’ai gagné +3 km/h, de 36 à 39 km/h, toujours avec mon vélo de 2008 (700 €).<br /> Olivier D., triathlète, fondateur d’AeroX',
         icon: 'tabler:users',
 
         education:
-    "En développant et testant AeroX, j’ai compris l’importance de tenir la position aéro dès 25 km/h. J’ai rapproché mes prolongateurs, allongé la posture, abaissé tête et épaules. Même en montée, dès que la vitesse dépassait 25 km/h, je gardais la position. Résultat : de 36 à 39 km/h avec un vélo de 2008 à 700 €, sans changer de FTP. Avant, je me faisais déposer sur le plat ; plus maintenant. Rien n’aurait été possible sans feedback en temps réel.",
+          'En développant et testant AeroX, j’ai compris l’importance de tenir la position aéro dès 25 km/h. J’ai rapproché mes prolongateurs, allongé la posture, abaissé tête et épaules. Même en montée, dès que la vitesse dépassait 25 km/h, je gardais la position. Résultat : de 36 à 39 km/h avec un vélo de 2008 à 700 €, sans changer de FTP. Avant, je me faisais déposer sur le plat ; plus maintenant. Rien n’aurait été possible sans feedback en temps réel.',
         expandable: true,
         moreLabel: 'En savoir plus…',
         defaultOpen: false,
@@ -152,13 +157,18 @@ const metadata = {
         },
       },
     ]}
-  />
+  >
+    <Fragment slot="ctaDetails">
+             Plus que <CountDown targetDate="2025-09-30T00:00:00" /> pour profiter <span class="font-bold text-accent">d'avantages exclusifs</span>!
+
+    </Fragment>
+  </Features>
 
   <!-- Content Widget **************** -->
 
   <Content
     isReversed
-    tagline="Inside template"
+    tagline="Fonctionnalités"
     title="AstroWind's Blueprint: Fun Meets Functionality!"
     items={[
       {
