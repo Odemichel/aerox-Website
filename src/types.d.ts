@@ -136,6 +136,7 @@ export interface Item {
   title?: string;
   description?: string;
   education?:string;
+  objectif?: string;
   icon?: string;
   classes?: {
     panel?: string;
@@ -151,6 +152,7 @@ export interface Item {
   defaultOpen?: boolean;   // <- ouvert par défaut ?
   callToAction?: CallToAction | CallToAction[];
   image?: Image;
+  video?: VideoHTMLAttributes;
 }
 
 export interface Price {
@@ -256,8 +258,6 @@ export interface Features extends Omit<Headline, 'classes'>, Widget {
   items?: Array<Item>;
   columns?: number;
   defaultIcon?: string;
-
-
 
   // ⬇️ autoriser 1 CTA, plusieurs CTAs, ou du HTML via slot
   callToAction1?: CallToAction | CallToAction[] | string;
