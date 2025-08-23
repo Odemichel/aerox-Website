@@ -69,15 +69,7 @@ const metadata = {
     id="features"
     title="Pourquoi intégrer l'aérodynamisme à ton entraînement ?"
     subtitle="Parce que chaque watt compte, l’aérodynamisme doit devenir un paramètre aussi suivi que la puissance ou la fréquence cardiaque.<br /> AeroX : l'innovation qui traduit ta position en données aérodynamiques à chaque instant."
-    callToAction1={[
-      {
-        variant: 'primary',
-        target: '_blank',
-        text: 'Rejoins notre équipe de testeurs',
-        href: 'https://github.com/onwidget/astrowind',
-        icon: 'tabler:download',
-      },
-    ]}
+    
     items={[
       {
         title: 'Gagne de 1 à 5 km/h sans plus d’effort',
@@ -199,6 +191,97 @@ const metadata = {
       >!
     </Fragment>
   </Features>
+
+
+  <!-- Features2 Widget ************** -->
+
+  <Features2
+    title='Fonctionnalités'
+    subtitle="AeroX innove en intégrant l'aéro au coeur de ton entrainement"
+    
+    items={[
+      {
+        title: 'Mode Puissance',
+        
+        description:
+          'Découvre l\'impact de ta position sur ta vitesse grâce aux <span class="font-bold">feedbacks AeroX en temps réel.</span><br />Optimise, stabilise et renforce ta position aéro directement pendant tes séances d\'entrainement.',
+
+       objectif:'Convertis chaque watt en km/h',
+        icon: 'tabler:bolt-filled',
+    video:{ src: demoPuissance, alt: 'Démonstration Mode Puissance' },
+    callToAction: {
+        variant: 'primary',
+        text: 'Deviens plus rapide maintenant',
+        href: 'https://github.com/onwidget/astrowind',
+        target: '_blank',
+      },
+      },
+      {
+        title:'Mode vitesse',
+        objectif: 'Ressens ce que te coûte ta position ',
+        description:
+          '<span class="font-bold">Innovation pure !</span> <br />Tu définis la vitesse que tu veux tenir. AeroX asservit en temps réel la résistance de ton Home-Trainer sur ta position.',
+         video:{ src: demoPuissance, alt: 'Démonstration Mode Puissance' },
+        icon: 'flat-color-icons:gallery',
+        callToAction: {
+        variant: 'primary',
+        text: 'Ressens ce que te coûte ta position',
+        href: 'https://github.com/onwidget/astrowind',
+        target: '_blank',
+      },
+      },
+      {
+        title: 'Simulation sur GPX',
+        description:
+          "La seule simulation où l'aéro compte vraiment !<br />Ironman, CLM, Étape du tour, Alpe d'Huez ? Entraine-toi là où tu décides avec pentes et aérodynamisme comme dans la vraie vie. (import de traces possible)",
+        icon: 'flat-color-icons:approval',
+        objectif: '<span class="text-lg font-bold text-accent">Objectif:</span> Simule l\'outdoor dans ton salon.',
+      },
+      {
+        title: 'Challenges AeroX',
+        description:
+          'Une progression de défis ou tu choisis ta vitesse: entre 25 et 60 km/h. Trouve le meilleur compromis entre puissance et position aérodynamique pour tenir 10 minutes.',
+        icon: 'flat-color-icons:document',
+        objectif:
+          '<span class="text-lg font-bold text-accent">Objectif:</span> Dépasse-toi et mesure tes progrès sur nos défis.',
+      },
+      {
+        title: 'Contre-La-Montre Mondial',
+        description: 'Nouveau parcours tous les mois. Un classement mondial. Seulement 3 tentatives. ',
+        icon: 'flat-color-icons:advertising',
+        objectif:
+          '<span class="text-lg font-bold text-accent">Objectif:</span> Prouve ta maîtrise aéro au monde entier.',
+      },
+      {
+        title: 'Éditeur de séance',
+        description:
+          "Tu ne trouves pas ton bonheur dans nos plans d'entraînement ? Construis tes propres séances simplement. Glisse tes blocs. Définis puissances ou vitesse. Et c'est parti !",
+        icon: 'flat-color-icons:currency-exchange',
+        objectif:
+          '<span class="text-lg font-bold text-accent">Objectif:</span> Construits tes séances, celles de ton coach... et ajoutes-y l\'aéro.',
+      },
+      {
+        title: 'Progression',
+        description:
+          "Meilleure position, temps de maintien en position aéro, meilleures vitesses produites... C'est là que tu verras ta vitesse gagner 1 à 3 km/h et ton temps de maintien passer de 5 à 45 minutes en quelques semaines.",
+        icon: 'flat-color-icons:voice-presentation',
+        objectif:
+          '<span class="text-lg font-bold text-accent">Objectif:</span> Analyse tes progrès, séances après séances.',
+      },
+      {
+        title: 'Tests AéroX',
+        description:
+          'Mieux que les tests de puissance, AéroX te propose de tester directement la vitesse que tu sors vraiment. Un test incrémental où la vitesse augmente... Dépasseras-tu les 40 km/h ? ',
+        icon: 'flat-color-icons:business-contact',
+        objectif:
+          '<span class="text-lg font-bold text-accent">Objectif:</span> Mesure ta progression aérodynamique en vitesse, ce qui compte vraiment.',
+      },
+    ]}
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Features2>
 
   <!-- Content Widget **************** -->
 
@@ -406,84 +489,7 @@ const metadata = {
     }}
   />
 
-  <!-- Features2 Widget ************** -->
-
-  <Features2
-    title=' Science, Innovation, Simplicité<br /><span class="font-bold text-primary">PERFORMANCE</span>'
-    subtitle="AeroX innove en intégrant l'aéro au coeur de ton entrainement"
-    tagline="Fonctionnalités"
-    items={[
-      {
-        title: 'Mode Puissance',
-        description:
-          "Entraîne-toi dans tes zones de puissance. Mais ici, AeroX te montre l'impact de ta position sur ta vitesse en temps réel. Seras-tu à -1 km/h ou à +3 km/h ?",
-        objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Optimise, stabilise et consolide ta position aéro.',
-        icon: 'tabler:bolt-filled',
-    video:{ src: demoPuissance, alt: 'Démonstration Mode Puissance' }
-      },
-      {
-        title: 'Mode Vitesse',
-        description:
-          "Innovation pure ! <br />Tu t'entraines avec des objectifs de vitesse. La résistance du Home-Trainer est asservie sur ta position. Tes watts perdus sont affichés. ",
-        objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Ressens enfin ce que te coûte ta position. ',
-
-        icon: 'flat-color-icons:gallery',
-      },
-      {
-        title: 'Simulation sur GPX',
-        description:
-          "La seule simulation où l'aéro compte vraiment !<br />Ironman, CLM, Étape du tour, Alpe d'Huez ? Entraine-toi là où tu décides avec pentes et aérodynamisme comme dans la vraie vie. (import de traces possible)",
-        icon: 'flat-color-icons:approval',
-        objectif: '<span class="text-lg font-bold text-accent">Objectif:</span> Simule l\'outdoor dans ton salon.',
-      },
-      {
-        title: 'Challenges AeroX',
-        description:
-          'Une progression de défis ou tu choisis ta vitesse: entre 25 et 60 km/h. Trouve le meilleur compromis entre puissance et position aérodynamique pour tenir 10 minutes.',
-        icon: 'flat-color-icons:document',
-        objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Dépasse-toi et mesure tes progrès sur nos défis.',
-      },
-      {
-        title: 'Contre-La-Montre Mondial',
-        description: 'Nouveau parcours tous les mois. Un classement mondial. Seulement 3 tentatives. ',
-        icon: 'flat-color-icons:advertising',
-        objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Prouve ta maîtrise aéro au monde entier.',
-      },
-      {
-        title: 'Éditeur de séance',
-        description:
-          "Tu ne trouves pas ton bonheur dans nos plans d'entraînement ? Construis tes propres séances simplement. Glisse tes blocs. Définis puissances ou vitesse. Et c'est parti !",
-        icon: 'flat-color-icons:currency-exchange',
-        objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Construits tes séances, celles de ton coach... et ajoutes-y l\'aéro.',
-      },
-      {
-        title: 'Progression',
-        description:
-          "Meilleure position, temps de maintien en position aéro, meilleures vitesses produites... C'est là que tu verras ta vitesse gagner 1 à 3 km/h et ton temps de maintien passer de 5 à 45 minutes en quelques semaines.",
-        icon: 'flat-color-icons:voice-presentation',
-        objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Analyse tes progrès, séances après séances.',
-      },
-      {
-        title: 'Tests AéroX',
-        description:
-          'Mieux que les tests de puissance, AéroX te propose de tester directement la vitesse que tu sors vraiment. Un test incrémental où la vitesse augmente... Dépasseras-tu les 40 km/h ? ',
-        icon: 'flat-color-icons:business-contact',
-        objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Mesure ta progression aérodynamique en vitesse, ce qui compte vraiment.',
-      },
-    ]}
-  >
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Features2>
-
+  
   <!-- HighlightedPosts Widget ******* -->
 
   <BlogLatestPosts
