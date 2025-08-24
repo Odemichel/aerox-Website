@@ -33,6 +33,8 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
         containerClass
       )}
       aria-label="Carrousel infini d’items"
+      
+  
     >
       {looped.map(
         ({ title, description, objectif, icon, image, video, callToAction, classes: itemClasses = {} }, i) => (
@@ -75,19 +77,20 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
 
             {/* MEDIA (image OU vidéo) */}
             {(image || video) && (
-              <div class="w-full aspect-video border rounded-xl dark:border-secondary ">
+              <div class="relative overflow-visible w-full aspect-video border rounded-xl dark:border-secondary">
                 {video ? (
                   <>
                     <video
                       src={video?.src ?? ''}
                       poster={video?.poster ?? ''}
+                      loop
                       playsinline
                       preload="metadata"
-                      class="media-el w-full h-full rounded-2xl object-contain  bg-black"
+                      class="media-el w-full h-full rounded-2xl object-contain bg-black"
                       data-video
                     />
 
-                    {/* Gros bouton Play centré */}
+                    {/* Play centré */}
                     <button
                       type="button"
                       class="absolute inset-0 grid place-items-center transition
@@ -95,7 +98,7 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
                       aria-label="Lire la vidéo"
                       data-play
                     >
-                      <span class="rounded-full p-3 md:p-4 dark:bg-primary border-2 dark:border-primary-light dark:hover:bg-white text-white hover:text-primary shadow-lg">
+                      <span class="rounded-full p-3 md:p-4 bg-primary border-2 border-primary-light text-white shadow-lg">
                         <Icon name="tabler:player-play-filled" class="w-6 h-6 md:w-8 md:h-8" />
                       </span>
                     </button>
@@ -109,24 +112,24 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
                   />
                 )}
 
-                {/* Dégradé pour lisibilité du texte */}
-                <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 " />
+                {/* Dégradé plus bas en mobile */}
+<div class="video-gradient hidden sm:block pointer-events-none absolute inset-x-0 bottom-0 h-1/2 "></div>
 
-                {/* Overlay description + CTA en bas */}
-                <div class="desc-overlay absolute inset-x-0 bottom-0 p-3 sm:p-4 text-white flex flex-col gap-2 transition-opacity">
+                {/* Overlay description + CTA — collé en bas, compact en mobile */}
+                <div class="desc-overlay absolute inset-x-0 bottom-[-8px] md:bottom-0 p-2 sm:p-4 text-white transition-opacity">
                   <div
                     class={twMerge(
-                      // boîte texte + CTA avec fond commun
-                      'pointer-events-auto m-2 p-3 rounded-lg shadow-md',
+                      'pointer-events-auto m-0 sm:m-2 p-2 sm:p-3 rounded-lg shadow-md',
                       'bg-white/90 text-black dark:bg-black/70 dark:text-white backdrop-blur',
-                      'max-w-[100%] ', // largeur de la bulle
-                      itemClasses?.description // hook si tu veux surcharger
+                      'max-w-[100%] max-h-[38%] sm:max-h-none overflow-hidden', // <-- limite la hauteur en mobile
+                      itemClasses?.description
                     )}
                   >
                     {description && (
                       <p
                         class={twMerge(
-                          'text-sm lg:text-base  leading-snug',
+                          // si tu as le plugin line-clamp:
+                          'text-sm lg:text-base leading-snug ',
                           descriptionClass,
                           itemClasses?.description
                         )}
@@ -143,7 +146,7 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
                               class={twMerge(
                                 'px-3 py-1.5 text-sm rounded-md',
                                 'bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20',
-                                'text-current', // conserve le contraste du conteneur
+                                'text-current',
                                 cta.class ?? ''
                               )}
                             />
@@ -177,30 +180,33 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
   article[data-playing='false'] .media-el {
     filter: blur(3px) brightness(0.85);
     transition:
-      filter 700ms ease,
-      transform 700ms ease;
-    transform: scale(0.9); /* léger zoom pour gommer les bords du blur */
+      filter 500ms ease,
+      transform 500ms ease;
+    transform: scale(0.98); /* léger zoom pour gommer les bords du blur */
   }
 
   /* Quand ça joue : on rétablit net */
   article[data-playing='true'] .media-el {
     filter: none;
     transition:
-      filter 1000ms ease,
-      transform 1000ms ease;
+      filter 500ms ease,
+      transform 500ms ease;
   }
 
   /* Masquer la description/CTA pendant la lecture */
   article[data-playing='true'] .desc-overlay {
     opacity: 0;
     pointer-events: none;
-    transition: opacity 250ms ease;
+    transition: opacity 500ms ease,
+    filter 500ms ease;
   }
 
   /* Visible par défaut quand ça ne joue pas */
   article[data-playing='false'] .desc-overlay {
     opacity: 1;
     pointer-events: auto;
+    transition: opacity 500ms ease,
+    filter 500ms ease;
   }
   .scrollbar-none::-webkit-scrollbar {
     display: none;
@@ -209,6 +215,16 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  @media (prefers-reduced-motion: reduce) {
+  article .media-el {
+    filter: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  article .desc-overlay {
+    transition: none !important;
+  }
+}
 </style>
 <script define:vars={{ carouselId }}>
   // Récupère le conteneur du carrousel par ID injecté depuis le frontmatter
@@ -284,4 +300,37 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
       ['play', 'pause', 'ended', 'waiting', 'seeking'].forEach((evt) => video.addEventListener(evt, syncState));
     });
   }
+  // --- Lazy-load + pause hors écran (sans autoplay) ---
+const makeIO = () => {
+  if (!('IntersectionObserver' in window)) return;
+
+  const cards = Array.from(el.children);
+  const originalsCount = cards.length / 3; // set original
+  const originals = cards.slice(0, originalsCount).concat(cards.slice(originalsCount, originalsCount*2)); // deux sets centraux
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const card = entry.target;
+      const video = card.querySelector('video[data-video]');
+      const playBtn = card.querySelector('[data-play]');
+      if (!video) return;
+
+      if (entry.isIntersecting) {
+        // Lazy set src (si tu veux différer le chargement)
+        if (video.dataset.src && !video.src) {
+          video.src = video.dataset.src;
+        }
+        // Rendre le bouton play actif seulement si visible
+        playBtn?.removeAttribute('disabled');
+      } else {
+        // Pause si l'utilisateur a lancé la lecture et que la carte sort de l'écran
+        if (!video.paused && !video.ended) video.pause();
+      }
+    });
+  }, { root: el, threshold: 0.6 }); // 60% de la carte visible
+
+  originals.forEach((c) => io.observe(c));
+};
+
+makeIO();
 </script>

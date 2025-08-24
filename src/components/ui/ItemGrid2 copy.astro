@@ -1,0 +1,349 @@
+---
+import { Icon } from 'astro-icon/components';
+import { twMerge } from 'tailwind-merge';
+import type { ItemGrid as Props } from '~/types';
+import Button from './Button.astro';
+
+const { items = [], defaultIcon = '', classes = {} } = Astro.props;
+
+const {
+  container: containerClass = '',
+  panel: panelClass = '',
+  title: titleClass = '',
+  description: descriptionClass = '',
+  objectif: objectifClass = '',
+  icon: defaultIconClass = 'text-primary',
+} = classes;
+
+// Scroll infini : on duplique 3×
+const looped = [...items, ...items, ...items];
+
+// id unique pour le carrousel
+const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+
+
+{items && items.length > 0 && (
+  <div
+    id={carouselId}
+    class={twMerge(
+      // Carrousel horizontal (toutes tailles) + UX scrollbar
+      'flex overflow-x-auto snap-x snap-mandatory gap-4 px-6 -mx-6 scroll-px-6',
+      'scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none]',
+      containerClass
+    )}
+    aria-label="Carrousel infini d’items"
+  >
+    {looped.map(
+      ({ title, description, objectif, icon, image, video, callToAction, classes: itemClasses = {} }, i) => (
+        <article
+          class={twMerge(
+            // élément scrollable (teasing : on voit la carte suivante)
+            'snap-center shrink-0 min-w-[85%] md:min-w-[420px] xl:min-w-[520px] max-w-[55%]',
+            // carte
+            'bg-white/5 rounded-2xl p-0 sm:p-0',
+            'relative flex flex-col gap-2',
+            'border-2 dark:hover:border-primary-light',
+            panelClass,
+            itemClasses?.panel
+          )}
+          
+          tabindex="0"
+          role="group"
+          data-idx={i}
+          data-playing="false"
+        >
+          {/* ICONE + TITRE */}
+          <div class="flex items-start gap-2 px-4 pt-4">
+            {(icon || defaultIcon) && (
+              <Icon
+                name={icon || defaultIcon}
+                class={twMerge('mt-0.5 w-6 h-6', defaultIconClass, itemClasses?.icon)}
+              />
+            )}
+            {/* Bloc texte en colonne */}
+            <div class="flex-1 min-w-0">
+              {title && (
+                <h3 class={twMerge('text-lg md:text-2xl font-semibold', titleClass, itemClasses?.title)}>{title}</h3>
+              )}
+              {objectif && (
+                <p class={twMerge('mt-1 text-muted', objectifClass, itemClasses?.description)} set:html={objectif} />
+              )}
+            </div>
+          </div>
+
+          {/* MEDIA (image OU vidéo) + overlay (sous la vidéo en mobile, superposé dès sm:) */}
+          {(image || video) && (
+            <div class="relative">
+              {/* MEDIA */}
+              
+                <div class="relative overflow-visible w-full aspect-video border rounded-xl dark:border-secondary">
+                {video ? (
+                  <>
+                    <video
+                    data-src="/videos/mode-puissance.mp4"
+                      poster={video?.poster ?? ''}
+                      loop
+                      playsinline
+                      preload="none"
+                      class="media-el w-full h-full rounded-2xl object-cover bg-black"
+                      data-video
+                    />
+
+                    {/* Play centré */}
+                    <button
+                      type="button"
+                      class="absolute inset-0 grid place-items-center transition
+                             data-[hidden=true]:opacity-0 data-[hidden=true]:pointer-events-none"
+                      aria-label="Lire la vidéo"
+                      data-play
+                      disabled
+                    >
+                      <span class="rounded-full p-3 md:p-4 bg-primary border-2 border-primary-light text-white shadow-lg">
+                        <Icon name="tabler:player-play-filled" class="w-6 h-6 md:w-8 md:h-8" />
+                      </span>
+                    </button>
+                  </>
+                ) : (
+                  <img
+                    src={image?.src ?? ''}
+                    alt={image?.alt ?? ''}
+                    loading="lazy"
+                    class="w-full h-full object-contain bg-black"
+                  />
+                )}
+
+                {/* Dégradé visible seulement quand overlay est superposé (≥ sm) */}
+                <div class="hidden sm:block pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+              </div>
+
+              {/* Overlay description + CTA
+                  - Mobile : SOUS la vidéo (mt-2, en flux normal)
+                  - ≥ sm   : superposé en bas de la vidéo */}
+              <div class="desc-overlay mt-2 px-2 text-white transition-opacity
+                          static sm:absolute sm:inset-x-0 sm:bottom-0 sm:mt-0 sm:px-4">
+                <div
+                  class={twMerge(
+                    'pointer-events-auto p-3 sm:m-2 sm:p-3 rounded-lg shadow-md',
+                    'bg-white/90 text-black dark:bg-black/70 dark:text-white backdrop-blur',
+                    'max-w-[100%]',
+                    descriptionClass,
+                    itemClasses?.description
+                  )}
+                >
+                  {description && (
+                    <p class="text-sm lg:text-base leading-snug" set:html={description} />
+                  )}
+
+                  {callToAction && (
+                    <div class="mt-2 flex flex-wrap justify-end gap-2">
+                      {Array.isArray(callToAction) ? (
+                        callToAction.map((cta) => (
+                          <Button
+                            {...cta}
+                            class={twMerge(
+                              'px-3 py-1.5 text-sm rounded-md',
+                              'bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20',
+                              'text-current',
+                              cta.class ?? ''
+                            )}
+                          />
+                        ))
+                      ) : (
+                        <Button
+                          {...callToAction}
+                          class={twMerge(
+                            'px-3 py-1.5 text-sm rounded-md',
+                            'bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20',
+                            'text-current',
+                            callToAction.class ?? ''
+                          )}
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </article>
+      )
+    )}
+  </div>
+)}
+
+<style is:inline>
+  /* Effet blur quand la vidéo n'est pas lancée */
+  article[data-playing='false'] .media-el {
+    filter: blur(3px) brightness(0.85);
+    transition: filter 700ms ease, transform 700ms ease;
+    transform: scale(0.9);
+  }
+  article[data-playing='true'] .media-el {
+    filter: none;
+    transition: filter 1000ms ease, transform 1000ms ease;
+    transform: none;
+  }
+  /* Masquer la description/CTA pendant la lecture */
+  article[data-playing='true'] .desc-overlay {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 250ms ease;
+  }
+  /* En mobile, on retire aussi l'espace occupé par l'overlay quand on lit */
+  @media (max-width: 639px) {
+    article[data-playing='true'] .desc-overlay { display: none; }
+  }
+
+  /* Masquer proprement la scrollbar (optionnel) */
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+  .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+
+<script define:vars={{ carouselId }}>
+  // Récupère le conteneur du carrousel par ID injecté depuis le frontmatter
+  const el = document.getElementById(carouselId);
+  if (!el) {
+    console.warn('Carousel introuvable:', carouselId);
+  }
+
+  if (el) {
+    const cards = Array.from(el.children);
+    const setSize = cards.length / 3; // taille d’un set original (items x3)
+    const offset0 = cards[0].offsetLeft;
+    let setSpan = cards[setSize].offsetLeft - cards[0].offsetLeft; // largeur d’un set complet
+    const buffer = 2;
+
+    // placer le scroll au CENTRE de la 1re carte du set du milieu
+    const firstMid = cards[setSize];
+    const centerLeft = firstMid.offsetLeft - (el.clientWidth - firstMid.clientWidth) / 2;
+    el.scrollLeft = centerLeft;
+
+    const recalc = () => {
+      setSpan = cards[setSize].offsetLeft - cards[0].offsetLeft;
+      const centerLeft = firstMid.offsetLeft - (el.clientWidth - firstMid.clientWidth) / 2;
+      el.scrollLeft = centerLeft;
+    };
+    window.addEventListener('resize', recalc);
+
+    let ticking = false;
+    el.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const x = el.scrollLeft;
+          if (x < offset0 + buffer) {
+            el.scrollLeft = x + setSpan;                    // bord gauche → saute +setSpan
+          } else if (x > offset0 + setSpan * 2 - buffer) {
+            el.scrollLeft = x - setSpan;                    // bord droit → saute -setSpan
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+
+    // Gestion du bouton Play overlay + état playing
+    el.querySelectorAll('[data-play]').forEach((btn) => {
+      const wrap = btn.closest('article');
+      if (!wrap) return;
+      const video = wrap.querySelector('video[data-video]');
+      if (!video) return;
+
+      const syncState = () => {
+        const playing = !video.paused && !video.ended;
+        wrap.dataset.playing = playing ? 'true' : 'false';
+        btn.dataset.hidden = playing ? 'true' : 'false';
+      };
+
+      // init
+      syncState();
+
+      // toggle via overlay
+      btn.addEventListener('click', () => {
+        if (video.paused || video.ended) video.play();
+        else video.pause();
+      });
+
+      // toggle via clic vidéo
+      video.addEventListener('click', () => {
+        if (video.paused || video.ended) video.play();
+        else video.pause();
+      });
+
+      // sync sur les événements clés
+      ['play', 'pause', 'ended', 'waiting', 'seeking'].forEach((evt) =>
+        video.addEventListener(evt, syncState)
+      );
+    });
+  }
+  // --- Lazy-load + pause hors écran (sans autoplay) ---
+const initLazyVideos = () => {
+  if (!el) return;
+
+  const videos = Array.from(el.querySelectorAll('video[data-video]'));
+  const playBtns = new Map(videos.map(v => [v, v.closest('article')?.querySelector('[data-play]')]));
+
+  const attachSrc = (video) => {
+    if (!video.src && video.dataset.src) {
+      video.src = video.dataset.src;
+      // Demande explicite de métadonnées (pré-warm sans lecture)
+      try {
+      video.load();
+    } catch (err) {
+      console.warn("Erreur lors du load() lazy vidéo", err);
+    }
+    }
+  };
+
+  // Fallback si IO absent
+  if (!('IntersectionObserver' in window)) {
+    videos.forEach(v => { attachSrc(v); });
+    playBtns.forEach((btn) => btn?.removeAttribute('disabled'));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const video = entry.target;
+      const btn = playBtns.get(video);
+
+      if (entry.isIntersecting) {
+        // Pré-chauffe réseau + métadonnées (PAS de lecture)
+        attachSrc(video);
+        btn?.removeAttribute('disabled');
+      } else {
+        // Pause hors-écran si l’utilisateur avait lancé
+        if (!video.paused && !video.ended) video.pause();
+      }
+    });
+  }, { root: el, threshold: 0.5 });
+
+  videos.forEach(v => io.observe(v));
+
+  // Clic Play : lecture (src déjà posé si visible)
+  playBtns.forEach((btn, video) => {
+    if (!btn) return;
+    const syncState = () => {
+      const wrap = btn.closest('article');
+      const playing = !video.paused && !video.ended;
+      if (wrap) wrap.dataset.playing = playing ? 'true' : 'false';
+      btn.dataset.hidden = playing ? 'true' : 'false';
+    };
+    btn.addEventListener('click', () => {
+      // Si l’utilisateur clique très vite avant IO : on attache la src maintenant
+      if (!video.src && video.dataset.src) attachSrc(video);
+      if (video.paused || video.ended) video.play(); else video.pause();
+    });
+    video.addEventListener('click', () => {
+      if (!video.src && video.dataset.src) attachSrc(video);
+      if (video.paused || video.ended) video.play(); else video.pause();
+    });
+    ['play','pause','ended','waiting','seeking','loadedmetadata'].forEach(e => video.addEventListener(e, syncState));
+    syncState();
+  });
+};
+initLazyVideos();
+
+
+</script>
