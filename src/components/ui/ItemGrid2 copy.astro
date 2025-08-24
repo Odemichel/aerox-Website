@@ -98,7 +98,6 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
                              data-[hidden=true]:opacity-0 data-[hidden=true]:pointer-events-none"
                       aria-label="Lire la vidéo"
                       data-play
-                      disabled
                     >
                       <span class="rounded-full p-3 md:p-4 bg-primary border-2 border-primary-light text-white shadow-lg">
                         <Icon name="tabler:player-play-filled" class="w-6 h-6 md:w-8 md:h-8" />
@@ -277,73 +276,4 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
       );
     });
   }
-  // --- Lazy-load + pause hors écran (sans autoplay) ---
-const initLazyVideos = () => {
-  if (!el) return;
-
-  const videos = Array.from(el.querySelectorAll('video[data-video]'));
-  const playBtns = new Map(videos.map(v => [v, v.closest('article')?.querySelector('[data-play]')]));
-
-  const attachSrc = (video) => {
-    if (!video.src && video.dataset.src) {
-      video.src = video.dataset.src;
-      // Demande explicite de métadonnées (pré-warm sans lecture)
-      try {
-      video.load();
-    } catch (err) {
-      console.warn("Erreur lors du load() lazy vidéo", err);
-    }
-    }
-  };
-
-  // Fallback si IO absent
-  if (!('IntersectionObserver' in window)) {
-    videos.forEach(v => { attachSrc(v); });
-    playBtns.forEach((btn) => btn?.removeAttribute('disabled'));
-    return;
-  }
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      const video = entry.target;
-      const btn = playBtns.get(video);
-
-      if (entry.isIntersecting) {
-        // Pré-chauffe réseau + métadonnées (PAS de lecture)
-        attachSrc(video);
-        btn?.removeAttribute('disabled');
-      } else {
-        // Pause hors-écran si l’utilisateur avait lancé
-        if (!video.paused && !video.ended) video.pause();
-      }
-    });
-  }, { root: el, threshold: 0.5 });
-
-  videos.forEach(v => io.observe(v));
-
-  // Clic Play : lecture (src déjà posé si visible)
-  playBtns.forEach((btn, video) => {
-    if (!btn) return;
-    const syncState = () => {
-      const wrap = btn.closest('article');
-      const playing = !video.paused && !video.ended;
-      if (wrap) wrap.dataset.playing = playing ? 'true' : 'false';
-      btn.dataset.hidden = playing ? 'true' : 'false';
-    };
-    btn.addEventListener('click', () => {
-      // Si l’utilisateur clique très vite avant IO : on attache la src maintenant
-      if (!video.src && video.dataset.src) attachSrc(video);
-      if (video.paused || video.ended) video.play(); else video.pause();
-    });
-    video.addEventListener('click', () => {
-      if (!video.src && video.dataset.src) attachSrc(video);
-      if (video.paused || video.ended) video.play(); else video.pause();
-    });
-    ['play','pause','ended','waiting','seeking','loadedmetadata'].forEach(e => video.addEventListener(e, syncState));
-    syncState();
-  });
-};
-initLazyVideos();
-
-
 </script>
