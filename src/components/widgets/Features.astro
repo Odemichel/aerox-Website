@@ -21,8 +21,14 @@ const {
 } = Astro.props;
 ---
 
-<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-5xl ${classes?.container ?? ''}`} bg={bg}>
+<WidgetWrapper
+  id={id}
+  isDark={isDark}
+  containerClass={`max-w-7xl px-6 md:px-8 ${classes?.container ?? ''}`}
+  bg={bg}
+>
   <Headline title={title} subtitle={subtitle} tagline={tagline} classes={classes?.headline as Record<string, string>} />
+    
   <ItemGrid
     items={items}
     columns={columns}
@@ -34,7 +40,7 @@ const {
       ...((classes?.items as Record<string, never>) ?? {}),
     }}
   />
-  
+
   {
     callToAction1 && (
       <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center  mt-8 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
@@ -47,16 +53,10 @@ const {
         ) : (
           <Fragment set:html={callToAction1} />
         )}
-
       </div>
-              
-
     )
-    
   }
-                <div class="m-auto motion-safe:md:opacity-0 text-center motion-safe:md:intersect:animate-fade mt-4 mb-10">
-
+  <div class="m-auto motion-safe:md:opacity-0 text-center motion-safe:md:intersect:animate-fade mt-4 mb-10">
     <slot name="ctaDetails" />
   </div>
-
 </WidgetWrapper>

@@ -1,20 +1,26 @@
 ---
-import heroVideo from '~/assets/images/hero_aerox.mp4';
+import heroVideo from '~/assets/videos/aerox_hero.mp4';
+import Milan_HT from '../assets/images/Milan_HT.jpg';
+import Milan_Tete from '../assets/images/Milan_tete.jpg';
+import Olivier_Tete from '../assets/images/Olivier_tete2.png';
+
+import Frédéric_tete from '../assets/images/Frédéric_tete.jpg';
+
 import demoPuissance from '../assets/videos/demo_puissance.mp4';
 
 import Layout from '~/layouts/PageLayout.astro';
 
-import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
-import Content from '~/components/widgets/Content.astro';
 import CountDown from '~/components/widgets/CountDown.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Features from '~/components/widgets/Features.astro';
 import Features2 from '~/components/widgets/Features2.astro';
 import Hero from '~/components/widgets/Hero.astro';
 import Note from '~/components/widgets/Note.astro';
+import Prices from '~/components/widgets/Pricing.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import Steps from '~/components/widgets/Steps.astro';
+import Testimonials from '~/components/widgets/Testimonials.astro';
 
 const metadata = {
   title: 'AeroX — Analyse et améliore ton aérodynamisme à vélo',
@@ -31,30 +37,35 @@ const metadata = {
       {
         variant: 'primary',
         target: '_blank',
-        text: 'Rejoins notre équipe de testeurs',
+        text: 'Rejoins AeroX',
         href: 'https://github.com/onwidget/astrowind',
-        icon: 'tabler:download',
+        icon: 'tabler:users-group',
       },
     ]}
   >
     tagline="En bêta le 1er septembre"
 
     <Fragment slot="title">
-      <span class="font-bold text-primary">AeroX</span><span class="font-medium"> transforme ta position en</span>
-      <span class="font-bold text-primary">vitesse</span>
+      <span class="font-bold text-primary">AeroX</span><span class="sm:hidden"><br /></span><span class="font-medium">
+        transforme ta position en</span
+      >
+      <span class="sm:hidden"><br /></span><span class="font-bold text-primary">vitesse</span>
     </Fragment>
 
     <Fragment slot="subtitle">
-      La seule application indoor qui <span class="font-bold text-primary">analyse ton aérodynamisme en temps réel</span>,<br />avec une simple webcam.
+      La seule application indoor qui <span class="font-bold text-primary">analyse ton aérodynamisme en temps réel</span
+      >,<br />avec une simple webcam.
     </Fragment>
     <Fragment slot="paragraph">
-      Gagne jusqu'à <span class="font-bold text-accent"> 3 km/h</span> et économise <span class="font-bold text-accent">
-        40 W<br />
+      Gagne jusqu'à <span class="font-bold text-accent"> 3&#8239;km/h</span> et économise <span
+        class="font-bold text-accent"
+      >
+        40&#8239;W<br />
       </span> en intègrant l'aérodynamisme dans ton entraînement. <br />
     </Fragment>
 
     <Fragment slot="content">
-      Plus que <CountDown targetDate="2025-09-30T00:00:00" /> pour profiter <span class="font-bold text-accent"
+      Plus que <CountDown targetDate="2025-09-30T00:00:00" /> pour profiter <span class="font-bold"
         >d'avantages exclusifs</span
       >!
     </Fragment>
@@ -64,7 +75,6 @@ const metadata = {
 
   <Note title="Notre Philosophie:" description="Innovation, simplicité, efficacité" />
 
-  
   <!-- Features2 Widget ************** -->
 
   <Features2
@@ -116,36 +126,7 @@ const metadata = {
           target: '_blank',
         },
       },
-      {
-        title: 'Challenges AeroX (à venir)',
-        description:
-          'Choisis ton challenge: entre 25 et 60 km/h, de 5 à 20 minutes.<br /> <span class="font-bold">Maintiens ta puissance en position aéro.</span>',
-        icon: 'flat-color-icons:document',
-        objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Dépasse-toi sur nos challenges de vitesse.',
-        video: { src: demoPuissance, alt: 'Démonstration Mode Puissance' },
-        callToAction: {
-          variant: 'primary',
-          text: 'Prêt à challenger ta vitesse ?',
-          href: '/telechargement',
-          target: '_blank',
-        },
-      },
-      {
-        title: 'Contre-La-Montre Mondial (à venir)',
-        description:
-          'Nouveau parcours tous les mois.<br />Un chrono.<br /><span class="font-bold">Un classement mondial.</span>',
-        icon: 'flat-color-icons:advertising',
-        objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Prouve ta maîtrise aéro au monde entier.',
-        video: { src: demoPuissance, alt: 'Démonstration Mode Puissance' },
-        callToAction: {
-          variant: 'primary',
-          text: 'Prêt à défier le monde ?',
-          href: '/telechargement',
-          target: '_blank',
-        },
-      },
+
       {
         title: 'Éditeur de séance',
         description:
@@ -162,27 +143,49 @@ const metadata = {
         },
       },
       {
+        title: 'Contre-La-Montre Mondial (à venir)',
+        description:
+          'Nouveau parcours tous les mois.<br />Un chrono.<br /><span class="font-bold">Un classement mondial.</span>',
+        icon: 'flat-color-icons:advertising',
+        objectif:
+          '<span class="text-lg font-bold text-accent">Objectif:</span> Prouve ta maîtrise aéro au monde entier.',
+        video: { src: '', alt: 'Démonstration Mode Puissance' },
+        callToAction: {
+          variant: 'primary',
+          text: 'Prêt à défier le monde ?',
+          href: '/telechargement',
+          target: '_blank',
+        },
+      },
+      {
+        title: 'Challenges AeroX (à venir)',
+        description:
+          'Choisis ta vitesse entre 25 et 60&#8239;km/h. Maintiens-la pendant 5, 10 ou 20 minutes en combinant puissance et position aéro.<br /><span class="font-bold">Gagne tes badges AeroX.</span>',
+        icon: 'flat-color-icons:document',
+        objectif:
+          '<span class="text-lg font-bold text-accent">Objectif:</span> Dépasse-toi sur nos challenges de vitesse.',
+        video: { src: '', alt: 'Démonstration Mode Puissance' },
+        callToAction: {
+          variant: 'primary',
+          text: 'Prêt à challenger ta vitesse ?',
+          href: '/telechargement',
+          target: '_blank',
+        },
+      },
+      {
         title: 'Progression (à venir)',
         description:
-          '<span class="hidden sm:inline"> Meilleure position, temps de maintien en position aéro, meilleures vitesses produites... </span>C\'est là que tu verras ta vitesse gagner 1 à 3 km/h et ton temps en position aéro passer de 5 à 45 minutes en quelques semaines.',
+          '<span class="hidden sm:inline"> Meilleure position, temps de maintien en position aéro, meilleures vitesses produites... </span>C\'est là que tu verras ta vitesse gagner 1 à 3&#8239;km/h et ton temps en position aéro passer de 5 à 45 minutes en quelques semaines.',
         icon: 'flat-color-icons:voice-presentation',
         objectif:
           '<span class="text-lg font-bold text-accent">Objectif:</span> Analyse tes progrès, séances après séances.',
-          video: { src: demoPuissance, alt: 'Démonstration Mode Puissance' },
+        video: { src: '', alt: 'Démonstration Mode Puissance' },
         callToAction: {
           variant: 'primary',
           text: 'Analyse précisément ta progression',
           href: '/telechargement',
           target: '_blank',
         },
-      },
-      {
-        title: 'Tests AéroX',
-        description:
-          'Mieux que les tests de puissance, AéroX te propose de tester directement la vitesse que tu sors vraiment. Un test incrémental où la vitesse augmente... Dépasseras-tu les 40 km/h ? ',
-        icon: 'flat-color-icons:business-contact',
-        objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Mesure ta progression aérodynamique en vitesse, ce qui compte vraiment.',
       },
     ]}
   >
@@ -191,30 +194,93 @@ const metadata = {
     </Fragment>
   </Features2>
 
-<!-- Features Widget *************** -->
+  <!-- Note Widget ******************* -->
+
+  <Note title="Notre Mission:" description="Permettre à chaque cycliste et triathlète de s'entrainer comme un pro." />
+
+  <!-- FAQs Widget ******************* -->
+
+  <Testimonials
+    title="Témoignages"
+    testimonials={[
+      {
+        testimonial:
+          "\"C'est incroyable qu'un dispositif aussi simple donne des informations aussi essentielles pour mes performances. Maintenant, j'économise au moins 35&#8239;W avec ma position, c'est de l'énergie que je garde pour la course à pieds.\"",
+        name: 'Milan Larivière',
+        job: "Triathlète élite- 2<sup>e</sup> Coupe d'Europe U23",
+        image: {
+          src: Milan_HT,
+          alt: 'Milan Larivière',
+        },
+        profile: {
+          src: Milan_Tete,
+          alt: 'Milan Larivière',
+        },
+      },
+      {
+        testimonial:
+          '"En 4 semaines, j’ai gagné +1 km/h sans forcer plus. Je n’imaginais pas qu’à mon niveau, l’aéro pouvait compter autant. Maintenant, je roule avec plaisir, même dans le vent."',
+        name: 'Frédéric Petit',
+        job: 'Cycliste amateur - 6000&#8239;km/an',
+        profile: {
+          src: Frédéric_tete,
+          alt: 'Frédéric Petit Image',
+        },
+      },
+      {
+        testimonial:
+          '"En développant AeroX, j’ai gagné +3&#8239;km/h en course, juste en tenant une meilleure position. Ancien chercheur au CNRS et triathlète, j’ai voulu démocratiser ce feedback autrefois réservé aux pros. Avec une simple webcam, chacun peut désormais mesurer et ressentir l’aéro en temps réel."',
+        name: 'Olivier Demichel',
+        job: "Triathlète - Fondateur d'AeroX",
+        profile: {
+          src: Olivier_Tete,
+          alt: 'Olivier Demichel Image',
+        },
+      },
+      {
+        testimonial:
+          '"Avec AeroX, mes athlètes comprennent enfin l’impact de leur position sur leur vitesse. J’ai maintenant un vrai levier pour leur faire gagner de la vitesse gratuitement. Mes services sont maintenant à la hauteur de mes exigences professionnelles.<br />Merci AeroX"',
+        name: 'James Ropert',
+        job: 'Entraineur cyclisme - Dijon',
+        profile: {
+          src: Olivier_Tete,
+          alt: 'James Ropert Image',
+        },
+      },
+    ]}
+    callToAction={{
+      target: '_blank',
+      text: 'Tester AeroX',
+      href: '/telechargement',
+      icon: 'tabler:chevron-right',
+    }}
+  />
+
+  <!-- Features Widget *************** -->
   <Features
     id="features"
     title="Pourquoi intégrer l'aérodynamisme à ton entraînement ?"
-    subtitle="Parce que chaque watt compte, l’aérodynamisme doit devenir un paramètre aussi suivi que la puissance ou la fréquence cardiaque.<br /> AeroX : l'innovation qui traduit ta position en données aérodynamiques à chaque instant."
+    subtitle="Parce que chaque watt compte et ton budget aussi !<br />Maîtrise ton aérodynamisme autant que ta puissance ou ta fréquence cardiaque."
     items={[
       {
         title: 'Gagne de 1 à 5 km/h sans plus d’effort',
         description:
-          "AeroX révèle en temps réel les km/h que ta position te fait perdre… Même à 25 km/h tu peux gagner 1km/h ! Mieux qu'un nouveau cadre à 5000 €...<br /> Ne laisse plus rien au hasard, optimise ta position et ta vitesse.",
+          "AeroX révèle en temps réel les km/h que ta position te fait perdre… Même à 25&#8239;km/h tu peux gagner 1km/h ! Mieux qu'un nouveau cadre à 5000&#8239;€...<br /> Ne laisse plus rien au hasard.",
         icon: 'tabler:brand-speedtest',
 
         education:
-          "Dès 25 km/h, l’air absorbe ~70 % de ta puissance, et à 45 km/h, jusqu’à 95 %. Ton corps agit comme un parachute : AeroX mesure sa taille (surface frontale) et calcule ton gain quand tu le refermes. Résultat : ~+1 km/h à 25, jusqu’à +5 km/h à 45. Plie les coudes, rentre la tête, rapproche tes prolongateurs : chaque détail devient de la vitesse gratuite. <br /><br />👉 Imagine finir ta sortie en rentrant plus vite que d’habitude, sans un watt de plus. Juste la sensation de fendre l'air… plus que de la performance, du plaisir.",
+          "Dès 25&#8239;km/h, l’air absorbe ~70&#8239;% de ta puissance, et à 45&#8239;km/h, jusqu’à 95&#8239;%. Ton corps agit comme un parachute : AeroX mesure sa taille (surface frontale) et calcule ton gain quand tu le refermes. Résultat : +1&#8239;km/h à 25, jusqu’à +5&#8239;km/h à 45. Plie les coudes, rentre la tête, rapproche tes prolongateurs : chaque détail devient de la vitesse gratuite. AeroX te le montre.<br /><br />👉 Imagine finir ta sortie en rentrant plus vite que d’habitude, sans forcer plus. Juste la sensation de fendre l'air… plus que de la performance, du plaisir.",
         expandable: true,
-        moreLabel: 'En savoir plus…',
+        moreLabel: "On t'explique les chiffres…",
         defaultOpen: false,
         classes: {
           summary: 'text-accent hover:underline',
           more: 'mt-3',
         },
         callToAction: {
-          text: 'Commence à rouler plus vite',
+          text: 'Commence AeroX, gagne 1-5&#8239;km/h',
           href: '/telechargement',
+          icon: 'tabler:download',
           variant: 'primary', // btn-primary
           class: 'mt-2',
         },
@@ -223,10 +289,10 @@ const metadata = {
       {
         title: 'Gagne en vitesse réelle, pas en puissance virtuelle',
         description:
-          'Sur home-trainer, beaucoup progressent… dans un monde virtuel.<br /> Avec AeroX, tu deviens plus rapide dans la vraie vie !',
-        icon: 'tabler:chart-dots',
+          "Sur home-trainer, beaucoup progressent… dans un monde virtuel.<br /> Avec AeroX, c'est toi qui économise 40&#8239;W. Tu deviens plus rapide dans la vraie vie !",
+        icon: 'tabler:bolt',
         education:
-          "Sur home-trainer, ton seul objectif est d'améliorer ta puissance. Et c'est très bien… pour t'amuser sur des courses virtuelles. Mais dehors, tu n’es pas plus rapide, parfois même moins et ta position aéro est inconfortable. S'entraîner avec un feedback aérodynamique en temps réel a le double avantage: optimiser ta position et en faire un automatisme pour performer sur de vraies courses, là où ça compte.",
+          "Sur home-trainer, ton seul objectif est d'améliorer ta puissance. Et c'est très bien… pour t'amuser sur des courses virtuelles. Mais dehors, tu n’es pas plus rapide, parfois même moins et ta position aéro est inconfortable. C'est 40&#8239;W qui s'évaporent sans que tu t'en rendes compte. S'entraîner avec un feedback aérodynamique en temps réel a le double avantage: optimiser ta position et en faire un automatisme pour prendre plaisir sur tes entrainements et performer sur de vraies courses, là où ça compte.",
         expandable: true,
         moreLabel: 'En savoir plus…',
         defaultOpen: false,
@@ -235,8 +301,9 @@ const metadata = {
           more: 'mt-3',
         },
         callToAction: {
-          text: 'Commence à économiser tes watts',
+          text: 'Essaie AeroX, économise tes watts',
           href: '/telechargement',
+          icon: 'tabler:bolt',
           variant: 'primary', // btn-primary
           class: 'mt-2',
         },
@@ -245,20 +312,21 @@ const metadata = {
       {
         title: 'Entraîne-toi comme un pro, sans budget élite',
         description:
-          'Les pros maîtrisent le triptyque: puissance, cardio et aéro. Mais à quel prix ? AeroX te donne le même avantage: tu apprends à rester puissant dans une position aérodynamique efficace, grâce à une technologie simple et économique.',
+          "Les pros maîtrisent le triptyque: puissance, cardio et aéro. Mais à quel prix ? Les tests en soufflerie, c'est 1500&#8239;€+...<br /> AeroX te donne le même avantage avec une simple webcam. L'aéro devient enfin accessible à tous les cyclistes et triathlètes.",
         icon: 'tabler:trophy',
         education:
-          "Les plans d’entraînement classiques se limitent à la puissance et au cardio. Mais Evenepoel n’est pas champion du monde de CLM juste grâce à ses watts : il a appris à rester puissant dans une position aéro optimale.<br/><br/>  Malheureusement, tester son aérodynamisme reste inaccessible pour 99 % des cyclistes (souffleries, vélodromes, capteurs coûtent très chers).<br/><br/> AeroX change la donne : depuis ton home-trainer, avec une simple webcam, tu accèdes à ces données en temps réel pour optimiser ta position à l'entraînement. <br/><br/>👉 Ce que les pros paient des milliers d’euros, tu peux maintenant l’avoir chez toi. Et tu ressens ce petit frisson: 'je m’entraîne comme eux'.",
+          "Les plans d’entraînement classiques se limitent à la puissance et au cardio. Mais Evenepoel n’est pas champion du monde de CLM juste grâce à ses watts : il a appris à rester puissant dans une position aéro optimale.<br/><br/>  Malheureusement, tester son aérodynamisme reste inaccessible pour 99&#8239;% des cyclistes (souffleries, vélodromes, capteurs coûtent très chers).<br/><br/> AeroX change la donne : depuis ton home-trainer, avec une simple webcam, tu accèdes à ces données en temps réel pour optimiser ta position à l'entraînement. <br/><br/>👉 Ce que les pros paient des milliers d’euros, tu peux maintenant l’avoir chez toi. Et tu ressens ce petit frisson: 'je m’entraîne comme eux'.",
         expandable: true,
-        moreLabel: 'En savoir plus…',
+        moreLabel: "Comprendre l'entrainement des pros…",
         defaultOpen: false,
         classes: {
           summary: 'text-accent hover:underline',
           more: 'mt-3',
         },
         callToAction: {
-          text: 'Entraîne-toi comme un pro',
+          text: 'Entraîne-toi comme un pro avec AeroX',
           href: '/telechargement',
+          icon: 'tabler:download',
           variant: 'primary', // btn-primary
           class: 'mt-2',
         },
@@ -267,11 +335,11 @@ const metadata = {
       {
         title: "Roule plus vite sans dépenser des milliers d'euros",
         description:
-          "90 % de ton aéro, c’est ta position. Pas ton vélo. Pas tes roues. Pas ton casque.<br /> AeroX t'apprend à l'optimiser pour moins cher qu'une paire de chaussettes aéro !",
+          "90&#8239;% de ton aéro, c’est ta position. Pas ton vélo. Pas tes roues. Pas ton casque.<br /> AeroX t'apprend à l'optimiser pour moins cher qu'une paire de chaussettes aéro !",
         icon: 'tabler:currency-euro',
 
         education:
-          "Roues profilées, cadre haut de gamme, casque dernier cri… Les effets marketing te font dépenser des milliers d’euros chaque année pour gagner quelques watts. Mais en réalité, 90 % de la résistance aérodynamique vient de ton corps, pas du matériel. Le meilleur vélo du monde ne compensera jamais une position que tu ne tiens pas plus de 5 minutes, autant rouler en vélib'. Avec AeroX, tu investis là où ça paie vraiment : ta position. <br />Ton équipement haut de gamme mérite un entraînement haut de gamme.",
+          "Roues profilées, cadre haut de gamme, casque dernier cri… Les effets marketing te font dépenser des milliers d’euros chaque année pour gagner quelques watts. Mais en réalité, 90&#8239;% de la résistance aérodynamique vient de ton corps, pas du matériel. Le meilleur vélo du monde ne compensera jamais une position que tu ne tiens pas plus de 5 minutes, autant rouler en vélib'. Avec AeroX, tu investis là où ça paie vraiment : ta position. <br />Ton équipement haut de gamme mérite un entraînement haut de gamme.",
         expandable: true,
         moreLabel: 'En savoir plus…',
         defaultOpen: false,
@@ -280,23 +348,24 @@ const metadata = {
           more: 'mt-3',
         },
         callToAction: {
-          text: 'Commence AeroX maintenant',
+          text: 'Accélère sans dépenser plus',
           href: '/telechargement',
+          icon: 'tabler:currency-euro',
           variant: 'primary', // btn-primary
           class: 'mt-2',
         },
       },
 
       {
-        title: 'Créé par des athlètes, pour tous les athlètes',
+        title: 'AeroX, ça marche vraiment',
         description:
-          'Avec AeroX, j’ai gagné +3 km/h, de 36 à 39 km/h, toujours avec mon vélo de 2008 (700 €).<br /> Olivier D., triathlète, fondateur d’AeroX',
+          'Avec AeroX, j’ai gagné +3&#8239;km/h, de 36 à 39&#8239;km/h, toujours avec mon vélo de 2008 (700&#8239;€).<br /> Olivier D., triathlète, fondateur d’AeroX',
         icon: 'tabler:users',
 
         education:
-          'En développant et testant AeroX, j’ai compris l’importance de tenir la position aéro dès 25 km/h. J’ai rapproché mes prolongateurs, allongé la posture, abaissé tête et épaules. Même en montée, dès que la vitesse dépassait 25 km/h, je gardais la position. Résultat : de 36 à 39 km/h avec un vélo de 2008 à 700 €, sans changer de FTP. Avant, je me faisais déposer sur le plat ; plus maintenant. Rien n’aurait été possible sans feedback en temps réel.',
+          'En développant et testant AeroX, j’ai compris l’importance de tenir la position aéro dès 25&#8239;km/h. J’ai rapproché mes prolongateurs, allongé la posture, abaissé tête et épaules. Même en montée, dès que la vitesse dépassait 25&#8239;km/h, je gardais la position. Résultat : de 36 à 39&#8239;km/h avec un vélo de 2008 à 700&#8239;€, sans changer de FTP. Avant, je me faisais déposer sur le plat ; plus maintenant. Rien n’aurait été possible sans feedback en temps réel.',
         expandable: true,
-        moreLabel: 'En savoir plus…',
+        moreLabel: "Je t'explique tout…",
         defaultOpen: false,
         classes: {
           summary: 'text-accent hover:underline',
@@ -305,6 +374,7 @@ const metadata = {
         callToAction: {
           text: 'Rejoins la communauté AeroX',
           href: '/telechargement',
+          icon: 'tabler:download',
           variant: 'primary', // btn-primary
           class: 'mt-2',
         },
@@ -318,7 +388,6 @@ const metadata = {
     </Fragment>
   </Features>
 
-
   <!-- Steps Widget ****************** -->
 
   <Steps
@@ -326,7 +395,7 @@ const metadata = {
     items={[
       {
         title: 'Étape 1: <span class="font-semibold">Télécharge AeroX</span>',
-        description: 'Windows ou MacOs: choisis, installe et lance AeroX.',
+        description: '',
         icon: 'tabler:download',
         expandable: true, // ✅ active “En savoir plus”
         moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
@@ -394,7 +463,7 @@ const metadata = {
       alt: 'Steps image',
     }}
   />
-  <!-- Content Widget **************** -->
+  <!-- Content Widget
 
   <Content
     isReversed
@@ -428,7 +497,7 @@ const metadata = {
       <p>
         AeroX te montre <strong>combien tu gagnes</strong> (km/h, watts) en changeant ta position.
         <br class="hidden sm:block" />
-        <span class="text-muted-foreground">Installé en 2 min, piloté par une simple webcam.</span>
+        <span class="text-muted-foreground">Installé en 2&#8239;min, piloté par une simple webcam.</span>
       </p>
     </Fragment>
 
@@ -439,8 +508,9 @@ const metadata = {
       </div>
     </Fragment>
   </Content>
+ **************** -->
 
-  <!-- Content Widget **************** -->
+  <!-- Content Widget 
 
   <Content
     isAfterContent
@@ -484,8 +554,9 @@ const metadata = {
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
     </Fragment>
   </Content>
+**************** -->
 
-  <!-- Content Widget **************** -->
+  <!-- Content Widget
 
   <Content
     isReversed
@@ -523,8 +594,9 @@ const metadata = {
     </Fragment>
   </Content>
 
+   **************** -->
 
-  <!-- HighlightedPosts Widget ******* -->
+  <!-- HighlightedPosts Widget 
 
   <BlogLatestPosts
     title="Find out more content in our Blog"
@@ -533,8 +605,166 @@ const metadata = {
                         Astro is a very interesting technology. Thanks.
                 `}
   />
-
+******* -->
   <!-- FAQs Widget ******************* -->
+
+  <!-- Pricing Widget ******************* -->
+
+  <Prices
+    title="Nos tarifs"
+    subtitle="Nos offres de lancement"
+    prices={[
+      {
+        title: 'Gratuit',
+        subtitle: 'Essaie AeroX',
+        price: '0',
+        period: 'pendant 10 jours',
+        items: [
+          
+          {
+            description: 'Accès complet à AeroX',
+            icon: 'tabler:award-filled',
+          },
+          {
+            description: 'Teste ton aéro sans risque',
+            icon: 'tabler:award-filled',
+          },
+         
+        
+         
+        ],
+        // countdownTarget: '2026-01-30T00:00:00', // 👈 apparaît uniquement dans cette carte
+
+        callToAction: {
+          target: '_blank',
+          text: 'Lancement le 01/11/2025',
+          href: '#',
+        },
+        hasRibbon: false,
+        ribbonTitle: '',
+      },
+      {
+        title: 'Pionnier AeroX',
+        subtitle: "Jusqu'au 30&nbsp;septembre", // string OK (HTML interprété via set:html)
+        countdownTarget: '2025-09-30T00:00:00', // 👈 apparaît uniquement dans cette carte
+
+        price: '20',
+        period: 'paiement unique',
+        items: [
+          {
+            description: 'Accès complet à AeroX pendant 4mois',
+            icon: 'tabler:award-filled',
+          },
+
+          {
+            description: 'Canal de discussion exclusif Pionniers',
+            icon: 'tabler:brand-whatsapp-filled',
+          },
+          {
+            description: "1 an d'abonnement à 50%",
+            icon: 'tabler:currency-euro',
+          },
+          {
+            description: 'Tu boostes le développement d\'AeroX',
+            icon: 'tabler:thumb-up-filled',
+          },
+           {
+            description: ' Fais partie des 100 premiers testeurs et entre dans l’histoire d’AeroX 🚀',
+            icon: 'tabler:users',
+          },
+         
+        ],
+        callToAction: {
+          target: '/telechargement',
+          text: 'Commence l\'aventure AeroX',
+          href: '#',
+        },
+        hasRibbon: true,
+        ribbonTitle: 'Pionnier',
+      },
+      
+      {
+       
+        
+        hasChoice:true,
+         title1: 'Annuel',
+        subtitle1: 'Économise 30%',
+        price1: 140,
+        period1: '190€/an à partir de 2026',
+        items1: [
+          
+          {
+            description: 'Accès complet à AeroX',
+            icon: 'tabler:award-filled',
+          },
+          {
+            description: 'De nouvelles mises à jour toute l\'année',
+            icon: 'tabler:award-filled',
+          },
+          {
+            description: 'Idéal pour préparer sérieusement tes objectifs',
+            icon: 'tabler:award-filled',
+          },
+          {
+            description: 'Canal de discussion Premium',
+            icon: 'tabler:brand-whatsapp-filled',
+          },
+        
+         
+        ],
+        // countdownTarget: '2026-01-30T00:00:00', // 👈 apparaît uniquement dans cette carte
+
+        callToAction1: {
+          target: '_blank',
+          text: 'Lancement le 01/11/2025',
+          href: '#',
+        }, 
+        
+        title2: 'Mensuel',
+        subtitle2: 'Sans engagement',
+        price2: 15,
+        period2: '22€/mois en 2026',
+        items2: [
+          
+          {
+            description: 'Accès complet à AeroX',
+            icon: 'tabler:award-filled',
+          },
+        
+          {
+            description: 'Canal de discussion Abonnés',
+            icon: 'tabler:brand-whatsapp-filled',
+          },
+        
+         
+        ],
+        // countdownTarget: '2026-01-30T00:00:00', // 👈 apparaît uniquement dans cette carte
+
+        callToAction2: {
+          target: '_blank',
+          text: 'Lancement le 01/11/2025',
+          href: '#',
+        },
+        hasRibbon: false,
+        ribbonTitle: '',
+      },
+      
+    ]}
+  />
+
+  <!-- CallToAction Widget *********** -->
+
+  <CallToAction
+    title="Ready to boost your projects?"
+    subtitle="Join our community of satisfied customers who have transformed their work with our templates."
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Get started now',
+        href: '/',
+      },
+    ]}
+  />
 
   <FAQs
     title="Frequently Asked Questions"

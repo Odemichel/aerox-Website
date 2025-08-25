@@ -156,13 +156,29 @@ export interface Item {
 }
 
 export interface Price {
+  hasChoice?: boolean
   title?: string;
+  title1?: string;
+  title2?: string;
   subtitle?: string;
+  subtitle1?: string;
+  subtitle2?: string;
   description?: string;
   price?: number | string;
+  price1?: number | string;
+  price2?: number | string;
+  countdownTarget?:targetDate ;
+  countdownTarget1?:targetDate ;
+  countdownTarget2?:targetDate ;
   period?: string;
   items?: Array<Item>;
+  period1?: string;
+  items1?: Array<Item>;
+  period2?: string;
+  items2?: Array<Item>;
   callToAction?: CallToAction;
+  callToAction1?: CallToAction;
+  callToAction2?: CallToAction;
   hasRibbon?: boolean;
   ribbonTitle?: string;
 }
@@ -173,6 +189,8 @@ export interface Testimonial {
   name?: string;
   job?: string;
   image?: string | unknown;
+    profile?: string | unknown;
+
 }
 
 export interface Input {

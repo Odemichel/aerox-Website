@@ -80,17 +80,17 @@ const {
             }
           </div>
         </div>
-        <div class="m-auto motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mb-10">
+        <div class="m-auto text-muted motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mb-10">
           {content && <Fragment set:html={content} />}
         </div>
 
         <div
-          class="intersect-once intersect-no-queue intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+          class="intersect-once intersect-no-queue intersect-quarter  motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
         >
           {
             video ? (
-              <div class="relative m-auto max-w-5xl">
-                <video autoplay muted loop playsinline class="mx-auto rounded-md w-full shadow-lg">
+              <div class="relative m-auto md:max-w-3xl max-w-5xl items-center">
+                <video autoplay muted loop playsinline class="mx-auto rounded-md w-full shadow-lg ">
                   <source src={video.src} type="video/mp4" />
                   Ton navigateur ne supporte pas la vidéo.
                 </video>
