@@ -42,7 +42,40 @@
     background-clip: text;
     color: transparent;
   }
+  /* === Scrollbar custom === */
+.scrollbar-custom::-webkit-scrollbar {
+  height: 8px; /* largeur si horizontal */
+  
 }
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: transparent;
+  margin-top: 4px; /* décale la barre vers le bas */
+     background-clip: content-box;
+
+   border-left: 40px solid transparent;  /* réduit la longueur côté gauche */
+  border-right: 40px solid transparent; /* réduit côté droit */
+
+
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: rgba(79, 70, 70, 0.1); /* test visuel */
+  border-radius: 9999px;
+    background-clip: content-box;
+
+   border-left: 40px solid transparent;  /* réduit la longueur côté gauche */
+  border-right: 40px solid transparent; /* réduit côté droit */
+
+}
+
+.scrollbar-custom {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: var(--aw-color-primary-light) transparent; /* thumb, track */
+}
+
+}
+
 
 @layer components {
   .btn {

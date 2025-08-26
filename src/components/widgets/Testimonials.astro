@@ -5,85 +5,155 @@ import Headline from '~/components/ui/Headline.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import type { Testimonials as Props } from '~/types';
 
+// Props
 const {
   title = '',
   subtitle = '',
   tagline = '',
   testimonials = [],
   callToAction,
-
   id,
   isDark = false,
   classes = {},
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
+
+// id unique pour le carrousel
+const carouselId = `testi-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
 <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
 
-  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
   {
-    testimonials &&
-      testimonials.map(({ title, testimonial, name, job, image, profile }) => (
-        <div class="h-auto intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter">
-          <div class="flex flex-col p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600">
+    testimonials?.length > 0 && (
+      <div class="relative">
+        {/* Boutons nav (optionnels) */}
+        <button
+          type="button"
+          aria-label="Précédent"
+          class="hidden sm:flex absolute left-2 top-1/2 -translate-y-1/2 z-10
+               h-9 w-9 rounded-full bg-black/30 hover:bg-black/50 text-white
+               items-center justify-center"
+          data-prev
+        >
+          ‹
+        </button>
 
-            {/* IMAGE réelle + TEXTE du témoignage */}
-            <div class="flex gap-4">
-             
+        <button
+          type="button"
+          aria-label="Suivant"
+          class="hidden sm:flex absolute right-2 top-1/2 -translate-y-1/2 z-10
+               h-9 w-9 rounded-full bg-black/30 hover:bg-black/50 text-white
+               items-center justify-center"
+          data-next
+        >
+          ›
+        </button>
 
-              <div class="flex flex-col justify-center">
-                {title && <h2 class="text-lg font-medium leading-6 mb-2">{title}</h2>}
-                {testimonial && (
-                  <blockquote>
-                    <p class="text-muted italic" set:html={testimonial} />
-                  </blockquote>
-                )}
-              </div>
-               {image && (
-                <div class="flex-shrink-0 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-600">
-                  <Image
-                    class="w-full h-full "
-                    width={96}
-                    
-                    {...image}
-                  />
+        {/* Carrousel */}
+        <div
+          id={carouselId}
+          class="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 -mx-6 scroll-px-6
+               scrollbar-custom"
+          aria-label="Témoignages"
+        >
+          {testimonials.map(({ title, testimonial, name, job, image, profile }) => (
+            <article
+              class="snap-center shrink-0 min-w-[85%] md:min-w-[520px] xl:min-w-[640px] max-w-[90%]
+         bg-white/5 rounded-2xl p-0 sm:p-0 relative flex flex-col h-min"
+            >
+              <div class="flex flex-col p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 h-auto">
+                {/* IMAGE réelle + TEXTE du témoignage (layout conservé) */}
+                <div class="flex gap-4">
+                  <div class="flex flex-col justify-center">
+                    {title && <h2 class="text-lg font-medium leading-6 mb-2">{title}</h2>}
+                    {testimonial && (
+                      <blockquote>
+                        <p class="text-muted italic" set:html={testimonial} />
+                      </blockquote>
+                    )}
+                  </div>
+
+                  {image && (
+                    <div class="flex-shrink-0 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-600 max-w-[120px]">
+                      <Image class="w-full h-full object-cover" width={120} {...image} />
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            <hr class="border-slate-200 dark:border-slate-600 my-4" />
+                <hr class="border-slate-200 dark:border-slate-600 my-4" />
 
-            {/* Avatar + nom + job */}
-            <div class="flex items-center">
-              {profile && (
-                <div class="h-13 w-13 rounded-full overflow-hidden border border-slate-200 dark:border-slate-600">
-
-                  <Image
-                    class="h-full w-full object-cover"
-                    width={70}
-                    height={70}
-                    {...profile}
-                  />
+                {/* Avatar + nom + job */}
+                <div class="flex items-center">
+                  {profile && (
+                    <div class="h-13 w-13 rounded-full overflow-hidden border border-slate-200 dark:border-slate-600">
+                      <Image class="h-full w-full object-cover" width={70} height={70} {...profile} />
+                    </div>
+                  )}
+                  <div class="ml-3 rtl:ml-0 rtl:mr-3">
+                    {name && <p class="text-base font-semibold">{name}</p>}
+                    {job && <p class="text-xs text-muted" set:html={job} />}
+                  </div>
                 </div>
-              )}
-              <div class="ml-3 rtl:ml-0 rtl:mr-3">
-                {name && <p class="text-base font-semibold">{name}</p>}
-                {job && <p class="text-xs text-muted" set:html={job} />}
               </div>
-            </div>
-          </div>
+            </article>
+          ))}
         </div>
-      ))
+      </div>
+    )
   }
-</div>
 
-{callToAction && (
-  <div class="flex justify-center mx-auto w-fit mt-8 md:mt-12 font-medium">
-    <Button {...callToAction} />
-  </div>
-)}
-
-  
+  {
+    callToAction && (
+      <div class="flex justify-center mx-auto w-fit mt-8 md:mt-12 font-medium">
+        <Button {...callToAction} />
+      </div>
+    )
+  }
 </WidgetWrapper>
+
+<style is:inline>
+  /* Optionnel: scrollbars plus propres */
+  .scrollbar-custom::-webkit-scrollbar {
+    height: 8px;
+  }
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+  .scrollbar-custom {
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  }
+</style>
+
+<script define:vars={{ carouselId }}>
+  const wrap = document.getElementById(carouselId);
+  if (!wrap) console.warn('Carousel témoignages introuvable:', carouselId);
+
+  // Flèches
+  const container = wrap?.parentElement;
+  const prevBtn = container?.querySelector('[data-prev]');
+  const nextBtn = container?.querySelector('[data-next]');
+
+  const scrollByPage = (dir = 1) => {
+    if (!wrap) return;
+    const delta = wrap.clientWidth * 0.9 * dir; // ~1 "page"
+    wrap.scrollBy({ left: delta, behavior: 'smooth' });
+  };
+
+  prevBtn?.addEventListener('click', () => scrollByPage(-1));
+  nextBtn?.addEventListener('click', () => scrollByPage(1));
+
+  // Navigation clavier (← →) quand le carrousel est focus
+  wrap?.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      scrollByPage(1);
+    }
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      scrollByPage(-1);
+    }
+  });
+</script>

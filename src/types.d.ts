@@ -93,6 +93,10 @@ export interface Image {
   alt?: string;
 }
 
+export interface MediaImage {
+  src?: string | ImageMetadata;
+  alt?: string;
+}
 export interface Video {
   src: string;
   type?: string;
@@ -151,7 +155,7 @@ export interface Item {
   moreLabel?: string;      // <- texte du bouton (default: "En savoir plus")
   defaultOpen?: boolean;   // <- ouvert par défaut ?
   callToAction?: CallToAction | CallToAction[];
-  image?: Image;
+  image?: MediaImage;
   video?: VideoHTMLAttributes;
 }
 

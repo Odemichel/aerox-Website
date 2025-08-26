@@ -3,6 +3,12 @@ import heroVideo from '~/assets/videos/aerox_hero.mp4';
 import Milan_HT from '../assets/images/Milan_HT.jpg';
 import Milan_Tete from '../assets/images/Milan_tete.jpg';
 import Olivier_Tete from '../assets/images/Olivier_tete2.png';
+import Progression from '../assets/images/Progression.jpg';
+import challengesBadges from '../assets/images/challengesBadges.jpg';
+import classementCLM from '../assets/images/classementCLM.jpg';
+import editeurSeance from '../assets/images/editeurSeance.jpg';
+import simulationGPX from '../assets/images/simulationGPX.jpg';
+
 
 import Frederic_tete from '../assets/images/Frederic_tete.jpg';
 
@@ -37,7 +43,7 @@ const metadata = {
       {
         variant: 'primary',
         target: '_blank',
-        text: 'Rejoins AeroX',
+        text: 'Fais partie des pionniers AeroX',
         href: 'https://github.com/onwidget/astrowind',
         icon: 'tabler:users-group',
       },
@@ -46,22 +52,22 @@ const metadata = {
     tagline="En bêta le 1er septembre"
 
     <Fragment slot="title">
-      <span class="font-bold text-primary">AeroX</span><span class="sm:hidden"><br /></span><span class="font-medium">
-        transforme ta position en</span
+      <span class="sm:hidden"><br /></span><span class="font-bold">
+        Transforme ta position en</span
       >
       <span class="sm:hidden"><br /></span><span class="font-bold text-primary">vitesse</span>
     </Fragment>
 
     <Fragment slot="subtitle">
-      La seule application indoor qui <span class="font-bold text-primary">analyse ton aérodynamisme en temps réel</span
-      >,<br />avec une simple webcam.
+      Le cyclisme indoor, <span class="font-bold text-primary">l'aérodynamisme en plus.</span
+      >
     </Fragment>
     <Fragment slot="paragraph">
       Gagne jusqu'à <span class="font-bold text-accent"> 3&#8239;km/h</span> et économise <span
         class="font-bold text-accent"
       >
         40&#8239;W<br />
-      </span> en intègrant l'aérodynamisme dans ton entraînement. <br />
+      </span> avec une simple webcam.
     </Fragment>
 
     <Fragment slot="content">
@@ -78,17 +84,19 @@ const metadata = {
   <!-- Features2 Widget ************** -->
 
   <Features2
-    title="Fonctionnalités"
-    subtitle="AeroX innove en intégrant l'aéro au coeur de ton entrainement"
+    tagline="Fonctionnalités"
+    title="Tout ce dont tu as besoin pour aller plus vite"
+    
+    subtitle="Place l'aérodynamisme au coeur de ton entrainement"
     items={[
       {
         title: 'Mode Puissance',
 
         description:
-          'Découvre l\'impact de ta position sur ta vitesse<span class="hidden sm:inline"> grâce aux <span class="font-bold">feedbacks AeroX en temps réel</span></span>.<br /><span class="font-bold">Optimise<span class="hidden sm:inline">, stabilise</span> et renforce ta position aéro </span><span class="hidden sm:inline">pendant tes séances d\'entrainement </span>.',
+          'Découvre l\'impact de ta position sur ta vitesse.<br /><span class="font-bold">Optimise et renforce ta position aéro </span>.',
 
         objectif: 'Convertis chaque watt en km/h',
-        icon: 'tabler:bolt-filled',
+        icon: 'flat-color-icons:flash-on',
         video: { src: demoPuissance, alt: 'Démonstration Mode Puissance' },
         callToAction: {
           variant: 'primary',
@@ -99,9 +107,9 @@ const metadata = {
       },
       {
         title: 'Mode vitesse',
-        objectif: 'Ressens ce que te coûte ta position ',
+        objectif: 'Économises tes watts',
         description:
-          '<span class="font-bold">Innovation pure !</span> <br />Définis la vitesse à laquelle tu veux rouler.<br /><span class="font-bold">La résistance de ton HT s\'adapte à l\'aérodynamisme de ta position</span><span class="hidden sm:inline"> en temps réel</span>.',
+          'La résistance de ton HT s\'adapte à ton aérodynamisme<span class="hidden sm:inline"> en temps réel</span>.<br /><span class="font-bold">Ressens le watts que tu gâches ou économises.</span>',
         video: { src: demoPuissance, alt: 'Démonstration Mode Puissance' },
         icon: 'flat-color-icons:gallery',
         callToAction: {
@@ -114,11 +122,11 @@ const metadata = {
       {
         title: 'Mode simulation',
         description:
-          '<span class="hidden sm:inline">Ton Ironman, </span><span class="sm:hidden">Ta</span><span class="hidden sm:inline">ta</span> prochaine course ou ton parcours du dimanche, teste ta vitesse sur n\'importe quel parcours<span class="hidden sm:inline"> avec une simple trace GPX</span>.<br /><span class="font-bold">La seule simulation où l\'aéro compte<span class="hidden sm:inline"> vraiment</span></span><span class="hidden sm:inline">, comme dans la vraie vie</span>.',
-        icon: 'flat-color-icons:approval',
+          'Ton prochain objectif ou ta sortie du dimanche ?<br /><span class="font-bold">La seule simulation où l\'aéro compte vraiment</span><span class="hidden sm:inline">, comme dans la vraie vie</span>.',
+        icon: 'flat-color-icons:globe',
         objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Simule ton prochain objectif avec l\'aéro.',
-        video: { src: demoPuissance, alt: 'Démonstration Mode Puissance' },
+          'Simule ton prochain objectif avec D+ et aéro.',
+        image: { src: simulationGPX },
         callToAction: {
           variant: 'primary',
           text: "Simule ton prochain objectif avec l'aéro",
@@ -127,29 +135,15 @@ const metadata = {
         },
       },
 
-      {
-        title: 'Éditeur de séance',
-        description:
-          'Tu ne trouves pas ton bonheur dans nos plans d\'entraînement ?<br /><span class="font-bold">Édite tes propres séances simplement en moins de 2 minutes.</span>',
-        icon: 'flat-color-icons:currency-exchange',
-        objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Construits et personnalise tes séances avec l\'aéro.',
-        video: { src: demoPuissance, alt: 'Démonstration Mode Puissance' },
-        callToAction: {
-          variant: 'primary',
-          text: 'Personnalise tes séances aéro',
-          href: '/telechargement',
-          target: '_blank',
-        },
-      },
+      
       {
         title: 'Contre-La-Montre Mondial (à venir)',
         description:
-          'Nouveau parcours tous les mois.<br />Un chrono.<br /><span class="font-bold">Un classement mondial.</span>',
+          'Nouveau parcours tous les mois. Un chrono.<br /><span class="font-bold">Un classement mondial.</span>',
         icon: 'flat-color-icons:advertising',
         objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Prouve ta maîtrise aéro au monde entier.',
-        video: { src: '', alt: 'Démonstration Mode Puissance' },
+          'Prouve ta maîtrise aéro au monde entier.',
+        image: { src: classementCLM, },
         callToAction: {
           variant: 'primary',
           text: 'Prêt à défier le monde ?',
@@ -160,11 +154,11 @@ const metadata = {
       {
         title: 'Challenges AeroX (à venir)',
         description:
-          'Choisis ta vitesse entre 25 et 60&#8239;km/h. Maintiens-la pendant 5, 10 ou 20 minutes en combinant puissance et position aéro.<br /><span class="font-bold">Gagne tes badges AeroX.</span>',
+          'Combine puissance et aéro pour tenir la vitesse.<br /><span class="font-bold">Les badges Aero seront le miroir de tes progrès.</span>',
         icon: 'flat-color-icons:document',
         objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Dépasse-toi sur nos challenges de vitesse.',
-        video: { src: '', alt: 'Démonstration Mode Puissance' },
+          'Dépasse-toi sur nos challenges de vitesse.',
+        image: { src: challengesBadges, alt: 'Démonstration Mode Puissance' },
         callToAction: {
           variant: 'primary',
           text: 'Prêt à challenger ta vitesse ?',
@@ -172,17 +166,33 @@ const metadata = {
           target: '_blank',
         },
       },
+
       {
         title: 'Progression (à venir)',
         description:
-          '<span class="hidden sm:inline"> Meilleure position, temps de maintien en position aéro, meilleures vitesses produites... </span>C\'est là que tu verras ta vitesse gagner 1 à 3&#8239;km/h et ton temps en position aéro passer de 5 à 45 minutes en quelques semaines.',
-        icon: 'flat-color-icons:voice-presentation',
+          '<span class="hidden sm:inline"> Meilleure position, temps de maintien aéro, meilleures vitesses...</span><br />Tous tes progrès seront visibles ici.',
+        icon: 'flat-color-icons:bullish',
         objectif:
-          '<span class="text-lg font-bold text-accent">Objectif:</span> Analyse tes progrès, séances après séances.',
-        video: { src: '', alt: 'Démonstration Mode Puissance' },
+          'Analyse tes progrès, séances après séances.',
+        image: { src: Progression,},
         callToAction: {
           variant: 'primary',
           text: 'Analyse précisément ta progression',
+          href: '/telechargement',
+          target: '_blank',
+        },
+      },
+      {
+        title: 'Éditeur de séance',
+        description:
+          'Intuitif et rapide, notre éditeur t\'offre des possibilités infinies.<br /><span class="font-bold">L\'aéro en plus.</span>',
+        icon: 'flat-color-icons:edit-image',
+        objectif:
+           'Crée tes séances en moins de 2 minutes.',
+        image: { src: editeurSeance},
+        callToAction: {
+          variant: 'primary',
+          text: 'Personnalise tes séances aéro',
           href: '/telechargement',
           target: '_blank',
         },
@@ -196,7 +206,7 @@ const metadata = {
 
   <!-- Note Widget ******************* -->
 
-  <Note title="Notre Mission:" description="Permettre à chaque cycliste et triathlète de s'entrainer comme un pro." />
+  <Note title="Notre Mission:" description="Démocratiser l\'aérodynamisme." />
 
   <!-- FAQs Widget ******************* -->
 
@@ -205,9 +215,9 @@ const metadata = {
     testimonials={[
       {
         testimonial:
-          "\"C'est incroyable qu'un dispositif aussi simple donne des informations aussi essentielles pour mes performances. Maintenant, j'économise au moins 35&#8239;W avec ma position, c'est de l'énergie que je garde pour la course à pieds.\"",
+          "\"Incroyable qu’un dispositif si simple soit aussi précis. Je gagne 35 W rien qu’avec ma position. J'ai plus d’énergie pour la CAP.\"",
         name: 'Milan Larivière',
-        job: "Triathlète élite- 2<sup>e</sup> Coupe d'Europe U23",
+        job: "Triathlète élite- 2<sup>e</sup> Coupe d'Europe U23 (2025)",
         image: {
           src: Milan_HT,
           alt: 'Milan Larivière',
@@ -219,8 +229,9 @@ const metadata = {
       },
       {
         testimonial:
-          '"En 4 semaines, j’ai gagné +1 km/h sans forcer plus. Je n’imaginais pas qu’à mon niveau, l’aéro pouvait compter autant. Maintenant, je roule avec plaisir, même dans le vent."',
-        name: 'Frédéric Petit',
+         '"En 4 semaines, +1 km/h sans forcer. Je ne pensais pas que l’aéro comptait autant à mon niveau. Maintenant je roule avec plus deplaisir, même dans le vent."',
+
+            name: 'Frédéric Petit',
         job: 'Cycliste amateur - 6000&#8239;km/an',
         profile: {
           src: Frederic_tete,
@@ -229,7 +240,7 @@ const metadata = {
       },
       {
         testimonial:
-          '"En développant AeroX, j’ai gagné +3&#8239;km/h en course, juste en tenant une meilleure position. Ancien chercheur au CNRS et triathlète, j’ai voulu démocratiser ce feedback autrefois réservé aux pros. Avec une simple webcam, chacun peut désormais mesurer et ressentir l’aéro en temps réel."',
+          '" Ancien chercheur au CNRS et triathlète, j\'ai développé AeroX pour moi, il m\'a fait gagner +3&#8239;km/h en course. Aujourd\'hui je veux démocratiser ce feedback autrefois réservé aux pros. Une simple webcam suffit."',
         name: 'Olivier Demichel',
         job: "Triathlète - Fondateur d'AeroX",
         profile: {
@@ -239,7 +250,7 @@ const metadata = {
       },
       {
         testimonial:
-          '"Avec AeroX, mes athlètes comprennent enfin l’impact de leur position sur leur vitesse. J’ai maintenant un vrai levier pour leur faire gagner de la vitesse gratuitement. Mes services sont maintenant à la hauteur de mes exigences professionnelles.<br />Merci AeroX"',
+          '"Mes athlètes voient enfin l’impact de leur position. J’ai maintenant un vrai levier pour leur faire gagner de la vitesse gratuite. Merci AeroX."',
         name: 'James Ropert',
         job: 'Entraineur cyclisme - Dijon',
         profile: {
@@ -255,6 +266,11 @@ const metadata = {
       icon: 'tabler:chevron-right',
     }}
   />
+
+  <!-- Note Widget ******************* -->
+
+  <Note title="Notre Ambition:" description="te rendre plus rapide." />
+
 
   <!-- Features Widget *************** -->
   <Features
