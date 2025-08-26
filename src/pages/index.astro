@@ -3,12 +3,11 @@ import heroVideo from '~/assets/videos/aerox_hero.mp4';
 import Milan_HT from '../assets/images/Milan_HT.jpg';
 import Milan_Tete from '../assets/images/Milan_tete.jpg';
 import Olivier_Tete from '../assets/images/Olivier_tete2.png';
-import Progression from '../assets/images/Progression.jpg';
 import challengesBadges from '../assets/images/challengesBadges.jpg';
 import classementCLM from '../assets/images/classementCLM.jpg';
 import editeurSeance from '../assets/images/editeurSeance.jpg';
+import posterPuissance from '../assets/images/posterPuissance.jpg?url';
 import simulationGPX from '../assets/images/simulationGPX.jpg';
-
 
 import Frederic_tete from '../assets/images/Frederic_tete.jpg';
 
@@ -97,7 +96,7 @@ const metadata = {
 
         objectif: 'Convertis chaque watt en km/h',
         icon: 'flat-color-icons:flash-on',
-        video: { src: demoPuissance, alt: 'Démonstration Mode Puissance' },
+        video: { src: demoPuissance, alt: 'Démonstration Mode Puissance',poster: posterPuissance },
         callToAction: {
           variant: 'primary',
           text: 'Deviens plus rapide maintenant',
@@ -110,7 +109,7 @@ const metadata = {
         objectif: 'Économises tes watts',
         description:
           'La résistance de ton HT s\'adapte à ton aérodynamisme<span class="hidden sm:inline"> en temps réel</span>.<br /><span class="font-bold">Ressens le watts que tu gâches ou économises.</span>',
-        video: { src: demoPuissance, alt: 'Démonstration Mode Puissance' },
+        video: { src: demoPuissance, poster: posterPuissance },
         icon: 'flat-color-icons:gallery',
         callToAction: {
           variant: 'primary',
@@ -167,8 +166,8 @@ const metadata = {
         },
       },
 
-      {
-        title: 'Progression (à venir)',
+     /*  {
+        title: 'Page de progression (à venir)',
         description:
           '<span class="hidden sm:inline"> Meilleure position, temps de maintien aéro, meilleures vitesses...</span><br />Tous tes progrès seront visibles ici.',
         icon: 'flat-color-icons:bullish',
@@ -181,7 +180,7 @@ const metadata = {
           href: '/telechargement',
           target: '_blank',
         },
-      },
+      }, */
       {
         title: 'Éditeur de séance',
         description:
@@ -771,12 +770,12 @@ const metadata = {
   <!-- CallToAction Widget *********** -->
 
   <CallToAction
-    title="Ready to boost your projects?"
-    subtitle="Join our community of satisfied customers who have transformed their work with our templates."
+    title="Prêt à booster ta vitesse ?"
+    subtitle="Rejoins notre communauté de pionniers qui ont déjà gagnés 2.3 km/h en moyenne."
     actions={[
       {
         variant: 'primary',
-        text: 'Get started now',
+        text: 'Deviens Pionniers AeroX',
         href: '/',
       },
     ]}
@@ -825,10 +824,9 @@ const metadata = {
 
   <Stats
     stats={[
-      { title: 'Downloads', amount: '132K' },
-      { title: 'Stars', amount: '24.8K' },
-      { title: 'Forks', amount: '10.3K' },
-      { title: 'Users', amount: '48.4K' },
+      { title: 'Pionniers', amount: '290+' },
+      { title: 'km/h gagnés', amount: '+2.3' },
+      { title: 'Économisés à 30km/h', amount: '-35 W' },
     ]}
   />
 

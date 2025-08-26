@@ -34,7 +34,7 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
       id={carouselId}
       class={twMerge(
         // Carrousel horizontal (toutes tailles) + UX scrollbar
-        'flex overflow-x-auto scrollbar-custom snap-x snap-mandatory gap-4 px-6 -mx-6 scroll-px-6',
+        'flex overflow-x-auto scrollbar-custom snap-x snap-mandatory gap-4 px-6 -mx--6 scroll-px-6',
         containerClass
       )}
       aria-label="Carrousel infini d’items"
@@ -44,7 +44,7 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
           class={twMerge(
             // élément scrollable (teasing : on voit la carte suivante)
 
-            'snap-center shrink-0 min-w-[85%] md:min-w-[420px] xl:min-w-[520px] max-w-[55%]',
+            'snap-center shrink-0 min-w-[85%] md:min-w-[420px] xl:min-w-[520px] max-w-[40%]',
             // carte
             'bg-white/5 rounded-2xl p-0 sm:p-0',
             'relative flex flex-col gap-2 ',
@@ -58,7 +58,7 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
           data-playing="false"
         >
           {/* ICONE + TITRE */}
-          <div class="flex items-start gap-4">
+          <div class="flex items-start gap-4 ">
             {(icon || defaultIcon) && (
               <Icon
                 name={icon || defaultIcon}
@@ -77,98 +77,95 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
             </div>
           </div>
 
-        {/* MEDIA (image OU vidéo) */}
-{(image || video) && (
-  <>
-    <div class="relative overflow-visible w-full aspect-video border rounded-xl dark:border-secondary">
-      {video ? (
-        <>
-          <video
-            src={video?.src ?? ''}
-            poster={video?.poster ?? ''}
-            loop
-            playsinline
-            preload="metadata"
-            class="media-el w-full h-full rounded-2xl object-contain bg-black"
-            data-video
-          />
+          {/* MEDIA (image OU vidéo) */}
+          {(image || video) && (
+            <>
+              <div class="relative overflow-visible w-full aspect-video border rounded-xl dark:border-secondary">
+                {video ? (
+                  <>
+                    <video
+                      src={video?.src ?? ''}
+                      poster={video?.poster ?? ''}
+                      loop
+                      playsinline
+                      preload="metadata"
+                      class="media-el w-full h-full rounded-2xl object-contain bg-black"
+                      data-video
+                    />
 
-          {/* Play centré */}
-          <button
-            type="button"
-            class="absolute inset-0 grid place-items-center transition
+                    {/* Play centré */}
+                    <button
+                      type="button"
+                      class="absolute inset-0 grid place-items-center transition animate-zoom-in-out
               data-[hidden=true]:opacity-0 data-[hidden=true]:pointer-events-none"
-            aria-label="Lire la vidéo"
-            data-play
-          >
-            <span class="rounded-full p-3 md:p-4 bg-primary border-2 border-primary-light text-white shadow-lg">
-              <Icon name="tabler:player-play-filled" class="w-6 h-6 md:w-8 md:h-8" />
-            </span>
-          </button>
-        </>
-      ) : (
-        <div class="relative overflow-visible h-full video-ratio border dark:rounded-xl dark:border-secondary">
-          <img
-            src={srcFrom(image)}
-            alt={image?.alt ?? ''}
-            loading="lazy"
-            class="w-full h-full video-ratio object-contain bg-black rounded-xl dark:border-secondary"
-          />
-        </div>
-      )}
-
-      {/* Si tu gardes un dégradé interne au média */}
-      <div class="video-gradient hidden sm:block pointer-events-none absolute inset-x-0 bottom-0 h-1/2" />
-    </div>
-
-    {/* DESCRIPTION SOUS le média (plus d'absolute) */}
-    {(description || callToAction) && (
-      <div class="mt-3 p-2 sm:p-3 rounded-lg shadow-md
-                  bg-white/90 text-black dark:bg-black dark:text-white
-                  max-w-full">
-        {description && (
-          <p
-            class={twMerge(
-              'text-sm lg:text-base leading-snug',
-              descriptionClass,
-              itemClasses?.description
-            )}
-            set:html={description}
-          />
-        )}
-
-        {callToAction && (
-          <div class="mt-2 flex flex-wrap justify-end gap-2">
-            {Array.isArray(callToAction) ? (
-              callToAction.map((cta) => (
-                <Button
-                  {...cta}
-                  class={twMerge(
-                    'px-3 py-1.5 text-sm rounded-md',
-                    'bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20',
-                    'text-current',
-                    cta.class ?? ''
-                  )}
-                />
-              ))
-            ) : (
-              <Button
-                {...callToAction}
-                class={twMerge(
-                  'px-3 py-1.5 text-sm rounded-md',
-                  'bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20',
-                  'text-current',
-                  callToAction.class ?? ''
+                      aria-label="Lire la vidéo"
+                      data-play
+                    >
+                      <span class="rounded-full p-3 md:p-4 bg-primary border-2 border-primary-light text-white shadow-lg">
+                        <Icon name="tabler:player-play-filled" class="w-6 h-6 md:w-8 md:h-8" />
+                      </span>
+                    </button>
+                  </>
+                ) : (
+                  <div class="relative overflow-visible h-full video-ratio border dark:rounded-xl dark:border-secondary">
+                    <img
+                      src={srcFrom(image)}
+                      alt={image?.alt ?? ''}
+                      loading="lazy"
+                      class="w-full h-full video-ratio object-contain bg-black rounded-xl dark:border-secondary"
+                    />
+                  </div>
                 )}
-              />
-            )}
-          </div>
-        )}
-      </div>
-    )}
-  </>
-)}
 
+                {/* Si tu gardes un dégradé interne au média */}
+                <div class="video-gradient hidden sm:block pointer-events-none absolute inset-x-0 bottom-0 h-1/2" />
+              </div>
+
+              {/* DESCRIPTION SOUS le média (plus d'absolute) */}
+              {(description || callToAction) && (
+                <div
+                  class="mt-3 p-2 sm:p-3 rounded-lg shadow-md
+                  bg-white/90 text-black dark:bg-black dark:text-white
+                  max-w-full"
+                >
+                  {description && (
+                    <p
+                      class={twMerge('text-sm lg:text-base leading-snug', descriptionClass, itemClasses?.description)}
+                      set:html={description}
+                    />
+                  )}
+
+                  {callToAction && (
+                    <div class="mt-2 flex flex-wrap justify-end gap-2">
+                      {Array.isArray(callToAction) ? (
+                        callToAction.map((cta) => (
+                          <Button
+                            {...cta}
+                            class={twMerge(
+                              'px-3 py-1.5 text-sm rounded-md',
+                              'bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20',
+                              'text-current',
+                              cta.class ?? ''
+                            )}
+                          />
+                        ))
+                      ) : (
+                        <Button
+                          {...callToAction}
+                          class={twMerge(
+                            'px-3 py-1.5 text-sm rounded-md',
+                            'bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20',
+                            'text-current',
+                            callToAction.class ?? ''
+                          )}
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
         </article>
       ))}
     </div>
@@ -178,7 +175,6 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
 <style is:inline>
   /* Masquer proprement la scrollbar (optionnel) */
   article[data-playing='false'] .media-el {
-    filter: blur(3px) brightness(0.85);
     transition:
       filter 500ms ease,
       transform 500ms ease;
@@ -266,9 +262,7 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
         else video.pause();
       });
 
-      ['play', 'pause', 'ended', 'waiting', 'seeking'].forEach((evt) =>
-        video.addEventListener(evt, syncState)
-      );
+      ['play', 'pause', 'ended', 'waiting', 'seeking'].forEach((evt) => video.addEventListener(evt, syncState));
     });
 
     // --- Lazy-load + pause hors écran (simple, sans sets dupliqués) ---
@@ -301,4 +295,3 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
     makeIO();
   }
 </script>
-

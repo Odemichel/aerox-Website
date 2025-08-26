@@ -60,7 +60,7 @@ const carouselId = `testi-${Math.random().toString(36).slice(2, 8)}`;
         >
           {testimonials.map(({ title, testimonial, name, job, image, profile }) => (
             <article
-              class="snap-center shrink-0 min-w-[85%] md:min-w-[520px] xl:min-w-[640px] max-w-[90%]
+              class="snap-center shrink-0  min-w-[320px] xl:min-w-[340px] max-w-[30%]
          bg-white/5 rounded-2xl p-0 sm:p-0 relative flex flex-col h-min"
             >
               <div class="flex flex-col p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600 h-auto">
@@ -70,7 +70,7 @@ const carouselId = `testi-${Math.random().toString(36).slice(2, 8)}`;
                     {title && <h2 class="text-lg font-medium leading-6 mb-2">{title}</h2>}
                     {testimonial && (
                       <blockquote>
-                        <p class="text-muted italic" set:html={testimonial} />
+                        <p class="text-accent italic" set:html={testimonial} />
                       </blockquote>
                     )}
                   </div>
