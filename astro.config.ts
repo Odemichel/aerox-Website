@@ -54,8 +54,13 @@ export default defineConfig({
           'clock',
           'globe'
         ],
+        'fluent-emoji-flat': [
+          'stopwatch',
+         
+        ],
       },
     }),
+    
 
     ...whenExternalScripts(() =>
       partytown({

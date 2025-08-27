@@ -1,12 +1,14 @@
 ---
 import heroVideo from '~/assets/videos/aerox_hero.mp4';
-import Milan_HT from '../assets/images/Milan_HT.jpg';
-import Milan_Tete from '../assets/images/Milan_tete.jpg';
-import Olivier_Tete from '../assets/images/Olivier_tete2.png';
 import challengesBadges from '../assets/images/challengesBadges.jpg';
 import classementCLM from '../assets/images/classementCLM.jpg';
 import editeurSeance from '../assets/images/editeurSeance.jpg';
+import Milan_HT from '../assets/images/Milan_HT.jpg';
+import Milan_Tete from '../assets/images/Milan_tete.jpg';
+import Olivier_Tete from '../assets/images/Olivier_tete2.png';
 import posterPuissance from '../assets/images/posterPuissance.jpg?url';
+import Ropert_Tete from '../assets/images/ropert.jpg';
+
 import simulationGPX from '../assets/images/simulationGPX.jpg';
 
 import Frederic_tete from '../assets/images/Frederic_tete.jpg';
@@ -42,30 +44,29 @@ const metadata = {
       {
         variant: 'primary',
         target: '_blank',
-        text: 'Fais partie des pionniers AeroX',
+        text: 'Télécharge AeroX maintenant',
+        icon:'tabler:download',
         href: 'https://github.com/onwidget/astrowind',
-        icon: 'tabler:users-group',
       },
     ]}
   >
     tagline="En bêta le 1er septembre"
 
-    <Fragment slot="title">
-      <span class="sm:hidden"><br /></span><span class="font-bold">
-        Transforme ta position en</span
+    <Fragment slot="subtitle">
+      <!-- <span class="font-bold">
+        Ta puissance devient</span
       >
-      <span class="sm:hidden"><br /></span><span class="font-bold text-primary">vitesse</span>
+      <span class="font-bold text-primary">vitesse</span> -->
     </Fragment>
 
-    <Fragment slot="subtitle">
-      Le cyclisme indoor, <span class="font-bold text-primary">l'aérodynamisme en plus.</span
-      >
+    <Fragment slot="title">
+      <span class="font-bold">Le cyclisme indoor, <span class="text-primary">l'aérodynamisme en plus.</span
+      ></span>
     </Fragment>
     <Fragment slot="paragraph">
-      Gagne jusqu'à <span class="font-bold text-accent"> 3&#8239;km/h</span> et économise <span
+      Gagne jusqu'à&nbsp;<span class="font-bold text-accent">3&#8239;km/h</span>, économise&nbsp;<span
         class="font-bold text-accent"
-      >
-        40&#8239;W<br />
+      >40&#8239;W<br />
       </span> avec une simple webcam.
     </Fragment>
 
@@ -92,11 +93,11 @@ const metadata = {
         title: 'Mode Puissance',
 
         description:
-          'Découvre l\'impact de ta position sur ta vitesse.<br /><span class="font-bold">Optimise et renforce ta position aéro </span>.',
+          'Découvre l\'impact de ta position sur ta vitesse.<br /><span class="hidden sm:inline font-bold">Optimise et renforce ta position aéro.</span>',
 
         objectif: 'Convertis chaque watt en km/h',
         icon: 'flat-color-icons:flash-on',
-        video: { src: demoPuissance, alt: 'Démonstration Mode Puissance',poster: posterPuissance },
+        video: { src: demoPuissance, alt: 'Démonstration Mode Puissance',poster: posterPuissance},
         callToAction: {
           variant: 'primary',
           text: 'Deviens plus rapide maintenant',
@@ -106,9 +107,9 @@ const metadata = {
       },
       {
         title: 'Mode vitesse',
-        objectif: 'Économises tes watts',
+        objectif: 'Économise tes watts',
         description:
-          'La résistance de ton HT s\'adapte à ton aérodynamisme<span class="hidden sm:inline"> en temps réel</span>.<br /><span class="font-bold">Ressens le watts que tu gâches ou économises.</span>',
+          'Ressens la résistance s\'adapter à ton aérodynamisme<span class="hidden sm:inline"> en temps réel</span>.<br />',
         video: { src: demoPuissance, poster: posterPuissance },
         icon: 'flat-color-icons:gallery',
         callToAction: {
@@ -121,10 +122,10 @@ const metadata = {
       {
         title: 'Mode simulation',
         description:
-          'Ton prochain objectif ou ta sortie du dimanche ?<br /><span class="font-bold">La seule simulation où l\'aéro compte vraiment</span><span class="hidden sm:inline">, comme dans la vraie vie</span>.',
+          'Simule ton chrono comme dans la vraie vie.',
         icon: 'flat-color-icons:globe',
         objectif:
-          'Simule ton prochain objectif avec D+ et aéro.',
+          'La seule simulation où l\'aéro compte vraiment',
         image: { src: simulationGPX },
         callToAction: {
           variant: 'primary',
@@ -136,38 +137,41 @@ const metadata = {
 
       
       {
-        title: 'Contre-La-Montre Mondial (à venir)',
+        title: 'Mode Contre-La-Montre',
         description:
-          'Nouveau parcours tous les mois. Un chrono.<br /><span class="font-bold">Un classement mondial.</span>',
-        icon: 'flat-color-icons:advertising',
+          'Place-toi. Appuie fort. Sois le meilleur.',
+        icon: 'fluent-emoji-flat:stopwatch',
         objectif:
-          'Prouve ta maîtrise aéro au monde entier.',
+          'La seule course indoor avec l\'aéro',
         image: { src: classementCLM, },
         callToAction: {
           variant: 'primary',
-          text: 'Prêt à défier le monde ?',
+          text: 'Défie les plus grands',
           href: '/telechargement',
+                    icon: 'tabler:download',
+
           target: '_blank',
         },
       },
       {
-        title: 'Challenges AeroX (à venir)',
+        title: 'Mode Challenge',
         description:
-          'Combine puissance et aéro pour tenir la vitesse.<br /><span class="font-bold">Les badges Aero seront le miroir de tes progrès.</span>',
-        icon: 'flat-color-icons:document',
+          'Combine puissance et aéro pour tenir la vitesse.',
+        icon: 'flat-color-icons:approval',
         objectif:
-          'Dépasse-toi sur nos challenges de vitesse.',
+          'Tes badges AeroX seront le miroir de tes progrès',
         image: { src: challengesBadges, alt: 'Démonstration Mode Puissance' },
         callToAction: {
           variant: 'primary',
-          text: 'Prêt à challenger ta vitesse ?',
+          text: 'Challenge ta vitesse',
           href: '/telechargement',
+          icon: 'tabler:download',
           target: '_blank',
         },
       },
 
      /*  {
-        title: 'Page de progression (à venir)',
+        title: 'Page de progression ',
         description:
           '<span class="hidden sm:inline"> Meilleure position, temps de maintien aéro, meilleures vitesses...</span><br />Tous tes progrès seront visibles ici.',
         icon: 'flat-color-icons:bullish',
@@ -184,10 +188,10 @@ const metadata = {
       {
         title: 'Éditeur de séance',
         description:
-          'Intuitif et rapide, notre éditeur t\'offre des possibilités infinies.<br /><span class="font-bold">L\'aéro en plus.</span>',
+          'Crée tes séances ou celles de ton coach, <span class="font-bold">l\'aéro en plus.</span>',
         icon: 'flat-color-icons:edit-image',
         objectif:
-           'Crée tes séances en moins de 2 minutes.',
+           'Intuitif et rapide, tes séances perso en 2\'',
         image: { src: editeurSeance},
         callToAction: {
           variant: 'primary',
@@ -214,7 +218,7 @@ const metadata = {
     testimonials={[
       {
         testimonial:
-          "\"Incroyable qu’un dispositif si simple soit aussi précis. Je gagne 35 W rien qu’avec ma position. J'ai plus d’énergie pour la CAP.\"",
+          "\"Incroyable qu’un dispositif si simple soit aussi précis. Je gagne 35&#8239;W rien qu’avec ma position. J'ai plus d’énergie pour la CAP.\"",
         name: 'Milan Larivière',
         job: "Triathlète élite- 2<sup>e</sup> Coupe d'Europe U23 (2025)",
         image: {
@@ -249,11 +253,11 @@ const metadata = {
       },
       {
         testimonial:
-          '"Mes athlètes voient enfin l’impact de leur position. J’ai maintenant un vrai levier pour leur faire gagner de la vitesse gratuite. Merci AeroX."',
+          '"Mes athlètes voient enfin l’impact de leur position. J’ai maintenant un vrai levier pour leur faire gagner de la vitesse gratuite.<br /> Merci AeroX."',
         name: 'James Ropert',
         job: 'Entraineur cyclisme - Dijon',
         profile: {
-          src: Olivier_Tete,
+          src: Ropert_Tete,
           alt: 'James Ropert Image',
         },
       },
@@ -275,12 +279,12 @@ const metadata = {
   <Features
     id="features"
     title="Pourquoi intégrer l'aérodynamisme à ton entraînement ?"
-    subtitle="Parce que chaque watt compte et ton budget aussi !<br />Maîtrise ton aérodynamisme autant que ta puissance ou ta fréquence cardiaque."
+    subtitle="Parce que chaque watt compte, ton budget aussi !"
     items={[
       {
         title: 'Gagne de 1 à 5 km/h sans plus d’effort',
         description:
-          "AeroX révèle en temps réel les km/h que ta position te fait perdre… Même à 25&#8239;km/h tu peux gagner 1km/h ! Mieux qu'un nouveau cadre à 5000&#8239;€...<br /> Ne laisse plus rien au hasard.",
+          "AeroX révèle en temps réel les km/h que ta position te fait perdre. Même à 25&#8239;km/h tu peux gagner 1km/h ! À 45&#8239;km/h, +5km/h. Mieux qu'un vélo à 5000&#8239;€.",
         icon: 'tabler:brand-speedtest',
 
         education:
@@ -304,7 +308,7 @@ const metadata = {
       {
         title: 'Gagne en vitesse réelle, pas en puissance virtuelle',
         description:
-          "Sur home-trainer, beaucoup progressent… dans un monde virtuel.<br /> Avec AeroX, c'est toi qui économise 40&#8239;W. Tu deviens plus rapide dans la vraie vie !",
+          "Sur home-trainer, tu progresses dans un monde virtuel.<br />Avec AeroX, c'est toi qui économises 40&#8239;W. Tu deviens plus rapide dans la vraie vie.",
         icon: 'tabler:bolt',
         education:
           "Sur home-trainer, ton seul objectif est d'améliorer ta puissance. Et c'est très bien… pour t'amuser sur des courses virtuelles. Mais dehors, tu n’es pas plus rapide, parfois même moins et ta position aéro est inconfortable. C'est 40&#8239;W qui s'évaporent sans que tu t'en rendes compte. S'entraîner avec un feedback aérodynamique en temps réel a le double avantage: optimiser ta position et en faire un automatisme pour prendre plaisir sur tes entrainements et performer sur de vraies courses, là où ça compte.",
@@ -327,7 +331,7 @@ const metadata = {
       {
         title: 'Entraîne-toi comme un pro, sans budget élite',
         description:
-          "Les pros maîtrisent le triptyque: puissance, cardio et aéro. Mais à quel prix ? Les tests en soufflerie, c'est 1500&#8239;€+...<br /> AeroX te donne le même avantage avec une simple webcam. L'aéro devient enfin accessible à tous les cyclistes et triathlètes.",
+          "Les pros maîtrisent puissance, cardio… et aérodynamisme. Un test en soufflerie ? 1500&#8239;€ minimum.<br />AeroX t’apporte le même levier, depuis ton home-trainer, avec une simple webcam. L'aéro enfin accessible.",
         icon: 'tabler:trophy',
         education:
           "Les plans d’entraînement classiques se limitent à la puissance et au cardio. Mais Evenepoel n’est pas champion du monde de CLM juste grâce à ses watts : il a appris à rester puissant dans une position aéro optimale.<br/><br/>  Malheureusement, tester son aérodynamisme reste inaccessible pour 99&#8239;% des cyclistes (souffleries, vélodromes, capteurs coûtent très chers).<br/><br/> AeroX change la donne : depuis ton home-trainer, avec une simple webcam, tu accèdes à ces données en temps réel pour optimiser ta position à l'entraînement. <br/><br/>👉 Ce que les pros paient des milliers d’euros, tu peux maintenant l’avoir chez toi. Et tu ressens ce petit frisson: 'je m’entraîne comme eux'.",
@@ -350,7 +354,7 @@ const metadata = {
       {
         title: "Roule plus vite sans dépenser des milliers d'euros",
         description:
-          "90&#8239;% de ton aéro, c’est ta position. Pas ton vélo. Pas tes roues. Pas ton casque.<br /> AeroX t'apprend à l'optimiser pour moins cher qu'une paire de chaussettes aéro !",
+          "90&#8239;% de ton aéro, vient de ta position. Pas de ton vélo, ni de tes roues ou ton casque.<br />AeroX t'apprend à l'optimiser… pour moins cher qu'une paire de chaussettes aéro !",
         icon: 'tabler:currency-euro',
 
         education:
@@ -374,11 +378,11 @@ const metadata = {
       {
         title: 'AeroX, ça marche vraiment',
         description:
-          'Avec AeroX, j’ai gagné +3&#8239;km/h, de 36 à 39&#8239;km/h, toujours avec mon vélo de 2008 (700&#8239;€).<br /> Olivier D., triathlète, fondateur d’AeroX',
+          'Avec AeroX, j’ai gagné +3&#8239;km/h, de 36 à 39&#8239;km/h, avec mon vélo de 2008 à 700&#8239;€.<br />Pas besoin de changer de vélo pour aller plus vite.',
         icon: 'tabler:users',
 
         education:
-          'En développant et testant AeroX, j’ai compris l’importance de tenir la position aéro dès 25&#8239;km/h. J’ai rapproché mes prolongateurs, allongé la posture, abaissé tête et épaules. Même en montée, dès que la vitesse dépassait 25&#8239;km/h, je gardais la position. Résultat : de 36 à 39&#8239;km/h avec un vélo de 2008 à 700&#8239;€, sans changer de FTP. Avant, je me faisais déposer sur le plat ; plus maintenant. Rien n’aurait été possible sans feedback en temps réel.',
+          'En développant et testant AeroX, j’ai compris l’importance de tenir la position aéro dès 25&#8239;km/h. J’ai rapproché mes prolongateurs, allongé la posture, abaissé tête et épaules. Même en montée, dès que la vitesse dépassait 25&#8239;km/h, je gardais la position. Résultat : de 36 à 39&#8239;km/h avec un vélo de 2008 à 700&#8239;€, sans changer de FTP. Avant, je me faisais déposer sur le plat ; plus maintenant. Rien n’aurait été possible sans feedback en temps réel. Olivier D., triathlète, fondateur d’AeroX',
         expandable: true,
         moreLabel: "Je t'explique tout…",
         defaultOpen: false,
@@ -403,81 +407,6 @@ const metadata = {
     </Fragment>
   </Features>
 
-  <!-- Steps Widget ****************** -->
-
-  <Steps
-    title="Mise en place simple, rapide."
-    items={[
-      {
-        title: 'Étape 1: <span class="font-semibold">Télécharge AeroX</span>',
-        description: '',
-        icon: 'tabler:download',
-        expandable: true, // ✅ active “En savoir plus”
-        moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
-        defaultOpen: false, // (optionnel) ouvert par défaut
-        classes: {
-          summary: 'text-accent hover:underline', // (optionnel) style du <summary>
-          more: 'mt-3', // (optionnel) style du <details>
-        },
-      },
-      {
-        title: 'Étape 2: <span class="font-semibold">Positionne ta caméra (30 s)</span>',
-        description:
-          "Positionne ta webcam environ 1m30 devant ton home-trainer. Vérifie sur AeroX que tu es entièrement visible lorsque tu es sur ton vélo, c'est tout. Tu peux utiliser n'importe quelle webcam si elle peut se connecter à ton ordi, même ton téléphone via le wifi fonctionne. Pas d'excuse tu as tout ce qu'il te faut à la maison.",
-        icon: 'tabler:video',
-        expandable: true, // ✅ active “En savoir plus”
-        moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
-        defaultOpen: false, // (optionnel) ouvert par défaut
-        classes: {
-          summary: 'text-accent hover:underline', // (optionnel) style du <summary>
-          more: 'mt-3', // (optionnel) style du <details>
-        },
-      },
-      {
-        title: 'Étape 3: <span class="font-semibold">Calibre-la en 2 clics (10 sec)</span>',
-        description:
-          "La calibration se fait simplement en cliquant sur les 2 extrémités de ton cintre. La première fois, mesure la largeur de ton cintre et la distance caméra-cintre. Ajuste ces valeurs si besoin sur AeroX… et c’est prêt. Ces réglages resteront enregistrés et tu n'auras plus à les modifier si ton setup ne change pas.",
-        icon: 'tabler:adjustments',
-        expandable: true, // ✅ active “En savoir plus”
-        moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
-        defaultOpen: false, // (optionnel) ouvert par défaut
-        classes: {
-          summary: 'text-accent hover:underline', // (optionnel) style du <summary>
-          more: 'mt-3', // (optionnel) style du <details>
-        },
-      },
-      {
-        title: 'Étape 4: <span class="font-semibold">Connecte ton home-trainer (20 sec)</span>',
-        description:
-          'La détection se fait en Bluetooth — rapide et sans configuration complexe. AeroX détecte ton home-trainer et ton cardio. Choisis tes équipements, la connexion sera ensuite automatique. Compatible avec Wahoo, Elite, Tacx, Saris, Kickr, Suito, Zwift, etc. Fonctionne avec Garmin, Polar, Suunto pour la fréquence cardiaque.',
-        icon: 'tabler:bluetooth',
-        expandable: true, // ✅ active “En savoir plus”
-        moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
-        defaultOpen: false, // (optionnel) ouvert par défaut
-        classes: {
-          summary: 'text-accent hover:underline', // (optionnel) style du <summary>
-          more: 'mt-3', // (optionnel) style du <details>
-        },
-      },
-      {
-        title: 'Prêt!',
-        icon: 'tabler:check',
-      },
-    ]}
-    actions={[
-      {
-        variant: 'primary',
-        text: 'Télécharge AeroX',
-        href: 'https://github.com/onwidget/astrowind',
-        target: '_blank',
-        icon: 'tabler:download',
-      },
-    ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
-      alt: 'Steps image',
-    }}
-  />
   <!-- Content Widget
 
   <Content
@@ -672,12 +601,16 @@ const metadata = {
           },
 
           {
-            description: 'Canal de discussion exclusif Pionniers',
+            description: 'Canal de discussion exclusif',
             icon: 'tabler:brand-whatsapp-filled',
           },
           {
             description: "1 an d'abonnement à 50%",
             icon: 'tabler:currency-euro',
+          },
+           {
+            description: 'Nouvelles fonctionnalités toute l\'année',
+            icon: 'tabler:binary-tree-filled',
           },
           {
             description: 'Tu boostes le développement d\'AeroX',
@@ -713,17 +646,14 @@ const metadata = {
             icon: 'tabler:award-filled',
           },
           {
-            description: 'De nouvelles mises à jour toute l\'année',
-            icon: 'tabler:award-filled',
+            description: 'Nouvelles fonctionnalités toute l\'année',
+            icon: 'tabler:binary-tree-filled',
           },
           {
             description: 'Idéal pour préparer sérieusement tes objectifs',
-            icon: 'tabler:award-filled',
+            icon: 'tabler:target-arrow',
           },
-          {
-            description: 'Canal de discussion Premium',
-            icon: 'tabler:brand-whatsapp-filled',
-          },
+          
         
          
         ],
@@ -745,11 +675,12 @@ const metadata = {
             description: 'Accès complet à AeroX',
             icon: 'tabler:award-filled',
           },
-        
           {
-            description: 'Canal de discussion Abonnés',
-            icon: 'tabler:brand-whatsapp-filled',
+            description: 'Idéal pour préparer la saison estivale',
+            icon: 'tabler:thumb-up-filled',
           },
+        
+        
         
          
         ],
@@ -767,6 +698,82 @@ const metadata = {
     ]}
   />
 
+
+  <!-- Steps Widget ****************** -->
+
+  <Steps
+    title="Mise en place simple, rapide."
+    items={[
+      {
+        title: 'Étape 1: <span class="font-semibold">Télécharge AeroX</span>',
+        description: '',
+        icon: 'tabler:download',
+        expandable: true, // ✅ active “En savoir plus”
+        moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
+        defaultOpen: false, // (optionnel) ouvert par défaut
+        classes: {
+          summary: 'text-accent hover:underline', // (optionnel) style du <summary>
+          more: 'mt-3', // (optionnel) style du <details>
+        },
+      },
+      {
+        title: 'Étape 2: <span class="font-semibold">Positionne ta caméra (30 s)</span>',
+        description:
+          "Positionne ta webcam environ 1m30 devant ton home-trainer. Vérifie sur AeroX que tu es entièrement visible lorsque tu es sur ton vélo, c'est tout. Tu peux utiliser n'importe quelle webcam si elle peut se connecter à ton ordi, même ton téléphone via le wifi fonctionne. Pas d'excuse tu as tout ce qu'il te faut à la maison.",
+        icon: 'tabler:video',
+        expandable: true, // ✅ active “En savoir plus”
+        moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
+        defaultOpen: false, // (optionnel) ouvert par défaut
+        classes: {
+          summary: 'text-accent hover:underline', // (optionnel) style du <summary>
+          more: 'mt-3', // (optionnel) style du <details>
+        },
+      },
+      {
+        title: 'Étape 3: <span class="font-semibold">Calibre-la en 2 clics (10 sec)</span>',
+        description:
+          "La calibration se fait simplement en cliquant sur les 2 extrémités de ton cintre. La première fois, mesure la largeur de ton cintre et la distance caméra-cintre. Ajuste ces valeurs si besoin sur AeroX… et c’est prêt. Ces réglages resteront enregistrés et tu n'auras plus à les modifier si ton setup ne change pas.",
+        icon: 'tabler:adjustments',
+        expandable: true, // ✅ active “En savoir plus”
+        moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
+        defaultOpen: false, // (optionnel) ouvert par défaut
+        classes: {
+          summary: 'text-accent hover:underline', // (optionnel) style du <summary>
+          more: 'mt-3', // (optionnel) style du <details>
+        },
+      },
+      {
+        title: 'Étape 4: <span class="font-semibold">Connecte ton home-trainer (20 sec)</span>',
+        description:
+          'La détection se fait en Bluetooth — rapide et sans configuration complexe. AeroX détecte ton home-trainer et ton cardio. Choisis tes équipements, la connexion sera ensuite automatique. Compatible avec Wahoo, Elite, Tacx, Saris, Kickr, Suito, Zwift, etc. Fonctionne avec Garmin, Polar, Suunto pour la fréquence cardiaque.',
+        icon: 'tabler:bluetooth',
+        expandable: true, // ✅ active “En savoir plus”
+        moreLabel: 'En savoir plus...', // (optionnel) libellé du summary
+        defaultOpen: false, // (optionnel) ouvert par défaut
+        classes: {
+          summary: 'text-accent hover:underline', // (optionnel) style du <summary>
+          more: 'mt-3', // (optionnel) style du <details>
+        },
+      },
+      {
+        title: 'Prêt!',
+        icon: 'tabler:check',
+      },
+    ]}
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Télécharge AeroX',
+        href: 'https://github.com/onwidget/astrowind',
+        target: '_blank',
+        icon: 'tabler:download',
+      },
+    ]}
+    image={{
+      src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
+      alt: 'Steps image',
+    }}
+  />
   <!-- CallToAction Widget *********** -->
 
   <CallToAction

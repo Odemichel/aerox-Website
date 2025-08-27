@@ -27,8 +27,8 @@ const {
   </div>
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
     <div class="pt-0 md:pt-[76px] pointer-events-none"></div>
-    <div class="py-12 md:py-20">
-      <div class="text-center pb-10 md:pb-16 max-w-5xl mx-auto">
+    <div class="py-12 md:py-30">
+      <div class="text-center pb-18 md:pb-16 max-w-5xl mx-auto">
         {
           tagline && (
             <p
@@ -40,12 +40,12 @@ const {
         {
           title && (
             <h1
-              class="text-4xl md:text-6xl font-light leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+              class="text-4xl md:text-6xl  leading-tighter tracking-tighter mb-38 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
               set:html={title}
             />
           )
         }
-        <div class="max-w-3xl mx-auto">
+          <div class="max-w-3xl mx-auto  space-y-12 md:space-y-20">
           {
             subtitle && (
               <p
@@ -54,11 +54,11 @@ const {
               />
             )
           }
-          <div class="max-w-3xl mx-auto space-y-12">
+          <div class="max-w-3xl mx-auto  space-y-12 md:space-y-20">
             {
               paragraph && (
                 <p
-                  class="text-xl md:text-2xl text-muted mb-15 dark:text-slate-400 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+                  class="text-xl md:text-2xl text-muted  dark:text-slate-400 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
                   set:html={paragraph}
                 />
               )
@@ -80,7 +80,7 @@ const {
             }
           </div>
         </div>
-        <div class="m-auto text-muted motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mb-10">
+        <div class="m-auto text-muted motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mt-2 mb-10">
           {content && <Fragment set:html={content} />}
         </div>
 

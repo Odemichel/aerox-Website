@@ -34,10 +34,11 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
       id={carouselId}
       class={twMerge(
         // Carrousel horizontal (toutes tailles) + UX scrollbar
-        'flex overflow-x-auto scrollbar-custom snap-x snap-mandatory gap-4 px-6 -mx--6 scroll-px-6',
-        containerClass
+        'flex overflow-x-auto scrollbar-zwift snap-x snap-mandatory px-6 pb-4 scroll-px-0',
+        containerClass, 'sm:!gap-x-10'
+        
       )}
-      aria-label="Carrousel infini d’items"
+      aria-label="Carrousel d’items"
     >
       {list.map(({ title, description, objectif, icon, image, video, callToAction, classes: itemClasses = {} }, i) => (
         <article
@@ -80,7 +81,7 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
           {/* MEDIA (image OU vidéo) */}
           {(image || video) && (
             <>
-              <div class="relative overflow-visible w-full aspect-video border rounded-xl dark:border-secondary">
+              <div class="relative overflow-visible w-full aspect-video  rounded-xl dark:border-secondary">
                 {video ? (
                   <>
                     <video
@@ -96,12 +97,12 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
                     {/* Play centré */}
                     <button
                       type="button"
-                      class="absolute inset-0 grid place-items-center transition animate-zoom-in-out
+                      class="absolute inset-0 grid place-items-center transition 
               data-[hidden=true]:opacity-0 data-[hidden=true]:pointer-events-none"
                       aria-label="Lire la vidéo"
                       data-play
                     >
-                      <span class="rounded-full p-3 md:p-4 bg-primary border-2 border-primary-light text-white shadow-lg">
+                      <span class="rounded-full animate-zoom-in-out p-3 md:p-4 bg-primary border-2 border-primary-light text-white shadow-lg">
                         <Icon name="tabler:player-play-filled" class="w-6 h-6 md:w-8 md:h-8" />
                       </span>
                     </button>
@@ -176,17 +177,17 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
   /* Masquer proprement la scrollbar (optionnel) */
   article[data-playing='false'] .media-el {
     transition:
-      filter 500ms ease,
-      transform 500ms ease;
-    transform: scale(0.98); /* léger zoom pour gommer les bords du blur */
+      filter 700ms ease,
+      transform 700ms ease;
+    transform: scale(0.92); /* léger zoom pour gommer les bords du blur */
   }
 
   /* Quand ça joue : on rétablit net */
   article[data-playing='true'] .media-el {
     filter: none;
     transition:
-      filter 500ms ease,
-      transform 500ms ease;
+      filter 700ms ease,
+      transform 700ms ease;
   }
 
   /* Masquer la description/CTA pendant la lecture */
@@ -194,8 +195,8 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
     opacity: 0;
     pointer-events: none;
     transition:
-      opacity 500ms ease,
-      filter 500ms ease;
+      opacity 700ms ease,
+      filter 700ms ease;
   }
 
   /* Visible par défaut quand ça ne joue pas */
@@ -223,6 +224,7 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
       transition: none !important;
     }
   }
+  
 </style>
 <script define:vars={{ carouselId }}>
   const el = document.getElementById(carouselId);
@@ -262,8 +264,8 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
         else video.pause();
       });
 
-      ['play', 'pause', 'ended', 'waiting', 'seeking'].forEach((evt) => video.addEventListener(evt, syncState));
-    });
+['play','playing','pause','ended','waiting','seeking','timeupdate']
+   .forEach((evt) => video.addEventListener(evt, syncState));    });
 
     // --- Lazy-load + pause hors écran (simple, sans sets dupliqués) ---
     const makeIO = () => {
