@@ -34,7 +34,7 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
       id={carouselId}
       class={twMerge(
         // Carrousel horizontal (toutes tailles) + UX scrollbar
-        'flex overflow-x-auto scrollbar-zwift snap-x snap-mandatory px-6 pb-4 scroll-px-0',
+        'flex overflow-x-auto scrollbar-zwift snap-x snap-mandatory -mx-6 px-6 sm:px-10 pb-4 scroll-px-0',
         containerClass, 'sm:!gap-x-10'
         
       )}
@@ -45,7 +45,7 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
           class={twMerge(
             // élément scrollable (teasing : on voit la carte suivante)
 
-            'snap-center shrink-0 min-w-[85%] md:min-w-[420px] xl:min-w-[520px] max-w-[40%]',
+            'snap-center shrink-0 min-w-[92%] md:min-w-[520px] xl:min-w-[520px] max-w-[40%]',
             // carte
             'bg-white/5 rounded-2xl p-0 sm:p-0',
             'relative flex flex-col gap-2 ',
