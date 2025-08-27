@@ -324,6 +324,14 @@ export interface Steps extends Omit<Headline, 'classes'>, Widget {
   image?: string | Image;
   isReversed?: boolean;
 }
+export interface StepsSansImage extends Omit<Headline, 'classes'>, Widget {
+  items?: Array<Item>;
+  actions?: string | CallToAction[];
+    callToAction?: string | CallToAction;
+
+  image?: string | Image;
+  isReversed?: boolean;
+}
 
 export interface Content extends Omit<Headline, 'classes'>, Widget {
   content?: string;

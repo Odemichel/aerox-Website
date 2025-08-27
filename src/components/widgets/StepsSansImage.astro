@@ -1,0 +1,53 @@
+---
+import Headline from '~/components/ui/Headline.astro';
+import Timeline from '~/components/ui/Timeline.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import type { StepsSansImage as Props } from '~/types';
+import Button from '../ui/Button.astro';
+
+const {
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline = await Astro.slots.render('tagline'),
+  items = [],
+
+  actions = await Astro.slots.render('actions'),
+
+  id,
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+---
+<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-3xl mx-auto text-center ${classes?.container ?? ''}`} bg={bg}>
+  <div class="flex flex-col gap-8 md:gap-12 items-center">
+    <Headline
+      title={title}
+      subtitle={subtitle}
+      tagline={tagline}
+      classes={{
+        container: 'text-center',
+        title: 'text-3xl lg:text-4xl',
+        ...((classes?.headline as object) ?? {}),
+      }}
+    />
+
+    <Timeline items={items} classes={classes?.items as Record<string, never>} />
+
+    {
+      actions && (
+        <div class="max-w-xs sm:max-w-md m-auto flex flex-col sm:flex-row sm:justify-center gap-2">
+          {Array.isArray(actions) ? (
+            actions.map((action) => (
+              <div class="flex w-full sm:w-auto">
+                <Button {...(action || {})} class="w-full sm:mb-4" />
+              </div>
+            ))
+          ) : (
+            <Fragment set:html={actions} />
+          )}
+        </div>
+      )
+    }
+  </div>
+</WidgetWrapper>
