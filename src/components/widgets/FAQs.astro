@@ -1,33 +1,46 @@
 ---
 import Headline from '~/components/ui/Headline.astro';
-import ItemGrid from '~/components/ui/ItemGrid.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import type { Faqs as Props } from '~/types';
+import Button from '../ui/Button.astro';
+import ItemGridFAQ from '../ui/ItemGridFAQ.astro';
 
 const {
   title = '',
   subtitle = '',
   tagline = '',
   items = [],
-  columns = 2,
+  actions = await Astro.slots.render('actions'),
 
   id,
-  isDark = false,
   classes = {},
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 ---
 
-<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+<WidgetWrapper id={id} containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
-  <ItemGrid
+  <ItemGridFAQ
     items={items}
-    columns={columns}
     defaultIcon="tabler:chevron-right"
     classes={{
-      container: `${columns === 1 ? 'max-w-4xl' : ''} gap-y-8 md:gap-y-12`,
       panel: 'max-w-none',
-      icon: 'flex-shrink-0 mt-1 w-6 h-6 text-primary',
+      icon: 'flex-shrink-0 mt-1 w-6 h-6 sm:w-8 sm:h-8  text-primary',
     }}
   />
+  {
+              actions && (
+                <div class="max-w-xs sm:max-w-md mt-6 m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-2 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+                  {Array.isArray(actions) ? (
+                    actions.map((action) => (
+                      <div class="flex w-full sm:w-auto">
+                        <Button {...(action || {})} class="w-full sm:mb-4" />
+                      </div>
+                    ))
+                  ) : (
+                    <Fragment set:html={actions} />
+                  )}
+                </div>
+              )
+            }
 </WidgetWrapper>

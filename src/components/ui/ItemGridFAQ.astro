@@ -1,0 +1,125 @@
+---
+import { Icon } from 'astro-icon/components';
+import { twMerge } from 'tailwind-merge';
+import type { ItemGridFAQ as Props } from '~/types';
+import Button from './Button.astro';
+
+const { items = [], defaultIcon = '', classes = {} } = Astro.props;
+
+const {
+  container: containerClass = '',
+  panel: panelClass = '',
+  title: titleClass = '',
+  description: descriptionClass = '',
+  icon: defaultIconClass = 'text-primary',
+  action: actionClass = '',
+} = classes;
+---
+
+{
+  items && items.length > 0 && (
+    <div
+      class={twMerge(
+        ` mx-auto gap-6 md:gap-8 space-y-4`,
+        containerClass
+      )}
+    >
+      {items.map(
+        ({
+          title,
+          description,
+          education,
+          icon,
+          callToAction,
+          classes: itemClasses = {},
+          expandable = false,
+          moreLabel = 'En savoir plus',
+          defaultOpen = false,
+        }) => (
+          <div class=" intersect-once intersect-quarter motion-safe:opacity-0   motion-safe:intersect:animate-fade">
+            <div
+              class={twMerge(
+                'relative flex max-w-4xl  lg:p-2',
+                'shadow-[0_10px_30px_rgba(0,0,0,0.06)]',
+                'transition-all duration-300 ease-out', // 👈 transition unifiée et adoucie
+                panelClass,
+                itemClasses?.panel
+              )}
+            >
+              {' '}
+              <div class="flex justify-center">
+                {(icon || defaultIcon) && (
+                  <span class="inline-grid place-items-start rounded-full bg-primary/10 text-primary mr-3">
+                    <Icon
+                      name={icon || defaultIcon}
+                      class={twMerge( defaultIconClass, itemClasses?.icon)}
+                    />
+                  </span>
+                )}
+              </div>
+              <div class="mt-0.5">
+                {title && (
+                  <h3 class={twMerge('text-lg md:text-xl font-semibold tracking-tight', titleClass)}>{title}</h3>
+                )}
+
+                {description && (
+                  <p
+                    class={twMerge(
+                      `${title ? 'mt-2' : ''} text-sm md:text-[0.95rem] leading-relaxed text-muted`,
+                      descriptionClass
+                    )}
+                    set:html={description}
+                  />
+                )}
+
+                {education &&
+                  (expandable ? (
+                    <details class={twMerge(`${title ? 'mt-1' : ''} group`, itemClasses?.more)} open={defaultOpen}>
+                      <summary
+                        class="cursor-pointer inline-flex items-center text-muted dark:hover:text-primary
+                 font-medium select-none"
+                      >
+                        {moreLabel}
+                        <Icon name="tabler:chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180" />
+                      </summary>
+                      <div
+                        class="mt-2 p-3 rounded-xl  dark:bg-black/50 text-muted  
+           leading-relaxed"
+                        set:html={education}
+                      />
+                    </details>
+                  ) : (
+                    <p
+                      class={twMerge(`${title ? 'mt-3' : ''} text-muted`, descriptionClass, itemClasses?.description)}
+                      set:html={education}
+                    />
+                  ))}
+
+                {callToAction && (
+                  <div
+                    class={twMerge(
+                      `${title || description ? 'mt-3' : ''} flex justify-end  gap-2 `,
+                      actionClass,
+                      itemClasses?.actionClass
+                    )}
+                  >
+                    {Array.isArray(callToAction) ? (
+                      callToAction.map((cta) => (
+                        <Button {...cta} class={twMerge(cta.class ?? '', 'w-auto mb-2 sm:mb-4 px-3 py-1.5 text-sm')} />
+                      ))
+                    ) : (
+                      <Button
+                        {...callToAction}
+                        class={twMerge(callToAction.class ?? '', 'w-auto mb-2 sm:mb-4 px-3 py-1.5 text-sm')}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )
+      )}
+    </div>
+  )
+}

@@ -8,7 +8,7 @@ import Milan_Tete from '../assets/images/Milan_tete.jpg';
 import Olivier_Tete from '../assets/images/Olivier_tete2.png';
 import posterPuissance from '../assets/images/posterPuissance.jpg?url';
 import Ropert_Tete from '../assets/images/ropert1.jpg';
- 
+
 import simulationGPX from '../assets/images/simulationGPX.jpg';
 
 import Frederic_tete from '../assets/images/Frederic_tete.jpg';
@@ -17,7 +17,6 @@ import demoPuissance from '../assets/videos/demo_puissance.mp4';
 
 import Layout from '~/layouts/PageLayout.astro';
 
-import CallToAction from '~/components/widgets/CallToAction.astro';
 import CountDown from '~/components/widgets/CountDown.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Features from '~/components/widgets/Features.astro';
@@ -45,7 +44,7 @@ const metadata = {
         variant: 'primary',
         target: '_blank',
         text: 'Télécharge AeroX maintenant',
-        icon:'tabler:download',
+        icon: 'tabler:download',
         href: 'https://github.com/onwidget/astrowind',
       },
     ]}
@@ -60,13 +59,12 @@ const metadata = {
     </Fragment>
 
     <Fragment slot="title">
-      <span class="font-bold">Le cyclisme indoor, <span class="text-primary">l'aérodynamisme en plus.</span
-      ></span>
+      <span class="font-bold">Le cyclisme indoor, <span class="text-primary">l'aérodynamisme en plus.</span></span>
     </Fragment>
     <Fragment slot="paragraph">
       Gagne jusqu'à&nbsp;<span class="font-bold text-accent">3&#8239;km/h</span>, économise&nbsp;<span
         class="font-bold text-accent"
-      >40&#8239;W<br />
+        >40&#8239;W<br />
       </span> avec une simple webcam.
     </Fragment>
 
@@ -86,91 +84,84 @@ const metadata = {
   <Features2
     tagline="Fonctionnalités"
     title="Tout ce dont tu as besoin pour aller plus vite"
-    
     subtitle="Place l'aérodynamisme au coeur de ton entrainement"
     items={[
       {
         title: 'Mode Puissance',
 
-        description:
-          'Découvre l\'impact de ta position sur ta vitesse.<br /><span class="hidden sm:inline font-bold">Optimise et renforce ta position aéro.</span>',
+        description: "Découvre l'impact de ta position sur ta vitesse.",
 
         objectif: 'Convertis chaque watt en km/h',
         icon: 'flat-color-icons:flash-on',
-        video: { src: demoPuissance, alt: 'Démonstration Mode Puissance',poster: posterPuissance},
+        video: { src: demoPuissance, alt: 'Démonstration Mode Puissance', poster: posterPuissance },
         callToAction: {
           variant: 'primary',
           text: 'Deviens plus rapide maintenant',
           href: '/telechargement',
+          icon: 'tabler:bolt-filled',
           target: '_blank',
         },
       },
       {
         title: 'Mode vitesse',
         objectif: 'Économise tes watts',
-        description:
-          'Ressens la résistance s\'adapter à ton aérodynamisme<span class="hidden sm:inline"> en temps réel</span>.<br />',
+        description: "Ressens la résistance s'adapter à ton aérodynamisme.",
         video: { src: demoPuissance, poster: posterPuissance },
         icon: 'flat-color-icons:gallery',
         callToAction: {
           variant: 'primary',
           text: 'Ressens ce que te coûte ta position',
           href: '/telechargement',
+          icon: 'tabler:player-play-filled',
           target: '_blank',
         },
       },
       {
         title: 'Mode simulation',
-        description:
-          'Simule ton chrono comme dans la vraie vie.',
+        description: 'Simule ton chrono comme dans la vraie vie.',
         icon: 'flat-color-icons:globe',
-        objectif:
-          'La seule simulation où l\'aéro compte vraiment',
+        objectif: "La seule simulation où l'aéro compte vraiment",
         image: { src: simulationGPX },
         callToAction: {
           variant: 'primary',
           text: "Simule ton prochain objectif avec l'aéro",
           href: '/telechargement',
+          icon: 'tabler:bike-filled',
+
           target: '_blank',
         },
       },
 
-      
       {
         title: 'Mode Contre-La-Montre',
-        description:
-          'Place-toi. Appuie fort. Sois le meilleur.',
+        description: 'Place-toi. Appuie fort. Sois le meilleur.',
         icon: 'fluent-emoji-flat:stopwatch',
-        objectif:
-          'La seule course indoor avec l\'aéro',
-        image: { src: classementCLM, },
+        objectif: "La seule course indoor avec l'aéro",
+        image: { src: classementCLM },
         callToAction: {
           variant: 'primary',
           text: 'Défie les plus grands',
-          href: '/telechargement',
-                    icon: 'tabler:download',
-
-          target: '_blank',
-        },
-      },
-      {
-        title: 'Mode Challenge',
-        description:
-          'Combine puissance et aéro pour tenir la vitesse.',
-        icon: 'flat-color-icons:approval',
-        objectif:
-          'Tes badges AeroX seront le miroir de tes progrès',
-        image: { src: challengesBadges, alt: 'Démonstration Mode Puissance' },
-        callToAction: {
-          variant: 'primary',
-          text: 'Challenge ta vitesse',
           href: '/telechargement',
           icon: 'tabler:download',
           target: '_blank',
         },
       },
+      {
+        title: 'Mode Challenge',
+        description: 'Combine puissance et aéro pour tenir la vitesse.',
+        icon: 'flat-color-icons:approval',
+        objectif: 'Tes badges AeroX seront le miroir de tes progrès',
+        image: { src: challengesBadges, alt: 'Démonstration Mode Puissance' },
+        callToAction: {
+          variant: 'primary',
+          text: 'Challenge ta vitesse',
+          href: '/telechargement',
+          icon: 'tabler:arrow-badge-up-filled',
+          target: '_blank',
+        },
+      },
 
-     /*  {
+      /*  {
         title: 'Page de progression ',
         description:
           '<span class="hidden sm:inline"> Meilleure position, temps de maintien aéro, meilleures vitesses...</span><br />Tous tes progrès seront visibles ici.',
@@ -187,16 +178,15 @@ const metadata = {
       }, */
       {
         title: 'Éditeur de séance',
-        description:
-          'Crée tes séances ou celles de ton coach, <span class="font-bold">l\'aéro en plus.</span>',
+        description: 'Crée tes séances ou celles de ton coach, <span class="font-bold">l\'aéro en plus.</span>',
         icon: 'flat-color-icons:edit-image',
-        objectif:
-           'Intuitif et rapide, tes séances perso en 2\'',
-        image: { src: editeurSeance},
+        objectif: "Intuitif et rapide, tes séances perso en 2'",
+        image: { src: editeurSeance },
         callToAction: {
           variant: 'primary',
           text: 'Personnalise tes séances aéro',
           href: '/telechargement',
+          icon: 'tabler:pencil-cog',
           target: '_blank',
         },
       },
@@ -209,7 +199,7 @@ const metadata = {
 
   <!-- Note Widget ******************* -->
 
-  <Note title="Notre Mission:" description="Démocratiser l\'aérodynamisme." />
+  <Note title="Notre Mission:" description="Démocratiser l\'aérodynamisme" />
 
   <!-- FAQs Widget ******************* -->
 
@@ -218,7 +208,7 @@ const metadata = {
     testimonials={[
       {
         testimonial:
-          "\"Incroyable qu’un dispositif si simple soit aussi précis. Je gagne 35&#8239;W rien qu’avec ma position. J'ai plus d’énergie pour la CAP.\"",
+          '"Incroyable qu’un dispositif si simple soit aussi précis. Je gagne 35&#8239;W rien qu’avec ma position. J\'ai plus d’énergie pour la CAP."',
         name: 'Milan Larivière',
         job: "Triathlète élite- 2<sup>e</sup> Coupe d'Europe U23 (2025)",
         image: {
@@ -232,9 +222,9 @@ const metadata = {
       },
       {
         testimonial:
-         '"En 4 semaines, +1 km/h sans forcer. Je ne pensais pas que l’aéro comptait autant à mon niveau. Maintenant je roule avec plus deplaisir, même dans le vent."',
+          '"En 4 semaines, +1 km/h sans forcer. Je ne pensais pas que l’aéro comptait autant à mon niveau. Maintenant je roule avec plus deplaisir, même dans le vent."',
 
-            name: 'Frédéric Petit',
+        name: 'Frédéric Petit',
         job: 'Cycliste amateur - 6000&#8239;km/an',
         profile: {
           src: Frederic_tete,
@@ -243,7 +233,7 @@ const metadata = {
       },
       {
         testimonial:
-          '" Ancien chercheur au CNRS et triathlète, j\'ai développé AeroX pour moi, il m\'a fait gagner +3&#8239;km/h en course. Aujourd\'hui je veux démocratiser ce feedback autrefois réservé aux pros. Une simple webcam suffit."',
+          "\" Ancien chercheur au CNRS et triathlète, j'ai développé AeroX pour moi, il m'a fait gagner +3&#8239;km/h en course. Aujourd'hui je veux démocratiser ce feedback autrefois réservé aux pros. Une simple webcam suffit.\"",
         name: 'Olivier Demichel',
         job: "Triathlète - Fondateur d'AeroX",
         profile: {
@@ -263,17 +253,17 @@ const metadata = {
       },
     ]}
     callToAction={{
+      variant: 'primary',
       target: '_blank',
-      text: 'Tester AeroX',
+      text: 'Rejoins les pionniers AeroX',
       href: '/telechargement',
-      icon: 'tabler:chevron-right',
+      icon: 'tabler:users',
     }}
   />
 
   <!-- Note Widget ******************* -->
 
-  <Note title="Notre Ambition:" description="te rendre plus rapide." />
-
+  <Note title="Notre Promesse: " description="Vois, mesure, ressens l’aéro" />
 
   <!-- Features Widget *************** -->
   <Features
@@ -406,6 +396,10 @@ const metadata = {
       >!
     </Fragment>
   </Features>
+
+  <!-- Note Widget ******************* -->
+
+  <Note title="Notre Défi:" description="Casser des barrières, pas ton budget" />
 
   <!-- Content Widget
 
@@ -564,7 +558,6 @@ const metadata = {
         price: '0',
         period: 'pendant 10 jours',
         items: [
-          
           {
             description: 'Accès complet à AeroX',
             icon: 'tabler:award-filled',
@@ -573,9 +566,6 @@ const metadata = {
             description: 'Teste ton aéro sans risque',
             icon: 'tabler:award-filled',
           },
-         
-        
-         
         ],
         // countdownTarget: '2026-01-30T00:00:00', // 👈 apparaît uniquement dans cette carte
 
@@ -596,66 +586,57 @@ const metadata = {
         period: 'paiement unique',
         items: [
           {
-            description: 'Accès complet à AeroX pendant 4mois',
+            description: 'Accès complet à AeroX pendant 4 mois',
             icon: 'tabler:award-filled',
+          },
+          {
+            description: "1 an d'abonnement à 50%",
+            icon: 'tabler:currency-euro',
           },
 
           {
             description: 'Canal de discussion exclusif',
             icon: 'tabler:brand-whatsapp-filled',
           },
+
           {
-            description: "1 an d'abonnement à 50%",
-            icon: 'tabler:currency-euro',
-          },
-           {
-            description: 'Nouvelles fonctionnalités toute l\'année',
+            description: "Nouvelles fonctionnalités toute l'année",
             icon: 'tabler:binary-tree-filled',
           },
+
           {
-            description: 'Tu boostes le développement d\'AeroX',
-            icon: 'tabler:thumb-up-filled',
-          },
-           {
             description: ' Fais partie des 100 premiers testeurs et entre dans l’histoire d’AeroX 🚀',
             icon: 'tabler:users',
           },
-         
         ],
         callToAction: {
           target: '/telechargement',
-          text: 'Commence l\'aventure AeroX',
+          text: "Commence l'aventure AeroX",
           href: '#',
         },
         hasRibbon: true,
         ribbonTitle: 'Pionnier',
       },
-      
+
       {
-       
-        
-        hasChoice:true,
-         title1: 'Annuel',
+        hasChoice: true,
+        title1: 'Annuel',
         subtitle1: 'Économise 30%',
         price1: 140,
         period1: '190€/an à partir de 2026',
         items1: [
-          
           {
             description: 'Accès complet à AeroX',
             icon: 'tabler:award-filled',
           },
           {
-            description: 'Nouvelles fonctionnalités toute l\'année',
+            description: "Nouvelles fonctionnalités toute l'année",
             icon: 'tabler:binary-tree-filled',
           },
           {
             description: 'Idéal pour préparer sérieusement tes objectifs',
             icon: 'tabler:target-arrow',
           },
-          
-        
-         
         ],
         // countdownTarget: '2026-01-30T00:00:00', // 👈 apparaît uniquement dans cette carte
 
@@ -663,14 +644,13 @@ const metadata = {
           target: '_blank',
           text: 'Lancement le 01/11/2025',
           href: '#',
-        }, 
-        
+        },
+
         title2: 'Mensuel',
         subtitle2: 'Sans engagement',
         price2: 15,
         period2: '22€/mois en 2026',
         items2: [
-          
           {
             description: 'Accès complet à AeroX',
             icon: 'tabler:award-filled',
@@ -679,10 +659,6 @@ const metadata = {
             description: 'Idéal pour préparer la saison estivale',
             icon: 'tabler:thumb-up-filled',
           },
-        
-        
-        
-         
         ],
         // countdownTarget: '2026-01-30T00:00:00', // 👈 apparaît uniquement dans cette carte
 
@@ -694,10 +670,8 @@ const metadata = {
         hasRibbon: false,
         ribbonTitle: '',
       },
-      
     ]}
   />
-
 
   <!-- Steps Widget ****************** -->
 
@@ -774,55 +748,118 @@ const metadata = {
       alt: 'Steps image',
     }}
   />
-  <!-- CallToAction Widget *********** -->
 
-  <CallToAction
-    title="Prêt à booster ta vitesse ?"
-    subtitle="Rejoins notre communauté de pionniers qui ont déjà gagnés 2.3 km/h en moyenne."
+  <!-- Note Widget ******************* -->
+  <Note title="Notre Passion:" description="Frisson, vitesse, sensation" />
+
+  <!-- FAQ Widget ******************* -->
+
+  <FAQs
+    title="Questions fréquentes"
+    subtitle="Toutes les réponses à vos questions"
+    tagline="FAQs"
+    classes={{ container: 'max-w-6xl' }}
     actions={[
       {
         variant: 'primary',
-        text: 'Deviens Pionniers AeroX',
-        href: '/',
+        text: 'Écris ton futur avec AeroX',
+        href: '/telechargement',
+        target: '_blank',
+  //      icon: 'tabler:download',
       },
     ]}
-  />
-
-  <FAQs
-    title="Frequently Asked Questions"
-    subtitle="Dive into the following questions to gain insights into the powerful features that AstroWind offers and how it can elevate your web development journey."
-    tagline="FAQs"
-    classes={{ container: 'max-w-6xl' }}
     items={[
       {
-        title: 'Why AstroWind?',
-        description:
-          "Michael Knight a young loner on a crusade to champion the cause of the innocent. The helpless. The powerless in a world of criminals who operate above the law. Here he comes Here comes Speed Racer. He's a demon on wheels.",
+        title: 'Pourquoi AeroX ?',
+        education:
+          "Parce qu'à partir de 25 km/h, l’aérodynamisme représente entre 70 et 95 % de ce qui te freine. Sans donnée, toi comme moi, on appuie juste plus fort pour suivre celui qui est devant. On pense que c'est la seule solution, parce qu'on ne sait pas.<br />AeroX te montre les autres solutions. Tu ne pourras plus dire: je ne savais pas. ",
+        expandable: true,
+        moreLabel: "On t'explique ça en chiffres…",
+        defaultOpen: false,
+  //      icon: 'flat-color-icons:services',
+      },
+
+      {
+        title: 'De quels outils ai-je besoin ?',
+        education:
+          'Seulement un home-trainer connecté (compatible Bluetooth FTMS), ton vélo, un ordi (macOs ou Windows) et une simple caméra. Celle de ton ordinateur, de ton smartphone ou une caméra USB. ',
+        expandable: true,
+        moreLabel: 'Un ordinateur, ton Home-Trainer, une caméra',
+        defaultOpen: false,
+  //      icon: 'flat-color-icons:support',
       },
       {
-        title: 'What do I need to start?',
-        description:
-          'Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds. Many say exploration is part of our destiny, but it’s actually our duty to future generations.',
+        title: 'Combien de temps faut-il pour mettre AeroX en place ? ',
+        education:
+          ' Place ta caméra devant ton home-trainer, calibre-la en 2 clics, tu es prêt à t’entraîner avec ton feedback aéro.',
+        expandable: true,
+        moreLabel: 'En moins de 2 minutes, ton home-trainer devient une soufflerie virtuelle…',
+        defaultOpen: false,
+  //      icon: 'flat-color-icons:expired',
       },
       {
-        title: 'How to install the Astro + Tailwind CSS template?',
-        description:
-          "Well, the way they make shows is, they make one show. That show's called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they're going to make more shows.",
+        title: 'Mon matériel est-il compatible ?',
+        education:
+          'Oui, AeroX fonctionne avec la majorité des home-trainers connectés (Wahoo, Elite, Tacx, Saris, etc.). Pour le moment, seules les version MacOs et Windows sont disponible. Nous développons les versions tablette. Si ton HT n’est pas interactif, tu peux quand même utiliser AeroX en mode analyse (feedback visuel sans contrôle de résistance).',
+        expandable: true,
+        moreLabel: 'Compatible avec 95% des HT connectés, probablement le tien…',
+        defaultOpen: false,
+  //      icon: 'flat-color-icons:ok',
       },
       {
-        title: "What's something that you don't understand?",
-        description:
-          "A flower in my garden, a mystery in my panties. Heart attack never stopped old Big Bear. I didn't even know we were calling him Big Bear.",
+        title: 'Innovation ou gadget ?',
+        education:
+          "Développé par un chercheur au CNRS et triathlète, AeroX a mis toutes les chances de son côté. AeroX te donne enfin un feedback concret sur ton aéro, comme un cardiofréquencemètre l’a fait pour ton cœur il y a 20 ans. Aujourd'hui, s'entraîner sans capteur de FC ou de puissance parait inconcevable. Demain sera AeroX.",
+        expandable: true,
+        moreLabel: 'Essaie pour te faire ton propre avis…',
+        defaultOpen: false,
+  //      icon: 'fluent-emoji-flat:light-bulb',
+      },
+
+      {
+        title: 'Je suis cycliste, est-ce vraiment utile quand on roule en peloton ?',
+        education:
+          "Soyons franc, rester au milieu du peloton n'est pas la réalité du cyclisme. Effet de bordures, échappées ou rythmer le peloton sont des situations où ton aérodynamisme fera la différence. Et qui sait, avec 3km/h de plus, tu pourrais prendre plaisir à t'échapper.",
+        expandable: true,
+        moreLabel: 'Oui, sauf si tu veux rester derrière !',
+  //      icon:'twemoji:woman-biking-medium-dark-skin-tone'
       },
       {
-        title: 'What is something that you would like to try again?',
-        description:
-          "A business big enough that it could be listed on the NASDAQ goes belly up. Disappears! It ceases to exist without me. No, you clearly don't know who you're talking to, so let me clue you in.",
+        title: "Ai-je besoin d'un abonnement pour trouver et tester ma position optimale ?",
+        education:
+          'Oui, tu peux tester gratuitement ta position dès le premier jour du plan gratuit. Et avec l’abonnement, tu transformes cette position en automatisme solide. Elle deviendra ton 6<sup>ème</sup> sens en extérieur.',
+        expandable: true,
+        moreLabel: 'Teste avec le plan gratuit, progresse avec un abonnement',
+        defaultOpen: false,
+ //       icon: 'flat-color-icons:debt',
       },
       {
-        title: 'If you could only ask one question to each person you meet, what would that question be?',
-        description:
-          "This is not about revenge. This is about justice. A lot of things can change in twelve years, Admiral. Well, that's certainly good to know. About four years. I got tired of hearing how young I looked.",
+        title: 'Je suis habitué à ma position aéro, est-ce utile pour moi ?',
+        education:
+          'Oui. Être en position ne suffit pas : ce qui compte, c’est son efficacité réelle. AeroX rend visibles les détails que tu ne ressens pas : tête trop haute, coudes trop écartés… Autant de watts perdus que tu peux corriger avec un feedback instantané.',
+        expandable: true,
+        moreLabel: "Tenir la position, c'est bien mais est-elle efficace ?",
+        defaultOpen: false,
+  //      icon:'twemoji:person-biking-medium-skin-tone'
+      },
+      {
+        title: 'J’ai déjà un coach ça ne suffit pas ?',
+        education:
+          "Ton coach peut programmer une séance aéro, mais seul AeroX te dira si ta position était vraiment efficace du début à la fin. Les deux sont complémentaires. Bonus: notre éditeur de séance intuitif te permets de recréer les séancs de ton coach en 2'.",
+        expandable: true,
+        moreLabel: "AeroX te donne des données que ton coach n'a pas",
+        defaultOpen: false,
+ //       icon: 'flat-color-icons:manager',
+      },
+
+      {
+        title: 'Je prépare une course à l’autre bout du monde, comment AeroX m’aide spécifiquement ?',
+        education:
+          'Avec le mode GPX, tu importes le parcours exact de ta course. AeroX simule le relief, la distance, et surtout l’impact de ton aérodynamisme. Tu t’entraînes comme si tu y étais déjà : le jour J, rien ne te surprend, ni les côtes, ni le vent, ni ta position. Plus important encore, tu sais exactement les sections où tu dois impérativement être en position, et les pentes où tu vas plutot chercher le confort quand ta vitesse baisse.',
+        expandable: true,
+        moreLabel: 'AeroX te prépares à tout',
+        defaultOpen: false,
+    //    icon: 'flat-color-icons:globe',
       },
     ]}
   />
@@ -832,31 +869,10 @@ const metadata = {
   <Stats
     stats={[
       { title: 'Pionniers', amount: '290+' },
-      { title: 'km/h gagnés', amount: '+2.3' },
+      { title: 'km/h gagnés en moyenne', amount: '+2.3' },
       { title: 'Économisés à 30km/h', amount: '-35 W' },
     ]}
   />
 
   <!-- CallToAction Widget *********** -->
-
-  <CallToAction
-    actions={[
-      {
-        variant: 'primary',
-        text: 'Get template',
-        href: 'https://github.com/onwidget/astrowind',
-        target: '_blank',
-        icon: 'tabler:download',
-      },
-    ]}
-  >
-    <Fragment slot="title">
-      Astro&nbsp;+&nbsp;<br class="block sm:hidden" /><span class="sm:whitespace-nowrap">Tailwind CSS</span>
-    </Fragment>
-
-    <Fragment slot="subtitle">
-      Be very surprised by these huge fake numbers you are seeing on this page. <br class="hidden md:inline" />Don't
-      waste more time! :P
-    </Fragment>
-  </CallToAction>
 </Layout>

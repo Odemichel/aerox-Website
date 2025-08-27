@@ -52,12 +52,29 @@ export default defineConfig({
           'picture',
           'edit-image',
           'clock',
-          'globe'
+          'globe',
+          'decision',
+          'expired',
+          'services',
+          'support',
+          'ok',
+          'debt',
+          'manager',
+          'idea'
         ],
         'fluent-emoji-flat': [
           'stopwatch',
+          'light-bulb'
          
         ],
+        'emojione-v1':[
+          'person-biking'
+        ],
+        'emojione':['rocket'],
+        'twemoji':[
+          'person-biking-medium-skin-tone',
+        'woman-biking-medium-dark-skin-tone'
+      ]
       },
     }),
     

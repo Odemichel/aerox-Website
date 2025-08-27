@@ -231,6 +231,12 @@ export interface ItemGrid {
   defaultIcon?: string;
   classes?: Record<string, string>;
 }
+export interface ItemGridFAQ {
+  items?: Array<Item>;
+  columns?: number;
+  defaultIcon?: string;
+  classes?: Record<string, string>;
+}
 
 export interface Collapse {
   iconUp?: string;
@@ -307,6 +313,7 @@ export interface Faqs extends Omit<Headline, 'classes'>, Widget {
   iconDown?: string;
   items?: Array<Item>;
   columns?: number;
+actions?:  CallToAction | CallToAction[];
 }
 
 export interface Steps extends Omit<Headline, 'classes'>, Widget {

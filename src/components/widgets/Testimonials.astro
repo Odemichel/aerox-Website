@@ -11,12 +11,19 @@ const {
   subtitle = '',
   tagline = '',
   testimonials = [],
-  callToAction,
   id,
   isDark = false,
   classes = {},
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
+const actionsSlot = await Astro.slots.render('actions');
+const { callToAction } = Astro.props;
+const ctas = Array.isArray(callToAction)
+  ? callToAction
+  : callToAction
+    ? [callToAction]
+    : [];
+
 
 // id unique pour le carrousel
 const carouselId = `testi-${Math.random().toString(36).slice(2, 8)}`;
@@ -55,7 +62,7 @@ const carouselId = `testi-${Math.random().toString(36).slice(2, 8)}`;
         <div
           id={carouselId}
           class="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 -mx-6 scroll-px-6
-               scrollbar-custom"
+               hide-native-scroll"
           aria-label="Témoignages"
         >
           {testimonials.map(({ title, testimonial, name, job, image, profile }) => (
@@ -98,19 +105,37 @@ const carouselId = `testi-${Math.random().toString(36).slice(2, 8)}`;
                 </div>
               </div>
             </article>
-          ))}
+            
+          ))
+          }
+          
         </div>
+         <div class="fakebar" data-fakebar>
+    <div class="thumb" data-thumb></div>
+    </div>
       </div>
-    )
-  }
+      
 
-  {
-    callToAction && (
-      <div class="flex justify-center mx-auto w-fit mt-8 md:mt-12 font-medium">
-        <Button {...callToAction} />
-      </div>
+
     )
   }
+  {actionsSlot ? (
+  // 1) Si un slot `actions` est fourni (comme le Hero), on l’affiche tel quel
+  <div class=" max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-2
+              intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+    <Fragment set:html={actionsSlot} />
+  </div>
+) : ctas.length > 0 ? (
+  // 2) Sinon on rend des <Button /> à partir des objets (même rendu que le Hero)
+  <div class="mt-5 max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-2
+              intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+    {ctas.map((action) => (
+      <div class="flex w-full sm:w-auto  ">
+        <Button {...(action || {})} class="w-full py-2 mt-4  sm:mb-4 " />
+      </div>
+    ))}
+  </div>
+) : null}
 </WidgetWrapper>
 
 <style is:inline>
@@ -156,4 +181,53 @@ const carouselId = `testi-${Math.random().toString(36).slice(2, 8)}`;
       scrollByPage(-1);
     }
   });
+
+
+  const scroller = wrap; // réutilise la même ref
+const fake = scroller?.parentElement?.querySelector('[data-fakebar]');
+const thumb = fake?.querySelector('[data-thumb]');
+let hideT;
+
+const syncFakebar = () => {
+  if (!scroller || !fake || !thumb) return;
+
+  const trackW = fake.clientWidth;                 // largeur visible (80%)
+  const contentW = scroller.scrollWidth;
+  const viewportW = scroller.clientWidth;
+  const maxScroll = Math.max(1, contentW - viewportW);
+
+  // largeur du thumb proportionnelle (min 32px)
+  const ratio = Math.min(1, viewportW / contentW);
+  const thumbW = Math.max(trackW/6, Math.round(trackW * ratio));
+  thumb.style.width = `${thumbW}px`;
+
+  // position du thumb
+  const x = (scroller.scrollLeft / maxScroll) * (trackW - thumbW);
+  thumb.style.transform = `translateX(${x}px)`;
+};
+
+const showThenHide = () => {
+  if (!fake) return;
+  fake.classList.add('show');
+  clearTimeout(hideT);
+  hideT = setTimeout(() => fake.classList.remove('show'), 50);
+};
+
+if (scroller && fake) {
+  // init + blink
+  syncFakebar();
+  showThenHide();
+  setTimeout(() => fake.classList.remove('show'), 50);
+
+  scroller.addEventListener('scroll', () => {
+    syncFakebar();
+    showThenHide();
+  }, { passive: true });
+
+  // Recalcule si la taille change (images, responsive…)
+  const ro = new ResizeObserver(syncFakebar);
+  ro.observe(scroller);
+  ro.observe(fake);
+  window.addEventListener('resize', syncFakebar);
+}
 </script>

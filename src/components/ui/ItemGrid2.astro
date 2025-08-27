@@ -30,145 +30,183 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
 
 {
   items && items.length > 0 && (
-    <div
-      id={carouselId}
-      class={twMerge(
-        // Carrousel horizontal (toutes tailles) + UX scrollbar
-        'flex overflow-x-auto scrollbar-zwift snap-x snap-mandatory -mx-6 px-6 sm:px-10 pb-4 scroll-px-0',
-        containerClass, 'sm:!gap-x-10'
-        
-      )}
-      aria-label="Carrousel d’items"
-    >
-      {list.map(({ title, description, objectif, icon, image, video, callToAction, classes: itemClasses = {} }, i) => (
-        <article
-          class={twMerge(
-            // élément scrollable (teasing : on voit la carte suivante)
-
-            'snap-center shrink-0 min-w-[92%] md:min-w-[520px] xl:min-w-[520px] max-w-[40%]',
-            // carte
-            'bg-white/5 rounded-2xl p-0 sm:p-0',
-            'relative flex flex-col gap-2 ',
-            'border-2 dark:hover:border-primary-light ',
-            panelClass,
-            itemClasses?.panel
-          )}
-          tabindex="0"
-          role="group"
-          data-idx={i}
-          data-playing="false"
+    <div class="relative">
+      <button
+          type="button"
+          aria-label="Précédent"
+          class="hidden sm:flex absolute left-2 top-1/2 -translate-y-1/2 z-10
+               h-9 w-9 rounded-full bg-black/30 hover:bg-black/50 text-white
+               items-center justify-center"
+          data-prev
         >
-          {/* ICONE + TITRE */}
-          <div class="flex items-start gap-4 ">
-            {(icon || defaultIcon) && (
-              <Icon
-                name={icon || defaultIcon}
-                class={twMerge('mt-4 ml-4 w-6 h-6', defaultIconClass, itemClasses?.icon)}
-              />
-            )}
-            {/* Bloc texte en colonne */}
-            <div class="flex-1 min-w-0 mt-4">
-              {title && (
-                <h3 class={twMerge('text-lg md:text-2xl font-semibold', titleClass, itemClasses?.title)}>{title}</h3>
+          ‹
+        </button>
+
+        <button
+          type="button"
+          aria-label="Suivant"
+          class="hidden sm:flex absolute right-2 top-1/2 -translate-y-1/2 z-10
+               h-9 w-9 rounded-full bg-black/30 hover:bg-black/50 text-white
+               items-center justify-center"
+          data-next
+        >
+          ›
+        </button>
+      <div
+        id={carouselId}
+        tabindex="0"
+        class={twMerge(
+          // Carrousel horizontal (toutes tailles) + UX scrollbar
+          'flex overflow-x-auto hide-native-scroll  snap-x snap-mandatory py-2 -mx-6 px-6 sm:px-10  scroll-px-0',
+          containerClass
+        )}
+        aria-label="Carrousel d’items"
+      >
+        {list.map(
+          ({ title, description, objectif, icon, image, video, callToAction, classes: itemClasses = {} }, i) => (
+            <article
+              class={twMerge(
+                // élément scrollable (teasing : on voit la carte suivante)
+
+                'snap-center shrink-0 min-w-[92%] md:min-w-[520px] xl:min-w-[520px] max-w-[40%]',
+                // carte
+                'bg-white/5 rounded-2xl p-0 sm:p-0',
+                'relative flex flex-col gap-2 ',
+                'border-2 dark:hover:border-primary-light ',
+                panelClass,
+                itemClasses?.panel
               )}
-
-              {objectif && (
-                <p class={twMerge('mt-1 text-muted', objectifClass, itemClasses?.description)} set:html={objectif} />
-              )}
-            </div>
-          </div>
-
-          {/* MEDIA (image OU vidéo) */}
-          {(image || video) && (
-            <>
-              <div class="relative overflow-visible w-full aspect-video  rounded-xl dark:border-secondary">
-                {video ? (
-                  <>
-                    <video
-                      src={video?.src ?? ''}
-                      poster={video?.poster ?? ''}
-                      loop
-                      playsinline
-                      preload="metadata"
-                      class="media-el w-full h-full rounded-2xl object-contain bg-black"
-                      data-video
-                    />
-
-                    {/* Play centré */}
-                    <button
-                      type="button"
-                      class="absolute inset-0 grid place-items-center transition 
-              data-[hidden=true]:opacity-0 data-[hidden=true]:pointer-events-none"
-                      aria-label="Lire la vidéo"
-                      data-play
-                    >
-                      <span class="rounded-full animate-zoom-in-out p-3 md:p-4 bg-primary border-2 border-primary-light text-white shadow-lg">
-                        <Icon name="tabler:player-play-filled" class="w-6 h-6 md:w-8 md:h-8" />
-                      </span>
-                    </button>
-                  </>
-                ) : (
-                  <div class="relative overflow-visible h-full video-ratio border dark:rounded-xl dark:border-secondary">
-                    <img
-                      src={srcFrom(image)}
-                      alt={image?.alt ?? ''}
-                      loading="lazy"
-                      class="w-full h-full video-ratio object-contain bg-black rounded-xl dark:border-secondary"
-                    />
-                  </div>
+              tabindex="0"
+              role="group"
+              data-idx={i}
+              data-playing="false"
+            >
+              {/* ICONE + TITRE */}
+              <div class="flex items-start gap-4 ">
+                {(icon || defaultIcon) && (
+                  <Icon
+                    name={icon || defaultIcon}
+                    class={twMerge('mt-4 ml-4 w-6 h-6', defaultIconClass, itemClasses?.icon)}
+                  />
                 )}
-
-                {/* Si tu gardes un dégradé interne au média */}
-                <div class="video-gradient hidden sm:block pointer-events-none absolute inset-x-0 bottom-0 h-1/2" />
-              </div>
-
-              {/* DESCRIPTION SOUS le média (plus d'absolute) */}
-              {(description || callToAction) && (
-                <div
-                  class="mt-3 p-2 sm:p-3 rounded-lg shadow-md
-                  bg-white/90 text-black dark:bg-black dark:text-white
-                  max-w-full"
-                >
-                  {description && (
-                    <p
-                      class={twMerge('text-sm lg:text-base leading-snug', descriptionClass, itemClasses?.description)}
-                      set:html={description}
-                    />
+                {/* Bloc texte en colonne */}
+                <div class="flex-1 min-w-0 mt-4">
+                  {title && (
+                    <h3 class={twMerge('text-lg md:text-2xl font-semibold', titleClass, itemClasses?.title)}>
+                      {title}
+                    </h3>
                   )}
 
-                  {callToAction && (
-                    <div class="mt-2 flex flex-wrap justify-end gap-2">
-                      {Array.isArray(callToAction) ? (
-                        callToAction.map((cta) => (
-                          <Button
-                            {...cta}
-                            class={twMerge(
-                              'px-3 py-1.5 text-sm rounded-md',
-                              'bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20',
-                              'text-current',
-                              cta.class ?? ''
-                            )}
-                          />
-                        ))
-                      ) : (
-                        <Button
-                          {...callToAction}
-                          class={twMerge(
-                            'px-3 py-1.5 text-sm rounded-md',
-                            'bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20',
-                            'text-current',
-                            callToAction.class ?? ''
-                          )}
+                  {objectif && (
+                    <p
+                      class={twMerge('mt-1 text-muted', objectifClass, itemClasses?.description)}
+                      set:html={objectif}
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* MEDIA (image OU vidéo) */}
+              {(image || video) && (
+                <>
+                  <div class="relative overflow-visible w-full aspect-video  rounded-xl dark:border-secondary">
+                    {video ? (
+                      <>
+                        <video
+                          src={video?.src ?? ''}
+                          poster={video?.poster ?? ''}
+                          loop
+                          playsinline
+                          preload="metadata"
+                          class="media-el w-full h-full rounded-2xl object-contain bg-black"
+                          data-video
                         />
+
+                        {/* Play centré */}
+                        <button
+                          type="button"
+                          class="absolute inset-0 grid place-items-center transition 
+              data-[hidden=true]:opacity-0 data-[hidden=true]:pointer-events-none"
+                          aria-label="Lire la vidéo"
+                          data-play
+                        >
+                          <span class="rounded-full animate-zoom-in-out p-3 md:p-4 bg-primary border-2 border-primary-light text-white shadow-lg">
+                            <Icon name="tabler:player-play-filled" class="w-6 h-6 md:w-8 md:h-8" />
+                          </span>
+                        </button>
+                      </>
+                    ) : (
+                      <div class="relative overflow-visible h-full video-ratio border dark:rounded-xl dark:border-secondary">
+                        <img
+                          src={srcFrom(image)}
+                          alt={image?.alt ?? ''}
+                          loading="lazy"
+                          class="w-full h-full video-ratio object-contain bg-black rounded-xl dark:border-secondary"
+                        />
+                      </div>
+                    )}
+
+                    {/* Si tu gardes un dégradé interne au média */}
+                    <div class="video-gradient hidden sm:block pointer-events-none absolute inset-x-0 bottom-0 h-1/2" />
+                  </div>
+
+                  {/* DESCRIPTION SOUS le média (plus d'absolute) */}
+                  {(description || callToAction) && (
+                    <div
+                      class=" p-2 sm:p-3 rounded-lg 
+                  text-black  dark:text-white
+                  max-w-full"
+                    >
+                      {description && (
+                        <p
+                          class={twMerge(
+                            'text-sm px-4 lg:text-base leading-snug',
+                            descriptionClass,
+                            itemClasses?.description
+                          )}
+                          set:html={description}
+                        />
+                      )}
+
+                      {callToAction && (
+                        <div class="mt-4 flex flex-wrap justify-center gap-2">
+                          {Array.isArray(callToAction) ? (
+                            callToAction.map((cta) => (
+                              <Button
+                                {...cta}
+                                class={twMerge(
+                                  'px-3 py-1.5 text-sm rounded-md',
+                                  '',
+
+                                  cta.class ?? '',
+                                  'text-secondary'
+                                )}
+                              />
+                            ))
+                          ) : (
+                            <Button
+                              {...callToAction}
+                              class={twMerge(
+                                'px-3 py-1.5 text-sm rounded-md',
+                                '',
+                                'text-current',
+                                callToAction.class ?? ''
+                              )}
+                            />
+                          )}
+                        </div>
                       )}
                     </div>
                   )}
-                </div>
+                </>
               )}
-            </>
-          )}
-        </article>
-      ))}
+            </article>
+          )
+        )}
+      </div>{' '}
+      <div class="fakebar" data-fakebar>
+        <div class="thumb" data-thumb />
+      </div>
     </div>
   )
 }
@@ -224,8 +262,8 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
       transition: none !important;
     }
   }
-  
 </style>
+
 <script define:vars={{ carouselId }}>
   const el = document.getElementById(carouselId);
   if (!el) {
@@ -233,8 +271,29 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
   }
 
   if (el) {
-    // ⚠️ SUPPRIMÉ : recalc / setSpan (causait ReferenceError)
-    // window.addEventListener('resize', recalc);
+    // --- Auto-hide scrollbar spécifique à ce carrousel ---
+    let scrollTimeout;
+
+    const showScrollbar = () => el.classList.add('showing');
+    const hideScrollbar = () => el.classList.remove('showing');
+
+    // Gestion du scroll
+    el.addEventListener('scroll', () => {
+      showScrollbar();
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(hideScrollbar, 1000);
+    });
+
+    // Gestion du hover
+    el.addEventListener('mouseenter', () => {
+      showScrollbar();
+      clearTimeout(scrollTimeout);
+    });
+
+    el.addEventListener('mouseleave', () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(hideScrollbar, 1000);
+    });
 
     // -- Handlers Play/Pause --
     el.querySelectorAll('[data-play]').forEach((btn) => {
@@ -264,10 +323,12 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
         else video.pause();
       });
 
-['play','playing','pause','ended','waiting','seeking','timeupdate']
-   .forEach((evt) => video.addEventListener(evt, syncState));    });
+      ['play', 'playing', 'pause', 'ended', 'waiting', 'seeking', 'timeupdate'].forEach((evt) =>
+        video.addEventListener(evt, syncState)
+      );
+    });
 
-    // --- Lazy-load + pause hors écran (simple, sans sets dupliqués) ---
+    // --- Lazy-load + pause hors écran ---
     const makeIO = () => {
       if (!('IntersectionObserver' in window)) return;
 
@@ -290,10 +351,87 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
         { root: el, threshold: 0.6 }
       );
 
-      // Observe toutes les cartes (plus de /3)
       Array.from(el.children).forEach((c) => io.observe(c));
     };
 
     makeIO();
+  }
+
+
+  // Flèches
+
+  const container = el?.parentElement;
+  const prevBtn = container?.querySelector('[data-prev]');
+  const nextBtn = container?.querySelector('[data-next]');
+
+  const scrollByPage = (dir = 1) => {
+    if (!el) return;
+    const delta = el.clientWidth * 0.3 * dir; // ~1 "page"
+    el.scrollBy({ left: delta, behavior: 'smooth' });
+  };
+
+  prevBtn?.addEventListener('click', () => scrollByPage(-1));
+  nextBtn?.addEventListener('click', () => scrollByPage(1));
+
+  // Navigation clavier (← →) quand le carrousel est focus
+  el?.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      scrollByPage(1);
+    }
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      scrollByPage(-1);
+    }
+  });
+  const scroller = el; // réutilise la même ref
+  const fake = scroller?.parentElement?.querySelector('[data-fakebar]');
+  const thumb = fake?.querySelector('[data-thumb]');
+  let hideT;
+
+  const syncFakebar = () => {
+    if (!scroller || !fake || !thumb) return;
+
+    const trackW = fake.clientWidth; // largeur visible (80%)
+    const contentW = scroller.scrollWidth;
+    const viewportW = scroller.clientWidth;
+    const maxScroll = Math.max(1, contentW - viewportW);
+
+    // largeur du thumb proportionnelle (min 32px)
+    //const ratio = Math.min(1, viewportW / contentW);
+    const thumbW = Math.round(trackW / 4);
+    thumb.style.width = `${thumbW}px`;
+
+    // position du thumb
+    const x = (scroller.scrollLeft / maxScroll) * (trackW - thumbW);
+    thumb.style.transform = `translateX(${x}px)`;
+  };
+  const showThenHide = () => {
+    if (!fake) return;
+    fake.classList.add('show');
+    clearTimeout(hideT);
+    hideT = setTimeout(() => fake.classList.remove('show'), 20);
+  };
+
+  if (scroller && fake) {
+    // init + blink
+    syncFakebar();
+    showThenHide();
+    setTimeout(() => fake.classList.remove('show'), 20);
+
+    scroller.addEventListener(
+      'scroll',
+      () => {
+        syncFakebar();
+        showThenHide();
+      },
+      { passive: true }
+    );
+
+    // Recalcule si la taille change (images, responsive…)
+    const ro = new ResizeObserver(syncFakebar);
+    ro.observe(scroller);
+    ro.observe(fake);
+    window.addEventListener('resize', syncFakebar);
   }
 </script>
