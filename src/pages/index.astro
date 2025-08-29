@@ -8,6 +8,7 @@ import Milan_Tete from '../assets/images/Milan_tete.jpg';
 import Olivier_Tete from '../assets/images/Olivier_tete2.png';
 import posterPuissance from '../assets/images/posterPuissance.jpg?url';
 import Ropert_Tete from '../assets/images/ropert1.jpg';
+import LogosCarousel from '../components/widgets/LogosCarousel.astro';
 
 import simulationGPX from '../assets/images/simulationGPX.jpg';
 
@@ -22,11 +23,21 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import Features from '~/components/widgets/Features.astro';
 import Features2 from '~/components/widgets/Features2.astro';
 import Hero from '~/components/widgets/Hero.astro';
+import HeroVideo from '~/components/widgets/HeroVideo.astro';
 import Note from '~/components/widgets/Note.astro';
 import Prices from '~/components/widgets/Pricing.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import StepsSansImage from '~/components/widgets/StepsSansImage.astro';
 import Testimonials from '~/components/widgets/Testimonials.astro';
+import logo_elite from '../assets/images/logos/elite.png?url';
+import logo_saris from '../assets/images/logos/saris.png?url';
+import logo_tacx from '../assets/images/logos/tacx.jpg?url';
+import logo_vanrysel from '../assets/images/logos/vanrysel.png?url';
+import logo_wahoo from '../assets/images/logos/wahoo.jpg?url';
+  
+import logo_garmin from '../assets/images/logos/garmin.png?url';
+import logo_polar from '../assets/images/logos/polar.png?url';
+import logo_suunto from '../assets/images/logos/suunto.png?url';
 
 const metadata = {
   title: 'AeroX — Analyse et améliore ton aérodynamisme à vélo',
@@ -38,14 +49,14 @@ const metadata = {
   <!-- Hero Widget ******************* -->
 
   <Hero
-    video={{ src: heroVideo, alt: 'Démonstration AeroX' }}
+  id="Accueil"
     actions={[
       {
         variant: 'primary',
         target: '_blank',
-        text: 'Télécharge AeroX maintenant',
+        text: 'Essaie AeroX maintenant',
         icon: 'tabler:download',
-        href: 'https://github.com/onwidget/astrowind',
+        href: '/telechargement',
       },
     ]}
   >
@@ -59,7 +70,7 @@ const metadata = {
     </Fragment>
 
     <Fragment slot="title">
-      <span class="font-bold">Le cyclisme indoor, <span class="text-primary">l'aérodynamisme en plus.</span></span>
+      <span class="font-bold">Le cyclisme indoor<br /> <span class="text-primary">l'aérodynamisme en plus</span></span>
     </Fragment>
     <Fragment slot="paragraph">
       Gagne jusqu'à&nbsp;<span class="font-bold text-accent">3&#8239;km/h</span>, économise&nbsp;<span
@@ -75,14 +86,33 @@ const metadata = {
     </Fragment>
   </Hero>
 
+  
+  <HeroVideo
+    video={{ src: heroVideo, alt: 'Démonstration AeroX' }}
+  />
+
+
+
+
+<LogosCarousel title="Compatibilité " logos={[{src: logo_wahoo},{src: logo_elite},{src: logo_tacx},{src: logo_vanrysel},{src: logo_saris},{src: logo_polar},{src: logo_garmin},{src: logo_suunto}
+]} />
+<Stats
+    stats={[
+      { title: 'Pionniers', amount: '290+' },
+      { title: 'km/h gagnés en moyenne', amount: '+2.3' },
+      { title: 'Économisés à 30km/h', amount: '-35 W' },
+    ]}
+  />
   <!-- Note Widget ******************* -->
 
   <Note title="Notre Philosophie:" description="Innovation, simplicité, efficacité" />
 
   <!-- Features2 Widget ************** -->
 
+  
   <Features2
     tagline="Fonctionnalités"
+    id="features"
     title="Tout ce dont tu as besoin pour aller plus vite"
     subtitle="Place l'aérodynamisme au coeur de ton entrainement"
     items={[
@@ -204,6 +234,7 @@ const metadata = {
   <!-- FAQs Widget ******************* -->
 
   <Testimonials
+  id="utilisateurs"
     title="Témoignages"
     testimonials={[
       {
@@ -267,7 +298,7 @@ const metadata = {
 
   <!-- Features Widget *************** -->
   <Features
-    id="features"
+    
     title="Pourquoi intégrer l'aérodynamisme à ton entraînement ?"
     subtitle="Parce que chaque watt compte, ton budget aussi !"
     items={[
@@ -391,7 +422,7 @@ const metadata = {
     ]}
   >
     <Fragment slot="ctaDetails">
-      Plus que <CountDown targetDate="2025-09-30T00:00:00" /> pour faire partie des testeurs AerOX et profiter <span
+      Plus que <CountDown targetDate="2025-09-30T00:00:00" /> pour faire partie des testeurs AeroX et profiter <span
         class="font-bold text-accent">d'avantages exclusifs</span
       >!
     </Fragment>
@@ -549,7 +580,8 @@ const metadata = {
   <!-- Pricing Widget ******************* -->
 
   <Prices
-    title="Nos tarifs"
+    title="Nos Abonnements"
+    id="pricing"
     subtitle="Nos offres de lancement"
     prices={[
       {
@@ -611,7 +643,7 @@ const metadata = {
         ],
         callToAction: {
           target: '/telechargement',
-          text: "Commence l'aventure AeroX",
+          text: "Deviens pionnier AeroX",
           href: '#',
         },
         hasRibbon: true,
@@ -755,8 +787,9 @@ const metadata = {
   <!-- FAQ Widget ******************* -->
 
   <FAQs
-    title="Questions fréquentes"
-    subtitle="Toutes les réponses à vos questions"
+  id="FAQs"
+    title="Nos réponses à vos questions"
+    subtitle="Questions fréquentes"
     tagline="FAQs"
     classes={{ container: 'max-w-6xl' }}
     actions={[
@@ -873,6 +906,8 @@ const metadata = {
       { title: 'Économisés à 30km/h', amount: '-35 W' },
     ]}
   />
+  <LogosCarousel title="Compatibilité " logos={[{src: logo_wahoo},{src: logo_elite},{src: logo_tacx},{src: logo_vanrysel},{src: logo_saris},{src: logo_polar},{src: logo_garmin},{src: logo_suunto}
+]} />
 
   <!-- CallToAction Widget *********** -->
 </Layout>

@@ -57,7 +57,7 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
         tabindex="0"
         class={twMerge(
           // Carrousel horizontal (toutes tailles) + UX scrollbar
-          'flex overflow-x-auto hide-native-scroll  snap-x snap-mandatory py-2 -mx-6 px-6 sm:px-10  scroll-px-0',
+          'flex overflow-x-auto hide-native-scroll  snap-x snap-mandatory  -mx-6 px-6 sm:px-10  scroll-px-0',
           containerClass
         )}
         aria-label="Carrousel d’items"
@@ -68,10 +68,10 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
               class={twMerge(
                 // élément scrollable (teasing : on voit la carte suivante)
 
-                'snap-center shrink-0 min-w-[92%] md:min-w-[520px] xl:min-w-[520px] max-w-[40%]',
+                'snap-center shrink-0 min-w-[92%] md:min-w-[520px] xl:min-w-[520px] max-w-[35%]',
                 // carte
                 'bg-white/5 rounded-2xl p-0 sm:p-0',
-                'relative flex flex-col gap-2 ',
+                'relative flex flex-col  ',
                 'border-2 dark:hover:border-primary-light ',
                 panelClass,
                 itemClasses?.panel
@@ -109,7 +109,7 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
               {/* MEDIA (image OU vidéo) */}
               {(image || video) && (
                 <>
-                  <div class="relative overflow-visible w-full aspect-video  rounded-xl dark:border-secondary">
+                  <div class="relative overflow-visible w-full aspect-video p-6  rounded-xl dark:border-secondary">
                     {video ? (
                       <>
                         <video
@@ -153,7 +153,7 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
                   {/* DESCRIPTION SOUS le média (plus d'absolute) */}
                   {(description || callToAction) && (
                     <div
-                      class=" p-2 sm:p-3 rounded-lg 
+                      class="  pb-2 sm:pb-3 rounded-lg 
                   text-black  dark:text-white
                   max-w-full"
                     >

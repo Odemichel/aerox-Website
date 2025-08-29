@@ -262,6 +262,14 @@ export interface Hero extends Omit<Headline, 'classes'>, Omit<Widget, 'isDark' |
   video?: Media | string;
   paragraph?: string;
 }
+export interface HeroVideo extends Omit<Headline, 'classes'>, Omit<Widget, 'isDark' | 'classes'> {
+  content?: string;
+  actions?: string | CallToAction[];
+  image?: string | unknown;
+  video?: Media | string;
+  paragraph?: string;
+}
+
 
 export interface Team extends Omit<Headline, 'classes'>, Widget {
   team?: Array<TeamMember>;

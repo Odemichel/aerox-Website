@@ -18,7 +18,7 @@ const {
 } = Astro.props;
 ---
 
-<WidgetWrapper id={id} containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+<WidgetWrapper id={id} containerClass={`max-w-7xl w-full  bg-secondary ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
   <ItemGridFAQ
     items={items}

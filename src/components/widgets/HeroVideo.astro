@@ -1,0 +1,43 @@
+---
+import posterPuissance from '../../assets/images/posterPuissance.jpg?url';
+
+import type { HeroVideo as Props } from '~/types';
+
+const {
+ 
+  video = await Astro.slots.render('video'),
+  id,
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+---
+
+<section class="relative max-h-full md:-mt-[76px] not-prose" {...id ? { id } : {}}>
+  <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <slot name="bg">
+      {bg ? <Fragment set:html={bg} /> : null}
+    </slot>
+  </div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+
+    <div
+      class="intersect-once intersect-no-queue intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
+    >
+      {
+        video ? (
+          <div class="relative m-auto mt-12 mb-24 md:max-w-3xl max-w-5xl items-center">
+            <video
+              autoplay
+              muted
+              loop
+              playsinline
+              poster={posterPuissance ?? ''}
+              class="mx-auto rounded-md w-full shadow-lg "
+            >
+              <source src={video.src} type="video/mp4" />
+            </video>
+          </div>
+        ) : null
+      }
+    </div>
+  </div>
+</section>

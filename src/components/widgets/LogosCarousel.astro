@@ -1,0 +1,143 @@
+---
+/**
+ * Props:
+ * - title?: string
+ * - logos: Array<{ src: string; alt: string; href?: string }>
+ * - id?: string
+ */
+const { title = '', logos = [], id } = Astro.props;
+
+// id unique pour le carrousel
+const carouselId = `logos-${Math.random().toString(36).slice(2, 8)}`;
+---
+<section {...(id ? { id } : {})} class="not-prose">
+  {title && (
+    <h2 class="text-center text-muted text-xl md:text-2xl font-semibold mb-4">{title}</h2>
+  )}
+
+  <div class="relative">
+   
+
+    <!-- Piste -->
+    <div
+      id={carouselId}
+      class="flex items-center gap-8 overflow-x-auto snap-x snap-mandatory
+             px-6 -mx-6 py-3 scroll-px-6 bg-white hide-native-scroll"
+      aria-label="Carrousel de logos"
+    >
+      {logos.map(({ src, alt, href }) => (
+        <div class="snap-center shrink-0">
+          {href ? (
+            <a href={href} target="_blank" rel="noopener noreferrer" class="block focus:outline-none">
+              <img
+                src={src}
+                alt={alt}
+                loading="lazy"
+                class="h-12 md:h-16 w-auto object-contain  
+                       opacity-80 hover:opacity-100"
+              />
+            </a>
+          ) : (
+            <img
+              src={src}
+              alt={alt}
+              loading="lazy"
+              class="h-12 md:h-16 w-auto object-contain 
+                     opacity-80 hover:opacity-100"
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+
+
+
+<script define:vars={{ carouselId }}>
+  const scroller = document.getElementById(carouselId);
+  if (!scroller) return;
+
+  // --- réglages ---
+  const SPEED = 80;                // px/s
+  const AUTO_DUPLICATE = true;     // dupliquer pour forcer l'overflow si besoin
+  let dir = -1;                    // -1 = droite->gauche, 1 = gauche->droite
+  let rafId = 0, last = 0, pausedUntil = 0;
+  let inView = true;
+
+  // ⚠️ Si tu veux respecter l'accessibilité, décommente ce bloc :
+  // const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+  // if (reduceMotion) return;
+
+  // 1) Duplique au besoin pour forcer l’overflow (si peu de logos)
+  const ensureOverflow = () => {
+    if (!AUTO_DUPLICATE) return;
+    const minFactor = 1.25; // on veut au moins 125% de largeur
+    let guard = 0;
+    while (scroller.scrollWidth <= scroller.clientWidth * minFactor && guard < 5) {
+      // clone tous les enfants une fois
+      const clones = Array.from(scroller.children).map((el) => el.cloneNode(true));
+      clones.forEach((c) => scroller.appendChild(c));
+      guard++;
+    }
+  };
+
+  const disableSnap = () => {
+    scroller.style.scrollSnapType = 'none';
+  };
+
+  // 5) IO : ne tourne que si visible
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; });
+    io.observe(scroller);
+  }
+
+  // 6) Animation
+  const step = (t) => {
+    if (!inView) { rafId = requestAnimationFrame(step); return; }
+    if (!last) last = t;
+    const dt = (t - last) / 1000; // s
+    last = t;
+
+    const max = scroller.scrollWidth - scroller.clientWidth;
+    if (max <= 0) { // rien à scroller
+      rafId = requestAnimationFrame(step);
+      return;
+    }
+
+    if (performance.now() >= pausedUntil) {
+      disableSnap(); // auto-scroll ⇒ pas de snap
+      const dx = dir * SPEED * dt;
+      let next = scroller.scrollLeft + dx;
+
+      if (next <= 0) { next = 0; dir = 1; pausedUntil = performance.now() + 300; }
+      else if (next >= max) { next = max; dir = -1; pausedUntil = performance.now() + 300; }
+
+      scroller.scrollLeft = next;
+    }
+
+    rafId = requestAnimationFrame(step);
+  };
+
+  // Lancer après mise en page (images à largeur connue)
+  const start = () => {
+    ensureOverflow();
+    last = 0;
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(step);
+  };
+
+  if ('ResizeObserver' in window) {
+    const ro = new ResizeObserver(start);
+    ro.observe(scroller);
+  }
+  window.addEventListener('load', start);
+  start();
+
+  // Nettoyage page cachée
+  addEventListener('visibilitychange', () => {
+    if (document.hidden) cancelAnimationFrame(rafId);
+    else { last = 0; rafId = requestAnimationFrame(step); }
+  });
+</script>

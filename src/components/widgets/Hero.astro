@@ -1,5 +1,4 @@
 ---
-import Image from '~/components/common/Image.astro';
 import Button from '~/components/ui/Button.astro';
 
 import type { Hero as Props } from '~/types';
@@ -12,27 +11,24 @@ const {
 
   content = await Astro.slots.render('content'),
   actions = await Astro.slots.render('actions'),
-  image = await Astro.slots.render('image'),
-  video = await Astro.slots.render('video'),
   id,
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 ---
 
-<section class="relative md:-mt-[76px] not-prose" {...id ? { id } : {}}>
+<section class="relative not-prose min-h-screen flex items-center justify-center" {...id ? { id } : {}}>
   <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
     <slot name="bg">
       {bg ? <Fragment set:html={bg} /> : null}
     </slot>
   </div>
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
-    <div class="pt-0 md:pt-[76px] pointer-events-none"></div>
-    <div class="py-12 md:py-30">
+    <div class="pt-0 pointer-events-none"></div>
       <div class="text-center pb-18 md:pb-16 max-w-5xl mx-auto">
         {
           tagline && (
             <p
-              class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+              class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
               set:html={tagline}
             />
           )
@@ -40,7 +36,7 @@ const {
         {
           title && (
             <h1
-              class="text-4xl md:text-6xl  leading-tighter tracking-tighter mb-38 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+              class="text-4xl md:text-6xl  leading-tighter tracking-tighter mb-38 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
               set:html={title}
             />
           )
@@ -49,7 +45,7 @@ const {
           {
             subtitle && (
               <p
-                class="text-md md:text-xl text-muted mb-10 dark:text-slate-400 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+                class="text-md md:text-xl text-muted mb-10 dark:text-slate-400 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
                 set:html={subtitle}
               />
             )
@@ -58,14 +54,14 @@ const {
             {
               paragraph && (
                 <p
-                  class="text-xl md:text-2xl text-muted  dark:text-slate-400 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+                  class="text-xl md:text-2xl text-muted  dark:text-slate-400 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
                   set:html={paragraph}
                 />
               )
             }
             {
               actions && (
-                <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-2 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+                <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-2 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade">
                   {Array.isArray(actions) ? (
                     actions.map((action) => (
                       <div class="flex w-full sm:w-auto">
@@ -80,41 +76,11 @@ const {
             }
           </div>
         </div>
-        <div class="m-auto text-muted motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mt-2 mb-10">
+        <div class="m-auto text-muted motion-safe:opacity-0 motion-safe:intersect:animate-fade mt-2 mb-10">
           {content && <Fragment set:html={content} />}
         </div>
 
-        <div
-          class="intersect-once intersect-no-queue intersect-quarter  motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
-        >
-          {
-            video ? (
-              <div class="relative m-auto md:max-w-3xl max-w-5xl items-center">
-                <video autoplay muted loop playsinline class="mx-auto rounded-md w-full shadow-lg ">
-                  <source src={video.src} type="video/mp4" />
-                  Ton navigateur ne supporte pas la vidéo.
-                </video>
-              </div>
-            ) : image ? (
-              <div class="relative m-auto max-w-5xl">
-                {typeof image === 'string' ? (
-                  <Fragment set:html={image} />
-                ) : (
-                  <Image
-                    class="mx-auto rounded-md w-full"
-                    widths={[400, 768, 1024, 2040]}
-                    sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-                    loading="eager"
-                    width={1024}
-                    height={576}
-                    {...image}
-                  />
-                )}
-              </div>
-            ) : null
-          }
-        </div>
+        
       </div>
     </div>
-  </div>
 </section>
