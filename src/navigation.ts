@@ -1,3 +1,4 @@
+import type { HeaderProps } from './components/widgets/Header.astro';
 import { LINKS } from './config/links';
 import { getPermalink } from './utils/permalinks';
 
@@ -41,7 +42,7 @@ export const headerData = {
     `, icon:'tabler:download', href: LINKS.download, target: '_blank',    subtext: "Réservé aux pionniers AeroX",
 }],
     
-};
+}satisfies HeaderProps;
 
 export const footerData = {
   links: [
