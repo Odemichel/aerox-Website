@@ -1,3 +1,4 @@
+import { LINKS } from './config/links';
 import { getPermalink } from './utils/permalinks';
 
 export const headerData = {
@@ -14,8 +15,8 @@ export const headerData = {
           href: getPermalink('/#features'),
         },
         {
-          text: 'Services',
-          href: getPermalink('/#services'),
+          text: 'Pourquoi AeroX ?',
+          href: getPermalink('/#pourquoi'),
         },
         {
           text: 'Abonnements',
@@ -36,8 +37,10 @@ export const headerData = {
   ],
   actions: [{variant:'primary', text: `
       <span class="md:hidden">Télécharger</span>
-      <span class="hidden md:inline">Télécharge&nbsp;AeroX</span>
-    `, icon:'tabler:download', href: '/telechargement', target: '_blank' }],
+      <span class="hidden md:inline">Je&nbsp;teste&nbsp;AeroX</span>
+    `, icon:'tabler:download', href: LINKS.download, target: '_blank',    subtext: "Réservé aux pionniers AeroX",
+}],
+    
 };
 
 export const footerData = {

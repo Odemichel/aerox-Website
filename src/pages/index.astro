@@ -9,6 +9,8 @@ import Olivier_Tete from '../assets/images/Olivier_tete2.png';
 import posterPuissance from '../assets/images/posterPuissance.jpg?url';
 import Ropert_Tete from '../assets/images/ropert1.jpg';
 import LogosCarousel from '../components/widgets/LogosCarousel.astro';
+import { LINKS } from "../config/links";
+
 
 import simulationGPX from '../assets/images/simulationGPX.jpg';
 
@@ -56,7 +58,8 @@ const metadata = {
         target: '_blank',
         text: 'Essaie AeroX maintenant',
         icon: 'tabler:download',
-        href: '/telechargement',
+        subtext: "Réservé aux pionniers AeroX",
+        href: LINKS.download,
       },
     ]}
   >
@@ -80,7 +83,7 @@ const metadata = {
     </Fragment>
 
     <Fragment slot="content">
-      Plus que <CountDown targetDate="2025-09-30T00:00:00" />&nbsp;pour profiter <span class="font-bold"
+      Plus que <CountDown targetDate="2025-10-20T00:00:00" />&nbsp;pour profiter <span class="font-bold"
         >d'avantages exclusifs</span
       >!
     </Fragment>
@@ -98,7 +101,7 @@ const metadata = {
 ]} />
 <Stats
     stats={[
-      { title: 'Pionniers', amount: '290+' },
+      { title: 'Pionniers', amount: '300+' },
       { title: 'km/h gagnés en moyenne', amount: '+2.3' },
       { title: 'Économisés à 30km/h', amount: '-35 W' },
     ]}
@@ -127,7 +130,7 @@ const metadata = {
         callToAction: {
           variant: 'primary',
           text: 'Deviens plus rapide maintenant',
-          href: '/telechargement',
+          href: LINKS.download,
           icon: 'tabler:bolt-filled',
           target: '_blank',
         },
@@ -141,7 +144,7 @@ const metadata = {
         callToAction: {
           variant: 'primary',
           text: 'Ressens ce que te coûte ta position',
-          href: '/telechargement',
+          href: LINKS.download,
           icon: 'tabler:player-play-filled',
           target: '_blank',
         },
@@ -155,7 +158,7 @@ const metadata = {
         callToAction: {
           variant: 'primary',
           text: "Simule ton prochain objectif avec l'aéro",
-          href: '/telechargement',
+          href: LINKS.download,
           icon: 'tabler:bike-filled',
 
           target: '_blank',
@@ -171,7 +174,7 @@ const metadata = {
         callToAction: {
           variant: 'primary',
           text: 'Défie les plus grands',
-          href: '/telechargement',
+          href: LINKS.download,
           icon: 'tabler:download',
           target: '_blank',
         },
@@ -185,7 +188,7 @@ const metadata = {
         callToAction: {
           variant: 'primary',
           text: 'Challenge ta vitesse',
-          href: '/telechargement',
+          href: LINKS.download,
           icon: 'tabler:arrow-badge-up-filled',
           target: '_blank',
         },
@@ -202,7 +205,7 @@ const metadata = {
         callToAction: {
           variant: 'primary',
           text: 'Analyse précisément ta progression',
-          href: '/telechargement',
+          href: LINKS.download,
           target: '_blank',
         },
       }, */
@@ -215,7 +218,7 @@ const metadata = {
         callToAction: {
           variant: 'primary',
           text: 'Personnalise tes séances aéro',
-          href: '/telechargement',
+          href: LINKS.download,
           icon: 'tabler:pencil-cog',
           target: '_blank',
         },
@@ -287,7 +290,7 @@ const metadata = {
       variant: 'primary',
       target: '_blank',
       text: 'Rejoins les pionniers AeroX',
-      href: '/telechargement',
+      href: LINKS.download,
       icon: 'tabler:users',
     }}
   />
@@ -298,7 +301,7 @@ const metadata = {
 
   <!-- Features Widget *************** -->
   <Features
-    
+    id="pourquoi"
     title="Pourquoi intégrer l'aérodynamisme à ton entraînement ?"
     subtitle="Parce que chaque watt compte, ton budget aussi !"
     items={[
@@ -319,7 +322,7 @@ const metadata = {
         },
         callToAction: {
           text: 'Commence AeroX, gagne 1-5&#8239;km/h',
-          href: '/telechargement',
+          href: LINKS.download,
           icon: 'tabler:download',
           variant: 'primary', // btn-primary
           class: 'mt-2',
@@ -342,7 +345,7 @@ const metadata = {
         },
         callToAction: {
           text: 'Essaie AeroX, économise tes watts',
-          href: '/telechargement',
+          href: LINKS.download,
           icon: 'tabler:bolt',
           variant: 'primary', // btn-primary
           class: 'mt-2',
@@ -365,7 +368,7 @@ const metadata = {
         },
         callToAction: {
           text: 'Entraîne-toi comme un pro avec AeroX',
-          href: '/telechargement',
+          href: LINKS.download,
           icon: 'tabler:download',
           variant: 'primary', // btn-primary
           class: 'mt-2',
@@ -389,7 +392,7 @@ const metadata = {
         },
         callToAction: {
           text: 'Accélère sans dépenser plus',
-          href: '/telechargement',
+          href: LINKS.download,
           icon: 'tabler:currency-euro',
           variant: 'primary', // btn-primary
           class: 'mt-2',
@@ -413,7 +416,7 @@ const metadata = {
         },
         callToAction: {
           text: 'Rejoins la communauté AeroX',
-          href: '/telechargement',
+          href: LINKS.download,
           icon: 'tabler:download',
           variant: 'primary', // btn-primary
           class: 'mt-2',
@@ -422,7 +425,7 @@ const metadata = {
     ]}
   >
     <Fragment slot="ctaDetails">
-      Plus que <CountDown targetDate="2025-09-30T00:00:00" /> pour faire partie des testeurs AeroX et profiter <span
+      Plus que <CountDown targetDate="2025-10-20T00:00:00" /> pour faire partie des pionniers AeroX et profiter <span
         class="font-bold text-accent">d'avantages exclusifs</span
       >!
     </Fragment>
@@ -611,8 +614,8 @@ const metadata = {
       },
       {
         title: 'Pionnier AeroX',
-        subtitle: "Jusqu'au 30&nbsp;septembre", // string OK (HTML interprété via set:html)
-        countdownTarget: '2025-09-30T00:00:00', // 👈 apparaît uniquement dans cette carte
+        subtitle: "Jusqu'au 20&nbsp;Octobre", // string OK (HTML interprété via set:html)
+        countdownTarget: '2025-10-20T00:00:00', // 👈 apparaît uniquement dans cette carte
 
         price: '20',
         period: 'paiement unique',
@@ -637,12 +640,12 @@ const metadata = {
           },
 
           {
-            description: ' Fais partie des 100 premiers testeurs et entre dans l’histoire d’AeroX 🚀',
+            description: ' Fais partie des 100 premiers pionniers et entre dans l’histoire d’AeroX 🚀',
             icon: 'tabler:users',
           },
         ],
         callToAction: {
-          target: '/telechargement',
+          target: LINKS.download,
           text: "Deviens pionnier AeroX",
           href: '#',
         },
@@ -796,7 +799,7 @@ const metadata = {
       {
         variant: 'primary',
         text: 'Écris ton futur avec AeroX',
-        href: '/telechargement',
+        href: LINKS.download,
         target: '_blank',
   //      icon: 'tabler:download',
       },
@@ -901,7 +904,7 @@ const metadata = {
 
   <Stats
     stats={[
-      { title: 'Pionniers', amount: '290+' },
+      { title: 'Pionniers', amount: '300+' },
       { title: 'km/h gagnés en moyenne', amount: '+2.3' },
       { title: 'Économisés à 30km/h', amount: '-35 W' },
     ]}

@@ -1,0 +1,94 @@
+---
+// src/pages/abonnement.astro
+import Layout from '~/layouts/Layout.astro';
+---
+
+<Layout metadata={{ title: 'Devenir Pionnier AeroX' }}>
+  <section class="max-w-3xl mx-auto py-16 text-center">
+    <h1 class="text-3xl md:text-4xl font-bold mb-6">🚀 Rejoins les Pionniers AeroX</h1>
+    <p class="text-muted mb-12">
+      Tu n’es pas seulement utilisateur. Tu es co-bâtisseur d’une révolution cycliste.
+    </p>
+
+    <!-- Bloc 1 : avantages -->
+    <div class="mb-16">
+      <h2 class="text-2xl font-semibold mb-4">1. Les avantages pour toi</h2>
+      <ul class="space-y-3 text-left max-w-lg mx-auto text-muted">
+        <li>✅ <strong>Accès privilégié</strong> : premier cercle d’utilisateurs.</li>
+        <li>✅ <strong>Impact direct</strong> : tes retours façonnent AeroX.</li>
+        <li>✅ <strong>Tarif fondateur</strong> : une offre unique réservée aux pionniers.</li>
+        <li>✅ <strong>Visibilité</strong> : tu fais partie des premiers à démocratiser l’aéro.</li>
+      </ul>
+    </div>
+
+    <!-- Bloc 2 : enjeux -->
+    <div class="mb-16">
+      <h2 class="text-2xl font-semibold mb-4">2. Pourquoi une contribution payante ?</h2>
+      <ul class="space-y-3 text-left max-w-lg mx-auto text-muted">
+        <li>💡 <strong>Image extérieure</strong> : montrer qu’AeroX répond à un vrai besoin.</li>
+        <li>💡 <strong>Force de traction financière</strong> : chaque pionnier renforce le projet.</li>
+        <li>💡 <strong>Croissance</strong> : plus de mises à jour, de tests, de stabilité.</li>
+        <li>💡 <strong>Communauté vitrine</strong> : les pionniers deviennent la référence.</li>
+      </ul>
+    </div>
+
+    <!-- Call to action -->
+    <div class="flex flex-col items-center gap-2">
+      <button
+        id="btn-checkout"
+        type="button"
+        class="btn btn-primary px-8 py-3"
+      >
+        Devenir pionnier
+      </button>
+      <small class="text-xs text-muted">réservé aux premiers utilisateurs engagés</small>
+    </div>
+
+    <p class="text-xs text-muted mt-6">
+      Paiement sécurisé par Stripe. Ton engagement construit AeroX, et tu gardes ton avantage à vie.
+    </p>
+  </section>
+
+
+  <script is:inline>
+    const callCheckout = async (payload = {}) => {
+      const res = await fetch('/api/create-api-checkout', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data?.error || 'Erreur Stripe');
+      }
+    };
+    
+
+    const withLoading = async (btn, fn) => {
+      if (!btn) return;
+      btn.disabled = true;
+      const prev = btn.innerHTML;
+      btn.innerHTML = 'Redirection…';
+      try {
+        await fn();
+      } catch (e) {
+        alert(e?.message || e || 'Erreur');
+        btn.disabled = false;
+        btn.innerHTML = prev;
+      }
+    };
+
+    // Bouton principal : aucun param — l’API lira STRIPE_PRICE_ID / STRIPE_LOOKUP_KEY côté serveur
+    document.getElementById('btn-checkout')?.addEventListener('click', (e) => {
+      withLoading(e.currentTarget, () => callCheckout());
+    });
+
+    // Exemple : bouton alternatif qui passe un lookupKey public (facultatif)
+    document.getElementById('btn-checkout-alt')?.addEventListener('click', (e) => {
+      const key = e.currentTarget.getAttribute('data-lookup-key');
+      withLoading(e.currentTarget, () => callCheckout({ lookupKey: key }));
+    });
+  </script>
+</Layout>

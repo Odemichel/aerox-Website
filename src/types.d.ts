@@ -220,6 +220,8 @@ export interface Disclaimer {
 export interface CallToAction extends Omit<HTMLAttributes<'a'>, 'slot'> {
   variant?: 'primary' | 'secondary' | 'tertiary' | 'link';
   text?: string;
+  subtext?: string;
+
   icon?: string;
   classes?: Record<string, string>;
   type?: 'button' | 'submit' | 'reset';
@@ -262,7 +264,7 @@ export interface Hero extends Omit<Headline, 'classes'>, Omit<Widget, 'isDark' |
   video?: Media | string;
   paragraph?: string;
 }
-export interface HeroVideo extends Omit<Headline, 'classes'>, Omit<Widget, 'isDark' | 'classes'> {
+export interface Hero extends Omit<Headline, 'classes'>, Omit<Widget, 'isDark' | 'classes'> {
   content?: string;
   actions?: string | CallToAction[];
   image?: string | unknown;
