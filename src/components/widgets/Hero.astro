@@ -41,11 +41,11 @@ const {
             />
           )
         }
-          <div class="max-w-3xl mx-auto  space-y-12 ">
+          <div class="max-w-3xl mx-auto  space-y-12 "  >
           {
             subtitle && (
               <p
-                class="text-md md:text-xl text-muted mb-10 dark:text-slate-400 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
+                class="text-md md:text-xl text-muted mb-10 dark:text-slate-400 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade ![animation-delay:2s]"
                 set:html={subtitle}
               />
             )
@@ -54,14 +54,14 @@ const {
             {
               paragraph && (
                 <p
-                  class="text-xl md:text-2xl text-muted  dark:text-slate-400 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
+                  class="text-xl md:text-2xl text-muted  dark:text-slate-400 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade ![animation-delay:2s]"
                   set:html={paragraph}
                 />
               )
             }
             {
               actions && (
-                <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-2 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade">
+                <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-2 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade ![animation-delay:2s]">
                   {Array.isArray(actions) ? (
                     actions.map((action) => (
                       <div class="flex w-full sm:w-auto">
@@ -76,7 +76,7 @@ const {
             }
           </div>
         </div>
-        <div class="m-auto text-muted motion-safe:opacity-0 motion-safe:intersect:animate-fade mt-2 mb-10">
+        <div class="m-auto text-muted motion-safe:opacity-0 motion-safe:intersect:animate-fade ![animation-delay:2s] mt-2 mb-10">
           {content && <Fragment set:html={content} />}
         </div>
 
