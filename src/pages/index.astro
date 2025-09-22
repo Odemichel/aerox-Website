@@ -10,7 +10,6 @@ import Olivier_Tete from '../assets/images/Olivier_tete2.png';
 import posterPuissance from '../assets/images/posterPuissance.jpg?url';
 import Ropert_Tete from '../assets/images/ropert1.jpg';
 import LogosCarousel from '../components/widgets/LogosCarousel.astro';
-import { LINKS } from '../config/links';
 
 import simulationGPX from '../assets/images/simulationGPX.jpg';
 
@@ -668,9 +667,11 @@ const metadata = {
           },
         ],
         callToAction: {
-          target: LINKS.download,
+          target: '',
           text: 'Deviens pionnier AeroX',
-          href: LINKS.download,
+          href: ' ',
+            id: 'btn-checkout-card',
+
         },
         hasRibbon: true,
         ribbonTitle: 'Pionnier',
@@ -947,4 +948,45 @@ const metadata = {
   />
 
   <!-- CallToAction Widget *********** -->
+
+  <script is:inline>
+    const callCheckout = async (payload = {}) => {
+      const res = await fetch('/api/create-api-checkout', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data?.error || 'Erreur Stripe');
+      }
+    };
+
+    const withLoading = async (btn, fn) => {
+      if (!btn) return;
+      btn.disabled = true;
+      const prev = btn.innerHTML;
+      btn.innerHTML = 'Redirection…';
+      try {
+        await fn();
+      } catch (e) {
+        alert(e?.message || e || 'Erreur');
+        btn.disabled = false;
+        btn.innerHTML = prev;
+      }
+    };
+
+    document.getElementById('btn-checkout')?.addEventListener('click', (e) => {
+      withLoading(e.currentTarget, () => callCheckout());
+    });
+    document.getElementById('btn-checkout-final')?.addEventListener('click', (e) => {
+      withLoading(e.currentTarget, () => callCheckout());
+    });
+      document.getElementById('btn-checkout-card')?.addEventListener('click', (e) => {
+      withLoading(e.currentTarget, () => callCheckout());
+    });
+    
+  </script>
 </Layout>

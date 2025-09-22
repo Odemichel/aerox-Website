@@ -26,7 +26,7 @@ export const POST: APIRoute = async ({ request }) => {
     const base = envBase || reqOrigin;
 
     // --- Compose URLs absolues à partir des chemins env ---
-    const successPath = import.meta.env.SUCCESS_URL || '/telechargement/success';
+    const successPath = import.meta.env.SUCCESS_URL || 'telechargement/success';
     const cancelPath  = import.meta.env.CANCEL_URL  || 'telechargement/cancel';
 
     const successUrl = new URL(successPath, base).toString();
