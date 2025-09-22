@@ -158,6 +158,11 @@
     transition: opacity .2s ease;
     z-index: 10;
   }
+  h1, h2, h3, a, p{
+  font-family: 'Manrope', sans-serif !important;
+  line-height: 1.4;
+  letter-spacing: 0.008em;
+}
 
   .fakebar.show {
     opacity: 1;

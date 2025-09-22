@@ -4,13 +4,11 @@ import posterPuissance from '../../assets/images/posterPuissance.jpg?url';
 import type { HeroVideo as Props } from '~/types';
 
 const {
- 
-  video = await Astro.slots.render('video'),
+  video,
   id,
-  bg = await Astro.slots.render('bg'),
-} = Astro.props;
+  bg,
+} = Astro.props as Props;
 ---
-
 <section class="relative max-h-full md:-mt-[76px] not-prose" {...id ? { id } : {}}>
   <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
     <slot name="bg">
@@ -24,18 +22,32 @@ const {
     >
       {
         video ? (
-          <div class="relative m-auto mt-12 mb-24 md:max-w-3xl max-w-5xl items-center">
+          <figure class="relative m-auto mt-12 mb-24 md:max-w-3xl max-w-5xl items-center text-center">
+            
+            <!-- H2 SEO -->
+            <h2 class="sr-only">
+              Démonstration AeroX en vidéo : cyclisme indoor avec aérodynamisme en temps réel. Au-delà de Zwift, MyWhoosh et Kinomap, deviens plus rapide.
+            </h2>
+
+            <!-- Vidéo -->
             <video
               autoplay
               muted
               loop
               playsinline
               poster={posterPuissance ?? ''}
-              class="mx-auto rounded-md w-full shadow-lg "
+              class="mx-auto rounded-md w-full shadow-lg"
+              title="Démonstration AeroX – cyclisme indoor avec aérodynamisme"
+              aria-label="Vidéo AeroX : gagne 2–3 km/h et économise 40 W sur home trainer grâce à l’aérodynamisme en temps réel"
             >
               <source src={video.src} type="video/mp4" />
             </video>
-          </div>
+
+            <!-- Légende SEO-friendly -->
+            <figcaption class="italic text-muted">
+              AeroX transforme ton home trainer en soufflerie : ta position traduite en gain de puissance en temps réel. 
+            </figcaption>
+          </figure>
         ) : null
       }
     </div>

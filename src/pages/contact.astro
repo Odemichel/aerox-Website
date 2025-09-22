@@ -1,79 +1,29 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import HeroText from '~/components/widgets/HeroText.astro';
-import ContactUs from '~/components/widgets/Contact.astro';
-import Features2 from '~/components/widgets/Features2.astro';
 
 const metadata = {
-  title: 'Contact',
+  title: 'Contact AeroX',
+  description: "Besoin d'aide ou d'informations ? Contactez directement l'équipe AeroX par email.",
 };
 ---
 
 <Layout metadata={metadata}>
-  <!-- HeroText Widget ******************* -->
+  <section class="max-w-3xl mx-auto py-20 text-center min-h-screen ">
+    <h1 class="text-3xl md:text-4xl font-bold mb-6">📩 Contact AeroX</h1>
+    <p class="text-muted mb-8">
+      Pour toute question, suggestion ou demande d’assistance, vous pouvez nous écrire directement :
+    </p>
 
-  <HeroText tagline="Contact" title="Let's Connect!" />
+    <a 
+      href="mailto:contact@aeroxbefaster.com"
+      class="text-xl md:text-2xl font-semibold text-primary hover:underline"
+      aria-label="Envoyer un email à contact@aeroxbefaster.com"
+    >
+      contact@aeroxbefaster.com
+    </a>
 
-  <ContactUs
-    id="form"
-    title="Drop us a message today!"
-    subtitle="For quicker answers, explore our FAQs section. You may find the solution you're looking  for right there! If not, our support team is delighted to help you."
-    inputs={[
-      {
-        type: 'text',
-        name: 'name',
-        label: 'Name',
-      },
-      {
-        type: 'email',
-        name: 'email',
-        label: 'Email',
-      },
-    ]}
-    textarea={{
-      label: 'Message',
-    }}
-    disclaimer={{
-      label:
-        'By submitting this contact form, you acknowledge and agree to the collection of your personal information.',
-    }}
-    description="Our support team typically responds within 24 business hours."
-  />
-
-  <!-- Features2 Widget ************** -->
-
-  <Features2
-    title="We are here to help!"
-    items={[
-      {
-        title: 'General support',
-        description: `Chat with us for inquiries related to account management, website navigation, payment issues, accessing purchased templates or general questions about the website's functionality.`,
-      },
-      {
-        title: 'Contact sales',
-        description:
-          'Chat with us for questions about purchases, customization options, licensing for commercial use, inquiries about specific template, etc.',
-      },
-      {
-        title: 'Technical support',
-        description:
-          'Chat with us when facing issues like template installation, problems editing difficulties, compatibility issues with software or download errors, or other technical challenges related to using the templates.',
-      },
-      {
-        title: 'Phone',
-        description: '+1 (234) 567-890',
-        icon: 'tabler:headset',
-      },
-      {
-        title: 'Email',
-        description: 'contact@support.com',
-        icon: 'tabler:mail',
-      },
-      {
-        title: 'Location',
-        description: '1234 Lorem Ipsum St, 12345, Miami, EEUU',
-        icon: 'tabler:map-pin',
-      },
-    ]}
-  />
+    <p class="text-sm text-muted mt-6">
+      Nous répondons généralement sous 24 à 48h (jours ouvrés).
+    </p>
+  </section>
 </Layout>

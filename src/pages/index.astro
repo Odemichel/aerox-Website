@@ -1,5 +1,6 @@
 ---
 import heroVideo from '~/assets/videos/aerox_hero.mp4';
+import { COUNTDOWN_TARGET } from '~/config/countdown';
 import challengesBadges from '../assets/images/challengesBadges.jpg';
 import classementCLM from '../assets/images/classementCLM.jpg';
 import editeurSeance from '../assets/images/editeurSeance.jpg';
@@ -9,8 +10,7 @@ import Olivier_Tete from '../assets/images/Olivier_tete2.png';
 import posterPuissance from '../assets/images/posterPuissance.jpg?url';
 import Ropert_Tete from '../assets/images/ropert1.jpg';
 import LogosCarousel from '../components/widgets/LogosCarousel.astro';
-import { LINKS } from "../config/links";
-
+import { LINKS } from '../config/links';
 
 import simulationGPX from '../assets/images/simulationGPX.jpg';
 
@@ -36,13 +36,16 @@ import logo_saris from '../assets/images/logos/saris.png?url';
 import logo_tacx from '../assets/images/logos/tacx.jpg?url';
 import logo_vanrysel from '../assets/images/logos/vanrysel.png?url';
 import logo_wahoo from '../assets/images/logos/wahoo.jpg?url';
-  
+
 import logo_garmin from '../assets/images/logos/garmin.png?url';
 import logo_polar from '../assets/images/logos/polar.png?url';
 import logo_suunto from '../assets/images/logos/suunto.png?url';
 
 const metadata = {
-  title: 'AeroX — Analyse et améliore ton aérodynamisme à vélo',
+  title: 'AeroX — Cyclisme indoor & triathlon avec aérodynamisme en temps réel',
+  description:
+    'AeroX transforme ton home trainer en soufflerie : mesure ta position avec une simple webcam, gagne 2–3 km/h et économise 40 W. Conçu pour cyclistes et triathlètes exigeants, progresse au-delà de Zwift, MyWhoosh et Kinomap.',
+  robots: { index: true, follow: true },
   ignoreTitleTemplate: true,
 };
 ---
@@ -51,29 +54,40 @@ const metadata = {
   <!-- Hero Widget ******************* -->
 
   <Hero
-  id="Accueil"
+    id="Accueil"
     actions={[
       {
         variant: 'primary',
-        target: '_blank',
         text: 'Essaie AeroX maintenant',
         icon: 'tabler:download',
-        subtext: "Réservé aux pionniers AeroX",
-        href: LINKS.download,
+        subtext: 'Réservé aux pionniers AeroX',
+        href: '#pricing',
+        target: '',
+        seo: 'Télécharger AeroX, application de cyclisme indoor avec aérodynamisme',
       },
     ]}
   >
     tagline="En bêta le 1er septembre"
 
-    <Fragment slot="subtitle">
-      <!-- <span class="font-bold">
-        Ta puissance devient</span
+    <Fragment slot="title">
+      <span class="font-bold"
+        >Le cyclisme indoor<br />
+        <span
+          class="text-primary intersect-once intersect-quarter motion-safe:opacity-1 motion-safe:intersect:animate-blur"
+          >l'aérodynamisme en plus</span
+        ></span
       >
-      <span class="font-bold text-primary">vitesse</span> -->
     </Fragment>
 
-    <Fragment slot="title">
-      <span class="font-bold">Le cyclisme indoor<br /> <span class="text-primary intersect-once intersect-quarter motion-safe:opacity-0   motion-safe:intersect:animate-blur">l'aérodynamisme en plus</span></span>
+    <Fragment slot="subtitle">
+      <span class="font-bold">
+        AeroX est la première application de cyclisme indoor pour cyclistes et triathlètes perofrmants et exigeants qui
+        intègre l’aérodynamisme en temps réel sur home trainer. Grâce à une simple webcam, tu mesures ta surface
+        frontale, optimises ta position, gagnes jusqu’à 3 km/h et économises plus de 40 watts. Une alternative innovante
+        et complémentaire à Zwift, MyWhoosh et Kinomap pour transformer ta puissance en vitesse réelle. Ton home trainer
+        devient une soufflerie virtuelle, un vrai wind tunnel disponible à chaque instant pour rouler plus vite sans
+        plus d'effort. AeroX est compatible avec Wahoo, Elite, Saris, Tacx et beaucoup d'autres marques de Home-trainer.
+      </span>
     </Fragment>
     <Fragment slot="paragraph">
       Gagne jusqu'à&nbsp;<span class="font-bold text-accent">3&#8239;km/h</span>, économise&nbsp;<span
@@ -83,23 +97,27 @@ const metadata = {
     </Fragment>
 
     <Fragment slot="content">
-      Plus que <CountDown targetDate="2025-10-20T00:00:00" />&nbsp;pour profiter <span class="font-bold"
-        >d'avantages exclusifs</span
-      >!
+      Plus que <CountDown targetDate={new Date(COUNTDOWN_TARGET)} /> !
     </Fragment>
   </Hero>
 
-  
-  <HeroVideo
-    video={{ src: heroVideo, alt: 'Démonstration AeroX' }}
+  <HeroVideo video={{ src: heroVideo, alt: 'Démonstration AeroX' }} />
+
+  <LogosCarousel
+    title="Compatibilité"
+    subtitle="AeroX fonctionne avec les principales marques de home trainer connectés et capteurs cardio, pour un entraînement indoor fluide et fiable. Tacx, Elite, Wahoo, Saris tout est compatible."
+    logos={[
+      { src: logo_wahoo },
+      { src: logo_elite },
+      { src: logo_tacx },
+      { src: logo_vanrysel },
+      { src: logo_saris },
+      { src: logo_polar },
+      { src: logo_garmin },
+      { src: logo_suunto },
+    ]}
   />
-
-
-
-
-<LogosCarousel title="Compatibilité " logos={[{src: logo_wahoo},{src: logo_elite},{src: logo_tacx},{src: logo_vanrysel},{src: logo_saris},{src: logo_polar},{src: logo_garmin},{src: logo_suunto}
-]} />
-<Stats
+  <Stats
     stats={[
       { title: 'Pionniers', amount: '300+' },
       { title: 'km/h gagnés en moyenne', amount: '+2.3' },
@@ -112,12 +130,12 @@ const metadata = {
 
   <!-- Features2 Widget ************** -->
 
-  
   <Features2
     tagline="Fonctionnalités"
     id="features"
-    title="Tout ce dont tu as besoin pour aller plus vite"
-    subtitle="Place l'aérodynamisme au coeur de ton entrainement"
+    title="Ton home-trainer devient une soufflerie virtuelle"
+    subtitle="Nos innovations pour te rendre plus rapide"
+    subsubtitle="Mesure, ajuste et contrôle ta position aérodynamique pour économiser des watts et gagner en vitesse lors de tes triathlons, Ironman ou courses en échappée. AeroX transforme ton home trainer connecté en soufflerie virtuelle : analyse en temps réel de ta surface frontale et des résistances aérodynamiques avec une simple webcam. Une alternative innovante et complémentaire à Zwift, MyWhoosh et Kinomap."
     items={[
       {
         title: 'Mode Puissance',
@@ -130,9 +148,8 @@ const metadata = {
         callToAction: {
           variant: 'primary',
           text: 'Deviens plus rapide maintenant',
-          href: LINKS.download,
-          icon: 'tabler:bolt-filled',
-          target: '_blank',
+ href: '#pricing',
+        target: '',          icon: 'tabler:bolt-filled',
         },
       },
       {
@@ -144,9 +161,9 @@ const metadata = {
         callToAction: {
           variant: 'primary',
           text: 'Ressens ce que te coûte ta position',
-          href: LINKS.download,
+           href: '#pricing',
+        target: '',
           icon: 'tabler:player-play-filled',
-          target: '_blank',
         },
       },
       {
@@ -158,15 +175,14 @@ const metadata = {
         callToAction: {
           variant: 'primary',
           text: "Simule ton prochain objectif avec l'aéro",
-          href: LINKS.download,
-          icon: 'tabler:bike-filled',
+ href: '#pricing',
+        target: '',          icon: 'tabler:bike-filled',
 
-          target: '_blank',
         },
       },
 
       {
-        title: 'Mode Contre-La-Montre',
+        title: 'Contre-La-Montre',
         description: 'Place-toi. Appuie fort. Sois le meilleur.',
         icon: 'fluent-emoji-flat:stopwatch',
         objectif: "La seule course indoor avec l'aéro",
@@ -174,13 +190,12 @@ const metadata = {
         callToAction: {
           variant: 'primary',
           text: 'Défie les plus grands',
-          href: LINKS.download,
-          icon: 'tabler:download',
-          target: '_blank',
+ href: '#pricing',
+        target: '',          icon: 'tabler:download',
         },
       },
       {
-        title: 'Mode Challenge',
+        title: 'Challenges',
         description: 'Combine puissance et aéro pour tenir la vitesse.',
         icon: 'flat-color-icons:approval',
         objectif: 'Tes badges AeroX seront le miroir de tes progrès',
@@ -188,9 +203,8 @@ const metadata = {
         callToAction: {
           variant: 'primary',
           text: 'Challenge ta vitesse',
-          href: LINKS.download,
-          icon: 'tabler:arrow-badge-up-filled',
-          target: '_blank',
+ href: '#pricing',
+        target: '',          icon: 'tabler:arrow-badge-up-filled',
         },
       },
 
@@ -218,9 +232,8 @@ const metadata = {
         callToAction: {
           variant: 'primary',
           text: 'Personnalise tes séances aéro',
-          href: LINKS.download,
-          icon: 'tabler:pencil-cog',
-          target: '_blank',
+ href: '#pricing',
+        target: '',          icon: 'tabler:pencil-cog',
         },
       },
     ]}
@@ -237,8 +250,10 @@ const metadata = {
   <!-- FAQs Widget ******************* -->
 
   <Testimonials
-  id="utilisateurs"
+    id="utilisateurs"
     title="Témoignages"
+    subtitle="Triathlètes, cyslistes et entraineurs: ils ont choisi AeroX"
+    subsubtitle="Avis utilisateurs AeroX : triathlètes, cyclistes amateurs et entraîneurs expliquent comment ils gagnent en vitesse et économisent des watts grâce à l’aérodynamisme en temps réel. Une alternative à Zwift, MyWhoosh et Kinomap."
     testimonials={[
       {
         testimonial:
@@ -256,7 +271,7 @@ const metadata = {
       },
       {
         testimonial:
-          '"En 4 semaines, +1 km/h sans forcer. Je ne pensais pas que l’aéro comptait autant à mon niveau. Maintenant je roule avec plus deplaisir, même dans le vent."',
+          '"En 4 semaines, +1 km/h sans forcer. Je ne pensais pas que l’aéro comptait autant à mon niveau. Maintenant je roule avec plus de plaisir, même dans le vent. C\'est une vraie innovation par rapport à Zwift."',
 
         name: 'Frédéric Petit',
         job: 'Cycliste amateur - 6000&#8239;km/an',
@@ -277,7 +292,7 @@ const metadata = {
       },
       {
         testimonial:
-          '"Mes athlètes voient enfin l’impact de leur position. J’ai maintenant un vrai levier pour leur faire gagner de la vitesse gratuite.<br /> Merci AeroX."',
+          '"Mes athlètes voient enfin l’impact de leur position. Avec zwift, ils controlaient leur puissance, maintenant j\'ai un vrai levier pour leur faire gagner de la vitesse gratuite.<br /> Merci AeroX."',
         name: 'James Ropert',
         job: 'Entraineur cyclisme - Dijon',
         profile: {
@@ -288,10 +303,9 @@ const metadata = {
     ]}
     callToAction={{
       variant: 'primary',
-      target: '_blank',
       text: 'Rejoins les pionniers AeroX',
-      href: LINKS.download,
-      icon: 'tabler:users',
+ href: '#pricing',
+        target: '',      icon: 'tabler:users',
     }}
   />
 
@@ -322,10 +336,12 @@ const metadata = {
         },
         callToAction: {
           text: 'Commence AeroX, gagne 1-5&#8239;km/h',
-          href: LINKS.download,
-          icon: 'tabler:download',
+ href: '#pricing',
+        target: '',          icon: 'tabler:download',
           variant: 'primary', // btn-primary
           class: 'mt-2',
+          'aria-label':
+            'Télécharger AeroX, application de cyclisme indoor pour gagner 1-5 km/h grâce à ton aérodynamisme',
         },
       },
 
@@ -345,8 +361,8 @@ const metadata = {
         },
         callToAction: {
           text: 'Essaie AeroX, économise tes watts',
-          href: LINKS.download,
-          icon: 'tabler:bolt',
+ href: '#pricing',
+        target: '',          icon: 'tabler:bolt',
           variant: 'primary', // btn-primary
           class: 'mt-2',
         },
@@ -368,8 +384,8 @@ const metadata = {
         },
         callToAction: {
           text: 'Entraîne-toi comme un pro avec AeroX',
-          href: LINKS.download,
-          icon: 'tabler:download',
+ href: '#pricing',
+        target: '',          icon: 'tabler:download',
           variant: 'primary', // btn-primary
           class: 'mt-2',
         },
@@ -392,8 +408,8 @@ const metadata = {
         },
         callToAction: {
           text: 'Accélère sans dépenser plus',
-          href: LINKS.download,
-          icon: 'tabler:currency-euro',
+ href: '#pricing',
+        target: '',          icon: 'tabler:currency-euro',
           variant: 'primary', // btn-primary
           class: 'mt-2',
         },
@@ -410,14 +426,15 @@ const metadata = {
         expandable: true,
         moreLabel: "Je t'explique tout…",
         defaultOpen: false,
+
         classes: {
           summary: 'text-accent hover:underline',
           more: 'mt-3',
         },
         callToAction: {
           text: 'Rejoins la communauté AeroX',
-          href: LINKS.download,
-          icon: 'tabler:download',
+ href: '#pricing',
+        target: '',          icon: 'tabler:download',
           variant: 'primary', // btn-primary
           class: 'mt-2',
         },
@@ -425,9 +442,9 @@ const metadata = {
     ]}
   >
     <Fragment slot="ctaDetails">
-      Plus que <CountDown targetDate="2025-10-20T00:00:00" /> pour faire partie des pionniers AeroX et profiter <span
-        class="font-bold text-accent">d'avantages exclusifs</span
-      >!
+      Plus que <CountDown targetDate={new Date(COUNTDOWN_TARGET)} /> pour devenir pionniers AeroX et construire <span
+        class="font-bold text-accent">le futur du cyclisme indoor !</span
+      >
     </Fragment>
   </Features>
 
@@ -583,14 +600,15 @@ const metadata = {
   <!-- Pricing Widget ******************* -->
 
   <Prices
-    title="Nos Abonnements"
+    title="Nos Offres"
     id="pricing"
-    subtitle="Nos offres de lancement"
+    subtitle="Un pack pour chaque objectif"
+    subsubtitle="Découvre les tarifs et abonnements AeroX pour cyclistes et triathlètes. Compare nos offres avec Zwift, MyWhoosh ou Kinomap et profite d’une solution unique pour ton home trainer connecté (Tacx, Elite, Wahoo). Idéal pour préparer tes Ironman et tes entraînements vélo indoor."
     prices={[
       {
-        title: 'Gratuit',
-        subtitle: 'Essaie AeroX',
-        price: '0',
+        title: 'Pack Découverte',
+        subtitle: 'Teste ton aéro',
+        price: '5',
         period: 'pendant 10 jours',
         items: [
           {
@@ -598,7 +616,7 @@ const metadata = {
             icon: 'tabler:award-filled',
           },
           {
-            description: 'Teste ton aéro sans risque',
+            description: "Teste jusqu'à 1h/j",
             icon: 'tabler:award-filled',
           },
         ],
@@ -606,22 +624,22 @@ const metadata = {
 
         callToAction: {
           target: '_blank',
-          text: 'Lancement le 01/11/2025',
+          text: 'Lancement le 01/12/2025',
           href: '#',
         },
         hasRibbon: false,
         ribbonTitle: '',
       },
       {
-        title: 'Pionnier AeroX',
-        subtitle: "Jusqu'au 20&nbsp;Octobre", // string OK (HTML interprété via set:html)
-        countdownTarget: '2025-10-20T00:00:00', // 👈 apparaît uniquement dans cette carte
+        title: 'Pack Pionnier',
+        subtitle: "Profite du futur de l'entrainement indoor en exclusivité", // string OK (HTML interprété via set:html)
+        countdownTarget: new Date(COUNTDOWN_TARGET), // 👈 apparaît uniquement dans cette carte
 
         price: '20',
         period: 'paiement unique',
         items: [
           {
-            description: 'Accès complet à AeroX pendant 4 mois',
+            description: 'Accès complet à AeroX pendant 3 mois',
             icon: 'tabler:award-filled',
           },
           {
@@ -635,30 +653,28 @@ const metadata = {
           },
 
           {
-            description: "Nouvelles fonctionnalités toute l'année",
+            description: "Soutiens le développement d'AeroX 🚀",
             icon: 'tabler:binary-tree-filled',
-          },
-
-          {
-            description: ' Fais partie des 100 premiers pionniers et entre dans l’histoire d’AeroX 🚀',
-            icon: 'tabler:users',
           },
         ],
         callToAction: {
           target: LINKS.download,
-          text: "Deviens pionnier AeroX",
-          href: '#',
+          text: 'Deviens pionnier AeroX',
+          href: LINKS.download,
         },
         hasRibbon: true,
         ribbonTitle: 'Pionnier',
       },
 
       {
+        title: 'Pack Progression',
+
         hasChoice: true,
         title1: 'Annuel',
-        subtitle1: 'Économise 30%',
+
+        subtitle1: "Renforce ta position toute l'année, Économise 30%",
         price1: 140,
-        period1: '190€/an à partir de 2026',
+        period1: '190€/an à partir de Février 2026',
         items1: [
           {
             description: 'Accès complet à AeroX',
@@ -677,14 +693,14 @@ const metadata = {
 
         callToAction1: {
           target: '_blank',
-          text: 'Lancement le 01/11/2025',
+          text: 'Lancement le 01/12/2025',
           href: '#',
         },
 
         title2: 'Mensuel',
-        subtitle2: 'Sans engagement',
+        subtitle2: 'Renforce ton aéro sans engagement',
         price2: 15,
-        period2: '22€/mois en 2026',
+        period2: '22€/mois en Février 2026',
         items2: [
           {
             description: 'Accès complet à AeroX',
@@ -711,7 +727,8 @@ const metadata = {
   <!-- Steps Widget ****************** -->
 
   <StepsSansImage
-    title="Mise en place simple, rapide."
+    title="Commence ton entraînement avec AeroX en 2 minutes"
+    subsubtitle="AeroX s’installe facilement et fonctionne immédiatement avec ton home trainer connecté. Compatible avec les principales marques (Tacx, Garmin, Wahoo, Elite, Saris), ton équipement est détecté automatiquement.  L’expérience est aussi fluide que sur Zwift, MyWhoosh ou Kinomap, mais avec un avantage unique :  l’analyse en temps réel de ton aérodynamisme pour gagner en vitesse et économiser des watts.  Idéal pour les cyclistes et triathlètes qui veulent optimiser leur position et préparer un Ironman ou une course de vélo indoor."
     items={[
       {
         title: 'Étape 1: <span class="font-semibold">Télécharge AeroX</span>',
@@ -765,7 +782,7 @@ const metadata = {
         },
       },
       {
-        title: 'Prêt!',
+        title: 'Pédale!',
         icon: 'tabler:check',
       },
     ]}
@@ -773,15 +790,11 @@ const metadata = {
       {
         variant: 'primary',
         text: 'Télécharge AeroX',
-        href: 'https://github.com/onwidget/astrowind',
-        target: '_blank',
+        href: '#pricing',
+        target: '',
         icon: 'tabler:download',
       },
     ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1616198814651-e71f960c3180?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
-      alt: 'Steps image',
-    }}
   />
 
   <!-- Note Widget ******************* -->
@@ -790,7 +803,7 @@ const metadata = {
   <!-- FAQ Widget ******************* -->
 
   <FAQs
-  id="FAQs"
+    id="FAQs"
     title="Nos réponses à vos questions"
     subtitle="Questions fréquentes"
     tagline="FAQs"
@@ -799,9 +812,9 @@ const metadata = {
       {
         variant: 'primary',
         text: 'Écris ton futur avec AeroX',
-        href: LINKS.download,
-        target: '_blank',
-  //      icon: 'tabler:download',
+        href: '#pricing',
+        target: '',
+        //      icon: 'tabler:download',
       },
     ]}
     items={[
@@ -812,7 +825,7 @@ const metadata = {
         expandable: true,
         moreLabel: "On t'explique ça en chiffres…",
         defaultOpen: false,
-  //      icon: 'flat-color-icons:services',
+        //      icon: 'flat-color-icons:services',
       },
 
       {
@@ -822,7 +835,7 @@ const metadata = {
         expandable: true,
         moreLabel: 'Un ordinateur, ton Home-Trainer, une caméra',
         defaultOpen: false,
-  //      icon: 'flat-color-icons:support',
+        //      icon: 'flat-color-icons:support',
       },
       {
         title: 'Combien de temps faut-il pour mettre AeroX en place ? ',
@@ -831,16 +844,16 @@ const metadata = {
         expandable: true,
         moreLabel: 'En moins de 2 minutes, ton home-trainer devient une soufflerie virtuelle…',
         defaultOpen: false,
-  //      icon: 'flat-color-icons:expired',
+        //      icon: 'flat-color-icons:expired',
       },
       {
-        title: 'Mon matériel est-il compatible ?',
+        title: 'Mon home trainer ou capteur est-il compatible avec AeroX ?',
         education:
           'Oui, AeroX fonctionne avec la majorité des home-trainers connectés (Wahoo, Elite, Tacx, Saris, etc.). Pour le moment, seules les version MacOs et Windows sont disponible. Nous développons les versions tablette. Si ton HT n’est pas interactif, tu peux quand même utiliser AeroX en mode analyse (feedback visuel sans contrôle de résistance).',
         expandable: true,
         moreLabel: 'Compatible avec 95% des HT connectés, probablement le tien…',
         defaultOpen: false,
-  //      icon: 'flat-color-icons:ok',
+        //      icon: 'flat-color-icons:ok',
       },
       {
         title: 'Innovation ou gadget ?',
@@ -849,7 +862,7 @@ const metadata = {
         expandable: true,
         moreLabel: 'Essaie pour te faire ton propre avis…',
         defaultOpen: false,
-  //      icon: 'fluent-emoji-flat:light-bulb',
+        //      icon: 'fluent-emoji-flat:light-bulb',
       },
 
       {
@@ -858,7 +871,7 @@ const metadata = {
           "Soyons franc, rester au milieu du peloton n'est pas la réalité du cyclisme. Effet de bordures, échappées ou rythmer le peloton sont des situations où ton aérodynamisme fera la différence. Et qui sait, avec 3km/h de plus, tu pourrais prendre plaisir à t'échapper.",
         expandable: true,
         moreLabel: 'Oui, sauf si tu veux rester derrière !',
-  //      icon:'twemoji:woman-biking-medium-dark-skin-tone'
+        //      icon:'twemoji:woman-biking-medium-dark-skin-tone'
       },
       {
         title: "Ai-je besoin d'un abonnement pour trouver et tester ma position optimale ?",
@@ -867,7 +880,7 @@ const metadata = {
         expandable: true,
         moreLabel: 'Teste avec le plan gratuit, progresse avec un abonnement',
         defaultOpen: false,
- //       icon: 'flat-color-icons:debt',
+        //       icon: 'flat-color-icons:debt',
       },
       {
         title: 'Je suis habitué à ma position aéro, est-ce utile pour moi ?',
@@ -876,7 +889,7 @@ const metadata = {
         expandable: true,
         moreLabel: "Tenir la position, c'est bien mais est-elle efficace ?",
         defaultOpen: false,
-  //      icon:'twemoji:person-biking-medium-skin-tone'
+        //      icon:'twemoji:person-biking-medium-skin-tone'
       },
       {
         title: 'J’ai déjà un coach ça ne suffit pas ?',
@@ -885,7 +898,7 @@ const metadata = {
         expandable: true,
         moreLabel: "AeroX te donne des données que ton coach n'a pas",
         defaultOpen: false,
- //       icon: 'flat-color-icons:manager',
+        //       icon: 'flat-color-icons:manager',
       },
 
       {
@@ -895,7 +908,7 @@ const metadata = {
         expandable: true,
         moreLabel: 'AeroX te prépares à tout',
         defaultOpen: false,
-    //    icon: 'flat-color-icons:globe',
+        //    icon: 'flat-color-icons:globe',
       },
     ]}
   />
@@ -909,8 +922,19 @@ const metadata = {
       { title: 'Économisés à 30km/h', amount: '-35 W' },
     ]}
   />
-  <LogosCarousel title="Compatibilité " logos={[{src: logo_wahoo},{src: logo_elite},{src: logo_tacx},{src: logo_vanrysel},{src: logo_saris},{src: logo_polar},{src: logo_garmin},{src: logo_suunto}
-]} />
+  <LogosCarousel
+    title="Compatibilité "
+    logos={[
+      { src: logo_wahoo },
+      { src: logo_elite },
+      { src: logo_tacx },
+      { src: logo_vanrysel },
+      { src: logo_saris },
+      { src: logo_polar },
+      { src: logo_garmin },
+      { src: logo_suunto },
+    ]}
+  />
 
   <!-- CallToAction Widget *********** -->
 </Layout>

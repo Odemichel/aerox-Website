@@ -1,6 +1,6 @@
-import { isUnpicCompatible, unpicOptimizer, astroAssetsOptimizer } from './images-optimization';
-import type { ImageMetadata } from 'astro';
 import type { OpenGraph } from '@astrolib/seo';
+import type { ImageMetadata } from 'astro';
+import { astroAssetsOptimizer, isUnpicCompatible, unpicOptimizer } from './images-optimization';
 
 const load = async function () {
   let images: Record<string, () => Promise<unknown>> | undefined = undefined;
@@ -29,12 +29,22 @@ export const findImage = async (
   if (typeof imagePath !== 'string') {
     return imagePath;
   }
+  if (imagePath && typeof imagePath === 'object') {
+    return imagePath;
+  }
 
   // Absolute paths
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('/')) {
     return imagePath;
   }
 
+  if (
+    imagePath.startsWith('http://') ||
+    imagePath.startsWith('https://') ||
+    imagePath.startsWith('/')
+  ) {
+    return imagePath;
+  }
   // Relative paths or not "~/assets/"
   if (!imagePath.startsWith('~/assets/images')) {
     return imagePath;

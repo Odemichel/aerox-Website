@@ -1,10 +1,10 @@
 ---
-import merge from 'lodash.merge';
 import { AstroSeo } from '@astrolib/seo';
+import merge from 'lodash.merge';
 
 import type { Props as AstroSeoProps } from '@astrolib/seo';
 
-import { SITE, METADATA, I18N } from 'astrowind:config';
+import { I18N, METADATA, SITE } from 'astrowind:config';
 import type { MetaData } from '~/types';
 import { getCanonical } from '~/utils/permalinks';
 
@@ -63,6 +63,96 @@ const seoProps: AstroSeoProps = merge(
     twitter: twitter,
   }
 );
+
 ---
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Pourquoi AeroX ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "À partir de 25 km/h, l’aérodynamisme représente entre 70 et 95 % de la résistance. AeroX te permet de visualiser et d’optimiser ta position pour gagner en vitesse et économiser des watts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quels outils et matériel sont nécessaires pour utiliser AeroX ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Il suffit d’un home trainer connecté (Bluetooth FTMS), d’un vélo, d’un ordinateur Mac ou Windows, et d’une simple caméra (webcam, smartphone ou USB)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Combien de temps faut-il pour mettre AeroX en place ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Installe ta caméra devant ton home trainer, calibre-la en 2 clics, et tu es prêt à t’entraîner avec ton feedback aérodynamique. Moins de 2 minutes suffisent."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Mon home trainer ou capteur est-il compatible avec AeroX ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, AeroX est compatible avec la majorité des home trainers connectés (Wahoo, Elite, Tacx, Saris, etc.). Actuellement disponible sur MacOS et Windows, versions tablette en cours de développement."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Innovation ou gadget ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Développé par un chercheur au CNRS et triathlète, AeroX fournit un feedback concret sur ton aérodynamisme. Comme le cardiofréquencemètre il y a 20 ans, AeroX devient un outil incontournable de l’entraînement."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "L’aérodynamisme avec AeroX est-il utile en peloton ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, car les situations de bordures, d’échappées ou de relance sont fréquentes. Gagner 3 km/h peut faire la différence pour rester dans le groupe ou partir devant."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ai-je besoin d’un abonnement pour tester AeroX ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tu peux tester gratuitement AeroX dès le premier jour. Avec l’abonnement, tu transformes ta position optimale en automatisme solide et durable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Je suis déjà habitué à ma position aéro, AeroX m’est-il utile ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui. Être en position ne suffit pas, encore faut-il qu’elle soit efficace. AeroX détecte les détails invisibles (tête trop haute, coudes écartés) et t’aide à corriger ces pertes de watts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Un coach suffit-il ou AeroX est complémentaire ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ton coach peut planifier des séances, mais seul AeroX mesure l’efficacité réelle de ta position du début à la fin. Les deux sont complémentaires."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Comment AeroX m’aide à préparer une course à l’étranger ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Avec le mode GPX, tu importes le parcours exact de ta course. AeroX simule le relief, le vent et l’impact de ton aérodynamisme pour t’entraîner comme si tu y étais déjà."
+      }
+    }
+  ]
+}
+</script>
 
 <AstroSeo {...{ ...seoProps, openGraph: await adaptOpenGraphImages(seoProps?.openGraph, Astro.site) }} />

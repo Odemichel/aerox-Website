@@ -2,11 +2,11 @@
 import type { HTMLAttributes } from 'astro/types';
 import { findImage } from '~/utils/images';
 import {
-  getImagesOptimized,
-  astroAssetsOptimizer,
-  unpicOptimizer,
-  isUnpicCompatible,
-  type ImageProps,
+    astroAssetsOptimizer,
+    getImagesOptimized,
+    isUnpicCompatible,
+    unpicOptimizer,
+    type ImageProps,
 } from '~/utils/images-optimization';
 
 type Props = ImageProps;
@@ -18,44 +18,54 @@ type ImageType = {
 const props = Astro.props;
 
 if (props.alt === undefined || props.alt === null) {
-  throw new Error();
+  throw new Error('⚠️ L’attribut alt est obligatoire pour toutes les images');
 }
 
-if (typeof props.width === 'string') {
-  props.width = parseInt(props.width);
-}
+// Forcer width/height en nombre si fournis
+if (typeof props.width === 'string') props.width = parseInt(props.width);
+if (typeof props.height === 'string') props.height = parseInt(props.height);
 
-if (typeof props.height === 'string') {
-  props.height = parseInt(props.height);
-}
-
-if (!props.loading) {
-  props.loading = 'lazy';
-}
-
-if (!props.decoding) {
-  props.decoding = 'async';
-}
+props.loading ??= 'lazy';
+props.decoding ??= 'async';
 
 const _image = await findImage(props.src);
 
-let image: ImageType | undefined = undefined;
+let image: ImageType | undefined;
 
 if (
   typeof _image === 'string' &&
   (_image.startsWith('http://') || _image.startsWith('https://')) &&
   isUnpicCompatible(_image)
 ) {
+  // ✅ URL distante compatible → on utilise Unpic pour optimisation
   image = await getImagesOptimized(_image, props, unpicOptimizer);
-} else if (_image) {
+} else if (_image && typeof _image !== 'string') {
+  // ✅ Objet ImageMetadata importé → Astro connait les dimensions
   image = await getImagesOptimized(_image, props, astroAssetsOptimizer);
+} else if (typeof _image === 'string') {
+  // ✅ Cas simplifié : chemin public (/images/...) ou string brute → on rend une balise <img> sans optim
+  image = {
+    src: _image,
+    attributes: {
+      alt: props.alt,
+      width: props.width,
+      height: props.height,
+      loading: props.loading,
+      decoding: props.decoding,
+      class: props.class ?? '',
+    },
+  };
 }
 ---
 
-{
-  !image ? (
-    <Fragment />
-  ) : (
-    <img src={image.src} crossorigin="anonymous" referrerpolicy="no-referrer" {...image.attributes} />
-  )
-}
+{image ? (
+  <img
+    src={image.src}
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+    {...image.attributes}
+    style={image.attributes?.width && image.attributes?.height ? '' : 'aspect-ratio:16/9;'}
+  />
+) : (
+  <Fragment />
+)}

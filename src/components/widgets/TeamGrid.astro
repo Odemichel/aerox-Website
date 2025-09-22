@@ -1,0 +1,50 @@
+---
+export interface Member {
+  name: string;
+  role: string;
+  image: { src: string; alt: string };
+  description: string;
+}
+
+export interface Props {
+  title?: string;
+  subtitle?: string;
+  members: Member[];
+}
+
+const { title, subtitle, members = [] } = Astro.props;
+---
+
+<section class="max-w-6xl mx-auto px-6 py-16">
+  {title && (
+    <h2 class="text-3xl md:text-4xl text-primary font-bold text-center mb-4">{title}</h2>
+  )}
+  {subtitle && (
+    <p class="text-lg text-muted text-center mb-12">{subtitle}</p>
+  )}
+
+  <div class="grid gap-12 sm:grid-cols-2 lg:grid-cols-2">
+    {members.map((member) => (
+      <div class="flex flex-col items-center text-center">
+        <!-- Photo -->
+        <div class="w-40 h-40 mb-6 rounded-full overflow-hidden shadow-lg ring-4 ring-primary/20">
+          <img
+            src={member.image.src}
+            alt={member.image.alt}
+            class="object-cover w-full h-full"
+            loading="lazy"
+          />
+        </div>
+
+        <!-- Nom -->
+        <h3 class="text-xl font-semibold">{member.name}</h3>
+        <p class="text-primary font-medium mb-3">{member.role}</p>
+
+        <!-- Description -->
+        <p class="text-muted leading-relaxed text-sm max-w-sm">
+          {member.description}
+        </p>
+      </div>
+    ))}
+  </div>
+</section>

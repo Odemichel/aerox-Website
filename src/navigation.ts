@@ -4,7 +4,7 @@ import { getPermalink } from './utils/permalinks';
 
 export const headerData = {
   links: [
-     {
+    {
       text: '',
       links: [
         {
@@ -29,44 +29,57 @@ export const headerData = {
         },
         {
           text: 'Contact',
-          href: getPermalink('/#contact'),
+          href:  LINKS.contact,
         },
-       
+        {
+          text: "L'histoire d'Aerox",
+          href: getPermalink('/team'),
+        },
+         {
+          text: "Nos Articles",
+  href: '/blog',
+        },
+
       ],
     },
-   
+
   ],
-  actions: [{variant:'primary', text: `
+  actions: [{
+    variant: 'primary', text: `
       <span class="md:hidden">Télécharger</span>
       <span class="hidden md:inline">Je&nbsp;teste&nbsp;AeroX</span>
-    `, icon:'tabler:download', href: LINKS.download, target: '_blank',    subtext: "Réservé aux pionniers AeroX",
-}],
-    
-}satisfies HeaderProps;
+    `, icon: 'tabler:download', href: '/#pricing',
+    target: '', subtext: "Réservé aux pionniers AeroX",
+  }],
+
+} satisfies HeaderProps;
 
 export const footerData = {
   links: [
-    {
+    /* {
       title: 'Produit',
       links: [
         { text: 'Fonctionnalités', href: '#features' },
         { text: 'Témoignages', href: '#utilisateurs' },
         { text: 'Abonnements', href: '#pricing' },
       ],
-    },
-   
+    }, */
+
     {
       title: 'Contact',
       links: [
-        { text: 'Équipe', href: '#' },
-        { text: 'Contactez-nous', href: '#' },
+        { text: 'Équipe', href: '/team' },
+        { text: 'Contactez-nous', href: LINKS.contact },
 
       ],
     },
-    
+
   ],
   secondaryLinks: [
-    { text: 'Privacy Policy', href: getPermalink('/privacy') },
+    { text: 'Règles de Confidentialité', href: getPermalink('/privacy') },
+    { text: 'CGV', href: getPermalink('/terms')
+    },
+
   ],
   /* socialLinks: [
     { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },

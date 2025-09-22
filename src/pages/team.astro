@@ -1,0 +1,103 @@
+---
+import HeroText from '~/components/widgets/HeroText.astro';
+import Layout from '~/layouts/PageLayout.astro';
+
+import Milan from '~/assets/images/Milan_tete.jpg?url';
+import Olivier from '~/assets/images/Olivier_tete2.png?url';
+import TeamGrid from '~/components/widgets/TeamGrid.astro';
+
+const metadata = {
+  title: 'Notre histoire - AeroX',
+  description:
+    'Découvrez l’histoire d’AeroX, la première soufflerie virtuelle pour cyclistes et triathlètes. Née d’un besoin réel : optimiser sa position aérodynamique sur home trainer connecté, gagner en vitesse et économiser des watts.',
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero Section -->
+  <HeroText
+    tagline="Notre histoire"
+    title="AeroX : quand une douleur se transforme en innovation majeure"
+    subtitle="D’un problème vécu en triathlon à une révolution accessible à tous les cyclistes"
+  />
+
+  <!-- Story Section -->
+  <section class="max-w-4xl mx-auto justify-center px-6 py-16 prose prose-lg dark:prose-invert">
+    <h2 class="text-primary text-center">La genèse d’AeroX</h2>
+
+    <p>
+      Tout est parti de longues heures sur <strong>home trainer connecté</strong>. Les watts montaient, les chiffres
+      progressaient… mais une fois en course, la réalité frappait : en montée, je rattrapais tout le monde, mais sur le
+      plat, je me faisais déposer. L’explication ? <strong>L’aérodynamisme</strong>, ce paramètre invisible qui
+      représente déjà 70&nbsp;% de la résistance à 25&nbsp;km/h, et jusqu’à 95&nbsp;% à haute vitesse.
+    </p>
+
+    <p>
+      Comme beaucoup, je croyais progresser car mes watts grimpaient sur Zwift. Mais jamais je ne travaillais ma
+      position aéro. Et dehors, je ne la tenais que quelques minutes. Je pensais que ceux qui me doublaient avaient un
+      meilleur vélo, de meilleures roues… jusqu’à ce que mon passé de chercheur au CNRS me ramène à la réalité :
+      <strong>80&nbsp;% des pertes aéro viennent du corps, pas du matériel</strong>. Le vrai frein, c’était moi.
+    </p>
+
+    <p>
+      Le problème est simple : nos sensations nous trompent. On croit qu’appuyer plus fort suffit à aller plus vite. En
+      vérité, une tête relevée ou des prolongateurs écartés coûtent des dizaines de watts, et font chuter la vitesse de
+      plusieurs km/h. Et sur home trainer, aucune mesure ne nous pousse à apprendre, comprendre ou corriger notre
+      position. Pire, sur Zwift, quand on arrête de pédaler en descente, notre avatar se mets en position aéro, il nous
+      trompe ! Bref.  Zéro retour. Zéro contrainte. Zéro progrès durable.
+    </p>
+
+    <p>
+      De cette frustration est né <span class="text-primary">
+        <span class="font-bold">AeroX</span>: une application qui <em
+          >transforme ton home trainer en soufflerie virtuelle</em
+        ></span
+      >. Avec une simple webcam, tu visualises en temps réel l’impact de ta position. Tu apprends à économiser des watts
+      et tu gagnes en vitesse, exactement comme les pros en soufflerie à 1800€/journée… mais depuis ton salon et pour le
+      prix d'un café par jour.
+    </p>
+
+    <p>
+      Dès les premiers tests, l’évidence était là : AeroX changeait ma manière de m’entraîner: prolongateurs rapprochés,
+      tête rentrée, position tenue en permanence, j'ai gagné 3km/h en course. Plus qu’un outil personnel, AeroX est une
+      opportunité pour <strong>des milliers de cyclistes et triathlètes</strong> d’apprendre l’aérodynamisme, de le mesurer,
+      de le sentir pour enfin s’entraîner intelligemment, et transformer chaque watt en vitesse utile.
+    </p>
+  </section>
+
+  <!-- Team Section -->
+  <TeamGrid
+    title="L'équipe derrière AeroX"
+    subtitle="Deux passionnés, deux parcours complémentaires, une même mission : démocratiser l’aérodynamisme"
+    members={[
+      {
+        name: 'Olivier Demichel',
+        role: 'Fondateur & Ingénieur',
+        image: { src: Olivier, alt: 'Photo de Olivier Demichel' },
+        description:
+          'Ancien chercheur au CNRS et triathlète passionné, Olivier a conçu AeroX pour résoudre ses propres blocages en aérodynamisme. Aujourd’hui, il met son expertise scientifique et son expérience d’athlète au service de tous les amateurs ou élites qui veulent rouler plus vite.',
+      },
+      {
+        name: 'Milan Larivière',
+        role: 'Ambassadeur & Triathlète élite',
+        image: { src: Milan, alt: 'Photo de Milan Larivière' },
+        description:
+          'Triathlète élite, 2ᵉ de la Coupe d’Europe U23 (2025), Milan incarne la nouvelle génération du triathlon. Son retour d’expérience de haut niveau nourrit le développement d’AeroX et garantit que chaque amélioration répond aux réalités du terrain même chez les athlètes les plus exigeants.',
+      },
+    ]}
+  />
+
+  <!-- Call To Action -->
+  <div class="text-center py-20">
+    <a
+      href="/#pricing"
+      class="btn btn-primary px-8 py-3 text-lg"
+      aria-label="Découvrir les offres AeroX et rejoindre les pionniers"
+    >
+      🚀 Rejoins les pionniers AeroX
+    </a>
+    <p class="mt-4 text-muted text-sm">
+      Deviens l’un des premiers à transformer ton entraînement indoor avec l’analyse en temps réel de ton aérodynamisme.
+    </p>
+  </div>
+</Layout>

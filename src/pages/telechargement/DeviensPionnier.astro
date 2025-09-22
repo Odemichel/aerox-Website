@@ -3,52 +3,87 @@
 import Layout from '~/layouts/Layout.astro';
 ---
 
-<Layout metadata={{ title: 'Devenir Pionnier AeroX' }}>
+<Layout metadata={{
+  title: "Devenir Pionnier AeroX",
+  description: "Fais partie des 100 premiers pionniers AeroX : transforme ton home trainer en soufflerie virtuelle et gagne jusqu’à 3 km/h gratuitement. Paiement sécurisé, avantages exclusifs à vie."
+}}>
   <section class="max-w-3xl mx-auto py-16 text-center">
-    <h1 class="text-3xl md:text-4xl font-bold mb-6">🚀 Rejoins les Pionniers AeroX</h1>
-    <p class="text-muted mb-12">
-      Tu n’es pas seulement utilisateur. Tu es co-bâtisseur d’une révolution cycliste.
+    <!-- HERO -->
+    <h1 class="text-3xl md:text-4xl font-bold mb-6">
+      🚀 Deviens Pionnier AeroX
+    </h1>
+    <p class="text-lg text-muted mb-8">
+      L’aérodynamisme, jusqu’ici réservé aux pros, enfin accessible avec une simple webcam.<br/>
+      Rejoins les <strong>100 premiers utilisateurs</strong> et transforme ton home trainer en soufflerie virtuelle.
     </p>
+    <button
+      id="btn-checkout"
+      type="button"
+      class="btn btn-primary px-8 py-3"
+      aria-label="Devenir pionnier AeroX et accéder à l'offre exclusive"
+    >
+      Je deviens pionnier maintenant
+    </button>
+    <small class="block mt-2 text-xs text-muted">
+      Paiement unique — Offre limitée aux 100 premiers
+    </small>
 
-    <!-- Bloc 1 : avantages -->
-    <div class="mb-16">
-      <h2 class="text-2xl font-semibold mb-4">1. Les avantages pour toi</h2>
-      <ul class="space-y-3 text-left max-w-lg mx-auto text-muted">
-        <li>✅ <strong>Accès privilégié</strong> : premier cercle d’utilisateurs.</li>
-        <li>✅ <strong>Impact direct</strong> : tes retours façonnent AeroX.</li>
-        <li>✅ <strong>Tarif fondateur</strong> : une offre unique réservée aux pionniers.</li>
-        <li>✅ <strong>Visibilité</strong> : tu fais partie des premiers à démocratiser l’aéro.</li>
+    <!-- SECTION 1 : Le problème -->
+    <div class="mt-20 text-left">
+      <h2 class="text-2xl font-semibold mb-4">🚴 Pourquoi AeroX change tout</h2>
+      <p class="text-muted mb-6">
+        Tu roules fort mais tu te fais déposer sur le plat ?  
+        Ton vélo à 10 000 € ne compense pas une position mal optimisée.  
+        <strong>À 25 km/h, l’aérodynamisme représente 70% de ce qui te freine.</strong>  
+        Et pourtant, aucun logiciel d’entraînement classique (Zwift, MyWhoosh, Kinomap) ne te donne ce feedback.
+      </p>
+    </div>
+
+    <!-- SECTION 2 : Les bénéfices -->
+    <div class="mt-16 text-left">
+      <h2 class="text-2xl font-semibold mb-4">✨ Tes avantages de pionnier</h2>
+      <ul class="space-y-3 text-muted">
+        <li>✅ <strong>Accès complet</strong> à AeroX pendant 4 mois</li>
+        <li>✅ <strong>-50% sur l’abonnement annuel</strong> (exclusivité pionniers)</li>
+        <li>✅ <strong>Canal privé</strong> avec les fondateurs et les premiers utilisateurs</li>
+        <li>✅ <strong>Ton nom dans l’histoire</strong> des premiers à démocratiser l’aéro</li>
       </ul>
     </div>
 
-    <!-- Bloc 2 : enjeux -->
-    <div class="mb-16">
-      <h2 class="text-2xl font-semibold mb-4">2. Pourquoi une contribution payante ?</h2>
-      <ul class="space-y-3 text-left max-w-lg mx-auto text-muted">
-        <li>💡 <strong>Image extérieure</strong> : montrer qu’AeroX répond à un vrai besoin.</li>
-        <li>💡 <strong>Force de traction financière</strong> : chaque pionnier renforce le projet.</li>
-        <li>💡 <strong>Croissance</strong> : plus de mises à jour, de tests, de stabilité.</li>
-        <li>💡 <strong>Communauté vitrine</strong> : les pionniers deviennent la référence.</li>
+    <!-- SECTION 3 : Réassurance -->
+    <div class="mt-16 text-left">
+      <h2 class="text-2xl font-semibold mb-4">🔒 Sécurité et confiance</h2>
+      <ul class="space-y-3 text-muted">
+        <li>💳 Paiement sécurisé par <strong>Stripe</strong></li>
+        <li>🌍 Compatible avec la majorité des home trainers connectés (Wahoo, Tacx, Elite…)</li>
+        <li>📈 Développé par un <strong>chercheur CNRS</strong> et triathlète</li>
       </ul>
     </div>
 
-    <!-- Call to action -->
-    <div class="flex flex-col items-center gap-2">
+    <!-- SECTION 4 : Appel final -->
+    <div class="mt-20 flex flex-col items-center">
+      <h2 class="text-2xl font-bold mb-6">
+        🚀 Prêt à gagner ta vitesse gratuite ?
+      </h2>
       <button
-        id="btn-checkout"
+        id="btn-checkout-final"
         type="button"
-        class="btn btn-primary px-8 py-3"
+        class="btn btn-primary px-10 py-3"
+        aria-label="Accéder à l'offre pionnier AeroX et payer en ligne"
       >
-        Devenir pionnier
+        Oui, je deviens pionnier AeroX
       </button>
-      <small class="text-xs text-muted">réservé aux premiers utilisateurs engagés</small>
+      <small class="block mt-3 text-xs text-muted">
+        Offre limitée aux <strong>100 premiers pionniers</strong> — Avantages à vie
+      </small>
     </div>
 
-    <p class="text-xs text-muted mt-6">
-      Paiement sécurisé par Stripe. Ton engagement construit AeroX, et tu gardes ton avantage à vie.
+    <!-- FOOTER NOTE -->
+    <p class="text-xs text-muted mt-12">
+      AeroX transforme ton home trainer en soufflerie : mesure ta position, économise 40 W et gagne 2–3 km/h gratuitement.  
+      Une alternative innovante et complémentaire à Zwift, MyWhoosh et Kinomap.
     </p>
   </section>
-
 
   <script is:inline>
     const callCheckout = async (payload = {}) => {
@@ -64,7 +99,6 @@ import Layout from '~/layouts/Layout.astro';
         throw new Error(data?.error || 'Erreur Stripe');
       }
     };
-    
 
     const withLoading = async (btn, fn) => {
       if (!btn) return;
@@ -80,15 +114,11 @@ import Layout from '~/layouts/Layout.astro';
       }
     };
 
-    // Bouton principal : aucun param — l’API lira STRIPE_PRICE_ID / STRIPE_LOOKUP_KEY côté serveur
     document.getElementById('btn-checkout')?.addEventListener('click', (e) => {
       withLoading(e.currentTarget, () => callCheckout());
     });
-
-    // Exemple : bouton alternatif qui passe un lookupKey public (facultatif)
-    document.getElementById('btn-checkout-alt')?.addEventListener('click', (e) => {
-      const key = e.currentTarget.getAttribute('data-lookup-key');
-      withLoading(e.currentTarget, () => callCheckout({ lookupKey: key }));
+    document.getElementById('btn-checkout-final')?.addEventListener('click', (e) => {
+      withLoading(e.currentTarget, () => callCheckout());
     });
   </script>
 </Layout>

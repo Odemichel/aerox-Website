@@ -16,7 +16,7 @@ const {
 } = Astro.props;
 ---
 
-<section class="relative not-prose min-h-screen flex items-center justify-center" {...id ? { id } : {}}>
+<section class="relative not-prose min-h-screen flex items-start pt-10 md:pt-20 justify-center" {...id ? { id } : {}}>
   <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
     <slot name="bg">
       {bg ? <Fragment set:html={bg} /> : null}
@@ -24,68 +24,69 @@ const {
   </div>
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
     <div class="pt-0 pointer-events-none"></div>
-      <div class="text-center pb-18 md:pb-16 max-w-5xl mx-auto">
+    <div class="text-center pb-18 md:pb-16 max-w-5xl mx-auto">
+      {
+        tagline && (
+          <p
+            class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
+            set:html={tagline}
+          />
+        )
+      }
+      {
+        title && (
+          <h1
+            class="text-6xl md:text-7xl  leading-tighter tracking-tighter  font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
+            set:html={title}
+          />
+        )
+      }
+      <div class="max-w-3xl mx-auto space-y-12">
         {
-          tagline && (
-            <p
-              class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
-              set:html={tagline}
+          subtitle && (
+            <h2
+              class="sr-only text-md md:text-xl text-muted mb-28 dark:text-slate-400 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade ![animation-delay:2s]"
+              set:html={subtitle}
             />
           )
         }
-        {
-          title && (
-            <h1
-              class="text-4xl md:text-6xl  leading-tighter tracking-tighter mb-38 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
-              set:html={title}
-            />
-          )
-        }
-          <div class="max-w-3xl mx-auto  space-y-12 "  >
+        <div class="max-w-3xl mx-auto space-y-12 md:space-y-20">
           {
-            subtitle && (
+            paragraph && (
               <p
-                class="text-md md:text-xl text-muted mb-10 dark:text-slate-400 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade ![animation-delay:2s]"
-                set:html={subtitle}
+                class="text-xl md:text-2xl text-muted  dark:text-slate-400 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade ![animation-delay:2s]"
+                set:html={paragraph}
               />
             )
           }
-          <div class="max-w-3xl mx-auto  space-y-12 md:space-y-20">
-            {
-              paragraph && (
-                <p
-                  class="text-xl md:text-2xl text-muted  dark:text-slate-400 intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade ![animation-delay:3s]"
-                  set:html={paragraph}
-                />
-              )
-            }
-            {
-  actions && (
-    <div
-      class="w-full flex flex-col items-center justify-center gap-3
+          {
+            actions && (
+              <div
+                class="w-full flex flex-col items-center justify-center gap-3
              sm:flex-row sm:justify-center
-             intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade ![animation-delay:3s]"
-    >
-      {Array.isArray(actions) ? (
-        actions.map((action) => (
-          <div class="flex">  {/* <- supprimé w-full */}
-            <Button {...(action || {})} class="w-auto" /> {/* <- force largeur auto */}
-          </div>
-        ))
-      ) : (
-        <Fragment set:html={actions} />
-      )}
-    </div>
-  )
-}
-
-          </div>
+             intersect-once intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade ![animation-delay:2s]"
+              >
+                {Array.isArray(actions) ? (
+                  actions.map((action) => (
+                    <div class="flex">
+                      {' '}
+                      {/* <- supprimé w-full */}
+                      <Button {...(action || {})} class="w-auto" /> {/* <- force largeur auto */}
+                    </div>
+                  ))
+                ) : (
+                  <Fragment set:html={actions} />
+                )}
+              </div>
+            )
+          }
         </div>
-        <div class="m-auto text-muted motion-safe:opacity-0 motion-safe:intersect:animate-fade ![animation-delay:3s] mt-2 mb-10">
-          {content && <Fragment set:html={content} />}
-        </div>
-
-        
+      </div>
+      <div
+        class="m-auto text-muted motion-safe:opacity-0 motion-safe:intersect:animate-fade ![animation-delay:2s] mt-2 mb-10"
+      >
+        {content && <Fragment set:html={content} />}
       </div>
     </div>
+  </div>
 </section>

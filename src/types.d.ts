@@ -2,6 +2,8 @@ import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import type { HTMLAttributes, HTMLInputTypeAttribute, ImageMetadata } from 'astro/types';
 
 export interface Post {
+  [x: string]: any;
+  [x: string]: any;
   /** A unique ID number that identifies a post. */
   id: string;
 
@@ -22,7 +24,7 @@ export interface Post {
   excerpt?: string;
   /**  */
   image?: ImageMetadata | string;
-
+  imageKey?: string ;
   /**  */
   category?: Taxonomy;
   /**  */
@@ -101,6 +103,14 @@ export interface Video {
   src: string;
   type?: string;
 }
+export interface HeroVideo {
+  video?: {
+    src: string;
+    alt: string;
+  };
+  id?: string;
+  bg?: string; // si tu utilises <slot name="bg">
+}
 
 export interface Widget {
   id?: string;
@@ -112,6 +122,7 @@ export interface Widget {
 export interface Headline {
   title?: string;
   subtitle?: string;
+  subsubtitle?:string;
   tagline?: string;
   classes?: Record<string, string>;
 }
@@ -221,7 +232,7 @@ export interface CallToAction extends Omit<HTMLAttributes<'a'>, 'slot'> {
   variant?: 'primary' | 'secondary' | 'tertiary' | 'link';
   text?: string;
   subtext?: string;
-
+  seo?: string;
   icon?: string;
   classes?: Record<string, string>;
   type?: 'button' | 'submit' | 'reset';

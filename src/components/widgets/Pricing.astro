@@ -11,6 +11,7 @@ const {
   subtitle = '',
   tagline = '',
   prices = [],
+  subsubtitle = '',
 
   id,
   isDark = false,
@@ -20,7 +21,7 @@ const {
 ---
 
 <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
-  <Headline title={title} subtitle={subtitle} tagline={tagline} />
+  <Headline title={title} subtitle={subtitle} subsubtitle={subsubtitle} tagline={tagline} />
 
   <div class="flex items-stretch justify-center">
     <div class="grid grid-cols-3 gap-4 dark:text-white sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
@@ -81,6 +82,11 @@ const {
                       <h3 class="text-center text-xl font-semibold uppercase leading-6 tracking-wider mb-2">{title}</h3>
                     ) : (
                       <>
+                        {' '}
+                        <h3 class="text-center text-xl font-semibold uppercase leading-6 tracking-wider mb-2">
+                          {title}
+                        </h3>
+                        <div class="font-light sm:text-lg text-gray-600 dark:text-slate-400 mb-4">{subtitle}</div>
                         <div class=" inline-flex rounded-md  overflow-hidden" role="tablist" aria-label="Type d’offre">
                           <button
                             type="button"
@@ -258,12 +264,11 @@ const {
                     )}
                   </div>
                   {countdownTarget && (
-                      <p class="mt-2 text-sm font-medium text-primary">
-                        Plus que <CountDown targetDate={countdownTarget} />
-                      </p>
-                    )}
+                    <p class="mt-2 text-sm font-medium text-primary">
+                      Plus que <CountDown targetDate={countdownTarget} />
+                    </p>
+                  )}
                 </div>
-                
               </div>
             );
           })

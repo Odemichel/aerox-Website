@@ -5,7 +5,7 @@
  * - logos: Array<{ src: string; alt: string; href?: string }>
  * - id?: string
  */
-const { title = '', logos = [], id } = Astro.props;
+const { title = '', logos = [], id, subtitle ='' } = Astro.props;
 
 // id unique pour le carrousel
 const carouselId = `logos-${Math.random().toString(36).slice(2, 8)}`;
@@ -14,7 +14,9 @@ const carouselId = `logos-${Math.random().toString(36).slice(2, 8)}`;
   {title && (
     <h2 class="text-center text-muted text-xl md:text-2xl font-semibold mb-4">{title}</h2>
   )}
-
+  {subtitle && (
+    <h3 class="sr-only text-center text-muted text-xl md:text-2xl font-semibold mb-4">{subtitle}</h3>
+  )}
   <div class="relative">
    
 

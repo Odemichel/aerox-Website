@@ -24,9 +24,11 @@ export default {
       animation: {
         fade: 'fadeInUp 1s both',
         blur: 'blurInUp 3s both',
-        fadedelay3s: 'fadeInUp 0.2s ease-out 6s forwards', // <- délai 3s
+        fadedelay3s: 'fadeInUp 1s ease-out 6s forwards', // <- délai 3s
+        
 
       },
+      
 
       keyframes: {
         fadeInUp: {

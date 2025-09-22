@@ -11,14 +11,14 @@ metadata:
   title:
     default: AeroX — Be Faster
     template: '%s — AeroX'
-  description: "🚴 AeroX entraîne ton aérodynamisme avec une simple webcam. Gagne 2–3 km/h à watts égaux grâce à un feedback en temps réel."
+  description: "AeroX améliore ton aérodynamisme avec une simple webcam sur home trainer. Gagne 2–3 km/h à watts égaux en triathlon, Ironman ou course vélo. Mieux que Zwift, MyWhoosh, Kinomap."
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: AstroWind
+    site_name: AeroX
     images:
-      - url: '~/assets/images/default.png'
+      - url: '~/assets/images/aerox-hero.jpg'
         width: 1200
         height: 628
     type: website

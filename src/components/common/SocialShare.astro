@@ -4,13 +4,17 @@ import { Icon } from 'astro-icon/components';
 export interface Props {
   text: string;
   url: string | URL;
+  image?: string
   class?: string;
 }
 
-const { text, url, class: className = 'inline-block' } = Astro.props;
+const { text, url, image, class: className = 'inline-block' } = Astro.props;
 ---
 
 <div class={className}>
+  {image && (
+    <img src={image} alt={text} class="w-16 h-16 object-cover rounded-md inline-block mr-2" />
+  )}
   <span class="align-super font-bold text-slate-500 dark:text-slate-400">Share:</span>
   <button
     class="ml-2 rtl:ml-0 rtl:mr-2"

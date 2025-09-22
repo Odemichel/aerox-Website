@@ -5,6 +5,7 @@ import type { Headline as Props } from '~/types';
 const {
   title = await Astro.slots.render('title'),
   subtitle = await Astro.slots.render('subtitle'),
+  subsubtitle = await Astro.slots.render('subsubtitle'),
   tagline,
   classes = {},
 } = Astro.props;
@@ -13,11 +14,12 @@ const {
   container: containerClass = 'max-w-3xl',
   title: titleClass = 'text-3xl md:text-4xl ',
   subtitle: subtitleClass = 'text-xl',
+subsubtitle: subsubtitleClass = 'text-xl',
 } = classes;
 ---
 
 {
-  (title || subtitle || tagline) && (
+  (title || subtitle || subsubtitle || tagline) && (
     <div class={twMerge('mb-8 md:mx-auto md:mb-12 text-center', containerClass)}>
       {tagline && (
         <p class="inline-block px-3 py-1 mb-4 text-base  dark:text-muted border rounded-full dark:border-primary-light font-bold tracking-wide uppercase" set:html={tagline} />
@@ -28,6 +30,10 @@ const {
           set:html={title}
         />
       )}
+      <h3
+          class="sr-only"
+          set:html={subsubtitle}
+        />
 
       {subtitle && <p class={twMerge('mt-4 text-muted', subtitleClass)} set:html={subtitle} />}
     </div>
