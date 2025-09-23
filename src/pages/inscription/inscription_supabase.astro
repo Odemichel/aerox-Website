@@ -44,7 +44,7 @@ const metadata = {
         <input type="checkbox" id="rgpd" required class="h-4 w-4" />
         <label for="rgpd" class="text-sm">
           J’accepte le traitement de mes données conformément à la
-          <a href= getPermalink('/privacy') class="underline text-primary hover:text-primary/80"
+          <a href="getPermalink('/privacy')" class="underline text-primary hover:text-primary/80"
             >politique de confidentialité</a
           >.
         </label>
@@ -54,7 +54,9 @@ const metadata = {
         <input type="checkbox" id="cgv" required class="h-4 w-4" />
         <label for="cgv" class="text-sm">
           J’accepte les
-          <a href=getPermalink('/terms') class="underline text-primary hover:text-primary/80">Conditions Générales de Vente</a>.
+          <a href="getPermalink('/terms')" class="underline text-primary hover:text-primary/80"
+            >Conditions Générales de Vente</a
+          >.
         </label>
       </div>
 
@@ -122,18 +124,27 @@ const metadata = {
         }
 
         // --- Création du compte ---
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { phone, rgpd: true, cgv: true },
-            emailRedirectTo: "https://aeroxbefaster.com/inscription/connexion"
- },
+          options: {
+            data: { phone, rgpd: true, cgv: true },
+            emailRedirectTo: 'https://aeroxbefaster.com/inscription/connexion',
+          },
         });
+
+        if (!error && data?.user) {
+          await supabase.from('users').insert({
+            id: data.user.id,
+
+            phoneNumber: phone,
+          });
+        }
 
         if (error) {
           attemptCount++;
           if (attemptCount >= 3) {
-            const penalty = Math.pow(2, attemptCount - 2) * 5000; 
+            const penalty = Math.pow(2, attemptCount - 2) * 5000;
             // 5s → 10s → 20s → 40s…
             lockUntil = Date.now() + penalty;
           }

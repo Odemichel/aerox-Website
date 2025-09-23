@@ -27,19 +27,24 @@ export const headerData = {
           text: 'FAQs',
           href: getPermalink('/#FAQs'),
         },
-        {
-          text: 'Contact',
-          href:  LINKS.contact,
-        },
+       
         {
           text: "L'histoire d'Aerox",
           href: getPermalink('/team'),
+        },
+         {
+          text: 'Contact',
+          href:  LINKS.contact,
         },
          {
           text: "Nos Articles",
   href: '/blog',
         },
 
+ {
+          text: "Connexion",
+  href: '/inscription/connexion',
+        },
       ],
     },
 
