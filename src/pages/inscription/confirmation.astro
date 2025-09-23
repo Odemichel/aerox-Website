@@ -1,0 +1,27 @@
+---
+import Layout from "~/layouts/Layout.astro";
+
+
+const metadata = {
+  title: 'Confirmation inscription — AeroX',
+  description: "Vérifie ton email pour activer ton compte AeroX.",
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="max-w-md mx-auto py-20 text-center">
+    <h1 class="text-3xl font-bold mb-6">✅ Email envoyé</h1>
+    <p class="mb-8 text-black dark:text-white">
+      Merci ! Un email de confirmation t’a été envoyé.<br/>
+      Clique sur le lien pour activer ton compte AeroX.<br/><br/>
+      ⚠️ Vérifie aussi dans ton dossier spam.
+    </p>
+
+    <a
+      href="/connexion"
+      class="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/80"
+    >
+      Se connecter
+    </a>
+  </section>
+</Layout>

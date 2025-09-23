@@ -31,6 +31,7 @@
     "@iconify-json/emojione": "^1.2.3",
     "@iconify-json/fluent-emoji-flat": "^1.2.5",
     "@stripe/stripe-js": "^7.9.0",
+    "@supabase/supabase-js": "^2.57.4",
     "@tabler/icons": "^3.34.1",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",

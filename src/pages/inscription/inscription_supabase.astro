@@ -1,0 +1,146 @@
+---
+import Button from '~/components/ui/Button.astro';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Inscription — AeroX',
+  description: "Crée ton compte AeroX pour accéder à l'application et aux abonnements.",
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="max-w-md mx-auto py-16 px-6 text-center">
+    <h1 class="text-3xl font-bold mb-6">Créer ton compte AeroX</h1>
+    <p class="mb-8 text-black dark:text-white">
+      Rejoins les pionniers AeroX 🚀<br />
+      Inscris-toi avec ton email et choisis ton mot de passe.
+    </p>
+
+    <form id="signup-form" class="flex flex-col gap-4 text-left">
+      <label for="email" class="font-medium">Email</label>
+      <input type="email" id="email" placeholder="ton@email.com" required class="border rounded p-3 text-secondary" />
+
+      <label for="password" class="font-medium">Mot de passe</label>
+      <input
+        type="password"
+        id="password"
+        placeholder="********"
+        required
+        minlength="8"
+        class="border rounded p-3 text-secondary"
+      />
+
+      <label for="phone" class="font-medium">Téléphone</label>
+      <input
+        type="tel"
+        id="phone"
+        placeholder="+33 6 12 34 56 78"
+        pattern="^(\+?\d{1,3}[\s.-]?)?(\d{2}[\s.-]?){4,5}$"
+        class="border rounded p-3 text-secondary"
+      />
+
+      <!-- ✅ Cases à cocher RGPD + CGV -->
+      <div class="flex items-center gap-2">
+        <input type="checkbox" id="rgpd" required class="h-4 w-4" />
+        <label for="rgpd" class="text-sm">
+          J’accepte le traitement de mes données conformément à la
+          <a href="/confidentialite" class="underline text-primary hover:text-primary/80"
+            >politique de confidentialité</a
+          >.
+        </label>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <input type="checkbox" id="cgv" required class="h-4 w-4" />
+        <label for="cgv" class="text-sm">
+          J’accepte les
+          <a href="/cgv" class="underline text-primary hover:text-primary/80">Conditions Générales de Vente</a>.
+        </label>
+      </div>
+
+      <Button variant="primary" type="submit" text="Créer mon compte" class="mt-6 w-full justify-center" />
+    </form>
+
+    <p id="message" class="mt-6 text-sm"></p>
+  </section>
+
+  <script>
+    import { supabase } from '~/config/supabaseClient';
+
+    const form = document.getElementById('signup-form');
+    const message = document.getElementById('message');
+
+    let attemptCount = 0;
+    let lockUntil = 0;
+
+    function showMessage(text, isError = true) {
+      if (!message) return;
+      message.textContent = text;
+      message.classList.remove('text-red-600', 'text-green-600');
+      message.classList.add(isError ? 'text-red-600' : 'text-green-600');
+    }
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const now = Date.now();
+        if (now < lockUntil) {
+          const wait = Math.ceil((lockUntil - now) / 1000);
+          showMessage(`⏳ Trop d'essais. Réessaie dans ${wait}s.`);
+          return;
+        }
+
+        const emailEl = document.getElementById('email') as HTMLInputElement | null;
+        const passwordEl = document.getElementById('password') as HTMLInputElement | null;
+        const phoneEl = document.getElementById('phone') as HTMLInputElement | null;
+        const rgpdEl = document.getElementById('rgpd') as HTMLInputElement | null;
+        const cgvEl = document.getElementById('cgv') as HTMLInputElement | null;
+
+        const email = emailEl?.value.trim() ?? '';
+        const password = passwordEl?.value.trim() ?? '';
+        const phone = phoneEl?.value.trim() ?? '';
+        const rgpd = rgpdEl?.checked ?? false;
+        const cgv = cgvEl?.checked ?? false;
+
+        // --- Vérifications ---
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          showMessage('❌ Email invalide.');
+          return;
+        }
+
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+        if (!passwordRegex.test(password)) {
+          showMessage('❌ Mot de passe trop faible (8+ caractères, 1 majuscule, 1 chiffre).');
+          return;
+        }
+
+        if (!rgpd || !cgv) {
+          showMessage('❌ Vous devez accepter la politique de confidentialité et les CGV.');
+          return;
+        }
+
+        // --- Création du compte ---
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { data: { phone, rgpd: true, cgv: true } },
+        });
+
+        if (error) {
+          attemptCount++;
+          if (attemptCount >= 3) {
+            const penalty = Math.pow(2, attemptCount - 2) * 5000; 
+            // 5s → 10s → 20s → 40s…
+            lockUntil = Date.now() + penalty;
+          }
+          showMessage('❌ ' + error.message);
+        } else {
+          attemptCount = 0; // reset si succès
+          window.location.href = '/inscription/confirmation';
+        }
+      });
+    }
+  </script>
+</Layout>
