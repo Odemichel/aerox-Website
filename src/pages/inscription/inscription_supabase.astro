@@ -125,7 +125,9 @@ const metadata = {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { phone, rgpd: true, cgv: true } },
+          options: { data: { phone, rgpd: true, cgv: true },
+            emailRedirectTo: "https://aeroxbefaster.com/inscription/connexion"
+ },
         });
 
         if (error) {
