@@ -44,7 +44,7 @@ const metadata = {
         <input type="checkbox" id="rgpd" required class="h-4 w-4" />
         <label for="rgpd" class="text-sm">
           J’accepte le traitement de mes données conformément à la
-          <a href="/confidentialite" class="underline text-primary hover:text-primary/80"
+          <a href= getPermalink('/privacy') class="underline text-primary hover:text-primary/80"
             >politique de confidentialité</a
           >.
         </label>
@@ -54,7 +54,7 @@ const metadata = {
         <input type="checkbox" id="cgv" required class="h-4 w-4" />
         <label for="cgv" class="text-sm">
           J’accepte les
-          <a href="/cgv" class="underline text-primary hover:text-primary/80">Conditions Générales de Vente</a>.
+          <a href=getPermalink('/terms') class="underline text-primary hover:text-primary/80">Conditions Générales de Vente</a>.
         </label>
       </div>
 
