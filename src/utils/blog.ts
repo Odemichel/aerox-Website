@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import { getCollection, render } from 'astro:content';
 import { APP_BLOG } from 'astrowind:config';
 import type { Post } from '~/types';
-import { BLOG_BASE, CATEGORY_BASE, cleanSlug, POST_PERMALINK_PATTERN, TAG_BASE, trimSlash } from './permalinks';
+import { BLOG_BASE, CATEGORY_BASE, cleanSlug, POST_PERMALINK_PATTERN, trimSlash } from './permalinks';
 // (optionnel, recommandé) : si tu as ajouté le sanitizer
 // import { sanitizeMetaData } from '~/utils/og';
 
@@ -61,12 +61,12 @@ const generatePermalink = ({
     .filter(Boolean)
     .join('/');
 
-    // si le pattern ne commence pas par BLOG_BASE, on le préfixe
-const pathWithBase = path.startsWith(trimSlash(BLOG_BASE ?? 'blog'))
-  ? path
-  : `${trimSlash(BLOG_BASE ?? 'blog')}/${path}`;
+  // si le pattern ne commence pas par BLOG_BASE, on le préfixe
+  const pathWithBase = path.startsWith(trimSlash(BLOG_BASE ?? 'blog'))
+    ? path
+    : `${trimSlash(BLOG_BASE ?? 'blog')}/${path}`;
 
-// Préfixe i18n: "/fr/blog/zwift/"
+  // Préfixe i18n: "/fr/blog/zwift/"
   // Préfixe i18n: "/fr/{path}" (avec BLOG_BASE déjà dans pattern)
   return withLangPrefix(lang, pathWithBase);
 };
@@ -275,16 +275,17 @@ export const getStaticPathsBlogTag = async ({
     });
   });
 
-  return Object.keys(tags).flatMap((tagSlug) =>
-    paginate(
-      posts.filter((post) => post.tags?.some((t) => t.slug === tagSlug)),
-      {
-        params: { lang, blog: `${TAG_BASE || 'tag'}/${tagSlug}` },
-        pageSize: blogPostsPerPage,
-        props: { tag: tags[tagSlug] },
-      }
-    )
-  );
+ return Object.keys(tags).flatMap((tagSlug) =>
+  paginate(
+    posts.filter((post) => post.tags?.some((t) => t.slug === tagSlug)),
+    {
+      // ✅ Corrigé ici : Astro attend "tag", pas "blog"
+      params: { lang, tag: tagSlug },
+      pageSize: blogPostsPerPage,
+      props: { tag: tags[tagSlug] },
+    }
+  )
+);
 };
 
 /* ------------------------------------------------------------------ */
