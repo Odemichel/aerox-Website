@@ -5,6 +5,8 @@ import Headline from '~/components/ui/Headline.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import type { Pricing as Props } from '~/types';
 import CountDown from './CountDown.astro';
+import { COUNTDOWN_TARGET } from '~/config/countdown';
+
 
 const {
   title = '',
@@ -265,7 +267,7 @@ const {
                   </div>
                   {countdownTarget && (
                     <p class="mt-2 text-sm font-medium text-primary">
-                      Plus que <CountDown targetDate={countdownTarget} />
+                      Plus que <CountDown targetDate={new Date(COUNTDOWN_TARGET)} />
                     </p>
                   )}
                 </div>
