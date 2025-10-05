@@ -41,9 +41,11 @@ interface Props {
 const { params, page, tag } = Astro.props as unknown as Props;
 
 // ✅ Langue courante
-const lang: Locale = SUPPORTED_LOCALES.includes(params.lang as Locale)
-  ? (params.lang as Locale)
-  : DEFAULT_LOCALE;
+const lang: Locale =
+  params?.lang && SUPPORTED_LOCALES.includes(params.lang as Locale)
+    ? (params.lang as Locale)
+    : DEFAULT_LOCALE;
+
 
 // ✅ Traductions (optionnel)
 const currentPage = page.currentPage ?? 1;

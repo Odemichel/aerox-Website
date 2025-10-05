@@ -275,24 +275,28 @@ export const getStaticPathsBlogTag = async ({
     });
   });
 
- return Object.keys(tags)
-  .flatMap((tagSlug) =>
-    paginate(
-      posts.filter((post) => post.tags?.some((t) => t.slug === tagSlug)),
-      {
-        params: { lang, tag: tagSlug },
-        pageSize: blogPostsPerPage,
-        props: { tag: tags[tagSlug] },
-      }
+  // ✅ Correction principale
+  return Object.keys(tags)
+    .flatMap((tagSlug) =>
+      paginate(
+        posts.filter((post) => post.tags?.some((t) => t.slug === tagSlug)),
+        {
+          params: { lang, tag: tagSlug },
+          pageSize: blogPostsPerPage,
+          props: { tag: tags[tagSlug] },
+        }
+      )
     )
-  )
-  // ✅ Sécurité : on s'assure que tous les chemins ont bien params.lang
-  .map((entry) => ({
-    ...entry,
-    params: entry.params ?? { lang, tag: 'inconnu' },
-  }));
-
+    .map((entry) => ({
+      ...entry,
+      params: {
+        lang: entry?.params?.lang || lang,
+        tag: entry?.params?.tag || 'general',
+      },
+      props: entry.props ?? {},
+    }));
 };
+
 
 /* ------------------------------------------------------------------ */
 /* Relations                                                          */
