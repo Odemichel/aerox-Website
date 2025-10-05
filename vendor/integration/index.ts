@@ -1,6 +1,6 @@
+import type { AstroConfig, AstroIntegration } from 'astro';
 import fs from 'node:fs';
 import os from 'node:os';
-import type { AstroConfig, AstroIntegration } from 'astro';
 
 import configBuilder, { type Config } from './utils/configBuilder';
 import loadConfig from './utils/loadConfig';
@@ -32,7 +32,7 @@ export default ({ config: _themeConfig = 'src/config.yaml' } = {}): AstroIntegra
           site: SITE.site,
           base: SITE.base,
 
-          trailingSlash: SITE.trailingSlash ? 'always' : 'never',
+          trailingSlash: SITE.trailingSlash ? 'always' : 'always',
 
           vite: {
             plugins: [

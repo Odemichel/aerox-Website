@@ -1,0 +1,81 @@
+---
+import type { GetStaticPaths } from 'astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+import TeamGrid from '~/components/widgets/TeamGrid.astro';
+import Layout from '~/layouts/PageLayout.astro';
+
+import Milan from '~/assets/images/Milan_tete.jpg?url';
+import Olivier from '~/assets/images/Olivier_tete2.png?url';
+
+// i18n depuis ton module
+import { getDict, SUPPORTED_LOCALES, t, type Locale } from '~/lib/i18n';
+
+export const prerender = true;
+export const getStaticPaths: GetStaticPaths = async () =>
+  SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
+
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
+
+// lien pricing de la home dans la langue
+const pricingHref = `/${lang}/#pricing`;
+
+const metadata = {
+  title: t(dict, 'ourStory.meta.title'),
+  description: t(dict, 'ourStory.meta.description'),
+};
+---
+<Layout metadata={metadata}>
+  <!-- Hero Section -->
+  <HeroText
+    tagline={t(dict, 'ourStory.hero.tagline')}
+    title={t(dict, 'ourStory.hero.title')}
+    subtitle={t(dict, 'ourStory.hero.subtitle')}
+  />
+
+  <!-- Story Section -->
+  <section class="max-w-4xl mx-auto justify-center px-6 py-16 prose prose-lg dark:prose-invert">
+    <h2 class="text-primary text-center">{t(dict, 'ourStory.h2')}</h2>
+
+    <!-- On garde EXACTEMENT ton HTML, injecté via JSON -->
+    <p set:html={t(dict, 'ourStory.p1')}></p>
+    <p set:html={t(dict, 'ourStory.p2')}></p>
+    <p set:html={t(dict, 'ourStory.p3')}></p>
+    <p set:html={t(dict, 'ourStory.p4')}></p>
+    <p set:html={t(dict, 'ourStory.p5')}></p>
+  </section>
+
+  <!-- Team Section -->
+  <TeamGrid
+    title={t(dict, 'ourStory.team.title')}
+    subtitle={t(dict, 'ourStory.team.subtitle')}
+    members={[
+      {
+        name: 'Olivier Demichel',
+        role: t(dict, 'ourStory.team.olivier.role'),
+        image: { src: Olivier, alt: t(dict, 'ourStory.team.olivier.alt') },
+        description: t(dict, 'ourStory.team.olivier.desc'),
+      },
+      {
+        name: 'Milan Larivière',
+        role: t(dict, 'ourStory.team.milan.role'),
+        image: { src: Milan, alt: t(dict, 'ourStory.team.milan.alt') },
+        description: t(dict, 'ourStory.team.milan.desc'),
+      },
+    ]}
+  />
+
+  <!-- Call To Action -->
+  <div class="text-center py-20">
+    <a
+      href={pricingHref}
+      class="btn btn-primary px-8 py-3 text-lg"
+      aria-label={t(dict, 'ourStory.cta.aria')}
+    >
+      {t(dict, 'ourStory.cta.label')}
+    </a>
+    <p class="mt-4 text-muted text-sm">
+      {t(dict, 'ourStory.cta.sub')}
+    </p>
+  </div>
+</Layout>

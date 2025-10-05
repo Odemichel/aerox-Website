@@ -1,6 +1,6 @@
 import slugify from 'limax';
 
-import { SITE, APP_BLOG } from 'astrowind:config';
+import { APP_BLOG, SITE } from 'astrowind:config';
 
 import { trim } from '~/utils/utils';
 
@@ -40,7 +40,13 @@ export const getCanonical = (path = ''): string | URL => {
 
 /** */
 export const getPermalink = (slug = '', type = 'page'): string => {
-  let permalink: string;
+  // 🔹 Cas 1: ancre (#...)
+  if (slug.startsWith('#')) {
+    // On colle sur la home SANS slash final
+    const home = getHomePermalink().replace(/\/$/, '');
+    return `${home}${slug}`;
+  }
+
 
   if (
     slug.startsWith('https://') ||
@@ -51,6 +57,7 @@ export const getPermalink = (slug = '', type = 'page'): string => {
   ) {
     return slug;
   }
+  let permalink: string;
 
   switch (type) {
     case 'home':

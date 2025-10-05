@@ -1,0 +1,103 @@
+---
+import Button from '~/components/ui/Button.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { getDict, t } from '~/lib/i18n';
+
+const { lang } = Astro.params;
+const dict = getDict(lang);
+
+const metadata = {
+  title: t(dict, 'login.meta.title'),
+  description: t(dict, 'login.meta.description'),
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="max-w-md mx-auto py-16 px-6 text-center">
+    <h1 class="text-3xl font-bold mb-6 text-primary">{t(dict, 'login.title')}</h1>
+    <p class="mb-8 text-black dark:text-white" set:html={t(dict, 'login.subtitle')} />
+
+    <form id="login-form" data-lang={lang} class="flex flex-col gap-4 text-left">
+      <label for="email" class="font-medium">{t(dict, 'login.email.label')}</label>
+      <input
+        type="email"
+        id="email"
+        placeholder={t(dict, 'login.email.placeholder')}
+        required
+        class="border rounded p-3 text-secondary"
+      />
+
+      <label for="password" class="font-medium">{t(dict, 'login.password.label')}</label>
+      <input
+        type="password"
+        id="password"
+        placeholder={t(dict, 'login.password.placeholder')}
+        required
+        minlength="8"
+        class="border rounded p-3 text-secondary"
+      />
+
+      <Button variant="primary" type="submit" text={t(dict, 'login.submit')} class="mt-6 w-full justify-center" />
+    </form>
+
+    <!-- Mot de passe oublié -->
+    <p class="mt-4 text-sm text-gray-600 dark:text-gray-300">
+      {t(dict, 'login.forgot.text')}
+      <a href={`/${lang}/reset-password/`} class="underline text-primary hover:text-primary/80">
+        {t(dict, 'login.forgot.link')}
+      </a>
+    </p>
+
+    <div class="flex items-center justify-center mt-3">
+      <label class="text-sm text-center">
+        {t(dict, 'login.noAccount.text')}
+        <a href={`/${lang}/inscription/inscription/`} class="underline text-primary hover:text-primary/80 ml-1">
+          {t(dict, 'login.noAccount.link')}
+        </a>
+      </label>
+    </div>
+
+    <p id="message" class="mt-6 text-sm"></p>
+  </section>
+
+  <script>
+    import { supabase } from '~/config/supabaseClient';
+
+    const form = document.getElementById('login-form');
+    const message = document.getElementById('message');
+    const lang = form?.dataset.lang || 'fr'; // fallback fr
+
+    function showMessage(text, isError = true) {
+      if (!message) return;
+      message.textContent = text;
+      message.classList.remove('text-red-600', 'text-green-600');
+      message.classList.add(isError ? 'text-red-600' : 'text-green-600');
+    }
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const emailEl = document.getElementById('email') as HTMLInputElement | null;
+        const passwordEl = document.getElementById('password') as HTMLInputElement | null;
+
+        const email = emailEl?.value.trim() ?? '';
+        const password = passwordEl?.value.trim() ?? '';
+
+        if (!email || !password) {
+          showMessage('❌ login.errors.missingFields');
+          return;
+        }
+
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+        if (error) {
+          showMessage('❌ ' + error.message);
+        } else {
+          showMessage('✅ login.success', false);
+          window.location.href = `/${lang}/inscription/dashboard/`;
+        }
+      });
+    }
+  </script>
+</Layout>

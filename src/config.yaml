@@ -2,11 +2,9 @@ site:
   name: AeroX
   site: 'https://aeroxbefaster.com'
   base: '/'
-  trailingSlash: false
-
+  trailingSlash: true
   googleSiteVerificationId: orcPxI47GSa-cRvY11tUe6iGg2IO_RPvnA1q95iEM3M
 
-# Default SEO metadata
 metadata:
   title:
     default: AeroX — Be Faster
@@ -27,46 +25,71 @@ metadata:
     site: ''
     cardType: summary_large_image
 
+# ⬇️ Conserve les 2 propriétés requises par le schéma…
 i18n:
-  language: fr
-  textDirection: ltr
+  language: fr            # requis par astrowind
+  textDirection: ltr      # requis par astrowind
+
+  # …et ajoute notre bloc multi-langues (propriétés additionnelles)
+  defaultLocale: fr
+  locales:
+    - code: fr
+      label: Français
+      htmlLang: fr
+      ogLocale: fr_FR
+    - code: en
+      label: English
+      htmlLang: en
+      ogLocale: en_GB
+
+# Overrides de métadonnées par langue (optionnel mais utile)
+metadata_i18n:
+  fr:
+    title:
+      default: AeroX — Be Faster
+      template: '%s — AeroX'
+    description: "AeroX améliore ton aérodynamisme avec une simple webcam sur home trainer. Gagne 2–3 km/h à watts égaux…"
+    openGraph:
+      locale: fr_FR
+  en:
+    title:
+      default: AeroX — Be Faster
+      template: '%s — AeroX'
+    description: "AeroX turns your smart trainer into a wind tunnel with a simple webcam. Gain 2–3 km/h…"
+    openGraph:
+      locale: en_GB
 
 apps:
   blog:
     isEnabled: true
     postsPerPage: 6
-
     post:
       isEnabled: true
-      permalink: '/%slug%' # Variables: %slug%, %year%, %month%, %day%, %hour%, %minute%, %second%, %category%
+      permalink: '/%slug%'
       robots:
         index: true
-
     list:
       isEnabled: true
-      pathname: 'blog' # Blog main path, you can change this to "articles" (/articles)
+      pathname: 'blog'
       robots:
         index: true
-
     category:
       isEnabled: true
-      pathname: 'category' # Category main path /category/some-category, you can change this to "group" (/group/some-category)
+      pathname: 'category'
       robots:
         index: true
-
     tag:
       isEnabled: true
-      pathname: 'tag' # Tag main path /tag/some-tag, you can change this to "topics" (/topics/some-category)
+      pathname: 'tag'
       robots:
         index: false
-
     isRelatedPostsEnabled: true
     relatedPostsCount: 4
 
 analytics:
   vendors:
     googleAnalytics:
-      id: null # or "G-XXXXXXXXXX"
+      id: null
 
 ui:
-  theme: 'dark:only' # Values: "system" | "light" | "dark" | "light:only" | "dark:only"
+  theme: 'dark:only'

@@ -2,13 +2,11 @@ import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import type { HTMLAttributes, HTMLInputTypeAttribute, ImageMetadata } from 'astro/types';
 
 export interface Post {
-  [x: string]: any;
-  [x: string]: any;
   /** A unique ID number that identifies a post. */
   id: string;
 
   /** A post’s unique slug – part of the post’s URL based on its name, i.e. a post called “My Sample Page” has a slug “my-sample-page”. */
-  slug: string;
+  slug?: string;
 
   /**  */
   permalink: string;
@@ -44,6 +42,7 @@ export interface Post {
 
   /**  */
   readingTime?: number;
+  lang: "fr" | "en";
 }
 
 export interface Taxonomy {
@@ -203,8 +202,9 @@ export interface Testimonial {
   testimonial?: string;
   name?: string;
   job?: string;
-  image?: string | unknown;
-    profile?: string | unknown;
+image?: { src: string | ImageMetadata; alt?: string };
+  profile?: { src: string | ImageMetadata; alt?: string };
+ 
 
 }
 

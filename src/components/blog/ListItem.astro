@@ -24,7 +24,7 @@ const image = post.imageKey
   ? blogImages[post.imageKey]
   : (await findImage(post.image)) as ImageMetadata | undefined;
 
-const link = APP_BLOG?.post?.isEnabled ? getPermalink(post.permalink, 'post') : '';
+const link = APP_BLOG?.post?.isEnabled ? post.permalink : '';
 ---
 
 <article

@@ -9,7 +9,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import type { AstroIntegration } from 'astro';
 import compress from 'astro-compress';
-import icon from 'astro-icon';
+import { default as astroIcon, default as icon } from 'astro-icon';
 
 
 
@@ -17,7 +17,7 @@ import astrowind from './vendor/integration';
 
 import { lazyImagesRehypePlugin, readingTimeRemarkPlugin, responsiveTablesRehypePlugin } from './src/utils/frontmatter';
 
-import vercel from "@astrojs/vercel/serverless"; // ou netlify si tu déploies là-bas
+import vercel from "@astrojs/vercel"; // ou netlify si tu déploies là-bas
 
 
 
@@ -28,6 +28,8 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
   hasExternalScripts ? (Array.isArray(items) ? items.map((item) => item()) : [items()]) : [];
 
 export default defineConfig({
+  site: "https://aeroxbefaster.com",   // ⚡ ton vrai domaine en prod
+  trailingSlash: 'always',              // ou "always" si tu préfères /fr/
   output: 'server',
   adapter: vercel({}),
 
@@ -37,6 +39,12 @@ export default defineConfig({
     }),
     sitemap(),
     mdx(),
+     astroIcon({
+      // ajoute la collection et les icônes que tu utilises
+      include: {
+        'circle-flags': ['fr', 'gb'], // fr = France, gb = Royaume-Uni
+      },
+    }),
     icon({
       include: {
         tabler: ['*'],
@@ -70,19 +78,19 @@ export default defineConfig({
         'fluent-emoji-flat': [
           'stopwatch',
           'light-bulb'
-         
+
         ],
-        'emojione-v1':[
+        'emojione-v1': [
           'person-biking'
         ],
-        'emojione':['rocket'],
-        'twemoji':[
+        'emojione': ['rocket'],
+        'twemoji': [
           'person-biking-medium-skin-tone',
-        'woman-biking-medium-dark-skin-tone'
-      ]
+          'woman-biking-medium-dark-skin-tone'
+        ]
       },
     }),
-    
+
 
     ...whenExternalScripts(() =>
       partytown({

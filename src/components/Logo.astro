@@ -5,7 +5,8 @@ import logo from '~/assets/favicons/Aerox.png';
 
 <span class="flex items-center ml-2 rtl:ml-0 rtl:mr-2">
   <img src={logo.src} alt="AeroX logo" class="h-8 w-auto mr-2" />
-  <span class="text-2xl md:text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white">
+  <!-- Texte masqué < md, visible ≥ md -->
+  <span class="hidden md:inline text-2xl md:text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white">
     {SITE?.name}
   </span>
 </span>

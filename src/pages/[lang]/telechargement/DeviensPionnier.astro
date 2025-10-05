@@ -1,6 +1,6 @@
 ---
 // src/pages/abonnement.astro
-import Layout from '~/layouts/Layout.astro';
+import Layout from '../../../layouts/Layout.astro';
 ---
 
 <Layout metadata={{
@@ -87,7 +87,7 @@ import Layout from '~/layouts/Layout.astro';
 
   <script is:inline>
     const callCheckout = async (payload = {}) => {
-      const res = await fetch('/api/create-api-checkout', {
+      const res = await fetch(`/${document.documentElement.lang || 'fr'}/telechargement/api/create-api-checkout/`,  {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(payload),

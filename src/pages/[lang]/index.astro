@@ -1,0 +1,548 @@
+---
+import type { GetStaticPaths } from 'astro';
+
+import heroVideo from '~/assets/videos/aerox_hero.mp4';
+import { COUNTDOWN_TARGET } from '~/config/countdown';
+import challengesBadges from '~/assets/images/challengesBadges.jpg';
+import classementCLM from '~/assets/images/classementCLM.jpg';
+import editeurSeance from '~/assets/images/editeurSeance.jpg';
+import Milan_HT from '~/assets/images/Milan_HT.jpg';
+import Milan_Tete from '~/assets/images/Milan_tete.jpg';
+import Olivier_Tete from '~/assets/images/Olivier_tete2.png';
+import posterPuissance from '~/assets/images/posterPuissance.jpg?url';
+import Ropert_Tete from '~/assets/images/ropert1.jpg';
+import simulationGPX from '~/assets/images/simulationGPX.jpg';
+import Frederic_tete from '~/assets/images/Frederic_tete.jpg';
+import demoPuissance from '~/assets/videos/demo_puissance.mp4';
+
+import Layout from '~/layouts/PageLayout.astro';
+import CountDown from '~/components/widgets/CountDown.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import Features from '~/components/widgets/Features.astro';
+import Features2 from '~/components/widgets/Features2.astro';
+import Hero from '~/components/widgets/Hero.astro';
+import HeroVideo from '~/components/widgets/HeroVideo.astro';
+import Note from '~/components/widgets/Note.astro';
+import Prices from '~/components/widgets/Pricing.astro';
+import Stats from '~/components/widgets/Stats.astro';
+import StepsSansImage from '~/components/widgets/StepsSansImage.astro';
+import Testimonials from '~/components/widgets/Testimonials.astro';
+import logo_elite from '~/assets/images/logos/elite.png?url';
+import logo_saris from '~/assets/images/logos/saris.png?url';
+import logo_tacx from '~/assets/images/logos/tacx.jpg?url';
+import logo_vanrysel from '~/assets/images/logos/vanrysel.png?url';
+import logo_wahoo from '~/assets/images/logos/wahoo.jpg?url';
+import logo_garmin from '~/assets/images/logos/garmin.png?url';
+import logo_polar from '~/assets/images/logos/polar.png?url';
+import logo_suunto from '~/assets/images/logos/suunto.png?url';
+import LogosCarousel from '~/components/widgets/LogosCarousel.astro';
+import { localizedHref } from '~/utils/localize';
+
+// i18n
+import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
+
+export const prerender = true;
+export const getStaticPaths: GetStaticPaths = async () =>
+  SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
+
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
+
+const metadata = {
+  title: t(dict, 'home.meta.title'),
+  description: t(dict, 'home.meta.description'),
+  robots: { index: true, follow: true },
+  ignoreTitleTemplate: true,
+};
+const Link_inscription = localizedHref(lang, '/inscription/inscription/');
+---
+<Layout metadata={metadata}>
+  <!-- Hero Widget ******************* -->
+  <Hero
+    id="Accueil"
+    actions={[
+      {
+        variant: 'primary',
+        text: t(dict, 'home.hero.cta.text'),
+        icon: 'tabler:download',
+        subtext: t(dict, 'home.hero.cta.subtext'),
+      href: Link_inscription,
+        target: '',
+        seo: t(dict, 'home.hero.cta.seo'),
+      },
+    ]}
+  >
+    tagline={t(dict, 'home.hero.tagline')}
+
+    <Fragment slot="title">
+      <span class="font-bold">
+        {t(dict, 'home.hero.title.l1')}<br />
+        <span class="text-5xl md:text-6xl text-primary intersect-once intersect-quarter motion-safe:opacity-1 motion-safe:intersect:animate-blur">
+          {t(dict, 'home.hero.title.l2')}
+        </span>
+      </span>
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      <span class="font-bold" set:html={t(dict, 'home.hero.subtitle')}></span>
+    </Fragment>
+
+    <Fragment slot="paragraph">
+      <span set:html={t(dict, 'home.hero.paragraph')}></span>
+    </Fragment>
+
+    <Fragment slot="content">
+      {t(dict, 'home.hero.countdown.prefix')} <CountDown targetDate={new Date(COUNTDOWN_TARGET)} /> !
+    </Fragment>
+  </Hero>
+
+  <HeroVideo video={{ src: heroVideo, alt: t(dict, 'home.herovideo.alt') }} />
+
+  <LogosCarousel
+    title={t(dict, 'home.compat.title')}
+    subtitle={t(dict, 'home.compat.subtitle')}
+    logos={[
+      { src: logo_wahoo },
+      { src: logo_elite },
+      { src: logo_tacx },
+      { src: logo_vanrysel },
+      { src: logo_saris },
+      { src: logo_polar },
+      { src: logo_garmin },
+      { src: logo_suunto },
+    ]}
+  />
+
+  <Stats
+    stats={[
+      { title: t(dict, 'home.stats.pioneers'), amount: '300+' },
+      { title: t(dict, 'home.stats.kmhAvg'), amount: '+2.3' },
+      { title: t(dict, 'home.stats.savedAt30'), amount: '-35 W' },
+    ]}
+  />
+
+  <Note title={t(dict, 'home.note1.title')} description={t(dict, 'home.note1.desc')} />
+
+  <Features2
+    tagline={t(dict, 'home.features2.tagline')}
+    id="features"
+    title={t(dict, 'home.features2.title')}
+    subtitle={t(dict, 'home.features2.subtitle')}
+    subsubtitle={t(dict, 'home.features2.subsubtitle')}
+    items={[
+      {
+        title: t(dict, 'home.features2.items.power.title'),
+        description: t(dict, 'home.features2.items.power.desc'),
+        objectif: t(dict, 'home.features2.items.power.obj'),
+        icon: 'flat-color-icons:flash-on',
+        video: { src: demoPuissance, alt: t(dict, 'home.features2.items.power.videoAlt'), poster: posterPuissance },
+        callToAction: {
+          variant: 'primary',
+          text: t(dict, 'home.features2.items.power.cta'),
+          href: Link_inscription,
+          target: '',
+          icon: 'tabler:bolt-filled',
+        },
+      },
+      {
+        title: t(dict, 'home.features2.items.speed.title'),
+        objectif: t(dict, 'home.features2.items.speed.obj'),
+        description: t(dict, 'home.features2.items.speed.desc'),
+        video: { src: demoPuissance, poster: posterPuissance },
+        icon: 'flat-color-icons:gallery',
+        callToAction: {
+          variant: 'primary',
+          text: t(dict, 'home.features2.items.speed.cta'),
+          href: Link_inscription,
+          target: '',
+          icon: 'tabler:player-play-filled',
+        },
+      },
+      {
+        title: t(dict, 'home.features2.items.sim.title'),
+        description: t(dict, 'home.features2.items.sim.desc'),
+        icon: 'flat-color-icons:globe',
+        objectif: t(dict, 'home.features2.items.sim.obj'),
+        image: { src: simulationGPX },
+        callToAction: {
+          variant: 'primary',
+          text: t(dict, 'home.features2.items.sim.cta'),
+          href: Link_inscription,
+          target: '',
+          icon: 'tabler:bike-filled',
+        },
+      },
+      {
+        title: t(dict, 'home.features2.items.tt.title'),
+        description: t(dict, 'home.features2.items.tt.desc'),
+        icon: 'fluent-emoji-flat:stopwatch',
+        objectif: t(dict, 'home.features2.items.tt.obj'),
+        image: { src: classementCLM },
+        callToAction: {
+          variant: 'primary',
+          text: t(dict, 'home.features2.items.tt.cta'),
+          href: Link_inscription,
+          target: '',
+          icon: 'tabler:download',
+        },
+      },
+      {
+        title: t(dict, 'home.features2.items.challenges.title'),
+        description: t(dict, 'home.features2.items.challenges.desc'),
+        icon: 'flat-color-icons:approval',
+        objectif: t(dict, 'home.features2.items.challenges.obj'),
+        image: { src: challengesBadges, alt: t(dict, 'home.features2.items.challenges.imgAlt') },
+        callToAction: {
+          variant: 'primary',
+          text: t(dict, 'home.features2.items.challenges.cta'),
+          href: Link_inscription,
+          target: '',
+          icon: 'tabler:arrow-badge-up-filled',
+        },
+      },
+      {
+        title: t(dict, 'home.features2.items.editor.title'),
+        description: t(dict, 'home.features2.items.editor.desc'),
+        icon: 'flat-color-icons:edit-image',
+        objectif: t(dict, 'home.features2.items.editor.obj'),
+        image: { src: editeurSeance },
+        callToAction: {
+          variant: 'primary',
+          text: t(dict, 'home.features2.items.editor.cta'),
+          href: Link_inscription,
+          target: '',
+          icon: 'tabler:pencil-cog',
+        },
+      },
+    ]}
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Features2>
+
+  <Note title={t(dict, 'home.note2.title')} description={t(dict, 'home.note2.desc')} />
+
+  <Testimonials
+    id="utilisateurs"
+    title={t(dict, 'home.testimonials.title')}
+    subtitle={t(dict, 'home.testimonials.subtitle')}
+    subsubtitle={t(dict, 'home.testimonials.subsubtitle')}
+    testimonials={[
+      {
+        testimonial: t(dict, 'home.testimonials.items.milan.text'),
+        name: 'Milan Larivière',
+        job: t(dict, 'home.testimonials.items.milan.job'),
+        image: { src: Milan_HT, alt: 'Milan Larivière' },
+        profile: { src: Milan_Tete, alt: 'Milan Larivière' },
+      },
+      {
+        testimonial: t(dict, 'home.testimonials.items.frederic.text'),
+        name: 'Frédéric Petit',
+        job: t(dict, 'home.testimonials.items.frederic.job'),
+        profile: { src: Frederic_tete, alt: 'Frédéric Petit Image' },
+      },
+      {
+        testimonial: t(dict, 'home.testimonials.items.olivier.text'),
+        name: 'Olivier Demichel',
+        job: t(dict, 'home.testimonials.items.olivier.job'),
+        profile: { src: Olivier_Tete, alt: 'Olivier Demichel Image' },
+      },
+      {
+        testimonial: t(dict, 'home.testimonials.items.james.text'),
+        name: 'James Ropert',
+        job: t(dict, 'home.testimonials.items.james.job'),
+        profile: { src: Ropert_Tete, alt: 'James Ropert Image' },
+      },
+    ]}
+    callToAction={{
+      variant: 'primary',
+      text: t(dict, 'home.testimonials.cta'),
+      href: Link_inscription,
+      target: '',
+      icon: 'tabler:users',
+    }}
+  />
+
+  <Note title={t(dict, 'home.note3.title')} description={t(dict, 'home.note3.desc')} />
+
+  <Features
+    id="pourquoi"
+    title={t(dict, 'home.features.title')}
+    subtitle={t(dict, 'home.features.subtitle')}
+    items={[
+      {
+        title: t(dict, 'home.features.items.gain.title'),
+        description: t(dict, 'home.features.items.gain.desc'),
+        icon: 'tabler:brand-speedtest',
+        education: t(dict, 'home.features.items.gain.education'),
+        expandable: true,
+        moreLabel: t(dict, 'home.features.items.gain.more'),
+        defaultOpen: false,
+        classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
+        callToAction: {
+          text: t(dict, 'home.features.items.gain.cta'),
+          href: Link_inscription,
+          target: '',
+          icon: 'tabler:download',
+          variant: 'primary',
+          class: 'mt-2',
+          'aria-label': t(dict, 'home.features.items.gain.aria'),
+        },
+      },
+      {
+        title: t(dict, 'home.features.items.real.title'),
+        description: t(dict, 'home.features.items.real.desc'),
+        icon: 'tabler:bolt',
+        education: t(dict, 'home.features.items.real.education'),
+        expandable: true,
+        moreLabel: t(dict, 'home.features.items.real.more'),
+        defaultOpen: false,
+        classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
+        callToAction: {
+          text: t(dict, 'home.features.items.real.cta'),
+          href: Link_inscription,
+          target: '',
+          icon: 'tabler:bolt',
+          variant: 'primary',
+          class: 'mt-2',
+        },
+      },
+      {
+        title: t(dict, 'home.features.items.pro.title'),
+        description: t(dict, 'home.features.items.pro.desc'),
+        icon: 'tabler:trophy',
+        education: t(dict, 'home.features.items.pro.education'),
+        expandable: true,
+        moreLabel: t(dict, 'home.features.items.pro.more'),
+        defaultOpen: false,
+        classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
+        callToAction: {
+          text: t(dict, 'home.features.items.pro.cta'),
+          href: Link_inscription,
+          target: '',
+          icon: 'tabler:download',
+          variant: 'primary',
+          class: 'mt-2',
+        },
+      },
+      {
+        title: t(dict, 'home.features.items.cost.title'),
+        description: t(dict, 'home.features.items.cost.desc'),
+        icon: 'tabler:currency-euro',
+        education: t(dict, 'home.features.items.cost.education'),
+        expandable: true,
+        moreLabel: t(dict, 'home.features.items.cost.more'),
+        defaultOpen: false,
+        classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
+        callToAction: {
+          text: t(dict, 'home.features.items.cost.cta'),
+          href: Link_inscription,
+          target: '',
+          icon: 'tabler:currency-euro',
+          variant: 'primary',
+          class: 'mt-2',
+        },
+      },
+      {
+        title: t(dict, 'home.features.items.proof.title'),
+        description: t(dict, 'home.features.items.proof.desc'),
+        icon: 'tabler:users',
+        education: t(dict, 'home.features.items.proof.education'),
+        expandable: true,
+        moreLabel: t(dict, 'home.features.items.proof.more'),
+        defaultOpen: false,
+        classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
+        callToAction: {
+          text: t(dict, 'home.features.items.proof.cta'),
+          href: Link_inscription,
+          target: '',
+          icon: 'tabler:download',
+          variant: 'primary',
+          class: 'mt-2',
+        },
+      },
+    ]}
+  >
+    <Fragment slot="ctaDetails">
+      <span set:html={t(dict, 'home.features.ctaDetails')}></span>
+    </Fragment>
+  </Features>
+
+  <Note title={t(dict, 'home.note4.title')} description={t(dict, 'home.note4.desc')} />
+
+  <Prices
+    title={t(dict, 'home.prices.title')}
+    id="pricing"
+    subtitle={t(dict, 'home.prices.subtitle')}
+    subsubtitle={t(dict, 'home.prices.subsubtitle')}
+    prices={[
+      {
+        title: t(dict, 'home.prices.packDiscover.title'),
+        subtitle: t(dict, 'home.prices.packDiscover.subtitle'),
+        price: '5',
+        period: t(dict, 'home.prices.packDiscover.period'),
+        items: [
+          { description: t(dict, 'home.prices.packDiscover.items.1'), icon: 'tabler:award-filled' },
+          { description: t(dict, 'home.prices.packDiscover.items.2'), icon: 'tabler:award-filled' },
+        ],
+        callToAction: { target: '_blank', text: t(dict, 'home.prices.packDiscover.cta'), href: '#' },
+        hasRibbon: false,
+        ribbonTitle: '',
+      },
+      {
+        title: t(dict, 'home.prices.packPioneer.title'),
+        subtitle: t(dict, 'home.prices.packPioneer.subtitle'),
+        countdownTarget: new Date(COUNTDOWN_TARGET),
+        price: '20',
+        period: t(dict, 'home.prices.packPioneer.period'),
+        items: [
+          { description: t(dict, 'home.prices.packPioneer.items.1'), icon: 'tabler:award-filled' },
+          { description: t(dict, 'home.prices.packPioneer.items.2'), icon: 'tabler:currency-euro' },
+          { description: t(dict, 'home.prices.packPioneer.items.3'), icon: 'tabler:brand-whatsapp-filled' },
+          { description: t(dict, 'home.prices.packPioneer.items.4'), icon: 'tabler:binary-tree-filled' },
+        ],
+        callToAction: { target: '', text: t(dict, 'home.prices.packPioneer.cta'), href: Link_inscription },
+        hasRibbon: true,
+        ribbonTitle: t(dict, 'home.prices.packPioneer.ribbon'),
+      },
+      {
+        title: t(dict, 'home.prices.packProgress.title'),
+        hasChoice: true,
+        title1: t(dict, 'home.prices.packProgress.title1'),
+        subtitle1: t(dict, 'home.prices.packProgress.subtitle1'),
+        price1: 140,
+        period1: t(dict, 'home.prices.packProgress.period1'),
+        items1: [
+          { description: t(dict, 'home.prices.packProgress.items1.1'), icon: 'tabler:award-filled' },
+          { description: t(dict, 'home.prices.packProgress.items1.2'), icon: 'tabler:binary-tree-filled' },
+          { description: t(dict, 'home.prices.packProgress.items1.3'), icon: 'tabler:target-arrow' },
+        ],
+        callToAction1: { target: '_blank', text: t(dict, 'home.prices.packProgress.cta1'), href: '#' },
+        title2: t(dict, 'home.prices.packProgress.title2'),
+        subtitle2: t(dict, 'home.prices.packProgress.subtitle2'),
+        price2: 15,
+        period2: t(dict, 'home.prices.packProgress.period2'),
+        items2: [
+          { description: t(dict, 'home.prices.packProgress.items2.1'), icon: 'tabler:award-filled' },
+          { description: t(dict, 'home.prices.packProgress.items2.2'), icon: 'tabler:target-arrow' },
+        ],
+        callToAction2: { target: '_blank', text: t(dict, 'home.prices.packProgress.cta2'), href: '#' },
+        hasRibbon: false,
+        ribbonTitle: '',
+      },
+    ]}
+  />
+
+  <StepsSansImage
+    title={t(dict, 'home.steps.title')}
+    subsubtitle={t(dict, 'home.steps.subsubtitle')}
+    items={[
+      {
+        title: t(dict, 'home.steps.items.1.title'),
+        description: '',
+        icon: 'tabler:download',
+        expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false,
+        classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
+      },
+      {
+        title: t(dict, 'home.steps.items.2.title'),
+        description: t(dict, 'home.steps.items.2.desc'),
+        icon: 'tabler:video',
+        expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false,
+        classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
+      },
+      {
+        title: t(dict, 'home.steps.items.3.title'),
+        description: t(dict, 'home.steps.items.3.desc'),
+        icon: 'tabler:adjustments',
+        expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false,
+        classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
+      },
+      {
+        title: t(dict, 'home.steps.items.4.title'),
+        description: t(dict, 'home.steps.items.4.desc'),
+        icon: 'tabler:bluetooth',
+        expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false,
+        classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
+      },
+      { title: t(dict, 'home.steps.items.5.title'), icon: 'tabler:check' },
+    ]}
+    actions={[{ variant: 'primary', text: t(dict, 'home.steps.cta'), href: Link_inscription, target: '', icon: 'tabler:download' }]}
+  />
+
+  <Note title={t(dict, 'home.note5.title')} description={t(dict, 'home.note5.desc')} />
+
+  <FAQs
+    id="FAQs"
+    title={t(dict, 'home.faq.title')}
+    subtitle={t(dict, 'home.faq.subtitle')}
+    tagline="FAQs"
+    classes={{ container: 'max-w-6xl' }}
+    actions={[{ variant: 'primary', text: t(dict, 'home.faq.cta'), href: Link_inscription, target: '' }]}
+    items={[
+      { title: t(dict, 'home.faq.items.1.title'), education: t(dict, 'home.faq.items.1.education'), expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.2.title'), education: t(dict, 'home.faq.items.2.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.2.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.3.title'), education: t(dict, 'home.faq.items.3.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.3.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.4.title'), education: t(dict, 'home.faq.items.4.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.4.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.5.title'), education: t(dict, 'home.faq.items.5.education'), expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.6.title'), education: t(dict, 'home.faq.items.6.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.6.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.7.title'), education: t(dict, 'home.faq.items.7.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.7.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.8.title'), education: t(dict, 'home.faq.items.8.education'), expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false },
+    ]}
+  />
+
+  <Stats
+    stats={[
+      { title: t(dict, 'home.stats.pioneers'), amount: '300+' },
+      { title: t(dict, 'home.stats.kmhAvg'), amount: '+2.3' },
+      { title: t(dict, 'home.stats.savedAt30'), amount: '-35 W' },
+    ]}
+  />
+
+  <LogosCarousel
+    title={t(dict, 'home.compat2.title')}
+    logos={[{ src: logo_wahoo }, { src: logo_elite }, { src: logo_tacx }, { src: logo_vanrysel }, { src: logo_saris }, { src: logo_polar }, { src: logo_garmin }, { src: logo_suunto }]}
+  />
+
+  <!-- Script checkout intact -->
+  <script is:inline>
+    const callCheckout = async (payload = {}) => {
+      const res = await fetch('/api/create-api-checkout', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data?.error || 'Erreur Stripe');
+      }
+    };
+
+    const withLoading = async (btn, fn) => {
+      if (!btn) return;
+      btn.disabled = true;
+      const prev = btn.innerHTML;
+      btn.innerHTML = 'Redirection…';
+      try {
+        await fn();
+      } catch (e) {
+        alert(e?.message || e || 'Erreur');
+        btn.disabled = false;
+        btn.innerHTML = prev;
+      }
+    };
+
+    document.getElementById('btn-checkout')?.addEventListener('click', (e) => {
+      withLoading(e.currentTarget, () => callCheckout());
+    });
+    document.getElementById('btn-checkout-final')?.addEventListener('click', (e) => {
+      withLoading(e.currentTarget, () => callCheckout());
+    });
+    document.getElementById('btn-checkout-card')?.addEventListener('click', (e) => {
+      withLoading(e.currentTarget, () => callCheckout());
+    });
+  </script>
+</Layout>

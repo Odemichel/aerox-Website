@@ -4,27 +4,45 @@ import Footer from '~/components/widgets/Footer.astro';
 import Header from '~/components/widgets/Header.astro';
 import Layout from '~/layouts/Layout.astro';
 
-import { footerData, headerData } from '~/navigation';
-
 import type { MetaData } from '~/types';
+
+// ⬇️ on utilise la fabrique i18n
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from '~/lib/i18n';
+import { makeNavigation } from '~/navigation';
 
 export interface Props {
   metadata?: MetaData;
 }
 
 const { metadata } = Astro.props;
+
+// Déduire la langue: params.lang si route [lang]/..., sinon 1er segment d’URL
+const seg = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
+const isLocale = (v: unknown): v is Locale =>
+  typeof v === 'string' && (SUPPORTED_LOCALES as readonly string[]).includes(v);
+
+const lang: Locale =
+  isLocale(Astro.params?.lang) ? (Astro.params.lang as Locale)
+  : isLocale(seg) ? (seg as Locale)
+  : DEFAULT_LOCALE;
+
+// Construire header/footer localisés
+const { headerData, footerData } = makeNavigation(lang);
 ---
 
 <Layout metadata={metadata}>
   <slot name="announcement">
     <Announcement />
   </slot>
+
   <slot name="header">
-    <Header {...headerData} isSticky showToggleTheme />
+<Header {...headerData} isSticky showToggleTheme currentLang={lang} />
   </slot>
+
   <main>
     <slot />
   </main>
+
   <slot name="footer">
     <Footer {...footerData} />
   </slot>

@@ -1,0 +1,76 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Headline from '~/components/blog/Headline.astro';
+import BlogList from '~/components/blog/List.astro';
+import Pagination from '~/components/blog/Pagination.astro';
+import Layout from '~/layouts/PageLayout.astro';
+
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from '~/lib/i18n';
+import type { Post } from '~/types';
+import { blogTagRobots, getStaticPathsBlogTag } from '~/utils/blog';
+
+export const prerender = true;
+
+// ✅ Génération pour chaque langue
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const all = await Promise.all(
+    SUPPORTED_LOCALES.map(async (lang) => {
+      const l = lang as Locale;
+      return await getStaticPathsBlogTag({ paginate, lang: l });
+    })
+  );
+  return all.flat();
+};
+
+// ✅ Typage propre
+interface PageData {
+  data: Post[];
+  currentPage: number;
+  lastPage: number;
+  url: { prev?: string; next?: string };
+}
+
+interface Props {
+  params: { lang?: string };
+  page: PageData;
+  tag: { title: string };
+}
+
+// ✅ Cast pour Astro.props
+const { params, page, tag } = Astro.props as unknown as Props;
+
+// ✅ Langue courante
+const lang: Locale = SUPPORTED_LOCALES.includes(params.lang as Locale)
+  ? (params.lang as Locale)
+  : DEFAULT_LOCALE;
+
+// ✅ Traductions (optionnel)
+const currentPage = page.currentPage ?? 1;
+
+// ✅ Métadonnées dynamiques
+const metadata = {
+  title:
+    lang === 'fr'
+      ? `Articles avec le tag « ${tag.title} »${currentPage > 1 ? ` — Page ${currentPage}` : ''}`
+      : `Posts tagged “${tag.title}”${currentPage > 1 ? ` — Page ${currentPage}` : ''}`,
+  description:
+    lang === 'fr'
+      ? `Tous les articles liés au tag « ${tag.title} » sur AeroX.`
+      : `All posts related to the “${tag.title}” tag on AeroX.`,
+  robots: {
+    index: blogTagRobots?.index,
+    follow: blogTagRobots?.follow,
+  },
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <Headline>
+      {lang === 'fr' ? `Tag : ${tag.title}` : `Tag: ${tag.title}`}
+    </Headline>
+
+    <BlogList posts={page.data} />
+    <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
+  </section>
+</Layout>

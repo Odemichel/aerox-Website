@@ -1,0 +1,58 @@
+---
+import type { GetStaticPaths, ImageMetadata } from 'astro';
+import merge from 'lodash.merge';
+import RelatedPosts from '~/components/blog/RelatedPosts.astro';
+import SinglePost from '~/components/blog/SinglePost.astro';
+import ToBlogLink from '~/components/blog/ToBlogLink.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import type { MetaData, Post } from '~/types';
+import { blogPostRobots, fetchPosts } from '~/utils/blog';
+import { findImage } from '~/utils/images';
+import { getCanonical } from '~/utils/permalinks';
+
+// ✅ i18n
+import { SUPPORTED_LOCALES, type Locale } from '~/lib/i18n';
+
+export const prerender = true;
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const all = await Promise.all(
+    SUPPORTED_LOCALES.map(async (lang) => {
+      const l = lang as Locale;
+      const posts = await fetchPosts(l);
+      return posts.map((post) => ({
+        params: { lang: l, slug: post.slug! }, // route explicite recommandée
+        props: { post, lang: l },
+      }));
+    })
+  );
+  return all.flat();
+};
+
+const { post } = Astro.props as { post: Post };
+
+const url = getCanonical(post.permalink);
+const image = (await findImage(post.image)) as ImageMetadata | string | undefined;
+const ogImage =
+  !image ? undefined
+  : typeof image === 'string'
+    ? { url: image }
+    : { url: image.src, width: image.width, height: image.height };
+
+const metadata = merge(
+  {
+    title: post.title,
+    description: post.excerpt,
+    robots: { index: blogPostRobots?.index, follow: blogPostRobots?.follow },
+    openGraph: { type: 'article', ...(ogImage ? { images: [ogImage] } : {}) },
+  },
+  post.metadata ? { ...post.metadata, canonical: post.metadata?.canonical || url } : {}
+) as MetaData;
+---
+<Layout metadata={metadata}>
+  <SinglePost post={{ ...post, image }} url={url}>
+    {post.Content ? <post.Content /> : <Fragment set:html={post.content || ''} />}
+  </SinglePost>
+  <ToBlogLink />
+  <RelatedPosts post={post} />
+</Layout>

@@ -1,6 +1,6 @@
 import merge from 'lodash.merge';
 
-import type { MetaData } from '~/types';
+import type { MetaData } from '../../../src/types';
 
 export type Config = {
   site?: SiteConfig;
@@ -89,7 +89,7 @@ const getSite = (config: Config) => {
     name: DEFAULT_SITE_NAME,
     site: undefined,
     base: '/',
-    trailingSlash: false,
+    trailingSlash: true,
 
     googleSiteVerificationId: '',
   };

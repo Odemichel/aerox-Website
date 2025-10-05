@@ -6,7 +6,6 @@ import ToggleTheme from '~/components/common/ToggleTheme.astro';
 import Button from '~/components/ui/Button.astro';
 
 import type { CallToAction } from '~/types';
-import { getHomePermalink, trimSlash } from '~/utils/permalinks';
 
 interface Link {
   text?: string;
@@ -30,6 +29,7 @@ export interface Props {
   showToggleTheme?: boolean;
   showRssFeed?: boolean;
   position?: string;
+  currentLang?: 'fr' | 'en';
 }
 
 const {
@@ -40,9 +40,56 @@ const {
   isDark = false,
   showToggleTheme = false,
   position = 'center',
+  currentLang = 'fr',
 } = Astro.props;
 
-const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
+/* ====== Config langues ====== */
+const LANGS = [
+  { code: 'fr', label: 'Fr', flag: '🇫🇷' },
+  { code: 'en', label: 'En', flag: '🇬🇧' },
+];
+
+/* ====== Helpers ====== */
+const ensureTrailingSlash = (p: string) =>
+  !p ? p : (p.endsWith('/') || p.includes('.')) ? p : p + '/';
+
+const normalizeHref = (href?: string) => {
+  if (!href) return href ?? '';
+  if (href.startsWith('#')) return href;
+  try {
+    const u = new URL(href);
+    u.pathname = ensureTrailingSlash(u.pathname);
+    return `${u.pathname}${u.search}${u.hash}`;
+  } catch {
+    const hasProtocol = /^[a-zA-Z]+:\/\//.test(href);
+    if (hasProtocol) return href;
+    return ensureTrailingSlash(href);
+  }
+};
+
+const urlNow = new URL(Astro.url);
+const currentPath = ensureTrailingSlash(urlNow.pathname);
+
+/* Détermine si on est sur la page d'accueil (avec ou sans langue + ancres) */
+const isHomePage =
+  currentPath === '/' ||
+  currentPath === '/fr/' ||
+  currentPath === '/en/' ||
+  currentPath.startsWith('/fr/#') ||
+  currentPath.startsWith('/en/#');
+
+function langHref(target: string): string {
+  const url = new URL(Astro.url);
+  const parts = url.pathname.split('/').filter(Boolean);
+
+  if (parts[0] === 'fr' || parts[0] === 'en') parts[0] = target;
+  else parts.unshift(target);
+
+  url.pathname = ensureTrailingSlash('/' + parts.join('/'));
+  return `${url.pathname}${url.search}${url.hash}`;
+}
+
+const currentLangObj = LANGS.find(l => l.code === currentLang) ?? LANGS[0];
 ---
 
 <header
@@ -50,84 +97,130 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
     { sticky: isSticky, relative: !isSticky, dark: isDark },
     'top-0 z-40 flex-none mx-auto w-full border-b border-gray-50/0 transition-[opacity] ease-in-out',
   ]}
-  {...isSticky ? { 'data-aw-sticky-header': true } : {}}
-  {...id ? { id } : {}}
+  {...(isSticky ? { 'data-aw-sticky-header': true } : {})}
+  {...(id ? { id } : {})}
 >
   <div class="absolute inset-0 pointer-events-none -z-10"></div>
   <div
-  class="relative text-default py-3 px-3 sm:px-6 mx-auto w-full max-w-7xl
-         grid grid-cols-[auto_1fr_auto] items-center gap-3">
+    class="relative text-default py-3 px-3 sm:px-6 mx-auto w-full max-w-7xl
+           grid grid-cols-[auto_1fr_auto] items-center gap-3">
     <div class:list={[{ 'mr-auto rtl:mr-0 rtl:ml-auto': position === 'right' }, 'flex justify-between']}>
-      <a class="flex items-center" href={getHomePermalink()}>
+      <a class="flex items-center" href={`/${currentLang}/`}>
         <Logo />
       </a>
+
+      {isHomePage && (
+        <details class="relative group">
+          <summary
+            class="list-none inline-flex items-center gap-1 px-6 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer select-none"
+            aria-label="Change language"
+          >
+            <Icon name="fluent-emoji-flat:globe-showing-europe-africa" class="w-5 h-5" />
+            <span class="text-sm font-medium">{currentLangObj.label}</span>
+            <Icon name="tabler:chevron-down" class="w-4 h-4" />
+          </summary>
+
+          <ul
+            class="absolute right-0 mt-2 w-40 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg py-1 z-50"
+            role="menu"
+          >
+            {
+              LANGS.map(({ code, label, flag }) => (
+                <li role="none">
+                  <a
+                    role="menuitem"
+                    href={langHref(code)}
+                    class:list={[
+                      'flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800',
+                      { 'opacity-60 pointer-events-none': code === currentLang },
+                    ]}
+                    aria-current={code === currentLang ? 'true' : 'false'}
+                    title={label}
+                  >
+                    <span class="text-base" aria-hidden="true">{flag}</span>
+                    <span>{label}</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </details>
+      )}
+
+      <div class="flex ml-3">
+        {showToggleTheme && <ToggleTheme iconClass="w-4 h-4 sm:w-5 sm:h-5 sm:inline-block z-60" />}
+      </div>
+
       <div class="flex items-center sm:hidden">
         <ToggleMenu />
       </div>
     </div>
-    <nav class="items-center w-full sm:w-auto hidden sm:flex sm:mx-5 text-default
-            overflow-y-auto overflow-x-hidden sm:overflow-visible sm:justify-self-center" aria-label="Main navigation">
 
+    <nav
+      class="items-center w-full sm:w-auto hidden sm:flex sm:mx-5 text-default
+             overflow-y-auto overflow-x-hidden sm:overflow-visible sm:justify-self-center"
+      aria-label="Main navigation">
       <ul
         class="flex flex-col sm:flex-row sm:self-center w-full sm:w-auto text-xl sm:text-[0.9375rem] tracking-[0.01rem] font-medium sm:justify-center"
       >
         {
-          links.map(({ text, href, links }) => (
-            <li class={links?.length ? 'dropdown' : ''}>
-              {links?.length ? (
-                <>
-                  <button
-                    type="button"
-                    class="hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap"
+          links.map(({ text, href, links }) => {
+            const hrefNorm = normalizeHref(href);
+            return (
+              <li class={links?.length ? 'dropdown' : ''}>
+                {links?.length ? (
+                  <>
+                    <button
+                      type="button"
+                      class="hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap"
+                    >
+                      {text}{' '}
+                      <Icon name="tabler:menu-2" class="w-6 h-6 sm:w-8 sm:h-8 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden sm:inline" />
+                    </button>
+                    <ul class="dropdown-menu sm:backdrop-blur-md dark:sm:bg-dark rounded sm:absolute pl-4 sm:pl-0 sm:hidden font-medium sm:bg-white/90 sm:min-w-[200px] drop-shadow-xl">
+                      {links.map(({ text: text2, href: href2 }) => {
+                        const href2Norm = normalizeHref(href2);
+                        return (
+                          <li>
+                            <a
+                              class:list={[
+                                'first:rounded-t last:rounded-b sm:hover:bg-gray-100 hover:text-link dark:hover:text-white dark:hover:bg-gray-700 py-2 px-5 block whitespace-no-wrap',
+                                { 'aw-link-active': href2Norm !== undefined && href2Norm === currentPath },
+                              ]}
+                              href={href2}
+                            >
+                              {text2}
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </>
+                ) : (
+                  <a
+                    class:list={[
+                      'hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap',
+                      { 'aw-link-active': hrefNorm !== undefined && hrefNorm === currentPath },
+                    ]}
+                    href={href}
                   >
-                    {text}{' '}
-                    <Icon name="tabler:menu-2" class="w-6 h-6 sm:w-8  sm:h-8   ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden sm:inline" />
-                  </button>
-                  <ul class="dropdown-menu sm:backdrop-blur-md dark:sm:bg-dark rounded sm:absolute pl-4 sm:pl-0 sm:hidden font-medium sm:bg-white/90 sm:min-w-[200px] drop-shadow-xl">
-                    {links.map(({ text: text2, href: href2 }) => (
-                      <li>
-                        <a
-                          class:list={[
-                            'first:rounded-t last:rounded-b sm:hover:bg-gray-100 hover:text-link dark:hover:text-white dark:hover:bg-gray-700 py-2 px-5 block whitespace-no-wrap',
-                            { 'aw-link-active': href2 === currentPath },
-                          ]}
-                          href={href2}
-                        >
-                          {text2}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              ) : (
-                <a
-                  class:list={[
-                    'hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap',
-                    { 'aw-link-active': href === currentPath },
-                  ]}
-                  href={href}
-                >
-                  {text}
-                </a>
-              )}
-            </li>
-          ))
+                    {text}
+                  </a>
+                )}
+              </li>
+            );
+          })
         }
       </ul>
     </nav>
 
-
     <div
       class:list={[
         { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' },
-        'self-center sm:flex items-center sm:mb-0  w-full sm:w-auto sm:static justify-end left-0 rtl:left-auto rtl:right-0  p-3 sm:p-0 sm:justify-self-end',
+        'self-center sm:flex items-center sm:mb-0 w-full sm:w-auto sm:static justify-end left-0 rtl:left-auto rtl:right-0 p-3 sm:p-0 sm:justify-self-end',
       ]}
     >
       <div class="items-center flex justify-between w-auto z-60">
-        <div class="flex">
-          {showToggleTheme && <ToggleTheme iconClass="w-4 h-4 sm:w-5 sm:h-5 sm:inline-block z-60" />}
-         
-        </div>
         {
           actions?.length ? (
             <span class="ml-4 rtl:ml-0 rtl:mr-4">
@@ -135,9 +228,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
                 <Button {...btnProps} class="ml-2 py-1 px-3 sm:px-6 sm:py-2 font-semibold shadow-none text-sm md:text-base w-auto" />
               ))}
             </span>
-          ) : (
-            ''
-          )
+          ) : null
         }
       </div>
     </div>

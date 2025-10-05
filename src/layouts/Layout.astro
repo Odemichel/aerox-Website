@@ -12,39 +12,79 @@ import SiteVerification from '~/components/common/SiteVerification.astro';
 import CustomStyles from '~/components/CustomStyles.astro';
 import Favicons from '~/components/Favicons.astro';
 
-// Comment the line below to disable View Transitions
 import SpeedInsights from "@vercel/speed-insights/astro";
 import { ClientRouter } from 'astro:transitions';
 import type { MetaData as MetaDataType } from '~/types';
+
+import merge from 'lodash.merge';
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from '~/lib/i18n';
 
 export interface Props {
   metadata?: MetaDataType;
 }
 
 const { metadata = {} } = Astro.props;
-const { language, textDirection } = I18N;
+
+// Langue courante depuis l’URL
+const seg = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
+const isLocale = (v: unknown): v is Locale =>
+  typeof v === 'string' && (SUPPORTED_LOCALES as readonly string[]).includes(v);
+const currentLang: Locale = isLocale(seg) ? seg : DEFAULT_LOCALE;
+
+const { textDirection } = I18N;
+
+/** ✅ Typage sans any pour accéder à metadata_i18n optionnel */
+type MetadataI18n = Partial<Record<Locale, Partial<MetaDataType>>>;
+type I18nConfig = {
+  metadata?: MetaDataType;
+  metadata_i18n?: MetadataI18n;
+};
+
+const i18nCfg = I18N as unknown as I18nConfig;
+const langOverrides = (i18nCfg.metadata_i18n?.[currentLang]) ?? {};
+
+/** Métadonnées finales : defaults → overrides de langue → metadata de la page */
+const effectiveMetadata: MetaDataType = merge({}, i18nCfg.metadata ?? {}, langOverrides, metadata);
+
+/* ===== hreflang helpers ===== */
+const ensureTrailingSlash = (p: string) =>
+  !p ? p : (p.endsWith('/') || p.includes('.')) ? p : p + '/';
+
+function hrefForLang(target: Locale) {
+  const url = new URL(Astro.url);
+  const parts = url.pathname.split('/').filter(Boolean);
+  if (parts[0] === 'fr' || parts[0] === 'en') parts[0] = target;
+  else parts.unshift(target);
+  url.pathname = ensureTrailingSlash('/' + parts.join('/'));
+  return `${url.pathname}${url.search}${url.hash}`;
+}
 ---
 
 <!doctype html>
-<html lang={language} dir={textDirection} class="2xl:text-[20px]">
+<html lang={currentLang} dir={textDirection} class="2xl:text-[20px]">
   <head>
     <CommonMeta />
     <Favicons />
     <CustomStyles />
     <ApplyColorMode />
-    <Metadata {...metadata} />
+    <!-- ⬇️ passe les metas fusionnées -->
+    <Metadata {...effectiveMetadata} />
     <SiteVerification />
-    <Analytics />
 
-    <!-- Comment the line below to disable View Transitions -->
+    <!-- hreflang alternates -->
+    {SUPPORTED_LOCALES.map((l) => (
+      <link rel="alternate" hreflang={l} href={hrefForLang(l)} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={hrefForLang(DEFAULT_LOCALE)} />
+
+    <Analytics />
     <ClientRouter fallback="swap" />
   </head>
 
   <body class="antialiased text-default bg-page tracking-tight">
     <slot />
-        <SpeedInsights />
-        <Analytics />
-
+    <SpeedInsights />
+    <Analytics />
     <BasicScripts />
   </body>
 </html>

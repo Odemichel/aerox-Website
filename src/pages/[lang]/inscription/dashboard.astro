@@ -1,0 +1,181 @@
+---
+import Prices from '../../../components/widgets/Pricing.astro';
+import { COUNTDOWN_TARGET } from '../../../config/countdown';
+import Layout from '../../../layouts/PageLayout.astro';
+import { getDict, t } from '~/lib/i18n';
+
+const { lang } = Astro.params;
+const dict = getDict(lang);
+
+const metadata = {
+  title: t(dict, 'dashboard.meta.title'),
+  description: t(dict, 'dashboard.meta.description'),
+};
+const role = t(dict, 'dashboard.role');
+const email = t(dict, 'dashboard.email');
+const choosePack = t(dict, 'dashboard.choosePack');
+---
+
+<Layout metadata={metadata}>
+  <section class="max-w-4xl mx-auto px-6">
+    <h1 class="text-3xl font-bold mb-6 text-center">
+      {t(dict, 'dashboard.title')} 🚴‍♂️
+    </h1>
+    <div id="dashboard-content" data-role={role} data-email={email} data-choosePack={choosePack} class="text-center">
+      <p>{t(dict, 'dashboard.loading')}</p>
+    </div>
+
+    <!-- ✅ Script côté client -->
+    <script>
+      import { supabase } from '../../../config/supabaseClient';
+
+      async function loadDashboard() {
+        console.log('➡️ Init dashboard');
+        const content = document.getElementById('dashboard-content');
+        const role = content?.dataset.role || 'Role'; // fallback en
+        const email = content?.dataset.email || 'Email'; // fallback en
+        const choosePack = content?.dataset.choosePack || 'Select your pack to start using AeroX';
+        if (!content) return;
+
+        // Vérifie si l’utilisateur est connecté
+        const { data: userData, error } = await supabase.auth.getUser();
+        if (error || !userData?.user) {
+          content.innerHTML = `<p class="text-red-600">❌ Tu n’es pas connecté.</p>`;
+          return;
+        }
+
+        const user = userData.user;
+        console.log('✅ Connecté :', user.email);
+        const phonenumber = user.user_metadata?.phone ?? null;
+
+        // Récupère son profil complet
+        const { data: profile, error: profileError } = await supabase
+          .from('users')
+          .select('role, is_active, licencetype')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        if (profileError) {
+          console.error('Erreur chargement profil:', profileError);
+        }
+
+        if (profile) {
+          let licenceDisplay = '';
+
+          if (profile.is_active) {
+            licenceDisplay = `<p><strong>Licence :</strong> ${profile.licencetype || 'Non définie'}</p>`;
+          } else {
+            licenceDisplay = `<p class="text-primary font-semibold text-center mt-2">${choosePack}</p>`;
+          }
+
+          content.innerHTML = `
+        <div class="mt-6 p-6 border rounded-lg bg-gray-50 dark:bg-gray-800 text-left inline-block">
+          <p><strong>${email} :</strong> ${user.email}</p>
+          <p><strong>${role} :</strong> ${profile.role}</p>
+          ${licenceDisplay}
+        </div>`;
+        } else {
+          const { error: insertError } = await supabase
+            .from('users')
+            .insert({
+              id: user.id,
+              email: user.email,
+              phonenumber,
+              role: 'user',
+              is_active: false,
+              licencetype: null,
+            })
+            .select('*')
+            .single();
+
+          if (insertError) {
+            console.error('Erreur insert user:', insertError);
+            content.innerHTML = `<p class="text-red-600">⚠️ Erreur lors de la création du profil.</p>`;
+            return;
+          }
+
+          loadDashboard();
+          return; // important
+        }
+      }
+
+      loadDashboard();
+    </script>
+  </section>
+
+  <!-- Cartes de prix (déjà traduites) -->
+  <Prices
+    title={t(dict, 'home.prices.title')}
+    id="pricing"
+    subtitle={t(dict, 'home.prices.subtitle')}
+    subsubtitle={t(dict, 'home.prices.subsubtitle')}
+    prices={[
+      {
+        title: t(dict, 'home.prices.packDiscover.title'),
+        subtitle: t(dict, 'home.prices.packDiscover.subtitle'),
+        price: '5',
+        period: t(dict, 'home.prices.packDiscover.period'),
+        items: [
+          { description: t(dict, 'home.prices.packDiscover.items.1'), icon: 'tabler:award-filled' },
+          { description: t(dict, 'home.prices.packDiscover.items.2'), icon: 'tabler:award-filled' },
+        ],
+        callToAction: {
+          target: '_blank',
+          text: t(dict, 'home.prices.packDiscover.cta'),
+          href: '#',
+        },
+      },
+      {
+        title: t(dict, 'home.prices.packPioneer.title'),
+        subtitle: t(dict, 'home.prices.packPioneer.subtitle'),
+        countdownTarget: new Date(COUNTDOWN_TARGET),
+        price: '20',
+        period: t(dict, 'home.prices.packPioneer.period'),
+        items: [
+          { description: t(dict, 'home.prices.packPioneer.items.1'), icon: 'tabler:award-filled' },
+          { description: t(dict, 'home.prices.packPioneer.items.2'), icon: 'tabler:currency-euro' },
+          { description: t(dict, 'home.prices.packPioneer.items.3'), icon: 'tabler:brand-whatsapp-filled' },
+          { description: t(dict, 'home.prices.packPioneer.items.4'), icon: 'tabler:binary-tree-filled' },
+        ],
+        callToAction: {
+          target: '',
+          text: t(dict, 'home.prices.packPioneer.cta'),
+          href: '/inscription/inscription_supabase/',
+        },
+        hasRibbon: true,
+        ribbonTitle: t(dict, 'home.prices.packPioneer.ribbon'),
+      },
+      {
+        title: t(dict, 'home.prices.packProgress.title'),
+        hasChoice: true,
+        title1: t(dict, 'home.prices.packProgress.title1'),
+        subtitle1: t(dict, 'home.prices.packProgress.subtitle1'),
+        price1: 140,
+        period1: t(dict, 'home.prices.packProgress.period1'),
+        items1: [
+          { description: t(dict, 'home.prices.packProgress.items1.1'), icon: 'tabler:award-filled' },
+          { description: t(dict, 'home.prices.packProgress.items1.2'), icon: 'tabler:binary-tree-filled' },
+          { description: t(dict, 'home.prices.packProgress.items1.3'), icon: 'tabler:target-arrow' },
+        ],
+        callToAction1: {
+          target: '_blank',
+          text: t(dict, 'home.prices.packProgress.cta1'),
+          href: '#',
+        },
+        title2: t(dict, 'home.prices.packProgress.title2'),
+        subtitle2: t(dict, 'home.prices.packProgress.subtitle2'),
+        price2: 15,
+        period2: t(dict, 'home.prices.packProgress.period2'),
+        items2: [
+          { description: t(dict, 'home.prices.packProgress.items2.1'), icon: 'tabler:award-filled' },
+          { description: t(dict, 'home.prices.packProgress.items2.2'), icon: 'tabler:target-arrow' },
+        ],
+        callToAction2: {
+          target: '_blank',
+          text: t(dict, 'home.prices.packProgress.cta2'),
+          href: '#',
+        },
+      },
+    ]}
+  />
+</Layout>

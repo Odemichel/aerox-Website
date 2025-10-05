@@ -5,5 +5,5 @@ export const LINKS = {
   pricing: "/#pricing",
   success:"/telechargement/success",
 
-  contact: "/contact",
+  contact: "/contact/",
 };
