@@ -1,8 +1,9 @@
 ---
 const { targetDate } = Astro.props as { targetDate: Date };
+const id = `countdown-${Math.random().toString(36).slice(2, 9)}`;
 ---
 
-<span id="countdown-timer" data-target-date={targetDate.toISOString()} class="inline-block font-bold text-content">
+<span id={id} data-target-date={targetDate.toISOString()} class="inline-block font-bold text-content">
   0j 00h 00m 00s
 </span>
 
@@ -10,17 +11,13 @@ const { targetDate } = Astro.props as { targetDate: Date };
   (() => {
     const pad = (n) => String(n).padStart(2, '0');
 
-    function initCountdown() {
-      const el = document.getElementById('countdown-timer');
-      if (!el) return;
-
+    function initCountdown(el) {
       const attr = el.getAttribute('data-target-date');
-      if (!attr) { el.textContent = '0j 00h 00m 00s'; return; }
-
+      if (!attr) return;
       const target = new Date(attr).getTime();
-      if (isNaN(target)) { el.textContent = '0j 00h 00m 00s'; return; }
+      if (isNaN(target)) return;
 
-      function update() {
+      const update = () => {
         const diff = target - Date.now();
         if (diff <= 0) {
           el.textContent = '🎯 0j 00h 00m 00s';
@@ -32,21 +29,19 @@ const { targetDate } = Astro.props as { targetDate: Date };
         const m = Math.floor((diff / 60000) % 60);
         const s = Math.floor((diff / 1000) % 60);
         el.textContent = `${j}j ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
-      }
+      };
 
       update();
       const interval = setInterval(update, 1000);
-
-      // 🔹 Nettoyage si on navigue avant la fin du compte à rebours
       document.addEventListener('astro:before-swap', () => clearInterval(interval), { once: true });
     }
 
-    // Premier lancement
-    initCountdown();
-
-    // 🔁 Redémarre après navigation client-side (View Transitions)
+    // Init tous les compteurs de la page
+    document.querySelectorAll('[id^="countdown-"]').forEach(initCountdown);
     document.addEventListener('astro:after-swap', () => {
-      requestAnimationFrame(initCountdown);
+      requestAnimationFrame(() => {
+        document.querySelectorAll('[id^="countdown-"]').forEach(initCountdown);
+      });
     });
   })();
 </script>

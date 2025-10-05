@@ -144,15 +144,15 @@ const {
                     {hasChoice && (
                       <>
                         {countdownTarget1 && (
-                          <p class="mt-1 text-sm font-medium text-primary" data-v="1">
-                            Plus que <CountDown targetDate={countdownTarget1} client:idle /> pour profiter de l’offre
-                          </p>
-                        )}
+  <p class="mt-1 text-sm font-medium text-primary" data-v="1">
+    Plus que <CountDown targetDate={new Date(countdownTarget1)} client:idle /> pour profiter de l’offre
+  </p>
+)}
                         {countdownTarget2 && (
-                          <p class="mt-1 text-sm font-medium text-primary" data-v="2">
-                            Plus que <CountDown targetDate={countdownTarget2} client:idle /> pour profiter de l’offre
-                          </p>
-                        )}
+  <p class="mt-1 text-sm font-medium text-primary" data-v="2">
+    Plus que <CountDown targetDate={new Date(countdownTarget2)} client:idle /> pour profiter de l’offre
+  </p>
+)}
                       </>
                     )}
 
@@ -265,11 +265,11 @@ const {
                       </>
                     )}
                   </div>
-                  {countdownTarget && (
-                    <p class="mt-2 text-sm font-medium text-primary">
-                      Plus que <CountDown targetDate={new Date(COUNTDOWN_TARGET)} />
-                    </p>
-                  )}
+                 {countdownTarget && (
+  <p class="mt-2 text-sm font-medium text-primary">
+    Plus que <CountDown targetDate={new Date(COUNTDOWN_TARGET)} client:idle />
+  </p>
+)}
                 </div>
               </div>
             );
