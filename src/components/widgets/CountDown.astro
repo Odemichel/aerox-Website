@@ -8,38 +8,45 @@ const { targetDate } = Astro.props as { targetDate: Date };
 
 <script is:inline>
   (() => {
-    const el = document.getElementById('countdown-timer');
-    if (!el) return;
-
-    const attr = el.getAttribute('data-target-date');
-    const target = attr ? new Date(attr).getTime() : NaN;
-    if (isNaN(target)) {
-      el.textContent = '0j 00h 00m 00s';
-      return;
-    }
-
     const pad = (n) => String(n).padStart(2, '0');
 
-    function updateCountdown() {
-      const diff = target - Date.now();
-      if (diff <= 0) {
-        el.textContent = '0j 00h 00m 00s';
-        clearInterval(interval);
-        return;
+    function initCountdown() {
+      const el = document.getElementById('countdown-timer');
+      if (!el) return;
+
+      const attr = el.getAttribute('data-target-date');
+      if (!attr) { el.textContent = '0j 00h 00m 00s'; return; }
+
+      const target = new Date(attr).getTime();
+      if (isNaN(target)) { el.textContent = '0j 00h 00m 00s'; return; }
+
+      function update() {
+        const diff = target - Date.now();
+        if (diff <= 0) {
+          el.textContent = '🎯 0j 00h 00m 00s';
+          clearInterval(interval);
+          return;
+        }
+        const j = Math.floor(diff / 86400000);
+        const h = Math.floor((diff / 3600000) % 24);
+        const m = Math.floor((diff / 60000) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+        el.textContent = `${j}j ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
       }
-      const j = Math.floor(diff / 86400000);
-      const h = Math.floor((diff / 3600000) % 24);
-      const m = Math.floor((diff / 60000) % 60);
-      const s = Math.floor((diff / 1000) % 60);
-      el.textContent = `${j}j ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
+
+      update();
+      const interval = setInterval(update, 1000);
+
+      // 🔹 Nettoyage si on navigue avant la fin du compte à rebours
+      document.addEventListener('astro:before-swap', () => clearInterval(interval), { once: true });
     }
 
-    // 🔁 relance après chaque transition Astro (client navigation)
-    document.addEventListener('astro:after-swap', () => {
-      updateCountdown();
-    });
+    // Premier lancement
+    initCountdown();
 
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
+    // 🔁 Redémarre après navigation client-side (View Transitions)
+    document.addEventListener('astro:after-swap', () => {
+      requestAnimationFrame(initCountdown);
+    });
   })();
 </script>
