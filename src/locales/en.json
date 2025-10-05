@@ -320,5 +320,10 @@
   "dashboard.no": "No",
   "dashboard.licence": "Licence",
   "dashboard.noLicence": "Not defined",
-  "dashboard.choosePack": "Select your pack to start using AeroX 👇"
+  "dashboard.choosePack": "Select your pack to start using AeroX 👇",
+
+  "hero.video.title": "AeroX demo video: indoor cycling with real-time aerodynamics. Go beyond Zwift, MyWhoosh, and Kinomap to get faster.",
+  "hero.video.caption": "AeroX turns your smart trainer into a wind tunnel: your position translated into real-time power gains.",
+  "hero.video.aria": "AeroX video: gain 2–3 km/h and save 40 W on your smart trainer thanks to real-time aerodynamics."
+
 }

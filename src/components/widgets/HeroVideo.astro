@@ -1,55 +1,59 @@
 ---
+import { DEFAULT_LOCALE, getDict, SUPPORTED_LOCALES, t, type Locale } from '~/lib/i18n';
 import posterPuissance from '../../assets/images/posterPuissance.jpg?url';
 
 import type { HeroVideo as Props } from '~/types';
 
-const {
-  video,
-  id,
-  bg,
-} = Astro.props as Props;
+const { video, id, bg } = Astro.props as Props;
+
+// 🔹 Détection automatique de la langue depuis l’URL
+const segments = Astro.url.pathname.split('/').filter(Boolean);
+const currentLang: Locale = SUPPORTED_LOCALES.includes(segments[0] as Locale)
+  ? (segments[0] as Locale)
+  : DEFAULT_LOCALE;
+
+// 🔹 Chargement du dictionnaire correspondant
+const dict = getDict(currentLang);
 ---
+
 <section class="relative max-h-full md:-mt-[76px] not-prose" {...id ? { id } : {}}>
   <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
     <slot name="bg">
       {bg ? <Fragment set:html={bg} /> : null}
     </slot>
   </div>
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
 
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
     <div
       class="intersect-once intersect-no-queue intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
     >
-      {
-        video ? (
-          <figure class="relative m-auto mt-12 mb-24 md:max-w-3xl max-w-5xl items-center text-center">
-            
-            <!-- H2 SEO -->
-            <h2 class="sr-only">
-              Démonstration AeroX en vidéo : cyclisme indoor avec aérodynamisme en temps réel. Au-delà de Zwift, MyWhoosh et Kinomap, deviens plus rapide.
-            </h2>
+      {video ? (
+        <figure class="relative m-auto mt-12 mb-24 md:max-w-3xl max-w-5xl items-center text-center">
+          <!-- 🧠 Titre SEO caché -->
+          <h2 class="sr-only">
+            {t(dict, 'hero.video.title')}
+          </h2>
 
-            <!-- Vidéo -->
-            <video
-              autoplay
-              muted
-              loop
-              playsinline
-              poster={posterPuissance ?? ''}
-              class="mx-auto rounded-md w-full shadow-lg"
-              title="Démonstration AeroX – cyclisme indoor avec aérodynamisme"
-              aria-label="Vidéo AeroX : gagne 2–3 km/h et économise 40 W sur home trainer grâce à l’aérodynamisme en temps réel"
-            >
-              <source src={video.src} type="video/mp4" />
-            </video>
+          <!-- 🎥 Vidéo -->
+          <video
+            autoplay
+            muted
+            loop
+            playsinline
+            poster={posterPuissance ?? ''}
+            class="mx-auto rounded-md w-full shadow-lg"
+            title={t(dict, 'hero.video.title')}
+            aria-label={t(dict, 'hero.video.aria')}
+          >
+            <source src={video.src} type="video/mp4" />
+          </video>
 
-            <!-- Légende SEO-friendly -->
-            <figcaption class="italic text-muted">
-              AeroX transforme ton home trainer en soufflerie : ta position traduite en gain de puissance en temps réel. 
-            </figcaption>
-          </figure>
-        ) : null
-      }
+          <!-- 📝 Légende SEO-friendly -->
+          <figcaption class="italic text-muted">
+            {t(dict, 'hero.video.caption')}
+          </figcaption>
+        </figure>
+      ) : null}
     </div>
   </div>
 </section>

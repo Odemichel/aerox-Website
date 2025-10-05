@@ -1,21 +1,26 @@
 ---
-const { targetDate } = Astro.props as { targetDate: string };
+const { targetDate } = Astro.props as { targetDate: Date };
 ---
 
-<span data-target-date={targetDate} class="inline-block font-bold text-content"></span>
+<span id="countdown-timer" data-target-date={targetDate.toISOString()} class="inline-block font-bold text-content">
+  0j 00h 00m 00s
+</span>
 
 <script is:inline>
-  (function () {
-    const el = document.currentScript?.previousElementSibling;
+  (() => {
+    const el = document.getElementById('countdown-timer');
     if (!el) return;
 
     const attr = el.getAttribute('data-target-date');
-    if (!attr) { el.textContent = '0j 00h 00m 00s'; return; }
+    const target = attr ? new Date(attr).getTime() : NaN;
+    if (isNaN(target)) {
+      el.textContent = '0j 00h 00m 00s';
+      return;
+    }
 
-    const target = new Date(attr).getTime();
     const pad = (n) => String(n).padStart(2, '0');
 
-    function tick() {
+    function updateCountdown() {
       const diff = target - Date.now();
       if (diff <= 0) {
         el.textContent = '0j 00h 00m 00s';
@@ -29,7 +34,12 @@ const { targetDate } = Astro.props as { targetDate: string };
       el.textContent = `${j}j ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
     }
 
-    tick();
-    const interval = setInterval(tick, 1000);
+    // 🔁 relance après chaque transition Astro (client navigation)
+    document.addEventListener('astro:after-swap', () => {
+      updateCountdown();
+    });
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
   })();
 </script>
