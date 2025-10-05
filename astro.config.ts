@@ -1,49 +1,46 @@
+import { defineConfig } from 'astro/config';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-import { defineConfig } from 'astro/config';
 
 import mdx from '@astrojs/mdx';
 import partytown from '@astrojs/partytown';
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
+import vercel from '@astrojs/vercel';
 import type { AstroIntegration } from 'astro';
 import compress from 'astro-compress';
 import { default as astroIcon, default as icon } from 'astro-icon';
-
-
-
 import astrowind from './vendor/integration';
 
 import { lazyImagesRehypePlugin, readingTimeRemarkPlugin, responsiveTablesRehypePlugin } from './src/utils/frontmatter';
 
-import vercel from "@astrojs/vercel"; // ou netlify si tu déploies là-bas
-
-
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 const hasExternalScripts = false;
 const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroIntegration)[] = []) =>
   hasExternalScripts ? (Array.isArray(items) ? items.map((item) => item()) : [items()]) : [];
 
 export default defineConfig({
-  site: "https://aeroxbefaster.com",   // ⚡ ton vrai domaine en prod
-  trailingSlash: 'always',              // ou "always" si tu préfères /fr/
+  site: 'https://aeroxbefaster.com',
+  trailingSlash: 'always',
   output: 'server',
   adapter: vercel({}),
 
+  /** 🌍 Ajout du bloc i18n */
+  i18n: {
+    defaultLocale: 'fr',
+    locales: ['fr', 'en'],
+    routing: {
+      prefixDefaultLocale: true,       // ✅ URLs avec /fr/
+      redirectToDefaultLocale: true,   // ✅ Redirige / vers /fr/
+    },
+  },
+
   integrations: [
-    tailwind({
-      applyBaseStyles: false,
-    }),
+    tailwind({ applyBaseStyles: false }),
     sitemap(),
     mdx(),
-     astroIcon({
-      // ajoute la collection et les icônes que tu utilises
-      include: {
-        'circle-flags': ['fr', 'gb'], // fr = France, gb = Royaume-Uni
-      },
+    astroIcon({
+      include: { 'circle-flags': ['fr', 'gb'] },
     }),
     icon({
       include: {
@@ -73,47 +70,28 @@ export default defineConfig({
           'ok',
           'debt',
           'manager',
-          'idea'
+          'idea',
         ],
-        'fluent-emoji-flat': [
-          'stopwatch',
-          'light-bulb'
-
-        ],
-        'emojione-v1': [
-          'person-biking'
-        ],
-        'emojione': ['rocket'],
-        'twemoji': [
-          'person-biking-medium-skin-tone',
-          'woman-biking-medium-dark-skin-tone'
-        ]
+        'fluent-emoji-flat': ['stopwatch', 'light-bulb', 'globe-showing-europe-africa'],
+        'emojione-v1': ['person-biking'],
+        emojione: ['rocket'],
+        twemoji: ['person-biking-medium-skin-tone', 'woman-biking-medium-dark-skin-tone'],
       },
     }),
-
-
     ...whenExternalScripts(() =>
       partytown({
         config: { forward: ['dataLayer.push'] },
       })
     ),
-
     compress({
       CSS: true,
-      HTML: {
-        'html-minifier-terser': {
-          removeAttributeQuotes: false,
-        },
-      },
+      HTML: { 'html-minifier-terser': { removeAttributeQuotes: false } },
       Image: false,
       JavaScript: true,
       SVG: false,
       Logger: 1,
     }),
-
-    astrowind({
-      config: './src/config.yaml',
-    }),
+    astrowind({ config: './src/config.yaml' }),
   ],
 
   image: {
