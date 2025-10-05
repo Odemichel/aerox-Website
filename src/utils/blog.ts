@@ -275,17 +275,23 @@ export const getStaticPathsBlogTag = async ({
     });
   });
 
- return Object.keys(tags).flatMap((tagSlug) =>
-  paginate(
-    posts.filter((post) => post.tags?.some((t) => t.slug === tagSlug)),
-    {
-      // ✅ Corrigé ici : Astro attend "tag", pas "blog"
-      params: { lang, tag: tagSlug },
-      pageSize: blogPostsPerPage,
-      props: { tag: tags[tagSlug] },
-    }
+ return Object.keys(tags)
+  .flatMap((tagSlug) =>
+    paginate(
+      posts.filter((post) => post.tags?.some((t) => t.slug === tagSlug)),
+      {
+        params: { lang, tag: tagSlug },
+        pageSize: blogPostsPerPage,
+        props: { tag: tags[tagSlug] },
+      }
+    )
   )
-);
+  // ✅ Sécurité : on s'assure que tous les chemins ont bien params.lang
+  .map((entry) => ({
+    ...entry,
+    params: entry.params ?? { lang, tag: 'inconnu' },
+  }));
+
 };
 
 /* ------------------------------------------------------------------ */
