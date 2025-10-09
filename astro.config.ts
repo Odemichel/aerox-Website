@@ -12,6 +12,7 @@ import compress from 'astro-compress';
 import { default as astroIcon, default as icon } from 'astro-icon';
 import astrowind from './vendor/integration';
 
+import react from '@astrojs/react';
 import { lazyImagesRehypePlugin, readingTimeRemarkPlugin, responsiveTablesRehypePlugin } from './src/utils/frontmatter';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -35,7 +36,7 @@ export default defineConfig({
     },
   },
 
-  integrations: [
+  integrations: [react(),
     tailwind({ applyBaseStyles: false }),
     sitemap(),
     mdx(),

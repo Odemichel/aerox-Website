@@ -326,8 +326,28 @@
 
   "hero.video.title": "Démonstration AeroX en vidéo : cyclisme indoor avec aérodynamisme en temps réel. Au-delà de Zwift, MyWhoosh et Kinomap, deviens plus rapide.",
   "hero.video.caption": "AeroX transforme ton home trainer en soufflerie : ta position traduite en gain de puissance en temps réel.",
-  "hero.video.aria": "Vidéo AeroX : gagne 2–3 km/h et économise 40 W sur home trainer grâce à l’aérodynamisme en temps réel."
+  "hero.video.aria": "Vidéo AeroX : gagne 2–3 km/h et économise 40 W sur home trainer grâce à l’aérodynamisme en temps réel.",
 
+  "pricing.remaining": "Plus que",
+  "pricing.offer": "pour profiter de l’offre",
+
+  "success.meta.title": "Paiement réussi",
+  "success.meta.description": "Merci pour ton soutien à AeroX. Découvre maintenant le futur de l'entraînement indoor.",
+  "success.title": "Merci de ta confiance !",
+  "success.subtitle1": "Bienvenue dans le futur de l’entraînement indoor.",
+  "success.subtitle2": "Tes retours nous permettront d’améliorer AeroX à ton image !",
+  "success.download1": "Télécharger",
+  "success.download2mac": "sur",
+  "success.download2win": "pour",
+  "success.backHome": "Retour à l’accueil",
+
+  "cancel.meta.title": "Paiement annulé",
+  "cancel.meta.description": "Le paiement n’a pas été finalisé. Tu peux réessayer ou contacter le support AeroX.",
+  "cancel.title": "Aïe !",
+  "cancel.message1": "Une erreur s'est produite, ton abonnement n'est pas activé.",
+  "cancel.message2": "Réessaye le paiement ou contacte l'administrateur.",
+  "cancel.backHome": "Retour à l’accueil"
+  
 
 
 

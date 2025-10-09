@@ -1,14 +1,29 @@
-// /src/pages/api/create-api-checkout.ts  (assure le nom EXACT du fichier/route)
+// /src/pages/api/create-api-checkout.ts
 import type { APIRoute } from 'astro';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY as string);
 
-type Body = { priceId?: string; lookupKey?: string; customerEmail?: string; userId?: string };
+type Body = {
+  priceId?: string;
+  lookupKey?: string;
+  customerEmail?: string;
+  userId?: string;
+  lang?: string; // 👈 ajouté
+};
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = (await request.json().catch(() => ({}))) as Body;
+
+    // --- Détection de la langue ---
+    let lang = body.lang;
+    if (!lang) {
+      const url = new URL(request.url);
+      // essaie d'extraire la langue du chemin (ex: /fr/telechargement/api/...)
+      const match = url.pathname.match(/^\/([a-z]{2})(\/|$)/);
+      lang = match?.[1] || 'fr'; // fallback fr
+    }
 
     // --- Prix ---
     let priceId = (body.priceId ?? import.meta.env.STRIPE_PRICE_ID ?? '').trim();
@@ -20,19 +35,18 @@ export const POST: APIRoute = async ({ request }) => {
     }
     if (!priceId) throw new Error('Missing priceId');
 
-    // --- Base site (sans hash) ---
-    const reqOrigin = new URL(request.url).origin; // ex http://localhost:4321 en dev
+    // --- Base site ---
+    const reqOrigin = new URL(request.url).origin; // http://localhost:4321
     const envBase = (import.meta.env.PUBLIC_SITE_URL || '').split('#')[0];
     const base = envBase || reqOrigin;
 
-    // --- Compose URLs absolues à partir des chemins env ---
-    const successPath = import.meta.env.SUCCESS_URL || 'telechargement/success';
-    const cancelPath  = import.meta.env.CANCEL_URL  || 'telechargement/cancel';
+    // --- Routes localisées ---
+    const successPath = `/${lang}/telechargement/success`;
+    const cancelPath = `/${lang}/telechargement/cancel`;
 
     const successUrl = new URL(successPath, base).toString();
-    const cancelUrl  = new URL(cancelPath, base).toString();
+    const cancelUrl = new URL(cancelPath, base).toString();
 
-    // mini validation
     const looksHttp = (u: string) => /^https?:\/\//i.test(u);
     if (!looksHttp(successUrl) || !looksHttp(cancelUrl)) {
       throw new Error(`Invalid success/cancel URL (${successUrl} | ${cancelUrl})`);
@@ -41,6 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
     const metadata: Record<string, string> = {};
     if (body.userId) metadata.userId = body.userId;
 
+    // --- Création session Stripe ---
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: [{ price: priceId, quantity: 1 }],
@@ -62,6 +77,5 @@ export const POST: APIRoute = async ({ request }) => {
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     return new Response(JSON.stringify({ error: message }), { status: 500 });
-    
   }
 };

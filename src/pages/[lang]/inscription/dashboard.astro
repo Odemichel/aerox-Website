@@ -1,11 +1,15 @@
 ---
 import Prices from '../../../components/widgets/Pricing.astro';
-import { COUNTDOWN_TARGET } from '../../../config/countdown';
+import { COUNTDOWN_TARGET } from '~/config/countdown';
+
 import Layout from '../../../layouts/PageLayout.astro';
 import { getDict, t } from '~/lib/i18n';
 
 const { lang } = Astro.params;
 const dict = getDict(lang);
+
+
+
 
 const metadata = {
   title: t(dict, 'dashboard.meta.title'),
@@ -19,7 +23,7 @@ const choosePack = t(dict, 'dashboard.choosePack');
 <Layout metadata={metadata}>
   <section class="max-w-4xl mx-auto px-6">
     <h1 class="text-3xl font-bold mb-6 text-center">
-      {t(dict, 'dashboard.title')} 🚴‍♂️
+      {t(dict, 'dashboard.title')}
     </h1>
     <div id="dashboard-content" data-role={role} data-email={email} data-choosePack={choosePack} class="text-center">
       <p>{t(dict, 'dashboard.loading')}</p>
@@ -27,14 +31,23 @@ const choosePack = t(dict, 'dashboard.choosePack');
 
     <!-- ✅ Script côté client -->
     <script>
-      import { supabase } from '../../../config/supabaseClient';
-
+      import { COUNTDOWN_EARLY_TARGET, COUNTDOWN_TARGET } from '~/config/countdown';
+import { supabase } from '../../../config/supabaseClient';
+      const now = new Date();
+      const countdownDate = new Date(COUNTDOWN_TARGET);
+      const earlyDate = new Date(COUNTDOWN_EARLY_TARGET);
+      let user_role = 'user';
+      if (now < countdownDate) {
+        user_role = 'pionnier';
+      } else if (now < earlyDate) {
+        user_role = 'early_user';
+      }
       async function loadDashboard() {
         console.log('➡️ Init dashboard');
         const content = document.getElementById('dashboard-content');
         const role = content?.dataset.role || 'Role'; // fallback en
         const email = content?.dataset.email || 'Email'; // fallback en
-        const choosePack = content?.dataset.choosePack || 'Select your pack to start using AeroX';
+        const choosePack = content?.dataset.choosePack || 'Choisis ton pack pour profiter d’AeroX 👇';
         if (!content) return;
 
         // Vérifie si l’utilisateur est connecté
@@ -81,7 +94,7 @@ const choosePack = t(dict, 'dashboard.choosePack');
               id: user.id,
               email: user.email,
               phonenumber,
-              role: 'user',
+              role: user_role,
               is_active: false,
               licencetype: null,
             })
@@ -138,9 +151,8 @@ const choosePack = t(dict, 'dashboard.choosePack');
           { description: t(dict, 'home.prices.packPioneer.items.4'), icon: 'tabler:binary-tree-filled' },
         ],
         callToAction: {
-          target: '',
+          id: 'btn-checkout',
           text: t(dict, 'home.prices.packPioneer.cta'),
-          href: '/inscription/inscription_supabase/',
         },
         hasRibbon: true,
         ribbonTitle: t(dict, 'home.prices.packPioneer.ribbon'),
@@ -178,4 +190,40 @@ const choosePack = t(dict, 'dashboard.choosePack');
       },
     ]}
   />
+
+  <script is:inline>
+      const redirectText = document.documentElement.lang === 'en' ? 'Redirecting…' : 'Redirection…';
+
+    const callCheckout = async (payload = {}) => {
+      const res = await fetch(`/${document.documentElement.lang || 'fr'}/telechargement/api/create-api-checkout/`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data?.error || 'Erreur Stripe');
+      }
+    };
+
+    const withLoading = async (btn, fn) => {
+      if (!btn) return;
+      btn.disabled = true;
+      const prev = btn.innerHTML;
+      btn.innerHTML = redirectText;
+      try {
+        await fn();
+      } catch (e) {
+        alert(e?.message || e || 'Erreur');
+        btn.disabled = false;
+        btn.innerHTML = prev;
+      }
+    };
+
+    document.getElementById('btn-checkout')?.addEventListener('click', (e) => {
+      withLoading(e.currentTarget, () => callCheckout());
+    });
+  </script>
 </Layout>

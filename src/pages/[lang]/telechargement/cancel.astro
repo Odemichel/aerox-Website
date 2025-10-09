@@ -1,17 +1,29 @@
 ---
 import Layout from '~/layouts/Layout.astro';
+import { getDict, t } from '~/lib/i18n';
+
+const { lang } = Astro.params;
+const dict = getDict(lang);
+
+const metadata = {
+  title: t(dict, 'cancel.meta.title'),
+  description: t(dict, 'cancel.meta.description'),
+};
 ---
 
-<Layout metadata={{ title: 'Paiement réussi' }}>
+<Layout metadata={metadata}>
   <section class="max-w-xl mx-auto py-20 text-center">
-    <h1 class="text-3xl font-bold mb-4">Aïe !</h1>
+    <h1 class="text-3xl font-bold mb-4">
+      {t(dict, 'cancel.title')}
+    </h1>
+
     <p class="text-lg mb-8">
-      Une erreur s'est produite, ton abonnement n'est pas activé.  
-      Réessaye le paiement ou contacte l'administrateur.
+      {t(dict, 'cancel.message1')}<br />
+      {t(dict, 'cancel.message2')}
     </p>
 
-    <a href="/" class="btn btn-primary px-6 py-3">
-      Retour à l’accueil
+    <a href={`/${lang}`} class="btn btn-primary px-6 py-3">
+      {t(dict, 'cancel.backHome')}
     </a>
   </section>
 </Layout>

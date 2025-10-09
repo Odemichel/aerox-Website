@@ -324,6 +324,26 @@
 
   "hero.video.title": "AeroX demo video: indoor cycling with real-time aerodynamics. Go beyond Zwift, MyWhoosh, and Kinomap to get faster.",
   "hero.video.caption": "AeroX turns your smart trainer into a wind tunnel: your position translated into real-time power gains.",
-  "hero.video.aria": "AeroX video: gain 2–3 km/h and save 40 W on your smart trainer thanks to real-time aerodynamics."
+  "hero.video.aria": "AeroX video: gain 2–3 km/h and save 40 W on your smart trainer thanks to real-time aerodynamics.",
+
+  "pricing.remaining": "Only",
+  "pricing.offer": "left to enjoy the offer",
+
+  "success.meta.title": "Payment successful",
+  "success.meta.description": "Thank you for supporting AeroX. Welcome to the future of indoor training.",
+  "success.title": "Thank you for your trust!",
+  "success.subtitle1": "Welcome to the future of indoor training.",
+  "success.subtitle2": "Your feedback will help us shape AeroX to your image!",
+  "success.download1": "Download",
+  "success.download2mac": "for",
+  "success.download2win": "for",
+  "success.backHome": "Back to home",
+
+    "cancel.meta.title": "Payment canceled",
+  "cancel.meta.description": "Your payment was not completed. You can try again or contact AeroX support.",
+  "cancel.title": "Oops!",
+  "cancel.message1": "Something went wrong — your subscription is not active.",
+  "cancel.message2": "Please try again or contact the administrator.",
+  "cancel.backHome": "Back to home"
 
 }

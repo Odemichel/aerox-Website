@@ -3,10 +3,9 @@ import { Icon } from 'astro-icon/components';
 import Button from '~/components/ui/Button.astro';
 import Headline from '~/components/ui/Headline.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
-import type { Pricing as Props } from '~/types';
 import CountDown from './CountDown.astro';
 import { COUNTDOWN_TARGET } from '~/config/countdown';
-
+import {  type Locale, getDict, t } from '~/lib/i18n';
 
 const {
   title = '',
@@ -14,12 +13,15 @@ const {
   tagline = '',
   prices = [],
   subsubtitle = '',
-
   id,
   isDark = false,
   classes = {},
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
+
+// ✅ Détermine la langue à partir de l’URL
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
 ---
 
 <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
@@ -144,15 +146,17 @@ const {
                     {hasChoice && (
                       <>
                         {countdownTarget1 && (
-  <p class="mt-1 text-sm font-medium text-primary" data-v="1">
-    Plus que <CountDown targetDate={new Date(countdownTarget1)} client:idle /> pour profiter de l’offre
-  </p>
-)}
+                          <p class="mt-1 text-sm font-medium text-primary" data-v="1">
+                            {t(dict, 'pricing.remaining')} <CountDown targetDate={new Date(countdownTarget1)} /><br />
+                            {t(dict, 'pricing.offer')}
+                          </p>
+                        )}
                         {countdownTarget2 && (
-  <p class="mt-1 text-sm font-medium text-primary" data-v="2">
-    Plus que <CountDown targetDate={new Date(countdownTarget2)} client:idle /> pour profiter de l’offre
-  </p>
-)}
+                          <p class="mt-1 text-sm font-medium text-primary" data-v="1">
+                            {t(dict, 'pricing.remaining')} <CountDown targetDate={new Date(countdownTarget2)} /><br />
+                            {t(dict, 'pricing.offer')}
+                          </p>
+                        )}
                       </>
                     )}
 
@@ -250,9 +254,7 @@ const {
                       typeof callToAction === 'string' ? (
                         <Fragment set:html={callToAction} />
                       ) : (
-                        callToAction?.href && (
-                          <Button {...(hasRibbon ? { variant: 'primary' } : {})} {...callToAction} />
-                        )
+                        callToAction && <Button {...(hasRibbon ? { variant: 'primary' } : {})} {...callToAction} />
                       )
                     ) : (
                       <>
@@ -265,11 +267,12 @@ const {
                       </>
                     )}
                   </div>
-                 {countdownTarget && (
-  <p class="mt-2 text-sm font-medium text-primary">
-    Plus que <CountDown targetDate={new Date(COUNTDOWN_TARGET)} client:idle />
-  </p>
-)}
+                  {countdownTarget && (
+                    <p class="mt-1 text-sm font-medium text-primary" data-v="1">
+                      {t(dict, 'pricing.remaining')} <CountDown targetDate={new Date(COUNTDOWN_TARGET)} /> <br />
+                      {t(dict, 'pricing.offer')}
+                    </p>
+                  )}
                 </div>
               </div>
             );

@@ -1,19 +1,31 @@
 ---
 import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/Layout.astro';
+import { getDict, t } from '~/lib/i18n';
+
+const { lang } = Astro.params;
+const dict = getDict(lang);
+
+const metadata = {
+  title: t(dict, 'success.meta.title'),
+  description: t(dict, 'success.meta.description'),
+};
 ---
 
-<Layout metadata={{ title: 'Paiement réussi' }}>
+<Layout metadata={metadata}>
   <section class="max-w-xl mx-auto py-20 text-center">
-    <h1 class="text-3xl font-bold mb-4">✅ Merci de ta confiance !</h1>
+    <h1 class="text-3xl font-bold mb-4">
+      ✅ {t(dict, 'success.title')}
+    </h1>
+
     <p class="text-lg mb-8">
-      Bienvenu dans le futur de l'entrainement Indoor.<br />
-      Tes retours nous permettront d'améliorer AeroX à ton image !
+      {t(dict, 'success.subtitle1')}<br />
+      {t(dict, 'success.subtitle2')}
     </p>
 
-    <!-- ✅ Boutons Mac + Windows côte à côte -->
+    <!-- ✅ Boutons Mac + Windows -->
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-      <!-- Bouton macOS -->
+      <!-- macOS -->
       <a
         href="https://github.com/Odemichel/AeroX-release/releases/download/v1.0.0/AeroX-macOS-v1.0.0.zip"
         class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
@@ -21,29 +33,33 @@ import Layout from '~/layouts/Layout.astro';
       >
         <Icon name="tabler:brand-apple-filled" class="w-10 h-10" />
         <span class="text-left">
-          <span class="block text-xs leading-none pb-1">Télécharger <span class="text-primary font-bold">AeroX</span> sur</span>
+          <span class="block text-xs leading-none pb-1">
+            {t(dict, 'success.download1')} <span class="text-primary font-bold">AeroX</span> {t(dict, 'success.download2mac')}
+          </span>
           <span class="block text-base font-semibold leading-none">macOS</span>
         </span>
       </a>
 
-      <!-- Bouton Windows -->
+      <!-- Windows -->
       <a
-        href="https://github.com/Odemichel/AeroX-release/releases/download/v1.0.0/AeroX-Windows-v1.0.0.zip"
+        href="https://github.com/Odemichel/AeroX-release/releases/download/Windows_V1.0.0_elite/aerox_ELITE.zip"
         class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
         download
       >
         <Icon name="tabler:brand-windows-filled" class="w-10 h-10" />
         <span class="text-left">
-          <span class="block text-xs leading-none pb-1">Télécharger <span class="text-primary font-bold">AeroX</span> pour</span>
+          <span class="block text-xs leading-none pb-1">
+            {t(dict, 'success.download1')} <span class="text-primary font-bold">AeroX</span> {t(dict, 'success.download2win')}
+          </span>
           <span class="block text-base font-semibold leading-none">Windows</span>
         </span>
       </a>
     </div>
 
-    <!-- ✅ Bouton retour accueil en dessous -->
+    <!-- ✅ Retour accueil -->
     <div class="flex justify-center">
-      <a href="/" class="btn btn-primary px-6 py-3">
-        Retour à l’accueil
+      <a href={`/${lang}`} class="btn btn-primary px-6 py-3">
+        {t(dict, 'success.backHome')}
       </a>
     </div>
   </section>

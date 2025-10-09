@@ -95,6 +95,8 @@ const metadata = {
           showMessage('❌ ' + error.message);
         } else {
           showMessage('✅ login.success', false);
+            await supabase.auth.getSession();
+
           window.location.href = `/${lang}/inscription/dashboard/`;
         }
       });

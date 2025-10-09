@@ -1,7 +1,6 @@
 ---
 import { DEFAULT_LOCALE, getDict, SUPPORTED_LOCALES, t, type Locale } from '~/lib/i18n';
 import posterPuissance from '../../assets/images/posterPuissance.jpg?url';
-
 import type { HeroVideo as Props } from '~/types';
 
 const { video, id, bg } = Astro.props as Props;
@@ -24,18 +23,13 @@ const dict = getDict(currentLang);
   </div>
 
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
-    <div
-      class="intersect-once intersect-no-queue intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
-    >
+    <div class="intersect-once intersect-no-queue intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade">
       {video ? (
         <figure class="relative m-auto mt-12 mb-24 md:max-w-3xl max-w-5xl items-center text-center">
-          <!-- 🧠 Titre SEO caché -->
-          <h2 class="sr-only">
-            {t(dict, 'hero.video.title')}
-          </h2>
+          <h2 class="sr-only">{t(dict, 'hero.video.title')}</h2>
 
-          <!-- 🎥 Vidéo -->
           <video
+            id="hero-video"
             autoplay
             muted
             loop
@@ -48,7 +42,6 @@ const dict = getDict(currentLang);
             <source src={video.src} type="video/mp4" />
           </video>
 
-          <!-- 📝 Légende SEO-friendly -->
           <figcaption class="italic text-muted">
             {t(dict, 'hero.video.caption')}
           </figcaption>
@@ -57,3 +50,27 @@ const dict = getDict(currentLang);
     </div>
   </div>
 </section>
+
+<script is:inline>
+  (() => {
+    function initVideo() {
+      const vid = document.getElementById('hero-video');
+      if (!vid) return;
+
+      try {
+        vid.currentTime = 0;
+        vid.play().catch(() => {});
+      } catch (e) {
+        console.warn('⚠️ Impossible de rejouer la vidéo:', e);
+      }
+    }
+
+    // 🔁 Relance après navigation Astro
+    document.addEventListener('astro:after-swap', () => {
+      requestAnimationFrame(initVideo);
+    });
+
+    // 🔹 Premier lancement
+    document.addEventListener('DOMContentLoaded', initVideo);
+  })();
+</script>
