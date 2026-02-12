@@ -249,7 +249,10 @@
    "contact.title": "Contact AeroX",
   "contact.description": "Need help or information? Get in touch directly with the AeroX team by email.",
   "contact.heading": "Contact AeroX",
-  "contact.intro": "For any question, suggestion, or support request, you can write to us directly:",
+   "contact.not_ready": "AeroX is in its final optimisation step, and will be ready pretty soon",
+
+ 
+  "contact.intro": "To try AeroX or any other, contact  us directly:",
   "contact.aria": "Send an email to contact@aeroxbefaster.com",
   "contact.delay": "We usually reply within 24 to 48 hours (business days).",
 
@@ -338,6 +341,9 @@
   "success.download2mac": "for",
   "success.download2win": "for",
   "success.backHome": "Back to home",
+    "success.whatsapp1":"Join",
+  "success.whatsapp2":"on",
+  "success.whatsapp3":"What'sApp",
 
     "cancel.meta.title": "Payment canceled",
   "cancel.meta.description": "Your payment was not completed. You can try again or contact AeroX support.",

@@ -250,7 +250,9 @@
    "contact.title": "Contact AeroX",
   "contact.description": "Besoin d'aide ou d'informations ? Contactez directement l'équipe AeroX par email.",
   "contact.heading": "Contact AeroX",
-  "contact.intro": "Pour toute question, suggestion ou demande d’assistance, vous pouvez nous écrire directement :",
+    "contact.not_ready": "AeroX est en phase finale d'optimisation et sera disponible très bientôt.",
+
+  "contact.intro": "Pour tester en avant-première ou toute autre demande, contactez-nous directement :",
   "contact.aria": "Envoyer un email à contact@aeroxbefaster.com",
   "contact.delay": "Nous répondons généralement sous 24 à 48h (jours ouvrés).",
 
@@ -337,6 +339,11 @@
   "success.subtitle1": "Bienvenue dans le futur de l’entraînement indoor.",
   "success.subtitle2": "Tes retours nous permettront d’améliorer AeroX à ton image !",
   "success.download1": "Télécharger",
+  "success.whatsapp1":"Rejoins",
+  "success.whatsapp2":"sur",
+
+  "success.whatsapp3":"What'sApp",
+
   "success.download2mac": "sur",
   "success.download2win": "pour",
   "success.backHome": "Retour à l’accueil",

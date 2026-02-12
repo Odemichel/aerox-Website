@@ -14,9 +14,7 @@ export interface Props {
 const { post } = Astro.props;
 
 // ✅ Priorité : imageKey → blogImages, sinon fallback sur findImage
-const image = post.imageKey
-  ? blogImages[post.imageKey]
-  : await findImage(post.image);
+const image = post.imageKey ? blogImages[post.imageKey] : await findImage(post.image);
 
 const link = APP_BLOG?.post?.isEnabled ? getPermalink(post.permalink, 'post') : '';
 ---
@@ -30,7 +28,7 @@ const link = APP_BLOG?.post?.isEnabled ? getPermalink(post.permalink, 'post') : 
         (link ? (
           <a href={link}>
             <Image
-              src={image}                
+              src={image}
               class="w-full md:h-full rounded shadow-lg bg-gray-400 dark:bg-slate-700"
               widths={[400, 900]}
               width={400}

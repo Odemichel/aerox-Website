@@ -22,6 +22,7 @@ const metadata = {
       {t(dict, 'success.subtitle1')}<br />
       {t(dict, 'success.subtitle2')}
     </p>
+     
 
     <!-- ✅ Boutons Mac + Windows -->
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
@@ -56,9 +57,24 @@ const metadata = {
       </a>
     </div>
 
+    <!-- What'sApp -->
+      <a
+        href="https://chat.whatsapp.com/JSojpi1bYYn7lYPurZ5SOq?mode=ems_email_t"
+        class="inline-flex items-center justify-center  mb-10 gap-3 bg-green-600 hover:bg-neutral-800 text-white rounded-xl px-4 py-2 shadow-md transition"
+        download
+      >
+        <Icon name="tabler:brand-whatsapp-filled" class="w-10 h-10" />
+        <span class="text-left">
+          <span class="block text-xs leading-none pb-1 font-bold">
+            {t(dict, 'success.whatsapp1')} <span class="text-primary text-base">AeroX</span> {t(dict, 'success.whatsapp2')} 
+          </span>
+          <span class="block text-base font-semibold leading-none">{t(dict, 'success.whatsapp3')}</span>
+        </span>
+      </a>
+
     <!-- ✅ Retour accueil -->
     <div class="flex justify-center">
-      <a href={`/${lang}`} class="btn btn-primary px-6 py-3">
+      <a href={`/${lang}/`} class="btn btn-primary px-6 py-3">
         {t(dict, 'success.backHome')}
       </a>
     </div>

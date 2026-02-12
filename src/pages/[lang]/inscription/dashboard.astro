@@ -8,9 +8,6 @@ import { getDict, t } from '~/lib/i18n';
 const { lang } = Astro.params;
 const dict = getDict(lang);
 
-
-
-
 const metadata = {
   title: t(dict, 'dashboard.meta.title'),
   description: t(dict, 'dashboard.meta.description'),
@@ -32,7 +29,7 @@ const choosePack = t(dict, 'dashboard.choosePack');
     <!-- ✅ Script côté client -->
     <script>
       import { COUNTDOWN_EARLY_TARGET, COUNTDOWN_TARGET } from '~/config/countdown';
-import { supabase } from '../../../config/supabaseClient';
+      import { supabase } from '../../../config/supabaseClient';
       const now = new Date();
       const countdownDate = new Date(COUNTDOWN_TARGET);
       const earlyDate = new Date(COUNTDOWN_EARLY_TARGET);
@@ -192,6 +189,24 @@ import { supabase } from '../../../config/supabaseClient';
   />
 
   <script is:inline>
+    const redirectUrl = `/${document.documentElement.lang || 'fr'}/contact/`;
+    const redirectText = document.documentElement.lang === 'en' ? 'Redirecting…' : 'Redirection…';
+
+    const withLoading = (btn) => {
+      if (!btn) return;
+      btn.disabled = true;
+      btn.innerHTML = redirectText;
+      setTimeout(() => {
+        window.location.href = redirectUrl;
+      }, 300);
+    };
+
+    document.getElementById('btn-checkout')?.addEventListener('click', (e) => {
+      withLoading(e.currentTarget);
+    });
+  </script>
+
+  <!--  <script is:inline>
       const redirectText = document.documentElement.lang === 'en' ? 'Redirecting…' : 'Redirection…';
 
     const callCheckout = async (payload = {}) => {
@@ -225,5 +240,5 @@ import { supabase } from '../../../config/supabaseClient';
     document.getElementById('btn-checkout')?.addEventListener('click', (e) => {
       withLoading(e.currentTarget, () => callCheckout());
     });
-  </script>
+  </script> -->
 </Layout>

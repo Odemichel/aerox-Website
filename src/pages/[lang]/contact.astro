@@ -5,9 +5,7 @@ import { DEFAULT_LOCALE, SUPPORTED_LOCALES, getDict, type Locale } from '~/lib/i
 // ✅ Déterminer la langue depuis l’URL
 const { params } = Astro.props;
 const maybeLang = params?.lang ?? Astro.url.pathname.split('/').filter(Boolean)[0];
-const lang: Locale = SUPPORTED_LOCALES.includes(maybeLang as Locale)
-  ? (maybeLang as Locale)
-  : DEFAULT_LOCALE;
+const lang: Locale = SUPPORTED_LOCALES.includes(maybeLang as Locale) ? (maybeLang as Locale) : DEFAULT_LOCALE;
 
 // ✅ Charger le dictionnaire
 const dict = getDict(lang);
@@ -21,6 +19,7 @@ const metadata = {
 <Layout metadata={metadata}>
   <section class="max-w-3xl mx-auto py-20 text-center min-h-screen">
     <h1 class="text-3xl md:text-4xl font-bold mb-6">📩 {dict['contact.heading']}</h1>
+    <p class="text-xl md:text-xl font-semi-bold mb-6">{dict['contact.not_ready']}</p>
 
     <p class="text-muted mb-8">
       {dict['contact.intro']}
