@@ -337,6 +337,8 @@
   "success.meta.description": "Merci pour ton soutien à AeroX. Découvre maintenant le futur de l'entraînement indoor.",
   "success.title": "Merci de ta confiance !",
   "success.subtitle1": "Bienvenue dans le futur de l’entraînement indoor.",
+
+  "success.livre.subtitle1": "Tu vas pouvoir intégrer les principes d'un entrainement aérodyanmique.",
   "success.subtitle2": "Tes retours nous permettront d’améliorer AeroX à ton image !",
   "success.download1": "Télécharger",
   "success.whatsapp1":"Rejoins",
@@ -353,7 +355,14 @@
   "cancel.title": "Aïe !",
   "cancel.message1": "Une erreur s'est produite, ton abonnement n'est pas activé.",
   "cancel.message2": "Réessaye le paiement ou contacte l'administrateur.",
-  "cancel.backHome": "Retour à l’accueil"
+  "cancel.backHome": "Retour à l’accueil",
+  
+  "cancel.livre.meta.title": "Paiement annulé",
+  "cancel.livre.meta.description": "Le paiement n’a pas été finalisé. Tu peux réessayer ou contacter le support AeroX.",
+  "cancel.livre.title": "Aïe !",
+  "cancel.livre.message1": "Une erreur s'est produite, ton paiement a été refusé.",
+  "cancel.livre.message2": "Réessaye le paiement ou contacte l'administrateur.",
+  "cancel.livre.backHome": "Retour à l’accueil"
   
 
 

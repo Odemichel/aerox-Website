@@ -14,14 +14,14 @@ const {
 } = Astro.props;
 ---
 
-<section class="relative bg-blue-50 z-20  dark:bg-slate-800 not-prose">
-  <div class="relative z-10 mb-20 dark:bg-page"/>
+<section class="relative bg-blue-50 z-20 dark:bg-slate-800 not-prose">
+  <div class="relative z-10 mb-8 dark:bg-page"></div>
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 text-md text-center font-medium">
     <Icon name={icon} class="w-5 h-5 inline-block align-text-bottom font-bold" />
     <span class="font-bold" set:html={title} />
     <span class="text-primary">
-    <Fragment  set:html={description} />
+      <Fragment set:html={description} />
     </span>
   </div>
-  <div class="mb-32"/>
+  <div class="mb-8"></div>
 </section>
