@@ -230,6 +230,7 @@
   "nav.story": "AeroX Story",
   "nav.contact": "Contact",
   "nav.blog": "Blog",
+  "nav.book":"AeroX Method", 
   "nav.login": "Sign in",
 
   "nav.cta.mobile": "Download",
@@ -238,6 +239,7 @@
 
   "footer.contact.title": "Contact",
   "footer.team": "Team",
+  "footer.story":"AeroX story",
   "footer.contactUs": "Contact us",
   "footer.privacy": "Privacy Policy",
   "footer.terms": "Terms",
@@ -350,6 +352,63 @@
   "cancel.title": "Oops!",
   "cancel.message1": "Something went wrong — your subscription is not active.",
   "cancel.message2": "Please try again or contact the administrator.",
-  "cancel.backHome": "Back to home"
+  "cancel.backHome": "Back to home",
+
+  "book.meta.title": "The scientific guide to cycling aerodynamics",
+"book.meta.description": "Understand the power-speed relationship and structure effective aerodynamic training.",
+
+"book.hero.alt": "Aerodynamics book cover",
+"book.hero.title.l1": "Aerodynamics isn't just for pros,",
+"book.hero.title.l2": "ride at the speed you deserve.",
+"book.hero.text": "This guide redefines cycling performance by placing aerodynamics at the core of training.<br/><br/>A scientific approach to measure the real impact of your position on speed.",
+"book.hero.cta": "Start riding at the speed you deserve",
+
+"book.gain.title": "An optimal aerodynamic position",
+"book.gain.desc": "Can save up to 45 minutes on an Ironman, increase sprint speed by up to 6 km/h, or save more than 50 W at constant speed.<br/><span class='text-primary'>Without changing equipment.</span>",
+
+"book.vision.title": "Our vision",
+"book.vision.desc": "Aerodynamics is a major performance lever in cycling.",
+
+"book.target.title": "Who this method is for",
+"book.target.good.title": "For those who refuse to optimize randomly",
+"book.target.good.desc": "Athletes, coaches and bike fitters who know position has a decisive impact on performance.",
+"book.target.bad.title": "This guide is not for you",
+"book.target.bad.desc": "If you believe performance only comes from producing more watts or changing equipment.",
+
+"book.errors.e1.title": "Myth #1",
+"book.errors.e1.desc": "Below 30 km/h aerodynamics doesn't matter.",
+"book.errors.e2.title": "Myth #2",
+"book.errors.e2.desc": "You need new equipment to go faster.",
+"book.errors.e3.title": "Myth #3",
+"book.errors.e3.desc": "To go faster, you just need more power.",
+
+"book.method.title": "Training aerodynamics",
+"book.method.p1.title": "Break common myths",
+"book.method.p1.desc": "Aerodynamics would only matter above 35 km/h or be only about equipment. Physics shows otherwise.",
+"book.method.p2.title": "Optimize your speed",
+"book.method.p2.desc": "Improving performance means optimizing speed, not just power.",
+"book.method.p3.title": "Measure to structure",
+"book.method.p3.desc": "Evaluating aerodynamic efficiency is the foundation for riding faster without more effort.",
+"book.method.p4.title": "Gain real speed",
+"book.method.p4.desc": "An optimal position can reduce aerodynamic drag by up to 30%.",
+
+"book.philo.title": "Our philosophy",
+"book.philo.desc": "Training decisions should rely on science, not beliefs.",
+
+"book.cta.question": "How many minutes could you gain with your current level?",
+"book.cta.button": "Access the method",
+"success_livre.meta.title": "Payment confirmed — AeroX",
+"success_livre.meta.description": "Your purchase is confirmed. Download your aerodynamics guide.",
+
+"success_livre.title": "Payment confirmed",
+"success_livre.subtitle": "Your aerodynamic training guide is ready to download.",
+
+"success_livre.image.alt": "Aerodynamics guide cover",
+
+"success_livre.download": "Download the guide",
+"success_livre.validity": "Link valid for 10 minutes",
+
+"success_livre.backHome": "Back to home"
+
 
 }

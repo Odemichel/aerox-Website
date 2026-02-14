@@ -1,29 +1,38 @@
 ---
+import type { GetStaticPaths } from 'astro';
+
 import Layout from '~/layouts/Layout.astro';
-import { getDict, t } from '~/lib/i18n';
+import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
+import { localizedHref } from '~/utils/localize';
+import livreCover from '~/assets/images/livre/image_livre_entrainer-aero.png';
 
-import livreCover from '~/assets/images/livre/image_livre_entrainer-aero.png'; // ⚠️ adapte le nom exact
+export const prerender = true;
 
-const { lang } = Astro.params;
+export const getStaticPaths: GetStaticPaths = async () => SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
+
+const lang = (Astro.params.lang as Locale) ?? 'fr';
 const dict = getDict(lang);
 
 const metadata = {
-  title: t(dict, 'success.meta.title'),
-  description: t(dict, 'success.meta.description'),
+  title: t(dict, 'success_livre.meta.title'),
+  description: t(dict, 'success_livre.meta.description'),
 };
+
+const homeUrl = localizedHref(lang, '/');
+const downloadApiBase = localizedHref(lang, '/telechargement/api/generate-livre-download/');
 ---
 
 <Layout metadata={metadata}>
   <section class="max-w mx-auto py-20 text-center">
     <h1 class="text-3xl font-bold mb-4">
-      ✅ {t(dict, 'success.title')}
+      ✅ {t(dict, 'success_livre.title')}
     </h1>
 
     <p class="text-lg mb-8">
-      {t(dict, 'success.livre.subtitle1')}<br />
+      {t(dict, 'success_livre.subtitle')}
     </p>
+
     <div class="max-w-6xl px-12 grid md:grid-cols-2 gap-12 items-center">
-      <!-- Image du livre -->
       <div class="flex justify-center">
         <img
           src={livreCover.src}
@@ -34,55 +43,59 @@ const metadata = {
           loading="eager"
         />
       </div>
+
       <div class="flex flex-col justify-center items-center gap-6">
         <a id="download-livre" style="display:none" class="btn btn-primary w-[90%] md:w-[80%] py-3" target="_blank">
-          Lien de téléchargement
+          {t(dict, 'success_livre.download')}
         </a>
-        <p>Lien valable pendant 10 minutes</p>
-      </div>
-    </div>
 
-    <!-- ✅ Retour accueil -->
-    <div class="flex justify-center mt-16">
-      <a href={`/${lang}/`} class="btn px-6 py-3">
-        {t(dict, 'success.backHome')}
-      </a>
+        <p class="text-muted">
+          {t(dict, 'success_livre.validity')}
+        </p>
+      </div>
     </div>
   </section>
 
-  <style>
-    @keyframes floatBook {
-      0% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(14px);
-      }
-      100% {
-        transform: translateY(0px);
-      }
-    }
-
-    .float-book {
-      animation: floatBook 3s ease-in-out infinite;
-      will-change: transform;
-    }
-  </style>
-  <script is:inline>
-    const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get('session_id');
-
-    const downloadBtn = document.getElementById('download-livre');
-
-    if (sessionId) {
-      const downloadUrl = `/telechargement/api/generate-livre-download/?session_id=${sessionId}`;
-
-      // 🔹 Fallback bouton toujours prêt
-      downloadBtn.href = downloadUrl;
-      downloadBtn.style.display = 'inline-block';
-
-      // 🔹 Auto téléchargement
-      window.location.href = downloadUrl;
-    }
-  </script>
+  <div class="flex justify-center mt-16">
+    <a href={homeUrl} class="btn px-6 py-3">
+      {t(dict, 'success_livre.backHome')}
+    </a>
+  </div>
 </Layout>
+
+<style>
+  @keyframes floatBook {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(14px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  .float-book {
+    animation: floatBook 3s ease-in-out infinite;
+  }
+</style>
+<script define:vars={{ downloadApiBase }}>
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+
+  const btn = document.getElementById('download-livre');
+
+  if (sessionId && btn) {
+    const url = `${downloadApiBase}?session_id=${sessionId}`;
+
+    btn.href = url;
+    btn.style.display = 'inline-block';
+
+    // attendre que la page soit rendue
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        window.location.href = url;
+      }, 800); // délai UX optimal
+    });
+  }
+</script>

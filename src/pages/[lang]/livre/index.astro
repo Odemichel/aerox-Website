@@ -1,204 +1,182 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
-import Hero from '~/components/widgets/Hero.astro';
-import Note from '~/components/widgets/Note.astro';
 import Features from '~/components/widgets/Features.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
+import Note from '~/components/widgets/Note.astro';
 import Button from '~/components/ui/Button.astro';
 
-import livreCover from '~/assets/images/livre/image_livre_entrainer-aero.png'; // ⚠️ adapte le nom exact
+import livreCover from '~/assets/images/livre/image_livre_entrainer-aero.png';
 
-import { SUPPORTED_LOCALES, type Locale } from '~/lib/i18n';
+import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
+import { localizedHref } from '~/utils/localize';
 
 export const prerender = true;
+
 export const getStaticPaths: GetStaticPaths = async () => SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
 
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
+
 const metadata = {
-  title: 'Le guide scientifique de l’aérodynamique en cyclisme',
-  description:
-    'Comprendre la relation puissance-vitesse, casser les idées reçues et structurer un entraînement aérodynamique efficace.',
+  title: t(dict, 'book.meta.title'),
+  description: t(dict, 'book.meta.description'),
   robots: { index: true, follow: true },
 };
+
+const checkoutUrl = localizedHref(lang, '/telechargement/api/create-api-livre-checkout/');
 ---
 
 <Layout metadata={metadata}>
-  <!-- HERO SECTION -->
+  <!-- HERO -->
   <section class="py-4">
     <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 items-center">
-      <!-- Image du livre -->
       <div class="flex justify-center">
         <img
           src={livreCover.src}
           width={livreCover.width}
           height={livreCover.height}
-          alt="Couverture du livre aérodynamique"
+          alt={t(dict, 'book.hero.alt')}
           class="w-[70%] md:w-[80%] max-w-md float-book"
           loading="eager"
         />
       </div>
-      <!-- Texte -->
+
       <div>
         <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
-          L'aéro n'est pas réservé aux pros,
-          <span class="text-primary">roule à la vitesse que tu mérites.</span>
+          {t(dict, 'book.hero.title.l1')}
+          <span class="text-primary">
+            {t(dict, 'book.hero.title.l2')}
+          </span>
         </h1>
 
-        <p class="text-xl text-muted mb-8">
-          Ce guide redéfinit la performance cycliste en positionnant l'aérodynamisme au coeur de l'entrainement. <br
-          /><br />
-          Notre approche structurée et scientifique t’apprend à mesurer précisément l’impact de ta position sur ta vitesse
-          et à structurer un entraînement aérodynamique réellement efficace.
-        </p>
+        <p class="text-xl text-muted mb-8" set:html={t(dict, 'book.hero.text')} />
 
         <Button id="btn-checkout-livre" variant="primary" class="px-6 py-3 text-lg">
-          Commence à rouler à la vitesse que tu mérites
+          {t(dict, 'book.hero.cta')}
         </Button>
       </div>
     </div>
   </section>
 
+  <!-- GAIN -->
   <section class="justify-items-center mt-8">
     <Features
       columns={1}
       items={[
         {
-          title: 'Une position aérodynamique optimale',
-          description:
-            "Peut te faire gagner jusqu'à 45 minutes sur Ironman, jusqu'à 6km/h en sprint ou économiser plus de 50 W à vitesse constante. <br/> <span class='text-primary'>Sans changer de matériel ni de niveau.</span>",
+          title: t(dict, 'book.gain.title'),
+          description: t(dict, 'book.gain.desc'),
           icon: 'tabler:target-arrow',
         },
       ]}
     />
 
-    <!-- SECTION 1 -->
-    <Note title="Notre vision:" description="l'aérodynamisme est un levier majeur de la performance cycliste." />
+    <Note title={t(dict, 'book.vision.title')} description={t(dict, 'book.vision.desc')} />
 
-    <!-- SECTION 2 -->
-    <section class="justify-items-center">
-      <Features
-        columns={2}
-        title="A qui s'adresse cette méthode:"
-        items={[
-          {
-            title: 'À ceux qui refusent d’optimiser au hasard.',
-            description:
-              'Que tu sois coach, bike fitter et athlète, tu sais que la position a un impact décisif sur la performance sur route.<br/>  <span class="text-primary">Ce guide est pour toi.</span>',
-            icon: 'tabler:target-arrow',
-          },
-          {
-            title: "Ce guide n'est pas pour toi.",
-            description:
-              'Si tu considères que la performance se résume à produire plus de watts ou changer de matériel, et que tu veux continuer à te faire plaisir au feeling.',
-            icon: 'tabler:alert-triangle',
-          },
-        ]}
-      />
+    <!-- TARGET -->
+    <Features
+      columns={2}
+      title={t(dict, 'book.target.title')}
+      items={[
+        {
+          title: t(dict, 'book.target.good.title'),
+          description: t(dict, 'book.target.good.desc'),
+          icon: 'tabler:target-arrow',
+        },
+        {
+          title: t(dict, 'book.target.bad.title'),
+          description: t(dict, 'book.target.bad.desc'),
+          icon: 'tabler:alert-triangle',
+        },
+      ]}
+    />
 
-      <section>
-        <Note title="Erreur n°1 :" description="À moins de 30km/h, je n'ai rien à gagner avec l'aéro." />
-        <div class="-mt-12"></div>
-        <Note title="Erreur n°2 : " description="Pour être plus rapide, il faut d'abord du nouveau matériel." />
-        <div class="-mt-12"></div>
+    <!-- ERREURS -->
+    <section>
+      <Note title={t(dict, 'book.errors.e1.title')} description={t(dict, 'book.errors.e1.desc')} />
+      <div class="-mt-12"></div>
+      <Note title={t(dict, 'book.errors.e2.title')} description={t(dict, 'book.errors.e2.desc')} />
+      <div class="-mt-12"></div>
+      <Note title={t(dict, 'book.errors.e3.title')} description={t(dict, 'book.errors.e3.desc')} />
+    </section>
 
-        <Note title="Erreur n°3 : " description="Pour aller plus vite, il faut appuyer plus fort." />
-      </section>
+    <!-- METHOD -->
+    <Features
+      columns={1}
+      title={t(dict, 'book.method.title')}
+      items={[
+        {
+          title: t(dict, 'book.method.p1.title'),
+          description: t(dict, 'book.method.p1.desc'),
+          icon: 'tabler:alert-triangle',
+        },
+        {
+          title: t(dict, 'book.method.p2.title'),
+          description: t(dict, 'book.method.p2.desc'),
+          icon: 'tabler:wind',
+        },
+        {
+          title: t(dict, 'book.method.p3.title'),
+          description: t(dict, 'book.method.p3.desc'),
+          icon: 'tabler:search',
+        },
+        {
+          title: t(dict, 'book.method.p4.title'),
+          description: t(dict, 'book.method.p4.desc'),
+          icon: 'tabler:target-arrow',
+        },
+      ]}
+    />
 
-      <!-- SECTION 2 -->
-      <section>
-        <Features
-          columns={1}
-          title="Entrainer son aérodynamisme, c'est:"
-          items={[
-            {
-              title: 'Principe :  Dépasser les idées reçues',
-              description:
-                'L’aérodynamisme ne compterait qu’au-delà de 35 km/h ?  <br/> Serait uniquement une question de matériel ? <br/>  Ces idées sont répandues.  La physique montre autre chose.',
-              icon: 'tabler:alert-triangle',
-            },
-            {
-              title: 'Objectif :  Optimiser ta vitesse',
-              description:
-                "Améliorer ses performances, c'est optimiser sa vitesse, pas sa puissance.<br/> Et ça passe par l'aérodynamisme. de ta position.",
-              icon: 'tabler:wind',
-            },
+    <Note title={t(dict, 'book.philo.title')} description={t(dict, 'book.philo.desc')} />
 
-            {
-              title: 'Méthode  :  Évaluer pour structurer',
-              description:
-                "S'entrainer au feeling ou avec des croyances limite ta vitesse.<br/> Évaluer l'efficacité aérodynamique de ta position et le compromis confort/puissance/stabilité est la base pour rouler plus vite sans plus d'effort.",
-              icon: 'tabler:search',
-            },
-            {
-              title: "Résultat : Gagner des km/h et des minutes sans plus d'effort.",
-              description:
-                'Quelque soit ton niveau et tes objectifs, une position optimale  réduit de 10 à 30% les résistances aérodynamiques avec un impact immédiat sur ton chrono. Apprends comment.',
-              icon: 'tabler:target-arrow',
-            },
-          ]}
-        />
-      </section>
+    <!-- CTA FINAL -->
+    <section class="py-16 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-8">
+        {t(dict, 'book.cta.question')}
+      </h2>
 
-      <!-- SECTION 3 -->
-      <section>
-        <Note
-          title="Notre philosophie : "
-          description="Les décisions d'entrainement doivent s'appuyer sur la science pas sur les croyances."
-        />
-      </section>
-
-      <!-- CTA FINAL -->
-      <section class="py-16 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold mb-8">
-          Combien de minutes pourrais-tu gagner avec ton niveau actuel et ton matériel ?
-        </h2>
-
-        <Button id="btn-checkout-livre-final" variant="primary" class="px-8 py-4 text-xl">
-          Accéder à la méthode
-        </Button>
-      </section>
-
-      <!-- STRIPE CHECKOUT SCRIPT -->
-      <script is:inline>
-        const callCheckoutLivre = async () => {
-          const res = await fetch('/fr/telechargement/api/create-api-livre-checkout/', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({}), // ← vide mais valide
-          });
-
-          const data = await res.json();
-
-          if (data?.url) {
-            window.location.href = data.url;
-          } else {
-            alert(data?.error || 'Erreur Stripe');
-          }
-        };
-
-        document.getElementById('btn-checkout-livre')?.addEventListener('click', callCheckoutLivre);
-
-        document.getElementById('btn-checkout-livre-final')?.addEventListener('click', callCheckoutLivre);
-      </script>
-
-      <style>
-        @keyframes floatBook {
-          0% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: scaleX(1.1) scaleY(1.1);
-          }
-          100% {
-            transform: translateY(0px);
-          }
-        }
-
-        .float-book {
-          animation: floatBook 3s ease-in-out infinite;
-          will-change: transform;
-        }
-      </style>
+      <Button id="btn-checkout-livre-final" variant="primary" class="px-8 py-4 text-xl">
+        {t(dict, 'book.cta.button')}
+      </Button>
     </section>
   </section>
+
+  <!-- CHECKOUT -->
+  <script define:vars={{ checkoutUrl }}>
+    const callCheckoutLivre = async () => {
+      const res = await fetch(checkoutUrl, {
+        method: 'POST',
+      });
+
+      const data = await res.json();
+
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data?.error || 'Stripe error');
+      }
+    };
+
+    document.getElementById('btn-checkout-livre')?.addEventListener('click', callCheckoutLivre);
+    document.getElementById('btn-checkout-livre-final')?.addEventListener('click', callCheckoutLivre);
+  </script>
+  <style>
+    @keyframes floatBook {
+      0% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-14px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    .float-book {
+      animation: floatBook 3s ease-in-out infinite;
+      will-change: transform;
+    }
+  </style>
 </Layout>

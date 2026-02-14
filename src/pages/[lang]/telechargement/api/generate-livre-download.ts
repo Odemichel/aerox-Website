@@ -27,6 +27,18 @@ export const GET: APIRoute = async ({ request }) => {
         if (session.payment_status !== 'paid') {
             return new Response(JSON.stringify({ error: 'Payment not completed' }), { status: 403 });
         }
+        const lineItems = await stripe.checkout.sessions.listLineItems(sessionId);
+        const PRICE_ID = import.meta.env.STRIPE_PRICE_LIVRE_ID as string;
+
+        const hasCorrectProduct = lineItems.data.some(
+            item => item.price?.id === PRICE_ID
+        );
+        console.log('produit correct:', hasCorrectProduct);
+
+        if (!hasCorrectProduct) {
+            return new Response(JSON.stringify({ error: 'Invalid product' }), { status: 403 });
+        }
+
 
         // 📦 Génère URL signée Supabase
         const { data, error } = await supabase.storage

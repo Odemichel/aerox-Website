@@ -37,17 +37,33 @@ export function makeNavigation(langInput?: string) {
         text: '',
         links: [
           // Home
-          { text: t('nav.home'), href: withLang(lang, getPermalink('/')) }, // => "/fr/"
+          {
+            text: t('nav.home'), href: withLang(lang, getPermalink('/')), icon: "tabler:home"
+          }, // => "/fr/"
           // Ancres -> home + #id
-          { text: t('nav.features'), href: withLang(lang, '#features') },       // => "/fr/#features"
-          { text: t('nav.why'), href: withLang(lang, '#pourquoi') },       // => "/fr/#pourquoi"
-          { text: t('nav.pricing'), href: withLang(lang, '#pricing') },        // => "/fr/#pricing"
-          { text: t('nav.faq'), href: withLang(lang, '#FAQs') },           // => "/fr/#FAQs"
-          // Pages
-          { text: t('nav.story'), href: withLang(lang, getPermalink('/team/')) },
-          { text: t('nav.contact'), href: withLang(lang, getPermalink('/contact/')) },
-          { text: t('nav.blog'), href: withLang(lang, getPermalink('/blog/')) },
-          { text: t('nav.login'), href: withLang(lang, getPermalink('/inscription/connexion/')) },
+          {
+            text: t('nav.features'), href: withLang(lang, '#features'), icon: "tabler:apps"
+          },       // => "/fr/#features"
+          {
+            text: t('nav.pricing'), href: withLang(lang, '#pricing'), icon: "tabler:currency-dollar"
+
+          },        // => "/fr/#pricing"
+          {
+            text: t('nav.book'), href: withLang(lang, '/livre/'), icon: "tabler:bolt"
+          },        // => "/fr/#pricing"
+          {
+            text: t('nav.blog'), href: withLang(lang, getPermalink('/blog/')), icon: "tabler:article"
+          },
+          {
+            text: t('nav.contact'), href: withLang(lang, getPermalink('/contact/')), icon: "tabler:mail"
+          },
+          {
+            text: t('nav.login'), href: withLang(lang, getPermalink('/inscription/connexion/')), icon: "tabler:user"
+          },
+          /*  { text: t('nav.why'), href: withLang(lang, '#pourquoi') },       // => "/fr/#pourquoi"
+               { text: t('nav.faq'), href: withLang(lang, '#FAQs') },           // => "/fr/#FAQs"
+              { text: t('nav.story'), href: withLang(lang, getPermalink('/team/')) },    
+             */
         ],
       },
     ],
@@ -72,6 +88,8 @@ export function makeNavigation(langInput?: string) {
         title: t('footer.contact.title'),
         links: [
           { text: t('footer.team'), href: withLang(lang, '/team') },
+          { text: t('footer.story'), href: withLang(lang, '/team') },
+
           { text: t('footer.contactUs'), href: withLang(lang, '/contact') }, // i18n si nécessaire
         ],
       },
@@ -81,9 +99,10 @@ export function makeNavigation(langInput?: string) {
         text: t('footer.privacy'),
         href: withLang(lang, '/privacy'),
       },
-      { text: t('footer.terms'), 
-        href:withLang(lang, '/terms'),
-},
+      {
+        text: t('footer.terms'),
+        href: withLang(lang, '/terms'),
+      },
     ],
     socialLinks: [], // requis par Props de Footer.astro
     footNote: t('footer.footnote'),

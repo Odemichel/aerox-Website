@@ -226,11 +226,12 @@
   "nav.home": "Accueil",
   "nav.features": "Fonctionnalités",
   "nav.why": "Pourquoi AeroX ?",
-  "nav.pricing": "Abonnements",
+  "nav.pricing": "Tarifs",
   "nav.faq": "FAQs",
   "nav.story": "L'histoire d'AeroX",
   "nav.contact": "Contact",
-  "nav.blog": "Nos Articles",
+  "nav.blog": "Articles",
+  "nav.book":"La Méthode AeroX",
   "nav.login": "Connexion",
 
   "nav.cta.mobile": "Télécharger",
@@ -239,6 +240,8 @@
 
   "footer.contact.title": "Contact",
   "footer.team": "Équipe",
+  "footer.story":"L'histoire d'AeroX",
+
   "footer.contactUs": "Contactez-nous",
   "footer.privacy": "Règles de Confidentialité",
   "footer.terms": "CGV",
@@ -247,10 +250,10 @@
   "blog.title": "Nos Articles",
   "blog.subtitle": "Conseils, analyses et innovations pour optimiser ton entraînement vélo et triathlon",
 
-   "contact.title": "Contact AeroX",
+  "contact.title": "Contact AeroX",
   "contact.description": "Besoin d'aide ou d'informations ? Contactez directement l'équipe AeroX par email.",
   "contact.heading": "Contact AeroX",
-    "contact.not_ready": "AeroX est en phase finale d'optimisation et sera disponible très bientôt.",
+  "contact.not_ready": "AeroX est en phase finale d'optimisation et sera disponible très bientôt.",
 
   "contact.intro": "Pour tester en avant-première ou toute autre demande, contactez-nous directement :",
   "contact.aria": "Envoyer un email à contact@aeroxbefaster.com",
@@ -362,9 +365,64 @@
   "cancel.livre.title": "Aïe !",
   "cancel.livre.message1": "Une erreur s'est produite, ton paiement a été refusé.",
   "cancel.livre.message2": "Réessaye le paiement ou contacte l'administrateur.",
-  "cancel.livre.backHome": "Retour à l’accueil"
+  "cancel.livre.backHome": "Retour à l’accueil",
   
+"book.meta.title": "Le guide scientifique de l’aérodynamique en cyclisme",
+"book.meta.description": "Comprendre la relation puissance-vitesse et structurer un entraînement aérodynamique efficace.",
 
+"book.hero.alt": "Couverture du livre aérodynamique",
+"book.hero.title.l1": "L'aéro n'est pas réservé aux pros,",
+"book.hero.title.l2": "roule à la vitesse que tu mérites.",
+"book.hero.text": "Ce guide redéfinit la performance cycliste en positionnant l'aérodynamisme au cœur de l'entraînement.<br/><br/>Une approche scientifique pour mesurer l’impact réel de ta position sur ta vitesse.",
+"book.hero.cta": "Commence à rouler à la vitesse que tu mérites",
+
+"book.gain.title": "Une position aérodynamique optimale",
+"book.gain.desc": "Peut te faire gagner jusqu'à 45 minutes sur Ironman, jusqu'à 6 km/h en sprint ou économiser plus de 50 W à vitesse constante.<br/><span class='text-primary'>Sans changer de matériel ni de niveau.</span>",
+
+"book.vision.title": "Notre vision",
+"book.vision.desc": "L’aérodynamisme est un levier majeur de la performance cycliste.",
+
+"book.target.title": "À qui s'adresse cette méthode",
+"book.target.good.title": "À ceux qui refusent d’optimiser au hasard",
+"book.target.good.desc": "Athlètes, coachs et bike fitters conscients de l’impact décisif de la position sur la performance.",
+"book.target.bad.title": "Ce guide n'est pas pour toi",
+"book.target.bad.desc": "Si tu considères que la performance se résume à produire plus de watts ou changer de matériel.",
+
+"book.errors.e1.title": "Erreur n°1",
+"book.errors.e1.desc": "À moins de 30 km/h, l’aérodynamisme ne sert à rien.",
+"book.errors.e2.title": "Erreur n°2",
+"book.errors.e2.desc": "Pour être plus rapide, il faut d'abord du nouveau matériel.",
+"book.errors.e3.title": "Erreur n°3",
+"book.errors.e3.desc": "Pour aller plus vite, il faut appuyer plus fort.",
+
+"book.method.title": "S’entraîner à l’aérodynamisme",
+"book.method.p1.title": "Dépasser les idées reçues",
+"book.method.p1.desc": "L’aérodynamisme ne compterait qu’au-delà de 35 km/h ou ne serait qu’une question de matériel. La physique montre autre chose.",
+"book.method.p2.title": "Optimiser ta vitesse",
+"book.method.p2.desc": "Améliorer ses performances, c’est optimiser sa vitesse, pas seulement sa puissance.",
+"book.method.p3.title": "Évaluer pour structurer",
+"book.method.p3.desc": "Mesurer l’efficacité aérodynamique de ta position est la base pour rouler plus vite sans plus d’effort.",
+"book.method.p4.title": "Gagner des km/h",
+"book.method.p4.desc": "Une position optimale réduit jusqu’à 30% les résistances aérodynamiques.",
+
+"book.philo.title": "Notre philosophie",
+"book.philo.desc": "Les décisions d’entraînement doivent s’appuyer sur la science, pas sur les croyances.",
+
+"book.cta.question": "Combien de minutes pourrais-tu gagner avec ton niveau actuel ?",
+"book.cta.button": "Accéder à la méthode",
+
+"success_livre.meta.title": "Paiement confirmé — AeroX",
+"success_livre.meta.description": "Votre achat est confirmé. Téléchargez votre guide d’aérodynamique.",
+
+"success_livre.title": "Paiement confirmé",
+"success_livre.subtitle": "Votre guide d’entraînement aérodynamique est prêt à être téléchargé.",
+
+"success_livre.image.alt": "Couverture du guide aérodynamique",
+
+"success_livre.download": "Télécharger le guide",
+"success_livre.validity": "Lien valable pendant 10 minutes",
+
+"success_livre.backHome": "Retour à l'accueil"
 
 
 }

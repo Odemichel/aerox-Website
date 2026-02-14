@@ -15,6 +15,9 @@ tags:
 metadata:
   description: "Scientific analysis of an incredible performance at the 2025 Amstel Gold Race: how a more compact position can be enough to reverse the outcome of a race."
 ---
+import Image from '~/components/common/Image.astro';
+import Amstel_Pog_vs_EvenP from '~/assets/images/blog/Amstel_Pog_vs_EvenP-article.png';
+
 
 ## Introduction
 Amstel Gold Race 2025.
@@ -43,23 +46,57 @@ Especially considering that throughout the season, Evenepoel has not shown clear
 Another lever must therefore be considered.
 
 ## The “aerodynamic” hypothesis
-What the images show
-When observing the pursuit and comparing the positions adopted by Tadej and Remco, a key difference stands out.
-Evenepoel adopts an extremely compact position:
-- Lowered torso
-- Elbows tucked in
-- Head down
-- Forearms nearly horizontal
 
-Pogačar, on the other hand, remains slightly more upright.
-Visually, the difference in frontal surface area is clear. Close to 10% more compact for Remco.
+  When observing the pursuit and comparing the positions adopted by Tadej and Remco,
+      a key difference stands out.
+<div class="grid md:grid-cols-2 gap-10  items-center ">
 
-**TPhysical translation**
-erodynamic drag represents more than 90% of total power output at these speeds.
+  <div class="flex justify-center">
+    <div class="w-[90%] md:[100%]">
+      <Image
+        src={Amstel_Pog_vs_EvenP}
+        alt="Gain chronométrique selon la vitesse initiale"
+        class="rounded-lg shadow-lg w-full h-auto"
+        widths={[600, 1000, 1400]}
+        sizes="(max-width: 768px) 80vw, 50vw"
+      />
+    </div>
+  </div>
+
+  <div class="space-y-4 ">
+   
+
+    <p>
+      <strong>Evenepoel adopts an extremely compact position:</strong>
+    </p>
+
+    <ul class="list-disc pl-6 space-y-1">
+      <li>Lowered torso</li>
+      <li>Elbows tucked in</li>
+      <li>Head down</li>
+      <li>Forearms nearly horizontal</li>
+    </ul>
+
+    <p>
+      <strong>Pogačar, on the other hand, remains slightly more upright. <br/> </strong>
+    </p>
+
+    
+  </div>
+
+</div>
+
+
+      Visually, the difference in frontal surface area is clear:
+        nearly 10% more compact for Remco.
+
+**Physical translation**
+
+Aerodynamic drag represents more than 90% of total power output at these speeds.
 Reducing frontal area lowers drag and therefore allows higher speed at the same power.
 
 In practice, a 10% variation in frontal area is enough to generate more than 1 km/h difference at these speeds:
-Tadej rides at 43 km/h, Remco at 44.3 km/h.
+Tadej rides at 43 km/h, Remco at 44.2 km/h.
 On each kilometer, Remco gains 2 to 3 seconds. Over 18 km, the 40 seconds are erased.
 
 A more aerodynamic position alone can therefore be sufficient to explain the gap.
