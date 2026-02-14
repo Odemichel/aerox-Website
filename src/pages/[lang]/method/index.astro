@@ -9,6 +9,7 @@ import livreCover from '~/assets/images/livre/image_livre_entrainer-aero.png';
 
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
+import StepsSansImage from '~/components/widgets/StepsSansImage.astro';
 
 export const prerender = true;
 
@@ -30,7 +31,7 @@ const checkoutUrl = localizedHref(lang, '/telechargement/api/create-api-livre-ch
   <!-- HERO -->
   <section class="py-4">
     <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 items-center">
-      <div class="flex justify-center">
+      <div class="flex flex-col items-center">
         <img
           src={livreCover.src}
           width={livreCover.width}
@@ -68,6 +69,17 @@ const checkoutUrl = localizedHref(lang, '/telechargement/api/create-api-livre-ch
           description: t(dict, 'book.gain.desc'),
           icon: 'tabler:target-arrow',
         },
+      ]}
+    />
+
+    <StepsSansImage
+      title={t(dict, 'book.content.title')}
+      items={[
+        { title: t(dict, 'book.content.p1'), icon: 'tabler:book' },
+        { title: t(dict, 'book.content.p2'), icon: 'tabler:brain' },
+        { title: t(dict, 'book.content.p3'), icon: 'tabler:chart-line' },
+        { title: t(dict, 'book.content.p4'), icon: 'tabler:adjustments' },
+        { title: t(dict, 'book.content.p5'), icon: 'tabler:target-arrow' },
       ]}
     />
 
@@ -129,8 +141,8 @@ const checkoutUrl = localizedHref(lang, '/telechargement/api/create-api-livre-ch
     />
 
     <Note title={t(dict, 'book.philo.title')} description={t(dict, 'book.philo.desc')} />
-    <Features
-      columns={1}
+
+    <StepsSansImage
       title={t(dict, 'book.concrete.title')}
       items={[
         {
@@ -148,6 +160,10 @@ const checkoutUrl = localizedHref(lang, '/telechargement/api/create-api-livre-ch
         {
           title: t(dict, 'book.concrete.p4.title'),
           icon: 'tabler:target-arrow',
+        },
+        {
+          title: t(dict, 'book.concrete.p5.title'),
+          icon: 'tabler:wind',
         },
       ]}
     />

@@ -394,11 +394,19 @@
 "book.method.p4.title": "Gain real speed",
 "book.method.p4.desc": "An optimal position can reduce aerodynamic drag by up to 30%.",
 
-"book.concrete.title": "What this method will change for you",
+"book.concrete.title": "What this method will change in the way you perform",
 "book.concrete.p1.title": "Understand why your sensations already make you lose precious minutes",
-"book.concrete.p2.title": "Discover the real performance gains your position can deliver immediately",
-"book.concrete.p3.title": "Structure your training to ride faster without changing equipment",
-"book.concrete.p4.title": "Experience a new feeling of speed and fluidity on the bike",
+"book.concrete.p2.title": "Assess how much time you can gain with an optimized position",
+"book.concrete.p3.title": "Discover the 3 pillars of true aerodynamic skill",
+"book.concrete.p4.title": "Structure your training to master your aerodynamics",
+"book.concrete.p5.title": "Experience a new feeling of speed and fluidity you’ve never known before",
+
+"book.content.title": "What you will actually get in the guide",
+"book.content.p1": "A clear and concise 60-page guide",
+"book.content.p2": "Physical principles explained simply to understand aerodynamics",
+"book.content.p3": "Analysis of 4 real performances based on true aerodynamic mastery",
+"book.content.p4": "A method to estimate your real gains in speed, time and watts",
+"book.content.p5": "A practical framework to train your aerodynamic position effectively",
 
 "book.philo.title": "Our philosophy",
 "book.philo.desc": "Training decisions should rely on science, not beliefs.",
