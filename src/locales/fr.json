@@ -409,7 +409,7 @@
 "book.method.p4.desc": "Une position optimale réduit jusqu’à 30% les résistances aérodynamiques.",
 
 "book.concrete.title": "Ce que cette méthode va réellement changer pour toi: ",
-"book.concrete.p1.title": "Comprends pourquoi tu perd des minutes à cause de tes sensations",
+"book.concrete.p1.title": "Comprends pourquoi tes sensations te font perdre des minutes",
 "book.concrete.p2.title": "Évalue le temps que tu peux gagner avec  une position optimisée",
 "book.concrete.p3.title": "Découvre les 3 piliers d'une véritable compétence aérodynamique",
 "book.concrete.p4.title": "Structure ton entraînement pour maitriser ton aérodynamisme",
@@ -421,6 +421,12 @@
 "book.content.p3": "L’analyse de 4 performances réelles basées sur une véritable maîtrise aérodynamique",
 "book.content.p4": "Une méthode pour estimer concrètement tes gains en vitesse, en minutes et en watts",
 "book.content.p5": "Une méthodologie pratique pour entraîner efficacement ta position",
+
+"book.price.desc": "Un travail scientifique, concret et directement applicable pour comprendre et entraîner ton aérodynamisme.",
+"book.price.old": "39€",
+"book.price.new": "29€ aujourd’hui",
+"book.price.urgency": "Offre de lancement valable encore 48h",
+"book.price.cta": "Accéder immédiatement au guide",
 
 "book.philo.title": "Notre philosophie",
 "book.philo.desc": "Les décisions d’entraînement doivent s’appuyer sur la science, pas sur les croyances.",
