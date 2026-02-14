@@ -49,7 +49,7 @@ export function makeNavigation(langInput?: string) {
 
           },        // => "/fr/#pricing"
           {
-            text: t('nav.book'), href: withLang(lang, '/livre/'), icon: "tabler:bolt"
+            text: t('nav.book'), href: withLang(lang, '/method/'), icon: "tabler:bolt"
           },        // => "/fr/#pricing"
           {
             text: t('nav.blog'), href: withLang(lang, getPermalink('/blog/')), icon: "tabler:article"

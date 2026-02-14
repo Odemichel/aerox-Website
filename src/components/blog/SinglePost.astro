@@ -1,4 +1,5 @@
 ---
+import type { GetStaticPaths } from 'astro';
 import { Icon } from 'astro-icon/components';
 import PostTags from '~/components/blog/Tags.astro';
 import SocialShare from '~/components/common/SocialShare.astro';
@@ -8,6 +9,15 @@ import { getPermalink } from '~/utils/permalinks';
 import { getFormattedDate } from '~/utils/utils';
 import { blogImages } from '../../data/blogImages';
 import Button from '../ui/Button.astro';
+
+import { getDict, SUPPORTED_LOCALES, t, type Locale } from '~/lib/i18n';
+
+export const prerender = true;
+
+export const getStaticPaths: GetStaticPaths = async () => SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
+
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
 
 export interface Props {
   post: Post;
@@ -99,8 +109,14 @@ const image = post.imageKey ? blogImages[post.imageKey] : undefined;
     </div>
 
     <div class="flex justify-center mt-8">
+      <Button variant="primary" class="px-3 md:px-3 items-center" href={LINKS.method}>
+        {t(dict, 'blog.aerox.method')}
+        <Icon name="tabler:chevron-right" class="w-5 h-5 ml-1.5" />
+      </Button>
+    </div>
+    <div class="flex justify-center mt-8">
       <Button variant="primary" class="px-3 md:px-3 items-center" href={LINKS.pricing}>
-        Les offres AeroX
+        {t(dict, 'blog.aerox.offers')}
         <Icon name="tabler:chevron-right" class="w-5 h-5 ml-1.5" />
       </Button>
     </div>

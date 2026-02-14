@@ -248,6 +248,9 @@
   "footer.footnote": "Made by O. Demichel · Tous droits réservés.",
 
   "blog.title": "Nos Articles",
+  "blog.aerox.offers":"Découvre AeroX",
+    "blog.aerox.method":"Les bases de l'entrainement aérodynamique",
+
   "blog.subtitle": "Conseils, analyses et innovations pour optimiser ton entraînement vélo et triathlon",
 
   "contact.title": "Contact AeroX",
@@ -373,7 +376,7 @@
 "book.hero.alt": "Couverture du livre aérodynamique",
 "book.hero.title.l1": "L'aéro n'est pas réservé aux pros,",
 "book.hero.title.l2": "roule à la vitesse que tu mérites.",
-"book.hero.text": "Ce guide redéfinit la performance cycliste en positionnant l'aérodynamisme au cœur de l'entraînement.<br/><br/>Une approche scientifique pour mesurer l’impact réel de ta position sur ta vitesse.",
+"book.hero.text": "Ce guide redéfinit la performance cycliste en positionnant l'aérodynamisme au cœur de l'entraînement.<br/><br/>Une approche scientifique pour mesurer et surtout optimiser l’impact réel de ta position sur ta vitesse.",
 "book.hero.cta": "Commence à rouler à la vitesse que tu mérites",
 
 "book.gain.title": "Une position aérodynamique optimale",

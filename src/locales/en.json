@@ -246,6 +246,8 @@
   "footer.footnote": "Made by O. Demichel · All rights reserved.",
 
   "blog.title": "Our Articles",
+  "blog.aerox.offers":"Discover AeroX",
+  "blog.aerox.method":"Basics of aerodynamic training",
   "blog.subtitle": "Tips, insights, and innovations to optimize your cycling and triathlon training",
 
    "contact.title": "Contact AeroX",
@@ -360,7 +362,7 @@
 "book.hero.alt": "Aerodynamics book cover",
 "book.hero.title.l1": "Aerodynamics isn't just for pros,",
 "book.hero.title.l2": "ride at the speed you deserve.",
-"book.hero.text": "This guide redefines cycling performance by placing aerodynamics at the core of training.<br/><br/>A scientific approach to measure the real impact of your position on speed.",
+"book.hero.text": "This guide redefines cycling performance by placing aerodynamics at the core of training.<br/><br/>A scientific approach to measure  and optimize the real impact of your position on speed.",
 "book.hero.cta": "Start riding at the speed you deserve",
 
 "book.gain.title": "An optimal aerodynamic position",
