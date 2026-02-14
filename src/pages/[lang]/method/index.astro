@@ -129,6 +129,28 @@ const checkoutUrl = localizedHref(lang, '/telechargement/api/create-api-livre-ch
     />
 
     <Note title={t(dict, 'book.philo.title')} description={t(dict, 'book.philo.desc')} />
+    <Features
+      columns={1}
+      title={t(dict, 'book.concrete.title')}
+      items={[
+        {
+          title: t(dict, 'book.concrete.p1.title'),
+          icon: 'tabler:alert-triangle',
+        },
+        {
+          title: t(dict, 'book.concrete.p2.title'),
+          icon: 'tabler:wind',
+        },
+        {
+          title: t(dict, 'book.concrete.p3.title'),
+          icon: 'tabler:search',
+        },
+        {
+          title: t(dict, 'book.concrete.p4.title'),
+          icon: 'tabler:target-arrow',
+        },
+      ]}
+    />
 
     <!-- CTA FINAL -->
     <section class="py-16 text-center">
