@@ -37,21 +37,6 @@ const metadata = {
           class="w-[70%] md:w-[80%] max-w-md float-book"
           loading="eager"
         />
-        <!-- TÉMOIGNAGE -->
-        <Testimonials
-          id="utilisateurs"
-          title={t(dict, 'livre.testimonials.title')}
-          subtitle={t(dict, 'livre.testimonials.subtitle')}
-          subsubtitle={t(dict, 'home.testimonials.subsubtitle')}
-          testimonials={[
-            {
-              testimonial:
-                "J'ai dévoré cet ouvrage d'une traite. Clairement, ça change radicalement la donne... et mes perspectives d'entraînement ! ",
-              name: 'Philippe',
-              job: t(dict, 'Triathlète'),
-            },
-          ]}
-        />
       </div>
 
       <div>
@@ -64,35 +49,37 @@ const metadata = {
 
         <p class="text-xl text-muted mb-8" set:html={t(dict, 'book.hero.text')} />
 
-        <form id="form-livre" class="flex flex-col items-center gap-4 max-w-md mx-auto mt-6">
+        <form
+          id="form-livre"
+          class="flex flex-col items-center gap-4 max-w-md mx-auto mt-6"
+          data-success={t(dict, 'book.form.success')}
+          data-error={t(dict, 'book.form.error')}
+        >
           <input
             type="text"
             id="name-livre"
-            placeholder="Ton prénom"
+            placeholder={t(dict, 'book.form.name.placeholder')}
             required
-            class="w-full border rounded p-3 text-secondary"
+            class="w-full border rounded p-2 text-secondary"
           />
           <input
             type="email"
             id="email-livre"
-            placeholder="Ton adresse email"
+            placeholder={t(dict, 'book.form.email.placeholder')}
             required
-            class="w-full border rounded p-3 text-secondary"
+            class="w-full border rounded p-2 text-secondary"
           />
           <input
             type="tel"
             id="phone-livre"
-            placeholder="Ton numéro de téléphone (optionnel)"
-            class="w-full border rounded p-3 text-secondary"
+            placeholder={t(dict, 'book.form.phone.placeholder')}
+            class="w-full border rounded p-2 text-secondary"
           />
-          <div class="flex items-center gap-3 w-full">
-            <input type="checkbox" id="whatsapp-livre" class="h-4 w-4" />
-            <label for="whatsapp-livre" class="text-sm text-muted"> Ce numéro est joignable sur WhatsApp </label>
-          </div>
-          <button type="submit" class="btn-primary px-8 py-4 text-xl w-full">
-            Je télécharge le guide gratuitement
+
+          <button type="submit" class="btn-primary px-4 py-3 text-xl w-full">
+            {t(dict, 'book.form.submit')}
           </button>
-          <p class="text-sm text-muted">🔒 Pas de spam. Désinscription possible à tout moment.</p>
+          <p class="text-sm text-muted">{t(dict, 'book.form.privacy')}</p>
           <p id="msg-livre" class="text-sm mt-2 hidden"></p>
         </form>
       </div>
@@ -101,6 +88,35 @@ const metadata = {
 
   <!-- GAIN -->
   <section class="justify-items-center mt-8">
+    <!-- TÉMOIGNAGE -->
+    <Testimonials
+      id="utilisateurs"
+      title={t(dict, 'book.testimonials.title')}
+      subtitle={t(dict, 'book.testimonials.subtitle')}
+      subsubtitle={t(dict, 'book.testimonials.subsubtitle')}
+      testimonials={[
+        {
+          testimonial: t(dict, 'book.testimonials.t1'),
+          name: 'Philippe G.',
+          job: t(dict, 'book.testimonials.triathlete'),
+        },
+        {
+          testimonial: t(dict, 'book.testimonials.t2'),
+          name: 'Thomas G.',
+          job: t(dict, 'book.testimonials.bikefitter'),
+        },
+        {
+          testimonial: t(dict, 'book.testimonials.t3'),
+          name: 'Claude D.',
+          job: t(dict, 'book.testimonials.triathlete'),
+        },
+        {
+          testimonial: t(dict, 'book.testimonials.t4'),
+          name: 'Kémaël S.',
+          job: t(dict, 'book.testimonials.cyclist'),
+        },
+      ]}
+    />
     <Features
       columns={1}
       items={[
@@ -142,15 +158,6 @@ const metadata = {
         },
       ]}
     />
-
-    <!-- ERREURS -->
-    <section>
-      <Note title={t(dict, 'book.errors.e1.title')} description={t(dict, 'book.errors.e1.desc')} />
-      <div class="-mt-12"></div>
-      <Note title={t(dict, 'book.errors.e2.title')} description={t(dict, 'book.errors.e2.desc')} />
-      <div class="-mt-12"></div>
-      <Note title={t(dict, 'book.errors.e3.title')} description={t(dict, 'book.errors.e3.desc')} />
-    </section>
 
     <!-- METHOD -->
     <Features
@@ -232,35 +239,37 @@ const metadata = {
         {t(dict, 'book.cta.question')}
       </h2>
 
-      <form id="form-livre-final" class="flex flex-col items-center gap-4 max-w-md mx-auto mt-6">
+      <form
+        id="form-livre-final"
+        class="flex flex-col items-center gap-4 max-w-md mx-auto mt-6"
+        data-success={t(dict, 'book.form.success')}
+        data-error={t(dict, 'book.form.error')}
+      >
         <input
           type="text"
           id="name-livre-final"
-          placeholder="Ton prénom"
+          placeholder={t(dict, 'book.form.name.placeholder')}
           required
-          class="w-full border rounded p-3 text-secondary"
+          class="w-full border rounded p-2 text-secondary"
         />
         <input
           type="email"
           id="email-livre-final"
-          placeholder="Ton adresse email"
+          placeholder={t(dict, 'book.form.email.placeholder')}
           required
-          class="w-full border rounded p-3 text-secondary"
+          class="w-full border rounded p-2 text-secondary"
         />
         <input
           type="tel"
           id="phone-livre-final"
-          placeholder="Ton numéro de téléphone (optionnel)"
-          class="w-full border rounded p-3 text-secondary"
+          placeholder={t(dict, 'book.form.phone.placeholder')}
+          class="w-full border rounded p-2 text-secondary"
         />
-        <div class="flex items-center gap-3 w-full">
-          <input type="checkbox" id="whatsapp-livre-final" class="h-4 w-4" />
-          <label for="whatsapp-livre-final" class="text-sm text-muted"> Ce numéro est joignable sur WhatsApp </label>
-        </div>
-        <button type="submit" class="btn-primary px-8 py-4 text-xl w-full">
-          Je télécharge le guide gratuitement
+
+        <button type="submit" class="btn-primary px-8 py-2 text-xl w-full">
+          {t(dict, 'book.form.submit')}
         </button>
-        <p class="text-sm text-muted">🔒 Pas de spam. Désinscription possible à tout moment.</p>
+        <p class="text-sm text-muted">{t(dict, 'book.form.privacy')}</p>
         <p id="msg-livre-final" class="text-sm mt-2 hidden"></p>
       </form>
     </section>
@@ -278,24 +287,23 @@ const metadata = {
         const name = (document.getElementById(`name-${suffix}`) as HTMLInputElement).value.trim();
         const email = (document.getElementById(`email-${suffix}`) as HTMLInputElement).value.trim();
         const phone = (document.getElementById(`phone-${suffix}`) as HTMLInputElement).value.trim();
-        const whatsapp = (document.getElementById(`whatsapp-${suffix}`) as HTMLInputElement).checked;
 
         const lang = window.location.pathname.split('/')[1] || 'fr';
         const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, phone, whatsapp }),
+          body: JSON.stringify({ name, email, phone }),
         });
 
         const data = await res.json();
         msg?.classList.remove('hidden', 'text-red-600', 'text-green-600');
 
         if (data.success) {
-          msg!.textContent = "C'est parti ! Vérifie ta boîte mail, le guide arrive 📩";
+          msg!.textContent = form?.dataset.success ?? '';
           msg?.classList.add('text-green-600');
           form.reset();
         } else {
-          msg!.textContent = 'Une erreur est survenue, réessaie.';
+          msg!.textContent = form?.dataset.error ?? '';
           msg?.classList.add('text-red-600');
         }
         msg?.classList.remove('hidden');

@@ -363,7 +363,24 @@
 "book.hero.title.l1": "Aerodynamics isn't just for pros,",
 "book.hero.title.l2": "ride at the speed you deserve.",
 "book.hero.text": "This guide redefines cycling performance by placing aerodynamics at the core of training.<br/><br/>A scientific approach to measure  and optimize the real impact of your position on speed.",
-"book.hero.cta": "Buy our aero method now",
+"book.form.name.placeholder": "Your first name",
+"book.form.email.placeholder": "Your email address",
+"book.form.phone.placeholder": "Your phone number (optional)",
+"book.form.submit": "Download the guide for free",
+"book.form.privacy": "🔒 No spam. Unsubscribe at any time.",
+"book.form.success": "You're all set! Check your inbox, the guide is on its way 📩",
+"book.form.error": "Something went wrong, please try again.",
+
+"book.testimonials.t1": "I read this book in one go. It’s a real game-changer — for how I train and how I think about performance.",
+"book.testimonials.t2": "With this new knowledge, AeroX will clearly have a major impact on my clients’ performance.",
+"book.testimonials.t3": "Everything is explained clearly and smoothly. <br/> The teaching effort is constant — an excellent book everyone should read.",
+"book.testimonials.t4": "I finally understood how important my position is — it’s crazy that no one explains it this way! Bravo!<br/> I can’t wait to start working with AeroX.",
+"book.testimonials.title": "Testimonials",
+"book.testimonials.subtitle": "What readers say about our guide",
+"book.testimonials.subsubtitle": "Triathletes, cyclists and coaches share their experience after reading the AeroX aerodynamics guide.",
+"book.testimonials.triathlete": "Triathlete",
+"book.testimonials.bikefitter": "Bike Fitter",
+"book.testimonials.cyclist": "Amateur cyclist",
 
 "book.gain.title": "An optimal aerodynamic position",
 "book.gain.desc": "Can save up to 45 minutes on an Ironman, increase sprint speed by up to 6 km/h, or save more than 50 W at constant speed.<br/><span class='text-primary'>Without changing equipment.</span>",
@@ -409,17 +426,10 @@
 "book.content.p5": "A practical framework to train your aerodynamic position effectively",
 "book.price.desc": "A scientific, practical and immediately applicable approach to understand and train your aerodynamics.",
 
-"book.price.old": "€39",
-"book.price.new": "€29 today",
-"book.price.urgency": "Launch offer available for the next 48 hours",
-"book.price.cta": "Get instant access to the guide",
-
-
 "book.philo.title": "Our philosophy",
 "book.philo.desc": "Training decisions should rely on science, not beliefs.",
 
 "book.cta.question": "How many minutes could you gain with your current level?",
-"book.cta.button": "Access the method",
 "success_livre.meta.title": "Payment confirmed — AeroX",
 "success_livre.meta.description": "Your purchase is confirmed. Download your aerodynamics guide.",
 

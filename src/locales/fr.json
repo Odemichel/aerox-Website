@@ -379,7 +379,24 @@
 "book.hero.title.l1": "L'aéro n'est pas réservé aux pros,",
 "book.hero.title.l2": "roule à la vitesse que tu mérites.",
 "book.hero.text": "Ce guide redéfinit la performance cycliste en positionnant l'aérodynamisme au cœur de l'entraînement.<br/><br/>Une approche scientifique pour mesurer et surtout optimiser l’impact réel de ta position sur ta vitesse.",
-"book.hero.cta": "Achète notre méthode maintenant.",
+"book.form.name.placeholder": "Ton prénom",
+"book.form.email.placeholder": "Ton adresse email",
+"book.form.phone.placeholder": "Ton numéro de téléphone (optionnel)",
+"book.form.submit": "Je télécharge le guide gratuitement",
+"book.form.privacy": "🔒 Pas de spam. Désinscription possible à tout moment.",
+"book.form.success": "C'est parti ! Vérifie ta boîte mail, le guide arrive 📩",
+"book.form.error": "Une erreur est survenue, réessaie.",
+
+"book.testimonials.t1": "J'ai dévoré cet ouvrage d'une traite. Clairement, ça change radicalement la donne... et mes perspectives d'entraînement !",
+"book.testimonials.t2": "Avec ces nouvelles connaissances, Aerox va clairement impacter les performances de mes clients !!",
+"book.testimonials.t3": "Pour moi, tout est très bien expliqué, c'est clair et fluide. <br/> L'effort de pédagogie est permanent, excellent ouvrage à mettre dans toutes les mains.",
+"book.testimonials.t4": "J'ai enfin compris l'importance de ma position, c'est dingue que personne ne l'explique comme ça ! Bravo !<br/> J'ai hâte d'avoir Aerox pour me mettre au boulot !!",
+"book.testimonials.title": "Témoignages",
+"book.testimonials.subtitle": "Ce que les lecteurs disent de notre guide",
+"book.testimonials.subsubtitle": "Triathlètes, cyclistes et coachs partagent leur expérience après la lecture du guide aérodynamique AeroX.",
+"book.testimonials.triathlete": "Triathlète",
+"book.testimonials.bikefitter": "Bike Fitter",
+"book.testimonials.cyclist": "Cycliste amateur",
 
 "book.gain.title": "Une position aérodynamique optimale",
 "book.gain.desc": "Peut te faire gagner jusqu'à 45 minutes sur Ironman, jusqu'à 6 km/h en sprint ou économiser plus de 50 W à vitesse constante.<br/><span class='text-primary'>Sans changer de matériel ni de niveau.</span>",
@@ -425,16 +442,11 @@
 "book.content.p5": "Une méthodologie pratique pour entraîner efficacement ta position",
 
 "book.price.desc": "Un travail scientifique, concret et directement applicable pour comprendre et entraîner ton aérodynamisme.",
-"book.price.old": "39€",
-"book.price.new": "29€ aujourd’hui",
-"book.price.urgency": "Offre de lancement valable encore 48h",
-"book.price.cta": "Accéder immédiatement au guide",
 
 "book.philo.title": "Notre philosophie",
 "book.philo.desc": "Les décisions d’entraînement doivent s’appuyer sur la science, pas sur les croyances.",
 
 "book.cta.question": "Combien de minutes pourrais-tu gagner avec ton niveau actuel ?",
-"book.cta.button": "Accéder à la méthode",
 
 "success_livre.meta.title": "Paiement confirmé — AeroX",
 "success_livre.meta.description": "Votre achat est confirmé. Téléchargez votre guide d’aérodynamique.",
