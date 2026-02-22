@@ -3,13 +3,12 @@ import type { GetStaticPaths } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
 import Features from '~/components/widgets/Features.astro';
 import Note from '~/components/widgets/Note.astro';
-import Button from '~/components/ui/Button.astro';
 
 import livreCover from '~/assets/images/livre/image_livre_entrainer-aero.png';
 
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
-import { localizedHref } from '~/utils/localize';
 import StepsSansImage from '~/components/widgets/StepsSansImage.astro';
+import Testimonials from '~/components/widgets/Testimonials.astro';
 
 export const prerender = true;
 
@@ -23,8 +22,6 @@ const metadata = {
   description: t(dict, 'book.meta.description'),
   robots: { index: true, follow: true },
 };
-
-const checkoutUrl = localizedHref(lang, '/telechargement/api/create-api-livre-checkout/');
 ---
 
 <Layout metadata={metadata}>
@@ -40,6 +37,21 @@ const checkoutUrl = localizedHref(lang, '/telechargement/api/create-api-livre-ch
           class="w-[70%] md:w-[80%] max-w-md float-book"
           loading="eager"
         />
+        <!-- TÉMOIGNAGE -->
+        <Testimonials
+          id="utilisateurs"
+          title={t(dict, 'livre.testimonials.title')}
+          subtitle={t(dict, 'livre.testimonials.subtitle')}
+          subsubtitle={t(dict, 'home.testimonials.subsubtitle')}
+          testimonials={[
+            {
+              testimonial:
+                "J'ai dévoré cet ouvrage d'une traite. Clairement, ça change radicalement la donne... et mes perspectives d'entraînement ! ",
+              name: 'Philippe',
+              job: t(dict, 'Triathlète'),
+            },
+          ]}
+        />
       </div>
 
       <div>
@@ -52,9 +64,37 @@ const checkoutUrl = localizedHref(lang, '/telechargement/api/create-api-livre-ch
 
         <p class="text-xl text-muted mb-8" set:html={t(dict, 'book.hero.text')} />
 
-        <Button id="btn-checkout-livre" variant="primary" class="px-6 py-3 text-lg">
-          {t(dict, 'book.hero.cta')}
-        </Button>
+        <form id="form-livre" class="flex flex-col items-center gap-4 max-w-md mx-auto mt-6">
+          <input
+            type="text"
+            id="name-livre"
+            placeholder="Ton prénom"
+            required
+            class="w-full border rounded p-3 text-secondary"
+          />
+          <input
+            type="email"
+            id="email-livre"
+            placeholder="Ton adresse email"
+            required
+            class="w-full border rounded p-3 text-secondary"
+          />
+          <input
+            type="tel"
+            id="phone-livre"
+            placeholder="Ton numéro de téléphone (optionnel)"
+            class="w-full border rounded p-3 text-secondary"
+          />
+          <div class="flex items-center gap-3 w-full">
+            <input type="checkbox" id="whatsapp-livre" class="h-4 w-4" />
+            <label for="whatsapp-livre" class="text-sm text-muted"> Ce numéro est joignable sur WhatsApp </label>
+          </div>
+          <button type="submit" class="btn-primary px-8 py-4 text-xl w-full">
+            Je télécharge le guide gratuitement
+          </button>
+          <p class="text-sm text-muted">🔒 Pas de spam. Désinscription possible à tout moment.</p>
+          <p id="msg-livre" class="text-sm mt-2 hidden"></p>
+        </form>
       </div>
     </div>
   </section>
@@ -168,24 +208,22 @@ const checkoutUrl = localizedHref(lang, '/telechargement/api/create-api-livre-ch
       ]}
     />
 
-    <div class="flex flex-col items-center text-center my-12">
-      <p class="max-w-xl text-lg text-primary mb-6">
-        {t(dict, 'book.price.desc')}
-      </p>
-
-      <div class="flex items-baseline gap-4">
-        <span class="text-xl text-accent line-through">
-          {t(dict, 'book.price.old')}
-        </span>
-
-        <span class="text-4xl font-bold text-primary">
-          {t(dict, 'book.price.new')}
-        </span>
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 items-center">
+      <div class="flex flex-col items-center">
+        <img
+          src={livreCover.src}
+          width={livreCover.width}
+          height={livreCover.height}
+          alt={t(dict, 'book.hero.alt')}
+          class="w-[70%] md:w-[80%] max-w-md float-book"
+          loading="eager"
+        />
       </div>
-
-      <p class="text-sm text-muted mt-2">
-        {t(dict, 'book.price.urgency')}
-      </p>
+      <div class="flex flex-col items-center text-center my-12">
+        <p class="max-w-xl text-lg text-primary mb-6">
+          {t(dict, 'book.price.desc')}
+        </p>
+      </div>
     </div>
 
     <!-- CTA FINAL -->
@@ -194,31 +232,80 @@ const checkoutUrl = localizedHref(lang, '/telechargement/api/create-api-livre-ch
         {t(dict, 'book.cta.question')}
       </h2>
 
-      <Button id="btn-checkout-livre-final" variant="primary" class="px-8 py-4 text-xl">
-        {t(dict, 'book.price.cta')}
-      </Button>
+      <form id="form-livre-final" class="flex flex-col items-center gap-4 max-w-md mx-auto mt-6">
+        <input
+          type="text"
+          id="name-livre-final"
+          placeholder="Ton prénom"
+          required
+          class="w-full border rounded p-3 text-secondary"
+        />
+        <input
+          type="email"
+          id="email-livre-final"
+          placeholder="Ton adresse email"
+          required
+          class="w-full border rounded p-3 text-secondary"
+        />
+        <input
+          type="tel"
+          id="phone-livre-final"
+          placeholder="Ton numéro de téléphone (optionnel)"
+          class="w-full border rounded p-3 text-secondary"
+        />
+        <div class="flex items-center gap-3 w-full">
+          <input type="checkbox" id="whatsapp-livre-final" class="h-4 w-4" />
+          <label for="whatsapp-livre-final" class="text-sm text-muted"> Ce numéro est joignable sur WhatsApp </label>
+        </div>
+        <button type="submit" class="btn-primary px-8 py-4 text-xl w-full">
+          Je télécharge le guide gratuitement
+        </button>
+        <p class="text-sm text-muted">🔒 Pas de spam. Désinscription possible à tout moment.</p>
+        <p id="msg-livre-final" class="text-sm mt-2 hidden"></p>
+      </form>
     </section>
   </section>
 
-  <!-- CHECKOUT -->
-  <script define:vars={{ checkoutUrl }}>
-    const callCheckoutLivre = async () => {
-      const res = await fetch(checkoutUrl, {
-        method: 'POST',
+  <script>
+    async function submitForm(formId: string, msgId: string) {
+      const form = document.getElementById(formId) as HTMLFormElement | null;
+      const msg = document.getElementById(msgId);
+
+      form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const suffix = formId === 'form-livre' ? 'livre' : 'livre-final';
+        const name = (document.getElementById(`name-${suffix}`) as HTMLInputElement).value.trim();
+        const email = (document.getElementById(`email-${suffix}`) as HTMLInputElement).value.trim();
+        const phone = (document.getElementById(`phone-${suffix}`) as HTMLInputElement).value.trim();
+        const whatsapp = (document.getElementById(`whatsapp-${suffix}`) as HTMLInputElement).checked;
+
+        const lang = window.location.pathname.split('/')[1] || 'fr';
+        const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, phone, whatsapp }),
+        });
+
+        const data = await res.json();
+        msg?.classList.remove('hidden', 'text-red-600', 'text-green-600');
+
+        if (data.success) {
+          msg!.textContent = "C'est parti ! Vérifie ta boîte mail, le guide arrive 📩";
+          msg?.classList.add('text-green-600');
+          form.reset();
+        } else {
+          msg!.textContent = 'Une erreur est survenue, réessaie.';
+          msg?.classList.add('text-red-600');
+        }
+        msg?.classList.remove('hidden');
       });
+    }
 
-      const data = await res.json();
-
-      if (data?.url) {
-        window.location.href = data.url;
-      } else {
-        alert(data?.error || 'Stripe error');
-      }
-    };
-
-    document.getElementById('btn-checkout-livre')?.addEventListener('click', callCheckoutLivre);
-    document.getElementById('btn-checkout-livre-final')?.addEventListener('click', callCheckoutLivre);
+    submitForm('form-livre', 'msg-livre');
+    submitForm('form-livre-final', 'msg-livre-final');
   </script>
+
   <style>
     @keyframes floatBook {
       0% {

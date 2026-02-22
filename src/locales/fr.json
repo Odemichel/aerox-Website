@@ -103,6 +103,8 @@
   "home.testimonials.items.james.text": "\"Mes athlètes voient enfin l’impact de leur position. Avec zwift, ils controlaient leur puissance, maintenant j'ai un vrai levier pour leur faire gagner de la vitesse gratuite.<br /> Merci AeroX.\"",
   "home.testimonials.items.james.job": "Entraineur cyclisme - Dijon",
   "home.testimonials.cta": "Rejoins les pionniers AeroX",
+  "livre.testimonials.title": "Témoignages",
+  "livre.testimonials.subtitle": "Ce que les lecteurs disent de notre livre",
 
   "home.features.title": "Pourquoi intégrer l'aérodynamisme à ton entraînement ?",
   "home.features.subtitle": "Parce que chaque watt compte, ton budget aussi !",
@@ -249,7 +251,7 @@
 
   "blog.title": "Nos Articles",
   "blog.aerox.offers":"Découvre AeroX",
-    "blog.aerox.method":"Les bases de l'entrainement aérodynamique",
+    "blog.aerox.method":"Découvre les bases de l'entrainement aérodynamique",
 
   "blog.subtitle": "Conseils, analyses et innovations pour optimiser ton entraînement vélo et triathlon",
 
@@ -377,7 +379,7 @@
 "book.hero.title.l1": "L'aéro n'est pas réservé aux pros,",
 "book.hero.title.l2": "roule à la vitesse que tu mérites.",
 "book.hero.text": "Ce guide redéfinit la performance cycliste en positionnant l'aérodynamisme au cœur de l'entraînement.<br/><br/>Une approche scientifique pour mesurer et surtout optimiser l’impact réel de ta position sur ta vitesse.",
-"book.hero.cta": "Commence à rouler à la vitesse que tu mérites",
+"book.hero.cta": "Achète notre méthode maintenant.",
 
 "book.gain.title": "Une position aérodynamique optimale",
 "book.gain.desc": "Peut te faire gagner jusqu'à 45 minutes sur Ironman, jusqu'à 6 km/h en sprint ou économiser plus de 50 W à vitesse constante.<br/><span class='text-primary'>Sans changer de matériel ni de niveau.</span>",
