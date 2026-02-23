@@ -386,6 +386,10 @@
 "book.form.privacy": "🔒 Pas de spam. Désinscription possible à tout moment.",
 "book.form.success": "C'est parti ! Vérifie ta boîte mail, le guide arrive 📩",
 "book.form.error": "Une erreur est survenue, réessaie.",
+"mailerlite_sub.form.submit": "Rejoins la communauté AeroX",
+"mailerlite_sub.hero.title.l1": "L'aéro n'est pas réservé aux pros,",
+"mailerlite_sub.hero.title.l2": "AeroX va changer la donne.",
+"mailerlite_sub.hero.text": "AeroX révolutionne l'entraînement cycliste en rendant l'aérodynamisme accessible à tous. <br/>Rejoins notre communauté pour découvrir comment optimiser ta position et gagner en vitesse, sans changer de matériel ni de niveau.",
 
 "book.testimonials.t1": "J'ai dévoré cet ouvrage d'une traite. Clairement, ça change radicalement la donne... et mes perspectives d'entraînement !",
 "book.testimonials.t2": "Avec ces nouvelles connaissances, Aerox va clairement impacter les performances de mes clients !!",

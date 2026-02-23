@@ -367,6 +367,12 @@
 "book.form.email.placeholder": "Your email address",
 "book.form.phone.placeholder": "Your phone number (optional)",
 "book.form.submit": "Download the guide for free",
+
+"mailerlite_sub.form.submit": "Join the AeroX community",
+"mailerlite_sub.hero.title.l1": "Aero is not just for pros,",
+"mailerlite_sub.hero.title.l2": "AeroX is about to change the game.",
+"mailerlite_sub.hero.text": "AeroX revolutionizes cycling training by making aerodynamics accessible to everyone. Join our community to discover how to optimize your position and gain speed, without changing equipment or level.",
+
 "book.form.privacy": "🔒 No spam. Unsubscribe at any time.",
 "book.form.success": "You're all set! Check your inbox, the guide is on its way 📩",
 "book.form.error": "Something went wrong, please try again.",

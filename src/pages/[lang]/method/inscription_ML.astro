@@ -1,0 +1,142 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '~/layouts/PageLayout.astro';
+
+import livreCover from '~/assets/images/livre/image_livre_entrainer-aero.png';
+
+import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
+
+export const prerender = true;
+
+export const getStaticPaths: GetStaticPaths = async () => SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
+
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
+
+const metadata = {
+  title: t(dict, 'book.meta.title'),
+  description: t(dict, 'book.meta.description'),
+  robots: { index: true, follow: true },
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- HERO -->
+  <section class="py-4">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 items-center">
+      <div class="flex flex-col items-center">
+        <img
+          src={livreCover.src}
+          width={livreCover.width}
+          height={livreCover.height}
+          alt={t(dict, 'book.hero.alt')}
+          class="w-[70%] md:w-[80%] max-w-md float-book"
+          loading="eager"
+        />
+      </div>
+
+      <div>
+        <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
+          {t(dict, 'mailerlite_sub.hero.title.l1')}
+          <span class="text-primary">
+            {t(dict, 'mailerlite_sub.hero.title.l2')}
+          </span>
+        </h1>
+
+        <p class="text-xl text-muted mb-8" set:html={t(dict, 'mailerlite_sub.hero.text')} />
+
+        <form
+          id="form-livre"
+          class="flex flex-col items-center gap-4 max-w-md mx-auto mt-6"
+          data-success={t(dict, 'mailerlite_sub.form.success')}
+          data-error={t(dict, 'mailerlite_sub.form.error')}
+        >
+          <input
+            type="text"
+            id="name-livre"
+            placeholder={t(dict, 'book.form.name.placeholder')}
+            required
+            class="w-full border rounded p-2 text-secondary"
+          />
+          <input
+            type="email"
+            id="email-livre"
+            placeholder={t(dict, 'book.form.email.placeholder')}
+            required
+            class="w-full border rounded p-2 text-secondary"
+          />
+          <input
+            type="tel"
+            id="phone-livre"
+            placeholder={t(dict, 'book.form.phone.placeholder')}
+            class="w-full border rounded p-2 text-secondary"
+          />
+
+          <button type="submit" class="btn-primary px-4 py-3 text-xl w-full">
+            {t(dict, 'mailerlite_sub.form.submit')}
+          </button>
+          <p class="text-sm text-muted">{t(dict, 'book.form.privacy')}</p>
+          <p id="msg-livre" class="text-sm mt-2 hidden"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    async function submitForm(formId: string, msgId: string) {
+      const form = document.getElementById(formId) as HTMLFormElement | null;
+      const msg = document.getElementById(msgId);
+
+      form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const suffix = formId === 'form-livre' ? 'livre' : 'livre-final';
+        const name = (document.getElementById(`name-${suffix}`) as HTMLInputElement).value.trim();
+        const email = (document.getElementById(`email-${suffix}`) as HTMLInputElement).value.trim();
+        const phone = (document.getElementById(`phone-${suffix}`) as HTMLInputElement).value.trim();
+
+        const lang = window.location.pathname.split('/')[1] || 'fr';
+        const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, phone }),
+        });
+
+        const data = await res.json();
+        msg?.classList.remove('hidden', 'text-red-600', 'text-green-600');
+
+        if (data.success) {
+          msg!.textContent = form?.dataset.success ?? '';
+          msg?.classList.add('text-green-600');
+          form.reset();
+        } else {
+          msg!.textContent = form?.dataset.error ?? '';
+          msg?.classList.add('text-red-600');
+        }
+        msg?.classList.remove('hidden');
+      });
+    }
+
+    submitForm('form-livre', 'msg-livre');
+    submitForm('form-livre-final', 'msg-livre-final');
+  </script>
+
+  <style>
+    @keyframes floatBook {
+      0% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-14px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    .float-book {
+      animation: floatBook 3s ease-in-out infinite;
+      will-change: transform;
+    }
+  </style>
+</Layout>
