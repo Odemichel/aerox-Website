@@ -38,7 +38,15 @@ export default defineConfig({
 
   integrations: [react(),
     tailwind({ applyBaseStyles: false }),
-    sitemap(),
+    sitemap({
+      filter: (page) =>
+        !/\/(homes|landing)\//.test(page) &&
+        !/\/blog\/(tag|category)\//.test(page) &&
+        !/\/inscription\/(connexion|confirmation|dashboard)\//.test(page) &&
+        !/\/telechargement\/(cancel|success)/.test(page) &&
+        !/\/paiement\//.test(page) &&
+        !/\/404/.test(page),
+    }),
     mdx(),
     astroIcon({
       include: { 'circle-flags': ['fr', 'gb'] },
