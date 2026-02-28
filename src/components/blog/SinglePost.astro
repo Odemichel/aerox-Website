@@ -11,6 +11,7 @@ import { blogImages } from '../../data/blogImages';
 import Button from '../ui/Button.astro';
 
 import { getDict, SUPPORTED_LOCALES, t, type Locale } from '~/lib/i18n';
+import AuthorPhoto from '~/assets/images/Olivier_tete2.png';
 
 export const prerender = true;
 
@@ -143,6 +144,29 @@ const image = post.imageKey ? blogImages[post.imageKey] : undefined;
         image={image?.src}
         class="mt-5 sm:mt-1 align-middle text-gray-500 dark:text-slate-600"
       />
+    </div>
+
+    <!-- ✅ Author block -->
+    <div class="mx-auto px-6 sm:px-6 max-w-3xl mt-10 border-t dark:border-slate-700 pt-8">
+      <div class="flex items-start gap-4">
+        <a href={withLang(lang, '/team/')} class="shrink-0">
+          <img
+            src={AuthorPhoto.src}
+            width="64"
+            height="64"
+            alt={t(dict, 'ourStory.team.olivier.alt')}
+            class="rounded-full w-16 h-16 object-cover"
+            loading="lazy"
+          />
+        </a>
+        <div>
+          <a href={withLang(lang, '/team/')} class="font-bold text-lg hover:underline">
+            {post.author || 'Olivier Demichel'}
+          </a>
+          <p class="text-sm text-muted dark:text-slate-400">{t(dict, 'ourStory.team.olivier.role')}</p>
+          <p class="mt-2 text-sm text-muted dark:text-slate-400">{t(dict, 'ourStory.team.olivier.desc')}</p>
+        </div>
+      </div>
     </div>
   </article>
 </section>

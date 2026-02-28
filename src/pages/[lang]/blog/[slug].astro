@@ -48,11 +48,33 @@ const metadata = merge(
   },
   post.metadata ? { ...post.metadata, canonical: post.metadata?.canonical || url } : {}
 ) as MetaData;
+
+const blogPostingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.title,
+  description: post.metadata?.description || post.excerpt || '',
+  author: {
+    '@type': 'Person',
+    name: post.author || 'Olivier Demichel',
+    url: `https://aeroxbefaster.com/${post.lang || 'fr'}/team/`,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'AeroX',
+    url: 'https://aeroxbefaster.com',
+  },
+  datePublished: post.publishDate ? new Date(post.publishDate).toISOString() : undefined,
+  dateModified: post.updateDate ? new Date(post.updateDate).toISOString() : (post.publishDate ? new Date(post.publishDate).toISOString() : undefined),
+  mainEntityOfPage: { '@type': 'WebPage', '@id': String(url) },
+  ...(ogImage ? { image: ogImage.url } : {}),
+};
 ---
 <Layout metadata={metadata}>
   <SinglePost post={{ ...post, image }} url={url}>
     {post.Content ? <post.Content /> : <Fragment set:html={post.content || ''} />}
   </SinglePost>
+  <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
   <ToBlogLink />
   <RelatedPosts post={post} />
 </Layout>
