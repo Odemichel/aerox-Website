@@ -58,6 +58,29 @@ function hrefForLang(target: Locale) {
   const origin = SITE?.site ? new URL(SITE.site).origin : Astro.url.origin;
   return `${origin}${path}`;
 }
+
+/* ===== BreadcrumbList schema ===== */
+const siteOrigin = SITE?.site ? new URL(SITE.site).origin : Astro.url.origin;
+const pathSegments = Astro.url.pathname.split('/').filter(Boolean);
+
+const breadcrumbLabels: Record<string, Record<string, string>> = {
+  fr: { fr: 'Accueil', blog: 'Blog', team: 'Équipe', contact: 'Contact', method: 'Méthode' },
+  en: { en: 'Home', blog: 'Blog', team: 'Team', contact: 'Contact', method: 'Method' },
+};
+const labels = breadcrumbLabels[currentLang] ?? breadcrumbLabels.fr;
+
+const breadcrumbItems = pathSegments.map((seg, i) => ({
+  '@type': 'ListItem' as const,
+  position: i + 1,
+  name: labels[seg] ?? seg.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+  item: `${siteOrigin}${ensureTrailingSlash('/' + pathSegments.slice(0, i + 1).join('/'))}`,
+}));
+
+const breadcrumbSchema = breadcrumbItems.length > 0 ? {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: breadcrumbItems,
+} : null;
 ---
 
 <!doctype html>
@@ -74,6 +97,10 @@ function hrefForLang(target: Locale) {
     <!-- hreflang alternates -->
     {SUPPORTED_LOCALES.map((l) => <link rel="alternate" hreflang={l} href={hrefForLang(l)} />)}
     <link rel="alternate" hreflang="x-default" href={hrefForLang(DEFAULT_LOCALE)} />
+
+    {breadcrumbSchema && (
+      <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    )}
 
     <ClientRouter fallback="swap" />
     <!-- Cloudflare Web Analytics -->

@@ -26,8 +26,8 @@
   "home.meta.description": "AeroX transforme ton home trainer en soufflerie : mesure ta position avec une simple webcam, gagne 2–3 km/h et économise 40 W. Conçu pour cyclistes et triathlètes exigeants, progresse au-delà de Zwift, MyWhoosh et Kinomap.",
 
   "home.hero.tagline": "En bêta le 1er septembre",
-  "home.hero.title.l1": "Analyse aérodynamique",
-  "home.hero.title.l2": "pour le vélo indoor",
+  "home.hero.title.l1": "Le cyclisme indoor",
+  "home.hero.title.l2": "l'aérodynamisme en plus",
   "home.hero.subtitle": "AeroX est la première application de cyclisme indoor pour cyclistes et triathlètes perofrmants et exigeants qui intègre l’aérodynamisme en temps réel sur home trainer. Grâce à une simple webcam, tu mesures ta surface frontale, optimises ta position, gagnes jusqu’à 3 km/h et économises plus de 40 watts. Une alternative innovante et complémentaire à Zwift, MyWhoosh et Kinomap pour transformer ta puissance en vitesse réelle. Ton home trainer devient une soufflerie virtuelle, un vrai wind tunnel disponible à chaque instant pour rouler plus vite sans plus d'effort. AeroX est compatible avec Wahoo, Elite, Saris, Tacx et beaucoup d'autres marques de Home-trainer.",
   "home.hero.paragraph": "Gagne jusqu'à&nbsp;<span class=\"font-bold text-accent\">3&#8239;km/h</span>, économise&nbsp;<span class=\"font-bold text-accent\">40&#8239;W<br /></span> avec une simple webcam.",
   "home.hero.countdown.prefix": "Plus que",
@@ -249,7 +249,7 @@
   "footer.terms": "CGV",
   "footer.footnote": "Made by O. Demichel · Tous droits réservés.",
 
-  "blog.title": "Blog Cyclisme & Aérodynamisme",
+  "blog.title": "Nos Articles",
   "blog.aerox.offers":"Découvre AeroX",
     "blog.aerox.method":"Découvre les bases de l'entrainement aérodynamique",
 

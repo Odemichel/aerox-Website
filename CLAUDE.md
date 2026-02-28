@@ -208,15 +208,20 @@ Retiré de `Metadata.astro`, déplacé dans `index.astro` uniquement.
 ### 8. Bloc auteur sur les articles — CORRIGÉ
 `src/components/blog/SinglePost.astro` : Bloc auteur ajouté en bas d'article avec photo, nom, rôle, bio (i18n) et lien vers `/[lang]/team/`.
 
-### 9. H1 homepage optimisé — CORRIGÉ
-- FR : "Analyse aérodynamique / pour le vélo indoor" (avant : "Le cyclisme indoor / l'aérodynamisme en plus")
-- EN : "Real-time aero analysis / for indoor cycling" (avant : "Indoor cycling / Now with real-time aero")
+### 9. H1 homepage — REVERT (besoin keyword research)
+Wording revert aux originaux. Nécessite une vraie recherche de mots-clés avant optimisation.
 - Clés i18n : `home.hero.title.l1` + `home.hero.title.l2`
 
-### 10. H1 blog index optimisé — CORRIGÉ
-- FR : "Blog Cyclisme & Aérodynamisme" (avant : "Nos Articles")
-- EN : "Cycling & Aerodynamics Blog" (avant : "Our Articles")
+### 10. H1 blog index — REVERT (besoin keyword research)
+Wording reverté. Idem.
 - Clé i18n : `blog.title`
+
+### 14. Schema Organization + WebSite — CORRIGÉ
+`src/pages/[lang]/index.astro` : JSON-LD `Organization` (name, url, logo, founder, sameAs) + `WebSite` (name, url, inLanguage, SearchAction) injectés sur la homepage.
+
+### 15. Schema BreadcrumbList — CORRIGÉ
+`src/layouts/Layout.astro` : JSON-LD `BreadcrumbList` généré dynamiquement depuis le pathname sur toutes les pages.
+Labels traduits pour les segments connus (blog, team, contact, method).
 
 ---
 
@@ -224,8 +229,9 @@ Retiré de `Metadata.astro`, déplacé dans `index.astro` uniquement.
 
 | # | Problème | Fichier | Impact |
 |---|----------|---------|--------|
-| 1 | **2 articles sans paire linguistique** | `aerox-innovation-fr.mdx`, `feel-aero-en.mdx` | Moyen — Hreflang pointe vers page 404 |
-| 2 | **Mapping hreflang FR↔EN par slug** | `src/layouts/Layout.astro` | Moyen — `zwift-fr` pointe vers `/en/blog/zwift-fr/` au lieu de `/en/blog/zwift-en/` |
+| 1 | **Articles mono-langue (voulu)** | `aerox-innovation-fr.mdx`, `feel-aero-en.mdx` | Faible — Hreflang pointe vers 404 mais choix éditorial |
+| 2 | **Mapping hreflang FR↔EN par slug** | `src/layouts/Layout.astro` | Moyen — `zwift-fr` → `/en/blog/zwift-fr/` au lieu de `/en/blog/zwift-en/` |
+| 3 | **H1 homepage + blog index** | `fr.json`, `en.json` | Moyen — Besoin keyword research avant optimisation |
 
 ---
 

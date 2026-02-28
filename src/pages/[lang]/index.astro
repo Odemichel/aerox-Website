@@ -634,4 +634,34 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
     ]
   }
   </script>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'AeroX',
+    url: 'https://aeroxbefaster.com',
+    logo: 'https://aeroxbefaster.com/favicon.svg',
+    description: t(dict, 'home.meta.description'),
+    founder: {
+      '@type': 'Person',
+      name: 'Olivier Demichel',
+    },
+    sameAs: [
+      'https://www.instagram.com/aerox_be_faster/',
+      'https://www.youtube.com/@AeroXBeFaster',
+    ],
+  })} />
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'AeroX',
+    url: 'https://aeroxbefaster.com',
+    inLanguage: lang === 'fr' ? 'fr-FR' : 'en-US',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `https://aeroxbefaster.com/${lang}/blog/?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  })} />
 </Layout>

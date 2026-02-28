@@ -26,8 +26,8 @@
   "home.meta.description": "AeroX turns your smart trainer into a wind tunnel: measure your position with just a webcam, gain 2–3 km/h and save 40 W. Built for demanding cyclists and triathletes, progress beyond Zwift, MyWhoosh and Kinomap.",
 
   "home.hero.tagline": "In beta on September 1",
-  "home.hero.title.l1": "Real-time aero analysis",
-  "home.hero.title.l2": "for indoor cycling",
+  "home.hero.title.l1": "Indoor cycling",
+  "home.hero.title.l2": "Now with real-time aero",
   "home.hero.subtitle": "AeroX is the first indoor-cycling app for performance-driven cyclists and triathletes that integrates real-time aerodynamics on a smart trainer. With just a webcam, measure frontal area, optimize position, gain up to 3 km/h and save 40+ watts. A focused, complementary alternative to Zwift, MyWhoosh and Kinomap that turns power into real speed. Your smart trainer becomes a virtual wind tunnel you can use anytime to ride faster without extra effort. Compatible with Wahoo, Elite, Saris, Tacx and more.",
   "home.hero.paragraph": "Gain up to&nbsp;<span class=\"font-bold text-accent\">3&#8239;km/h</span>, save&nbsp;<span class=\"font-bold text-accent\">40&#8239;W<br /></span> — with just a webcam.",
   "home.hero.countdown.prefix": "Only",
@@ -245,7 +245,7 @@
   "footer.terms": "Terms",
   "footer.footnote": "Made by O. Demichel · All rights reserved.",
 
-  "blog.title": "Cycling & Aerodynamics Blog",
+  "blog.title": "Our Articles",
   "blog.aerox.offers":"Discover AeroX",
   "blog.aerox.method":"Learn Basics of aerodynamic training",
   "blog.subtitle": "Tips, insights, and innovations to optimize your cycling and triathlon training",
