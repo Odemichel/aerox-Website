@@ -139,12 +139,12 @@ const reviewSchema = reviews.map((r) => ({
         <p class="text-lg md:text-xl text-gray-200 max-w-xl" set:html={t(dict, 'bf.hero.text')} />
         <div class="mt-6 flex flex-wrap gap-3">
           <span class="inline-flex items-center gap-1.5 bg-primary/20 backdrop-blur-sm rounded-full px-4 py-1.5 border border-primary/30">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-            <span class="text-sm font-bold text-white">+3 km/h</span>
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <span class="text-sm font-bold text-white">{lang === 'fr' ? 'Résultats visibles' : 'Visible results'}</span>
           </span>
           <span class="inline-flex items-center gap-1.5 bg-primary/20 backdrop-blur-sm rounded-full px-4 py-1.5 border border-primary/30">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/></svg>
-            <span class="text-sm font-bold text-white">−40 W</span>
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            <span class="text-sm font-bold text-white">{lang === 'fr' ? 'Mesure en direct' : 'Live measurement'}</span>
           </span>
           <span class="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 border border-white/20">
             <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -208,7 +208,7 @@ const reviewSchema = reviews.map((r) => ({
       <div class="flex flex-col items-center md:flex-row md:items-stretch md:justify-center gap-6 md:gap-12">
         <!-- Aerox gain overlay — 450px fixe -->
         <div class="w-[85%] md:w-[450px] md:shrink-0 flex">
-          <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-3 border border-white/15 shadow-2xl flex items-center w-full">
+          <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/15 shadow-2xl w-full">
             <img
               src={aeroxGain.src}
               width={aeroxGain.width}
