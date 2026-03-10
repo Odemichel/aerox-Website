@@ -11,6 +11,7 @@ import Metadata from '~/components/common/Metadata.astro';
 import SiteVerification from '~/components/common/SiteVerification.astro';
 import CustomStyles from '~/components/CustomStyles.astro';
 import Favicons from '~/components/Favicons.astro';
+import StickyBar from '~/components/common/StickyBar.astro';
 
 import SpeedInsights from '@vercel/speed-insights/astro';
 import { ClientRouter } from 'astro:transitions';
@@ -94,8 +95,8 @@ const siteOrigin = SITE?.site ? new URL(SITE.site).origin : Astro.url.origin;
 const pathSegments = Astro.url.pathname.split('/').filter(Boolean);
 
 const breadcrumbLabels: Record<string, Record<string, string>> = {
-  fr: { fr: 'Accueil', blog: 'Blog', team: 'Équipe', contact: 'Contact', method: 'Méthode' },
-  en: { en: 'Home', blog: 'Blog', team: 'Team', contact: 'Contact', method: 'Method' },
+  fr: { fr: 'Accueil', blog: 'Blog', team: 'Équipe', contact: 'Contact', method: 'Méthode', 'bike-fitting': 'Bike Fitting' },
+  en: { en: 'Home', blog: 'Blog', team: 'Team', contact: 'Contact', method: 'Method', 'bike-fitting': 'Bike Fitting' },
 };
 const labels = breadcrumbLabels[currentLang] ?? breadcrumbLabels.fr;
 
@@ -142,6 +143,7 @@ const breadcrumbSchema = breadcrumbItems.length > 0 ? {
 
   <body class="antialiased text-default bg-page tracking-tight">
     <slot />
+    <StickyBar />
     <SpeedInsights />
     <BasicScripts />
     <VercelAnalytics />

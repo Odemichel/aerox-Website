@@ -40,10 +40,6 @@ export function makeNavigation(langInput?: string) {
           {
             text: t('nav.home'), href: withLang(lang, getPermalink('/')), icon: "tabler:home"
           }, // => "/fr/"
-          // Ancres -> home + #id
-          {
-            text: t('nav.features'), href: withLang(lang, '#features'), icon: "tabler:apps"
-          },       // => "/fr/#features"
           {
             text: t('nav.pricing'), href: withLang(lang, '#pricing'), icon: "tabler:currency-dollar"
 
@@ -53,6 +49,9 @@ export function makeNavigation(langInput?: string) {
           },        // => "/fr/#pricing"
           {
             text: t('nav.blog'), href: withLang(lang, getPermalink('/blog/')), icon: "tabler:article"
+          },
+          {
+            text: t('nav.bikeFitting'), href: withLang(lang, '/bike-fitting/'), icon: "tabler:bike"
           },
           {
             text: t('nav.contact'), href: withLang(lang, getPermalink('/contact/')), icon: "tabler:mail"
@@ -90,7 +89,8 @@ export function makeNavigation(langInput?: string) {
           { text: t('footer.team'), href: withLang(lang, '/team') },
           { text: t('footer.story'), href: withLang(lang, '/team') },
 
-          { text: t('footer.contactUs'), href: withLang(lang, '/contact') }, // i18n si nécessaire
+          { text: t('footer.contactUs'), href: withLang(lang, '/contact') },
+          { text: t('footer.bikeFitting'), href: withLang(lang, '/bike-fitting') },
         ],
       },
     ],

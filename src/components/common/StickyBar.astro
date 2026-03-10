@@ -1,0 +1,119 @@
+---
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from '~/lib/i18n';
+
+const seg = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
+const isLocale = (v: unknown): v is Locale =>
+  typeof v === 'string' && (SUPPORTED_LOCALES as readonly string[]).includes(v);
+const lang: Locale = isLocale(seg) ? seg : DEFAULT_LOCALE;
+
+const isBikeFitting = Astro.url.pathname.includes('/bike-fitting');
+const contactHref = `/${lang}/contact/`;
+const signupHref = `/${lang}/inscription/inscription/`;
+const bfContactHref = `/${lang}/bike-fitting/#contact-bf`;
+const contactLabel = lang === 'fr' ? 'Contact' : 'Contact';
+const signupLabel = lang === 'fr' ? 'Gagner du temps' : 'Save time';
+const bfLabel = lang === 'fr' ? 'Nous contacter' : 'Contact us';
+---
+
+<div
+  id="sticky-bar"
+  class="fixed bottom-4 right-4 z-40 translate-y-[calc(100%+2rem)] transition-transform duration-300"
+  aria-label="Actions rapides"
+>
+  <div class="flex flex-col items-end gap-2">
+    {isBikeFitting ? (
+      <a
+        href={bfContactHref}
+        class="sticky-fab group relative flex items-center justify-center w-11 h-11 rounded-full bg-primary text-white shadow-lg hover:shadow-xl transition-all"
+        aria-label={bfLabel}
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        <span class="sticky-label">{bfLabel}</span>
+      </a>
+    ) : (
+      <>
+        <a
+          href={contactHref}
+          class="sticky-fab group relative flex items-center justify-center w-11 h-11 rounded-full bg-white dark:bg-slate-800 text-primary shadow-lg border border-gray-200 dark:border-slate-600 hover:shadow-xl transition-all"
+          aria-label={contactLabel}
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <span class="sticky-label">{contactLabel}</span>
+        </a>
+        <a
+          href={signupHref}
+          class="sticky-fab group relative flex items-center justify-center w-11 h-11 rounded-full bg-primary text-white shadow-lg hover:shadow-xl transition-all"
+          aria-label={signupLabel}
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="sticky-label">{signupLabel}</span>
+        </a>
+      </>
+    )}
+  </div>
+</div>
+
+<style>
+  .sticky-label {
+    position: absolute;
+    right: calc(100% + 0.5rem);
+    white-space: nowrap;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.25rem 0.65rem;
+    border-radius: 0.5rem;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(4px);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .sticky-fab:hover .sticky-label,
+  .sticky-fab:focus .sticky-label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+</style>
+
+<script>
+  const bar = document.getElementById('sticky-bar');
+  if (bar) {
+    let shown = false;
+    let footerVisible = false;
+
+    const footer = document.querySelector('footer');
+    if (footer) {
+      const io = new IntersectionObserver(
+        ([entry]) => {
+          footerVisible = entry.isIntersecting;
+          if (footerVisible) {
+            bar.classList.add('translate-y-[calc(100%+2rem)]');
+          } else if (shown) {
+            bar.classList.remove('translate-y-[calc(100%+2rem)]');
+          }
+        },
+        { threshold: 0.1 }
+      );
+      io.observe(footer);
+    }
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (window.scrollY > 300) {
+          if (!shown) {
+            shown = true;
+            if (!footerVisible) bar.classList.remove('translate-y-[calc(100%+2rem)]');
+          }
+        } else {
+          if (shown) {
+            shown = false;
+            bar.classList.add('translate-y-[calc(100%+2rem)]');
+          }
+        }
+      },
+      { passive: true }
+    );
+  }
+</script>
