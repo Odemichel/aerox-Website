@@ -27,20 +27,20 @@
 
 ## Homepage (`/fr/`) — Score : Visibilité 7/10, Conversion 6.5/10
 
-### SEO critique (impact élevé)
-- [ ] **Réécrire le H1** avec keyword fort : ex. "Transforme ton home trainer en soufflerie virtuelle" ou "Gagne 3 km/h sur home trainer"
-- [ ] **Raccourcir la meta description** à < 160 caractères (actuellement ~210)
-- [ ] **Corriger le hero subtitle** : supprimer le keyword stuffing (~350 mots), garder 2 phrases max
-- [ ] **Corriger la typo** "perofrmants" → "performants" dans `home.hero.subtitle` (fr.json)
-- [ ] **Supprimer les doublons** : 2e `<Stats>` et 2e `<LogosCarousel>` en bas de page (contenu identique)
-- [ ] **Ajouter `SoftwareApplication` schema** JSON-LD avec offers + aggregateRating
-- [ ] **Vérifier/retirer le `SearchAction`** schema si le blog n'a pas de vraie recherche
+### SEO critique (impact élevé) — FAIT
+- [x] **H1 réécrit** : "Ton home trainer / devient une soufflerie virtuelle"
+- [x] **Meta description** raccourcie à 155 car.
+- [x] **Hero subtitle** réduit à 2 phrases (supprimé keyword stuffing)
+- [x] **Typo corrigée** "perofrmants" (supprimé avec le nouveau subtitle)
+- [x] **Doublons supprimés** : 2e Stats + 2e LogosCarousel retirés
+- [x] **SoftwareApplication schema** ajouté (SportsApplication, macOS/Windows, 20€ PreOrder)
+- [x] **SearchAction retiré** du schema WebSite
 
-### Dates & contenus obsolètes (urgence)
-- [ ] **Mettre à jour le tagline** "En bêta le 1er septembre" → refléter le statut actuel
-- [ ] **Mettre à jour les CTA pricing** "Lancement le 01/12/2025" → lien actif ou nouvelle date
-- [ ] **Vérifier le countdown** : `COUNTDOWN_TARGET` est-il dans le futur ? Si non, retirer ou mettre à jour
-- [ ] **Vérifier la cohérence des prix** : Pack Progression annoncé 190€/an dans le texte mais affiché 140€
+### Dates & contenus obsolètes — FAIT
+- [x] **Tagline** → "Lancement le 10 avril"
+- [x] **Section pricing masquée** temporairement (à réactiver après le 10 avril)
+- [x] **Countdown** → cible 2026-04-10
+- [ ] **Cohérence des prix** : à harmoniser lors de la réactivation du pricing (140€ vs 190€, 15€ vs 22€)
 
 ### Conversion
 - [ ] **Raccourcir la page** : fusionner Features + Features2, supprimer les 5 Notes intercalaires → viser ~10 sections

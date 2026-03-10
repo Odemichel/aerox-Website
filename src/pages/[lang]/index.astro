@@ -371,6 +371,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
 
   <Note title={t(dict, 'home.note4.title')} description={t(dict, 'home.note4.desc')} />
 
+  {/* Section Pricing masquée temporairement — à réactiver après le lancement du 10 avril
   <Prices
     title={t(dict, 'home.prices.title')}
     id="pricing"
@@ -433,6 +434,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
       },
     ]}
   />
+  */}
 
   <StepsSansImage
     title={t(dict, 'home.steps.title')}
@@ -489,28 +491,6 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
       { title: t(dict, 'home.faq.items.6.title'), education: t(dict, 'home.faq.items.6.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.6.more'), defaultOpen: false },
       { title: t(dict, 'home.faq.items.7.title'), education: t(dict, 'home.faq.items.7.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.7.more'), defaultOpen: false },
       { title: t(dict, 'home.faq.items.8.title'), education: t(dict, 'home.faq.items.8.education'), expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false },
-    ]}
-  />
-
-  <Stats
-    stats={[
-      { title: t(dict, 'home.stats.pioneers'), amount: '300+' },
-      { title: t(dict, 'home.stats.kmhAvg'), amount: '+2.3' },
-      { title: t(dict, 'home.stats.savedAt30'), amount: '-35 W' },
-    ]}
-  />
-
-  <LogosCarousel
-    title={t(dict, 'home.compat2.title')}
-    logos={[
-      { src: logo_wahoo, alt: t(dict, 'home.compat.logos.wahoo') },
-      { src: logo_elite, alt: t(dict, 'home.compat.logos.elite') },
-      { src: logo_tacx, alt: t(dict, 'home.compat.logos.tacx') },
-      { src: logo_vanrysel, alt: t(dict, 'home.compat.logos.vanrysel') },
-      { src: logo_saris, alt: t(dict, 'home.compat.logos.saris') },
-      { src: logo_polar, alt: t(dict, 'home.compat.logos.polar') },
-      { src: logo_garmin, alt: t(dict, 'home.compat.logos.garmin') },
-      { src: logo_suunto, alt: t(dict, 'home.compat.logos.suunto') },
     ]}
   />
 
@@ -665,10 +645,21 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
     name: 'AeroX',
     url: 'https://aeroxbefaster.com',
     inLanguage: lang === 'fr' ? 'fr-FR' : 'en-US',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: `https://aeroxbefaster.com/${lang}/blog/?q={search_term_string}`,
-      'query-input': 'required name=search_term_string',
+  })} />
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'AeroX',
+    applicationCategory: 'SportsApplication',
+    operatingSystem: 'macOS, Windows',
+    description: t(dict, 'home.meta.description'),
+    url: 'https://aeroxbefaster.com',
+    offers: {
+      '@type': 'Offer',
+      price: '20',
+      priceCurrency: 'EUR',
+      availability: 'https://schema.org/PreOrder',
     },
   })} />
 </Layout>
