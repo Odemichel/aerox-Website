@@ -50,10 +50,40 @@ const effectiveMetadata: MetaDataType = merge({}, i18nCfg.metadata ?? {}, langOv
 /* ===== hreflang helpers ===== */
 const ensureTrailingSlash = (p: string) => (!p ? p : p.endsWith('/') || p.includes('.') ? p : p + '/');
 
+/** Blog slug pairs: maps fr slug → en slug and vice versa */
+const blogSlugPairs: Record<string, string> = {
+  'zwift-fr': 'zwift-en',
+  'zwift-en': 'zwift-fr',
+  'aero-gain-chronometrique-fr': 'aero-gain-chronometrique-en',
+  'aero-gain-chronometrique-en': 'aero-gain-chronometrique-fr',
+  'amstel-gold-race-2025-fr': 'amstel-gold-race-2025-en',
+  'amstel-gold-race-2025-en': 'amstel-gold-race-2025-fr',
+  'aero-feedbacks-fr': 'aero-feedbacks-en',
+  'aero-feedbacks-en': 'aero-feedbacks-fr',
+  'bf-mesurer-fr': 'bf-mesurer-en',
+  'bf-mesurer-en': 'bf-mesurer-fr',
+  'aerox-innovation-fr': 'aerox-innovation-en',
+  'aerox-innovation-en': 'aerox-innovation-fr',
+  'feel-aero-fr': 'feel-aero-en',
+  'feel-aero-en': 'feel-aero-fr',
+};
+
 function hrefForLang(target: Locale) {
   const parts = Astro.url.pathname.split('/').filter(Boolean);
-  if (parts[0] === 'fr' || parts[0] === 'en') parts[0] = target;
+  const srcLang = (parts[0] === 'fr' || parts[0] === 'en') ? parts[0] : null;
+
+  // Swap language prefix
+  if (srcLang) parts[0] = target;
   else parts.unshift(target);
+
+  // Swap blog slug if we have a paired translation
+  if (parts[1] === 'blog' && parts[2] && srcLang !== target) {
+    const slug = parts[2].toLowerCase();
+    if (blogSlugPairs[slug]) {
+      parts[2] = blogSlugPairs[slug];
+    }
+  }
+
   const path = ensureTrailingSlash('/' + parts.join('/'));
   const origin = SITE?.site ? new URL(SITE.site).origin : Astro.url.origin;
   return `${origin}${path}`;

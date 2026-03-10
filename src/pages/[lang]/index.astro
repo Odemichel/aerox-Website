@@ -102,14 +102,14 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
     title={t(dict, 'home.compat.title')}
     subtitle={t(dict, 'home.compat.subtitle')}
     logos={[
-      { src: logo_wahoo },
-      { src: logo_elite },
-      { src: logo_tacx },
-      { src: logo_vanrysel },
-      { src: logo_saris },
-      { src: logo_polar },
-      { src: logo_garmin },
-      { src: logo_suunto },
+      { src: logo_wahoo, alt: t(dict, 'home.compat.logos.wahoo') },
+      { src: logo_elite, alt: t(dict, 'home.compat.logos.elite') },
+      { src: logo_tacx, alt: t(dict, 'home.compat.logos.tacx') },
+      { src: logo_vanrysel, alt: t(dict, 'home.compat.logos.vanrysel') },
+      { src: logo_saris, alt: t(dict, 'home.compat.logos.saris') },
+      { src: logo_polar, alt: t(dict, 'home.compat.logos.polar') },
+      { src: logo_garmin, alt: t(dict, 'home.compat.logos.garmin') },
+      { src: logo_suunto, alt: t(dict, 'home.compat.logos.suunto') },
     ]}
   />
 
@@ -163,7 +163,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
         description: t(dict, 'home.features2.items.sim.desc'),
         icon: 'flat-color-icons:globe',
         objectif: t(dict, 'home.features2.items.sim.obj'),
-        image: { src: simulationGPX },
+        image: { src: simulationGPX, alt: t(dict, 'home.features2.items.sim.imgAlt') },
         callToAction: {
           variant: 'primary',
           text: t(dict, 'home.features2.items.sim.cta'),
@@ -177,7 +177,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
         description: t(dict, 'home.features2.items.tt.desc'),
         icon: 'fluent-emoji-flat:stopwatch',
         objectif: t(dict, 'home.features2.items.tt.obj'),
-        image: { src: classementCLM },
+        image: { src: classementCLM, alt: t(dict, 'home.features2.items.tt.imgAlt') },
         callToAction: {
           variant: 'primary',
           text: t(dict, 'home.features2.items.tt.cta'),
@@ -205,7 +205,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
         description: t(dict, 'home.features2.items.editor.desc'),
         icon: 'flat-color-icons:edit-image',
         objectif: t(dict, 'home.features2.items.editor.obj'),
-        image: { src: editeurSeance },
+        image: { src: editeurSeance, alt: t(dict, 'home.features2.items.editor.imgAlt') },
         callToAction: {
           variant: 'primary',
           text: t(dict, 'home.features2.items.editor.cta'),
@@ -233,26 +233,26 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
         testimonial: t(dict, 'home.testimonials.items.milan.text'),
         name: 'Milan Larivière',
         job: t(dict, 'home.testimonials.items.milan.job'),
-        image: { src: Milan_HT, alt: 'Milan Larivière' },
-        profile: { src: Milan_Tete, alt: 'Milan Larivière' },
+        image: { src: Milan_HT, alt: t(dict, 'home.testimonials.items.milan.imgAlt') },
+        profile: { src: Milan_Tete, alt: t(dict, 'home.testimonials.items.milan.imgAlt') },
       },
       {
         testimonial: t(dict, 'home.testimonials.items.frederic.text'),
         name: 'Frédéric Petit',
         job: t(dict, 'home.testimonials.items.frederic.job'),
-        profile: { src: Frederic_tete, alt: 'Frédéric Petit Image' },
+        profile: { src: Frederic_tete, alt: t(dict, 'home.testimonials.items.frederic.imgAlt') },
       },
       {
         testimonial: t(dict, 'home.testimonials.items.olivier.text'),
         name: 'Olivier Demichel',
         job: t(dict, 'home.testimonials.items.olivier.job'),
-        profile: { src: Olivier_Tete, alt: 'Olivier Demichel Image' },
+        profile: { src: Olivier_Tete, alt: t(dict, 'home.testimonials.items.olivier.imgAlt') },
       },
       {
         testimonial: t(dict, 'home.testimonials.items.james.text'),
         name: 'James Ropert',
         job: t(dict, 'home.testimonials.items.james.job'),
-        profile: { src: Ropert_Tete, alt: 'James Ropert Image' },
+        profile: { src: Ropert_Tete, alt: t(dict, 'home.testimonials.items.james.imgAlt') },
       },
     ]}
     callToAction={{
@@ -502,7 +502,16 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
 
   <LogosCarousel
     title={t(dict, 'home.compat2.title')}
-    logos={[{ src: logo_wahoo }, { src: logo_elite }, { src: logo_tacx }, { src: logo_vanrysel }, { src: logo_saris }, { src: logo_polar }, { src: logo_garmin }, { src: logo_suunto }]}
+    logos={[
+      { src: logo_wahoo, alt: t(dict, 'home.compat.logos.wahoo') },
+      { src: logo_elite, alt: t(dict, 'home.compat.logos.elite') },
+      { src: logo_tacx, alt: t(dict, 'home.compat.logos.tacx') },
+      { src: logo_vanrysel, alt: t(dict, 'home.compat.logos.vanrysel') },
+      { src: logo_saris, alt: t(dict, 'home.compat.logos.saris') },
+      { src: logo_polar, alt: t(dict, 'home.compat.logos.polar') },
+      { src: logo_garmin, alt: t(dict, 'home.compat.logos.garmin') },
+      { src: logo_suunto, alt: t(dict, 'home.compat.logos.suunto') },
+    ]}
   />
 
   <!-- Script checkout intact -->
@@ -546,94 +555,92 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
     });
   </script>
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
       {
-        "@type": "Question",
-        "name": "Pourquoi AeroX ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "À partir de 25 km/h, l'aérodynamisme représente entre 70 et 95 % de la résistance. AeroX te permet de visualiser et d'optimiser ta position pour gagner en vitesse et économiser des watts."
-        }
+        '@type': 'Question',
+        name: t(dict, 'home.faq.schema.q1'),
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: t(dict, 'home.faq.schema.a1'),
+        },
       },
       {
-        "@type": "Question",
-        "name": "Quels outils et matériel sont nécessaires pour utiliser AeroX ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Il suffit d'un home trainer connecté (Bluetooth FTMS), d'un vélo, d'un ordinateur Mac ou Windows, et d'une simple caméra (webcam, smartphone ou USB)."
-        }
+        '@type': 'Question',
+        name: t(dict, 'home.faq.schema.q2'),
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: t(dict, 'home.faq.schema.a2'),
+        },
       },
       {
-        "@type": "Question",
-        "name": "Combien de temps faut-il pour mettre AeroX en place ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Installe ta caméra devant ton home trainer, calibre-la en 2 clics, et tu es prêt à t'entraîner avec ton feedback aérodynamique. Moins de 2 minutes suffisent."
-        }
+        '@type': 'Question',
+        name: t(dict, 'home.faq.schema.q3'),
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: t(dict, 'home.faq.schema.a3'),
+        },
       },
       {
-        "@type": "Question",
-        "name": "Mon home trainer ou capteur est-il compatible avec AeroX ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Oui, AeroX est compatible avec la majorité des home trainers connectés (Wahoo, Elite, Tacx, Saris, etc.). Actuellement disponible sur MacOS et Windows, versions tablette en cours de développement."
-        }
+        '@type': 'Question',
+        name: t(dict, 'home.faq.schema.q4'),
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: t(dict, 'home.faq.schema.a4'),
+        },
       },
       {
-        "@type": "Question",
-        "name": "Innovation ou gadget ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Développé par un chercheur au CNRS et triathlète, AeroX fournit un feedback concret sur ton aérodynamisme. Comme le cardiofréquencemètre il y a 20 ans, AeroX devient un outil incontournable de l'entraînement."
-        }
+        '@type': 'Question',
+        name: t(dict, 'home.faq.schema.q5'),
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: t(dict, 'home.faq.schema.a5'),
+        },
       },
       {
-        "@type": "Question",
-        "name": "L'aérodynamisme avec AeroX est-il utile en peloton ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Oui, car les situations de bordures, d'échappées ou de relance sont fréquentes. Gagner 3 km/h peut faire la différence pour rester dans le groupe ou partir devant."
-        }
+        '@type': 'Question',
+        name: t(dict, 'home.faq.schema.q6'),
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: t(dict, 'home.faq.schema.a6'),
+        },
       },
       {
-        "@type": "Question",
-        "name": "Ai-je besoin d'un abonnement pour tester AeroX ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Tu peux tester gratuitement AeroX dès le premier jour. Avec l'abonnement, tu transformes ta position optimale en automatisme solide et durable."
-        }
+        '@type': 'Question',
+        name: t(dict, 'home.faq.schema.q7'),
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: t(dict, 'home.faq.schema.a7'),
+        },
       },
       {
-        "@type": "Question",
-        "name": "Je suis déjà habitué à ma position aéro, AeroX m'est-il utile ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Oui. Être en position ne suffit pas, encore faut-il qu'elle soit efficace. AeroX détecte les détails invisibles (tête trop haute, coudes écartés) et t'aide à corriger ces pertes de watts."
-        }
+        '@type': 'Question',
+        name: t(dict, 'home.faq.schema.q8'),
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: t(dict, 'home.faq.schema.a8'),
+        },
       },
       {
-        "@type": "Question",
-        "name": "Un coach suffit-il ou AeroX est complémentaire ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Ton coach peut planifier des séances, mais seul AeroX mesure l'efficacité réelle de ta position du début à la fin. Les deux sont complémentaires."
-        }
+        '@type': 'Question',
+        name: t(dict, 'home.faq.schema.q9'),
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: t(dict, 'home.faq.schema.a9'),
+        },
       },
       {
-        "@type": "Question",
-        "name": "Comment AeroX m'aide à préparer une course à l'étranger ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Avec le mode GPX, tu importes le parcours exact de ta course. AeroX simule le relief, le vent et l'impact de ton aérodynamisme pour t'entraîner comme si tu y étais déjà."
-        }
-      }
-    ]
-  }
-  </script>
+        '@type': 'Question',
+        name: t(dict, 'home.faq.schema.q10'),
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: t(dict, 'home.faq.schema.a10'),
+        },
+      },
+    ],
+  })} />
 
   <script type="application/ld+json" set:html={JSON.stringify({
     '@context': 'https://schema.org',

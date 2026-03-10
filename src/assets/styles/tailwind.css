@@ -314,3 +314,74 @@
 .dd *:first-child {
   margin-top: 0;
 }
+
+/* ── FAQ Section Styling ── */
+.faq-section {
+  @apply mt-12 pt-8 border-t-2;
+  border-color: color-mix(in srgb, var(--aw-color-primary) 20%, transparent);
+}
+
+.faq-section > h2 {
+  @apply text-2xl mb-6;
+  background-image: linear-gradient(135deg, var(--aw-color-primary), var(--aw-color-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.faq-section details {
+  @apply mb-3 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden transition-all;
+}
+
+.faq-section details[open] {
+  @apply shadow-sm;
+  border-color: color-mix(in srgb, var(--aw-color-primary) 30%, transparent);
+}
+
+.dark .faq-section details[open] {
+  border-color: color-mix(in srgb, var(--aw-color-primary-light) 30%, transparent);
+}
+
+.faq-section details summary {
+  @apply cursor-pointer px-5 py-4 font-semibold text-base list-none flex items-center justify-between gap-3 transition-colors;
+}
+
+.faq-section details summary:hover {
+  @apply bg-gray-50;
+}
+
+.dark .faq-section details summary:hover {
+  background-color: rgb(30 41 59 / 0.5);
+}
+
+.faq-section details summary::after {
+  content: "+";
+  @apply text-xl font-bold shrink-0;
+  color: var(--aw-color-primary);
+  transition: transform 0.2s;
+}
+
+.faq-section details[open] summary::after {
+  content: "−";
+}
+
+.faq-section details summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-section details > div,
+.faq-section details > p {
+  @apply px-5 pb-4 text-sm leading-relaxed;
+  color: var(--aw-color-text-muted);
+}
+
+.dark .faq-section details > div,
+.dark .faq-section details > p {
+  @apply text-slate-400;
+}
+
+.prose .faq-section details summary {
+  color: var(--aw-color-text-page);
+  font-size: 1rem;
+  margin: 0;
+}

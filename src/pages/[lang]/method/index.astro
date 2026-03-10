@@ -2,7 +2,6 @@
 import type { GetStaticPaths } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
 import Features from '~/components/widgets/Features.astro';
-import Note from '~/components/widgets/Note.astro';
 
 import livreCover from '~/assets/images/livre/image_livre_entrainer-aero.png';
 
@@ -25,7 +24,7 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <!-- HERO -->
+  <!-- 1. HERO — promesse claire + formulaire -->
   <section class="py-4">
     <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 items-center">
       <div class="flex flex-col items-center">
@@ -86,9 +85,32 @@ const metadata = {
     </div>
   </section>
 
-  <!-- GAIN -->
+  <!-- 2. CONTENU DU GUIDE — ce que tu reçois -->
   <section class="justify-items-center mt-8">
-    <!-- TÉMOIGNAGE -->
+    <StepsSansImage
+      title={t(dict, 'book.content.title')}
+      items={[
+        { title: t(dict, 'book.content.p1'), icon: 'tabler:book' },
+        { title: t(dict, 'book.content.p2'), icon: 'tabler:brain' },
+        { title: t(dict, 'book.content.p3'), icon: 'tabler:chart-line' },
+        { title: t(dict, 'book.content.p4'), icon: 'tabler:adjustments' },
+        { title: t(dict, 'book.content.p5'), icon: 'tabler:target-arrow' },
+      ]}
+    />
+
+    <!-- 3. GAINS CONCRETS — les chiffres -->
+    <Features
+      columns={1}
+      items={[
+        {
+          title: t(dict, 'book.gain.title'),
+          description: t(dict, 'book.gain.desc'),
+          icon: 'tabler:target-arrow',
+        },
+      ]}
+    />
+
+    <!-- 4. TÉMOIGNAGES -->
     <Testimonials
       id="utilisateurs"
       title={t(dict, 'book.testimonials.title')}
@@ -117,104 +139,8 @@ const metadata = {
         },
       ]}
     />
-    <Features
-      columns={1}
-      items={[
-        {
-          title: t(dict, 'book.gain.title'),
-          description: t(dict, 'book.gain.desc'),
-          icon: 'tabler:target-arrow',
-        },
-      ]}
-    />
 
-    <StepsSansImage
-      title={t(dict, 'book.content.title')}
-      items={[
-        { title: t(dict, 'book.content.p1'), icon: 'tabler:book' },
-        { title: t(dict, 'book.content.p2'), icon: 'tabler:brain' },
-        { title: t(dict, 'book.content.p3'), icon: 'tabler:chart-line' },
-        { title: t(dict, 'book.content.p4'), icon: 'tabler:adjustments' },
-        { title: t(dict, 'book.content.p5'), icon: 'tabler:target-arrow' },
-      ]}
-    />
-
-    <Note title={t(dict, 'book.vision.title')} description={t(dict, 'book.vision.desc')} />
-
-    <!-- TARGET -->
-    <Features
-      columns={2}
-      title={t(dict, 'book.target.title')}
-      items={[
-        {
-          title: t(dict, 'book.target.good.title'),
-          description: t(dict, 'book.target.good.desc'),
-          icon: 'tabler:target-arrow',
-        },
-        {
-          title: t(dict, 'book.target.bad.title'),
-          description: t(dict, 'book.target.bad.desc'),
-          icon: 'tabler:alert-triangle',
-        },
-      ]}
-    />
-
-    <!-- METHOD -->
-    <Features
-      columns={1}
-      title={t(dict, 'book.method.title')}
-      items={[
-        {
-          title: t(dict, 'book.method.p1.title'),
-          description: t(dict, 'book.method.p1.desc'),
-          icon: 'tabler:alert-triangle',
-        },
-        {
-          title: t(dict, 'book.method.p2.title'),
-          description: t(dict, 'book.method.p2.desc'),
-          icon: 'tabler:wind',
-        },
-        {
-          title: t(dict, 'book.method.p3.title'),
-          description: t(dict, 'book.method.p3.desc'),
-          icon: 'tabler:search',
-        },
-        {
-          title: t(dict, 'book.method.p4.title'),
-          description: t(dict, 'book.method.p4.desc'),
-          icon: 'tabler:target-arrow',
-        },
-      ]}
-    />
-
-    <Note title={t(dict, 'book.philo.title')} description={t(dict, 'book.philo.desc')} />
-
-    <StepsSansImage
-      title={t(dict, 'book.concrete.title')}
-      items={[
-        {
-          title: t(dict, 'book.concrete.p1.title'),
-          icon: 'tabler:alert-triangle',
-        },
-        {
-          title: t(dict, 'book.concrete.p2.title'),
-          icon: 'tabler:wind',
-        },
-        {
-          title: t(dict, 'book.concrete.p3.title'),
-          icon: 'tabler:search',
-        },
-        {
-          title: t(dict, 'book.concrete.p4.title'),
-          icon: 'tabler:target-arrow',
-        },
-        {
-          title: t(dict, 'book.concrete.p5.title'),
-          icon: 'tabler:wind',
-        },
-      ]}
-    />
-
+    <!-- 5. CTA FINAL -->
     <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 items-center">
       <div class="flex flex-col items-center">
         <img
@@ -233,7 +159,6 @@ const metadata = {
       </div>
     </div>
 
-    <!-- CTA FINAL -->
     <section class="py-8 text-center">
       <h2 class="text-2xl md:text-3xl font-bold mb-8">
         {t(dict, 'book.cta.question')}

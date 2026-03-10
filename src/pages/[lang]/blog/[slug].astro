@@ -1,5 +1,6 @@
 ---
 import type { GetStaticPaths, ImageMetadata } from 'astro';
+import { getCollection } from 'astro:content';
 import merge from 'lodash.merge';
 import RelatedPosts from '~/components/blog/RelatedPosts.astro';
 import SinglePost from '~/components/blog/SinglePost.astro';
@@ -8,28 +9,41 @@ import Layout from '~/layouts/PageLayout.astro';
 import type { MetaData, Post } from '~/types';
 import { blogPostRobots, fetchPosts } from '~/utils/blog';
 import { findImage } from '~/utils/images';
-import { getCanonical } from '~/utils/permalinks';
+import { cleanSlug, getCanonical } from '~/utils/permalinks';
 
 // ✅ i18n
 import { SUPPORTED_LOCALES, type Locale } from '~/lib/i18n';
+import { extractFaqItems } from '~/utils/faq';
 
 export const prerender = true;
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  // Get raw collection entries for FAQ extraction
+  const rawEntries = await getCollection('post');
+  const bodyBySlug = new Map<string, string>();
+  for (const entry of rawEntries) {
+    const slug = cleanSlug((entry.filePath ?? entry.id).split('/').pop()!.replace(/\.mdx?$/i, ''));
+    if (entry.body) bodyBySlug.set(slug, entry.body);
+  }
+
   const all = await Promise.all(
     SUPPORTED_LOCALES.map(async (lang) => {
       const l = lang as Locale;
       const posts = await fetchPosts(l);
       return posts.map((post) => ({
-        params: { lang: l, slug: post.slug! }, // route explicite recommandée
-        props: { post, lang: l },
+        params: { lang: l, slug: post.slug! },
+        props: {
+          post,
+          lang: l,
+          faqItems: extractFaqItems(bodyBySlug.get(post.slug!)),
+        },
       }));
     })
   );
   return all.flat();
 };
 
-const { post } = Astro.props as { post: Post };
+const { post, faqItems } = Astro.props as { post: Post; faqItems: Array<{ question: string; answer: string }> };
 
 const url = getCanonical(post.permalink);
 const image = (await findImage(post.image)) as ImageMetadata | string | undefined;
@@ -75,6 +89,20 @@ const blogPostingSchema = {
     {post.Content ? <post.Content /> : <Fragment set:html={post.content || ''} />}
   </SinglePost>
   <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
+  {faqItems.length > 0 && (
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer,
+        },
+      })),
+    })} />
+  )}
   <ToBlogLink />
   <RelatedPosts post={post} />
 </Layout>
