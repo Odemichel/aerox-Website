@@ -15,7 +15,7 @@
 - [ ] Créer un **cluster de 3-5 articles blog** autour du bike fitting (étude de cas, comparatif outils, guide aéro pour fitters)
 - [ ] **Adapter le contenu EN** au marché US (mentionner Retül, Guru comme contexte concurrentiel)
 - [ ] Ajouter un **HowTo schema** JSON-LD pour la section "3 étapes"
-- [ ] Ajouter un **SoftwareApplication schema** dédié avec `offers`, `audience` (B2B)
+- [x] **SoftwareApplication schema** ajouté avec `audience: BusinessAudience`, `offers: PreOrder`
 - [ ] Renforcer le **maillage interne** : liens depuis `/method/`, `/team/` vers bike-fitting
 - [ ] Obtenir des **photos/logos** des studios des 3 bike fitters pour les cards
 
