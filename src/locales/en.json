@@ -259,6 +259,23 @@
   "home.faq.schema.a10": "With GPX mode, you import the exact course of your race. AeroX simulates the terrain, wind, and impact of your aerodynamics so you can train as if you were already there.",
 
   "home.common.more": "Learn more…",
+
+  "home.leadmagnet.title": "Be the first to know",
+  "home.leadmagnet.subtitle": "Sign up and get priority access on April 10.",
+  "home.leadmagnet.placeholder": "Your email",
+  "home.leadmagnet.cta": "Sign me up",
+  "home.leadmagnet.success": "You're in! You'll get early access info first.",
+  "home.leadmagnet.error": "Something went wrong, please try again.",
+
+  "home.explore.title": "Explore AeroX",
+  "home.explore.bf.title": "AeroX for Bike Fitters",
+  "home.explore.bf.desc": "Measure your clients' aero in real time",
+  "home.explore.blog.zwift.title": "AeroX vs Zwift: what's the difference?",
+  "home.explore.blog.zwift.desc": "Blog post",
+  "home.explore.blog.aero.title": "Save time with aerodynamics",
+  "home.explore.blog.aero.desc": "Blog post",
+  "home.explore.blog.feel.title": "Learn to feel the aero",
+  "home.explore.blog.feel.desc": "Blog post",
    "nav.home": "Home",
   "nav.features": "Features",
   "nav.why": "Why AeroX?",

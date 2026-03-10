@@ -261,6 +261,23 @@
 
   "home.common.more": "En savoir plus…",
 
+  "home.leadmagnet.title": "Sois le premier informé du lancement",
+  "home.leadmagnet.subtitle": "Inscris-toi et reçois un accès prioritaire le 10 avril.",
+  "home.leadmagnet.placeholder": "Ton email",
+  "home.leadmagnet.cta": "Je m'inscris",
+  "home.leadmagnet.success": "C'est noté ! Tu recevras les infos en avant-première.",
+  "home.leadmagnet.error": "Une erreur est survenue, réessaie.",
+
+  "home.explore.title": "Explore AeroX",
+  "home.explore.bf.title": "AeroX pour les Bike Fitters",
+  "home.explore.bf.desc": "Mesurez l'aéro de vos clients en temps réel",
+  "home.explore.blog.zwift.title": "AeroX vs Zwift : quelles différences ?",
+  "home.explore.blog.zwift.desc": "Article de blog",
+  "home.explore.blog.aero.title": "Gagner du temps grâce à l'aérodynamisme",
+  "home.explore.blog.aero.desc": "Article de blog",
+  "home.explore.blog.feel.title": "Apprendre à ressentir l'aéro",
+  "home.explore.blog.feel.desc": "Article de blog",
+
   "nav.home": "Accueil",
   "nav.features": "Fonctionnalités",
   "nav.why": "Pourquoi AeroX ?",

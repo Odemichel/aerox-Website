@@ -98,6 +98,34 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
 
   <HeroVideo video={{ src: heroVideo, alt: t(dict, 'home.herovideo.alt') }} />
 
+  <!-- Lead Magnet — capture email au-dessus du fold -->
+  <section class="relative not-prose">
+    <div class="mx-auto max-w-4xl px-4 md:px-6 py-8 md:py-10">
+      <div class="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 dark:from-primary/10 dark:via-primary/20 dark:to-primary/10 rounded-2xl px-6 py-8 md:px-10 md:py-10 text-center border border-primary/15">
+        <h2 class="text-xl md:text-2xl font-bold mb-2">{t(dict, 'home.leadmagnet.title')}</h2>
+        <p class="text-sm text-muted mb-5">{t(dict, 'home.leadmagnet.subtitle')}</p>
+        <form
+          id="form-leadmagnet"
+          class="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto"
+          data-success={t(dict, 'home.leadmagnet.success')}
+          data-error={t(dict, 'home.leadmagnet.error')}
+        >
+          <input
+            type="email"
+            id="email-leadmagnet"
+            placeholder={t(dict, 'home.leadmagnet.placeholder')}
+            required
+            class="w-full sm:flex-1 border border-gray-300 dark:border-slate-600 rounded-lg px-4 py-2.5 text-sm text-secondary bg-white dark:bg-slate-800"
+          />
+          <button type="submit" class="btn-primary px-6 py-2.5 text-sm font-semibold whitespace-nowrap rounded-lg">
+            {t(dict, 'home.leadmagnet.cta')}
+          </button>
+        </form>
+        <p id="msg-leadmagnet" class="text-sm mt-3 hidden"></p>
+      </div>
+    </div>
+  </section>
+
   <LogosCarousel
     title={t(dict, 'home.compat.title')}
     subtitle={t(dict, 'home.compat.subtitle')}
@@ -494,6 +522,47 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
     ]}
   />
 
+  <!-- Explore AeroX — Liens internes maillage -->
+  <section class="relative not-prose">
+    <div class="mx-auto max-w-5xl px-4 md:px-6 py-12 md:py-16">
+      <h2 class="text-2xl md:text-3xl font-bold text-center mb-8">{t(dict, 'home.explore.title')}</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Bike Fitting — card mise en avant -->
+        <a href={`/${lang}/bike-fitting/`} class="group flex flex-col p-5 rounded-xl border-2 border-primary/30 bg-primary/5 dark:bg-primary/10 hover:border-primary hover:shadow-lg transition-all">
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">{t(dict, 'home.explore.bf.title')}</p>
+          <p class="text-xs text-muted mt-1">{t(dict, 'home.explore.bf.desc')}</p>
+        </a>
+        <!-- Blog: Zwift -->
+        <a href={`/${lang}/blog/zwift-${lang}/`} class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-primary/50 hover:shadow-md transition-all">
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+          </div>
+          <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">{t(dict, 'home.explore.blog.zwift.title')}</p>
+          <p class="text-xs text-muted mt-1">{t(dict, 'home.explore.blog.zwift.desc')}</p>
+        </a>
+        <!-- Blog: Aero gain -->
+        <a href={`/${lang}/blog/aero-gain-chronometrique-${lang}/`} class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-primary/50 hover:shadow-md transition-all">
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+          </div>
+          <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">{t(dict, 'home.explore.blog.aero.title')}</p>
+          <p class="text-xs text-muted mt-1">{t(dict, 'home.explore.blog.aero.desc')}</p>
+        </a>
+        <!-- Blog: Feel aero -->
+        <a href={`/${lang}/blog/feel-aero-${lang}/`} class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-primary/50 hover:shadow-md transition-all">
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+          </div>
+          <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">{t(dict, 'home.explore.blog.feel.title')}</p>
+          <p class="text-xs text-muted mt-1">{t(dict, 'home.explore.blog.feel.desc')}</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- Script checkout intact -->
   <script is:inline>
     const callCheckout = async (payload = {}) => {
@@ -532,6 +601,36 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
     });
     document.getElementById('btn-checkout-card')?.addEventListener('click', (e) => {
       withLoading(e.currentTarget, () => callCheckout());
+    });
+  </script>
+
+  <script>
+    const formLM = document.getElementById('form-leadmagnet') as HTMLFormElement | null;
+    const msgLM = document.getElementById('msg-leadmagnet');
+
+    formLM?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = (document.getElementById('email-leadmagnet') as HTMLInputElement).value.trim();
+      const lang = window.location.pathname.split('/')[1] || 'fr';
+
+      const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, name: '' }),
+      });
+
+      const data = await res.json();
+      msgLM?.classList.remove('hidden', 'text-red-600', 'text-green-600');
+
+      if (data.success) {
+        msgLM!.textContent = formLM?.dataset.success ?? '';
+        msgLM?.classList.add('text-green-600');
+        formLM.reset();
+      } else {
+        msgLM!.textContent = formLM?.dataset.error ?? '';
+        msgLM?.classList.add('text-red-600');
+      }
+      msgLM?.classList.remove('hidden');
     });
   </script>
 

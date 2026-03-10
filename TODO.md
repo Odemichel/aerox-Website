@@ -44,10 +44,10 @@
 
 ### Conversion
 - [ ] **Raccourcir la page** : fusionner Features + Features2, supprimer les 5 Notes intercalaires → viser ~10 sections
-- [ ] **Ajouter un lead magnet** au-dessus du fold (capture email pour visiteurs non prêts à s'inscrire)
+- [x] **Lead magnet ajouté** : capture email après le hero ("Sois le premier informé du lancement") via MailerLite
 - [ ] **Varier les CTA** : tous pointent vers `/inscription/` → proposer des actions secondaires
-- [ ] **Ajouter un lien vers `/bike-fitting/`** dans le contenu principal (pas seulement le nav)
+- [x] **Lien vers `/bike-fitting/`** ajouté dans la section "Explore AeroX"
 
-### Maillage interne
-- [ ] Lien depuis la homepage vers `/bike-fitting/` (dans la section Features ou Testimonials)
-- [ ] Lien vers les articles de blog principaux depuis la homepage
+### Maillage interne — FAIT
+- [x] Section "Explore AeroX" avec 4 cards : bike-fitting (mise en avant) + 3 articles blog (zwift, aero-gain, feel-aero)
+- [x] Liens homepage → articles blog principaux (zwift, aero-gain-chronometrique, feel-aero)
