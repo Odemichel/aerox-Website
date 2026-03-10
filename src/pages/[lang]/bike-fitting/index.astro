@@ -84,6 +84,19 @@ const softwareSchema = {
   },
 };
 
+/* ===== HowTo JSON-LD ===== */
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: lang === 'fr' ? 'Comment réaliser un bike fitting aérodynamique avec AeroX' : 'How to perform an aerodynamic bike fitting with AeroX',
+  description: t(dict, 'bf.meta.description'),
+  step: [1, 2, 3].map((i) => ({
+    '@type': 'HowToStep',
+    name: t(dict, `bf.steps.s${i}.title`),
+    text: t(dict, `bf.steps.s${i}.desc`),
+  })),
+};
+
 /* ===== Review JSON-LD ===== */
 const reviews = [
   { name: 'Marcelo Rocha', quote: t(dict, 'bf.social.rocha.quote') },
@@ -108,6 +121,7 @@ const reviewSchema = reviews.map((r) => ({
 <Layout metadata={metadata}>
   <!-- JSON-LD schemas -->
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
   {reviewSchema.map((r) => (
@@ -156,10 +170,18 @@ const reviewSchema = reviews.map((r) => ({
             href="#contact-bf"
             class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold"
           >
-            {t(dict, 'bf.form.submit')}
+            {t(dict, 'bf.hero.cta')}
           </a>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Bloc définition citable — optimisé GEO/AI Overviews -->
+  <section class="relative not-prose">
+    <div class="mx-auto max-w-4xl px-4 md:px-6 py-6">
+      <p class="text-sm text-muted leading-relaxed">{t(dict, 'bf.definition')}</p>
+      <p class="text-xs text-muted/60 mt-2 italic">{t(dict, 'bf.lastUpdated')}</p>
     </div>
   </section>
 
@@ -237,10 +259,15 @@ const reviewSchema = reviews.map((r) => ({
       <div class="prose prose-lg dark:prose-invert max-w-none text-muted">
         <p set:html={t(dict, 'bf.metrics.intro')} />
         <div class="grid md:grid-cols-2 gap-6 my-8 not-prose">
-          {[1, 2, 3, 4].map((i) => (
-            <div class="flex gap-3 items-start">
+          {[
+            { i: 1, icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>' },
+            { i: 2, icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>' },
+            { i: 3, icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>' },
+            { i: 4, icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>' },
+          ].map(({ i, icon }) => (
+            <div class="flex gap-3 items-start bf-fade-in">
               <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-1">
-                <span class="text-primary font-bold text-sm">{i}</span>
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={icon} />
               </div>
               <div>
                 <p class="font-semibold text-default mb-1">{t(dict, `bf.metrics.m${i}.title`)}</p>
@@ -277,7 +304,7 @@ const reviewSchema = reviews.map((r) => ({
       <!-- CTA intermédiaire -->
       <div class="mt-10 text-center">
         <a href="#contact-bf" class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold">
-          {t(dict, 'bf.form.submit')}
+          {t(dict, 'bf.metrics.cta')}
         </a>
       </div>
     </div>
@@ -289,13 +316,49 @@ const reviewSchema = reviews.map((r) => ({
       <h2 class="text-2xl md:text-3xl font-bold text-center mb-10">{t(dict, 'bf.steps.title')}</h2>
       <div class="grid md:grid-cols-3 gap-8">
         {[1, 2, 3].map((i) => (
-          <div class="flex flex-col items-center text-center">
+          <div class="flex flex-col items-center text-center bf-fade-in">
             <div class="w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center text-xl font-bold mb-4">{i}</div>
             <h3 class="text-lg font-semibold mb-2">{t(dict, `bf.steps.s${i}.title`)}</h3>
             <p class="text-sm text-muted">{t(dict, `bf.steps.s${i}.desc`)}</p>
           </div>
         ))}
       </div>
+    </div>
+  </section>
+
+  <!-- TABLEAU COMPARATIF — AeroX vs Soufflerie vs Fitting classique -->
+  <section class="relative not-prose scroll-mt-[72px]">
+    <div class="mx-auto max-w-4xl px-4 md:px-6 py-10 md:py-14">
+      <h2 class="text-2xl md:text-3xl font-bold text-center mb-8">{t(dict, 'bf.table.title')}</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-primary/10 dark:bg-primary/20">
+              <th class="text-left px-4 py-3 font-semibold">{t(dict, 'bf.table.col1')}</th>
+              <th class="text-left px-4 py-3 font-semibold text-primary">{t(dict, 'bf.table.col2')}</th>
+              <th class="text-left px-4 py-3 font-semibold">{t(dict, 'bf.table.col3')}</th>
+              <th class="text-left px-4 py-3 font-semibold">{t(dict, 'bf.table.col4')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              { key: 'cost', highlight: true },
+              { key: 'aero', highlight: true },
+              { key: 'access', highlight: false },
+              { key: 'duration', highlight: true },
+              { key: 'followup', highlight: true },
+            ].map(({ key, highlight }, idx) => (
+              <tr class={`border-b border-gray-200 dark:border-slate-700 ${idx % 2 === 1 ? 'bg-gray-50 dark:bg-slate-800/30' : ''}`}>
+                <td class="px-4 py-3 font-medium">{t(dict, `bf.table.${key}`)}</td>
+                <td class={`px-4 py-3 ${highlight ? 'text-primary font-semibold' : ''}`}>{t(dict, `bf.table.${key}.aerox`)}</td>
+                <td class="px-4 py-3">{t(dict, `bf.table.${key}.tunnel`)}</td>
+                <td class="px-4 py-3 text-muted">{t(dict, `bf.table.${key}.classic`)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-muted/60 text-center mt-3 italic">{t(dict, 'bf.lastUpdated')}</p>
     </div>
   </section>
 
@@ -340,7 +403,7 @@ const reviewSchema = reviews.map((r) => ({
           { name: 'Marcelo Muniz Machado', initials: 'MM', role: t(dict, 'bf.social.muniz.role'), location: t(dict, 'bf.social.muniz.location'), quote: t(dict, 'bf.social.muniz.quote'), url: 'https://saudem3bikefit.com.br/', domain: 'saudem3bikefit.com.br' },
           { name: 'Mark Gerlando', initials: 'MG', role: t(dict, 'bf.social.gerlando.role'), location: t(dict, 'bf.social.gerlando.location'), quote: t(dict, 'bf.social.gerlando.quote'), url: 'https://www.ridescience.com/', domain: 'ridescience.com' },
         ].map((fitter) => (
-          <article class="flex flex-col rounded-2xl shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-800/50 p-5 md:p-6">
+          <article class="flex flex-col rounded-2xl shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-800/50 p-5 md:p-6 bf-fade-in hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
             <div class="flex items-center gap-4 mb-4">
               <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <span class="text-primary text-lg font-bold">{fitter.initials}</span>
@@ -371,12 +434,12 @@ const reviewSchema = reviews.map((r) => ({
       <h2 class="text-2xl md:text-3xl font-bold text-center mb-8">{t(dict, 'bf.faq.title')}</h2>
       <div class="space-y-4">
         {[1, 2, 3, 4, 5].map((i) => (
-          <details class="group rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
-            <summary class="cursor-pointer px-5 py-4 font-semibold text-base flex items-center justify-between gap-3 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
+          <details class="group rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors open:border-primary/40 open:shadow-sm">
+            <summary class="cursor-pointer px-5 py-4 font-semibold text-base flex items-center justify-between gap-3 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors group-open:text-primary">
               {t(dict, `bf.faq.q${i}`)}
-              <svg class="w-5 h-5 shrink-0 text-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              <svg class="w-5 h-5 shrink-0 text-muted transition-transform group-open:rotate-180 group-open:text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
             </summary>
-            <div class="px-5 pb-4 text-muted">
+            <div class="px-5 pb-4 text-muted border-t border-primary/10">
               {t(dict, `bf.faq.a${i}`)}
             </div>
           </details>
@@ -459,4 +522,31 @@ const reviewSchema = reviews.map((r) => ({
     }
     msg?.classList.remove('hidden');
   });
+</script>
+
+<style>
+  .bf-fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .bf-fade-in.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+  document.querySelectorAll('.bf-fade-in').forEach((el) => observer.observe(el));
 </script>

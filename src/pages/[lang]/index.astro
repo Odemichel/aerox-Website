@@ -98,6 +98,16 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
 
   <HeroVideo video={{ src: heroVideo, alt: t(dict, 'home.herovideo.alt') }} />
 
+  <!-- Bloc définition citable — glassmorphism card, optimisé GEO/AI Overviews -->
+  <section class="relative not-prose">
+    <div class="mx-auto max-w-4xl px-4 md:px-6 py-8">
+      <div class="bg-white/75 dark:bg-slate-800/75 backdrop-blur-sm border border-gray-200 dark:border-slate-600 rounded-2xl p-8 md:p-10 shadow-2xl">
+        <p class="text-sm text-muted leading-relaxed" set:html={t(dict, 'home.definition')} />
+        <p class="text-xs text-muted/60 mt-3 italic">{t(dict, 'home.lastUpdated')}</p>
+      </div>
+    </div>
+  </section>
+
   <!-- Lead Magnet — capture email au-dessus du fold -->
   <section class="relative not-prose">
     <div class="mx-auto max-w-4xl px-4 md:px-6 py-8 md:py-10">
@@ -148,6 +158,13 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
       { title: t(dict, 'home.stats.savedAt30'), amount: '-35 W' },
     ]}
   />
+
+  <!-- Stats source -->
+  <section class="relative not-prose">
+    <div class="mx-auto max-w-4xl px-4 md:px-6 pb-2">
+      <p class="text-xs text-muted/60 text-center italic">{t(dict, 'home.stats.source')}</p>
+    </div>
+  </section>
 
   <Note title={t(dict, 'home.note1.title')} description={t(dict, 'home.note1.desc')} />
 
@@ -731,10 +748,18 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
     founder: {
       '@type': 'Person',
       name: 'Olivier Demichel',
+      jobTitle: lang === 'fr' ? 'Fondateur & Ingénieur' : 'Founder & Engineer',
+      sameAs: [
+        'https://www.linkedin.com/in/olivier-demichel-b9b824ba/',
+        'https://www.youtube.com/@nolimit-triathlon',
+        'https://www.researchgate.net/profile/Olivier-Demichel',
+      ],
     },
     sameAs: [
       'https://www.instagram.com/aerox_be_faster/',
       'https://www.youtube.com/@AeroXBeFaster',
+      'https://www.youtube.com/@nolimit-triathlon',
+      'https://www.linkedin.com/company/aerox-officiel/',
     ],
   })} />
 
@@ -760,5 +785,53 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
       priceCurrency: 'EUR',
       availability: 'https://schema.org/PreOrder',
     },
+  })} />
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: t(dict, 'home.herovideo.alt'),
+    description: t(dict, 'home.meta.description'),
+    uploadDate: '2025-01-15',
+    contentUrl: `https://aeroxbefaster.com${heroVideo}`,
+    thumbnailUrl: 'https://aeroxbefaster.com/favicon.svg',
+  })} />
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'AeroX',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      reviewCount: '4',
+      bestRating: '5',
+    },
+    review: [
+      {
+        '@type': 'Review',
+        author: { '@type': 'Person', name: 'Milan Larivière' },
+        reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+        reviewBody: t(dict, 'home.testimonials.items.milan.text').replace(/"/g, ''),
+      },
+      {
+        '@type': 'Review',
+        author: { '@type': 'Person', name: 'Frédéric Petit' },
+        reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+        reviewBody: t(dict, 'home.testimonials.items.frederic.text').replace(/"/g, ''),
+      },
+      {
+        '@type': 'Review',
+        author: { '@type': 'Person', name: 'Olivier Demichel' },
+        reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+        reviewBody: t(dict, 'home.testimonials.items.olivier.text').replace(/"/g, ''),
+      },
+      {
+        '@type': 'Review',
+        author: { '@type': 'Person', name: 'James Ropert' },
+        reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+        reviewBody: t(dict, 'home.testimonials.items.james.text').replace(/"/g, ''),
+      },
+    ],
   })} />
 </Layout>

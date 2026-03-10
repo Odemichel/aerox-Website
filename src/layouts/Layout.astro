@@ -63,11 +63,13 @@ const blogSlugPairs: Record<string, string> = {
   'aero-feedbacks-en': 'aero-feedbacks-fr',
   'bf-mesurer-fr': 'bf-mesurer-en',
   'bf-mesurer-en': 'bf-mesurer-fr',
-  'aerox-innovation-fr': 'aerox-innovation-en',
-  'aerox-innovation-en': 'aerox-innovation-fr',
-  'feel-aero-fr': 'feel-aero-en',
-  'feel-aero-en': 'feel-aero-fr',
 };
+
+/** Mono-language articles — skip hreflang alternate for these slugs */
+const monoLangSlugs = new Set([
+  'aerox-innovation-fr',
+  'feel-aero-en',
+]);
 
 function hrefForLang(target: Locale) {
   const parts = Astro.url.pathname.split('/').filter(Boolean);
@@ -80,6 +82,8 @@ function hrefForLang(target: Locale) {
   // Swap blog slug if we have a paired translation
   if (parts[1] === 'blog' && parts[2] && srcLang !== target) {
     const slug = parts[2].toLowerCase();
+    // Skip hreflang for mono-language articles
+    if (monoLangSlugs.has(slug)) return null;
     if (blogSlugPairs[slug]) {
       parts[2] = blogSlugPairs[slug];
     }
@@ -126,8 +130,8 @@ const breadcrumbSchema = breadcrumbItems.length > 0 ? {
     <SiteVerification />
 
     <!-- hreflang alternates -->
-    {SUPPORTED_LOCALES.map((l) => <link rel="alternate" hreflang={l} href={hrefForLang(l)} />)}
-    <link rel="alternate" hreflang="x-default" href={hrefForLang(DEFAULT_LOCALE)} />
+    {SUPPORTED_LOCALES.map((l) => { const href = hrefForLang(l); return href ? <link rel="alternate" hreflang={l} href={href} /> : null; })}
+    {hrefForLang(DEFAULT_LOCALE) && <link rel="alternate" hreflang="x-default" href={hrefForLang(DEFAULT_LOCALE)} />}
 
     {breadcrumbSchema && (
       <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
