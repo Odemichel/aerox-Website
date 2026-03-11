@@ -520,32 +520,13 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
 
   <Note title={t(dict, 'home.note5.title')} description={t(dict, 'home.note5.desc')} />
 
-  <FAQs
-    id="FAQs"
-    title={t(dict, 'home.faq.title')}
-    subtitle={t(dict, 'home.faq.subtitle')}
-    tagline="FAQs"
-    classes={{ container: 'max-w-6xl' }}
-    actions={[{ variant: 'primary', text: t(dict, 'home.faq.cta'), href: Link_inscription, target: '' }]}
-    items={[
-      { title: t(dict, 'home.faq.items.1.title'), education: t(dict, 'home.faq.items.1.education'), expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.2.title'), education: t(dict, 'home.faq.items.2.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.2.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.3.title'), education: t(dict, 'home.faq.items.3.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.3.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.4.title'), education: t(dict, 'home.faq.items.4.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.4.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.5.title'), education: t(dict, 'home.faq.items.5.education'), expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.6.title'), education: t(dict, 'home.faq.items.6.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.6.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.7.title'), education: t(dict, 'home.faq.items.7.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.7.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.8.title'), education: t(dict, 'home.faq.items.8.education'), expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false },
-    ]}
-  />
-
   <!-- Explore AeroX — Liens internes maillage -->
   <section class="relative not-prose">
     <div class="mx-auto max-w-5xl px-4 md:px-6 py-12 md:py-16">
       <h2 class="text-2xl md:text-3xl font-bold text-center mb-8">{t(dict, 'home.explore.title')}</h2>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Bike Fitting — card mise en avant -->
-        <a href={`/${lang}/bike-fitting/`} class="group flex flex-col p-5 rounded-xl border-2 border-primary/30 bg-primary/5 dark:bg-primary/10 hover:border-primary hover:shadow-lg transition-all">
+        <a href={`/${lang}/bike-fitting/`} class="group flex flex-col p-5 rounded-xl bg-primary/5 dark:bg-primary/10 shadow-lg hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all">
           <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
             <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           </div>
@@ -553,7 +534,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
           <p class="text-xs text-muted mt-1">{t(dict, 'home.explore.bf.desc')}</p>
         </a>
         <!-- Blog: Zwift -->
-        <a href={`/${lang}/blog/zwift-${lang}/`} class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-primary/50 hover:shadow-md transition-all">
+        <a href={`/${lang}/blog/zwift-${lang}/`} class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all">
           <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
             <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
           </div>
@@ -561,7 +542,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
           <p class="text-xs text-muted mt-1">{t(dict, 'home.explore.blog.zwift.desc')}</p>
         </a>
         <!-- Blog: Aero gain -->
-        <a href={`/${lang}/blog/aero-gain-chronometrique-${lang}/`} class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-primary/50 hover:shadow-md transition-all">
+        <a href={`/${lang}/blog/aero-gain-chronometrique-${lang}/`} class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all">
           <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
             <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
           </div>
@@ -569,7 +550,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
           <p class="text-xs text-muted mt-1">{t(dict, 'home.explore.blog.aero.desc')}</p>
         </a>
         <!-- Blog: Feel aero -->
-        <a href={`/${lang}/blog/feel-aero-${lang}/`} class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-primary/50 hover:shadow-md transition-all">
+        <a href={`/${lang}/blog/feel-aero-${lang}/`} class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all">
           <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
             <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
           </div>
@@ -579,6 +560,25 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
       </div>
     </div>
   </section>
+
+  <FAQs
+    id="FAQs"
+    title={t(dict, 'home.faq.title')}
+    subtitle={t(dict, 'home.faq.subtitle')}
+    tagline="FAQs"
+    classes={{ container: 'max-w-6xl' }}
+    actions={[{ variant: 'primary', text: t(dict, 'home.faq.cta'), href: Link_inscription, target: '' }]}
+    items={[
+      { title: t(dict, 'home.faq.items.1.title'), education: t(dict, 'home.faq.items.1.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.1.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.2.title'), education: t(dict, 'home.faq.items.2.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.2.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.3.title'), education: t(dict, 'home.faq.items.3.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.3.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.4.title'), education: t(dict, 'home.faq.items.4.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.4.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.5.title'), education: t(dict, 'home.faq.items.5.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.5.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.6.title'), education: t(dict, 'home.faq.items.6.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.6.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.7.title'), education: t(dict, 'home.faq.items.7.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.7.more'), defaultOpen: false },
+      { title: t(dict, 'home.faq.items.8.title'), education: t(dict, 'home.faq.items.8.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.8.more'), defaultOpen: false },
+    ]}
+  />
 
   <!-- Script checkout intact -->
   <script is:inline>

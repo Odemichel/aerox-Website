@@ -211,6 +211,7 @@
   "home.faq.cta": "Écris ton futur avec AeroX",
 
   "home.faq.items.1.title": "Pourquoi AeroX ?",
+  "home.faq.items.1.more": "80 % de ton effort combat l'air — AeroX te montre où le récupérer",
   "home.faq.items.1.education": "À partir de 25 km/h, l’aérodynamisme représente 70 à 95 % de la résistance totale — c’est le facteur numéro un qui te ralentit, bien avant le poids ou le matériel. Pourtant, aucun home trainer classique ne mesure ta position aéro. Sur Zwift, MyWhoosh ou Kinomap, tu pédales plus fort sans jamais savoir si ta position te coûte 30 ou 50 watts inutiles. AeroX change la donne : grâce à une simple webcam, l’application analyse ta silhouette en temps réel et calcule ta surface frontale (CdA). Tu vois instantanément combien de km/h et de watts chaque ajustement te fait gagner. Résultat mesuré sur 300+ sessions : +2 à 3 km/h de vitesse et 30 à 40 W économisés à effort identique. C’est l’équivalent d’un gain de 30 à 45 minutes sur un Ironman — sans pédaler plus fort, juste en optimisant ta position.",
 
   "home.faq.items.2.title": "De quels outils ai-je besoin ?",
@@ -226,6 +227,7 @@
   "home.faq.items.4.more": "Compatible avec 95% des HT connectés, probablement le tien…",
 
   "home.faq.items.5.title": "Innovation ou gadget ?",
+  "home.faq.items.5.more": "Ni l'un ni l'autre, AeroX est un changement de paradigme dans l'entraînement : ta vitesse devient ta priorité",
   "home.faq.items.5.education": "Il y a 20 ans, le cardiofréquencemètre était un gadget. Aujourd’hui, personne ne s’entraîne sans. Il y a 10 ans, le capteur de puissance était réservé aux pros. Aujourd’hui, il équipe la majorité des cyclistes sérieux. L’aérodynamisme est le prochain levier à démocratiser — et c’est exactement ce que fait AeroX. Développé par Olivier Demichel, ancien chercheur au CNRS et triathlète, AeroX s’appuie sur l’analyse vidéo par intelligence artificielle pour mesurer ta surface frontale en temps réel. Ce n’est pas une estimation théorique : c’est une mesure physique de ta silhouette, image par image, avec une répétabilité de 3 %. Les gains sont concrets et mesurés : +2 à 3 km/h en moyenne sur 300+ sessions. AeroX ne remplace pas ton capteur de puissance — il le complète en ajoutant la dimension aérodynamique que personne ne mesurait jusqu’ici sur home trainer.",
 
   "home.faq.items.6.title": "Je suis cycliste, est-ce vraiment utile quand on roule en peloton ?",
@@ -237,6 +239,7 @@
   "home.faq.items.7.more": "Teste avec le plan gratuit, progresse avec un abonnement",
 
   "home.faq.items.8.title": "Je suis habitué à ma position aéro, est-ce utile pour moi ?",
+  "home.faq.items.8.more": "Être habitué ne veut pas dire être optimisé, AeroX te montre la différence",
   "home.faq.items.8.education": "Être en position ne suffit pas — encore faut-il que cette position soit efficace. La plupart des cyclistes pensent être aérodynamiques alors que des détails invisibles leur coûtent 10 à 30 watts : tête trop haute de 3 cm, coudes trop écartés de 5 cm, épaules non rentrées. Sans mesure objective, tu ne peux pas le savoir. AeroX rend ces détails visibles en temps réel : tu ajustes ta tête, ton CdA baisse de 2 % — tu le vois instantanément à l’écran. Nos mesures montrent que même des cyclistes expérimentés gagnent encore 1 à 2 km/h en affinant leur position avec un feedback objectif. De plus, ta position se dégrade avec la fatigue : AeroX te montre comment ton CdA évolue au fil de la séance, pour que tu apprennes à maintenir une position efficace même après 2 heures d’effort. C’est la différence entre croire qu’on est aéro et le mesurer.",
 
   "home.faq.schema.q1": "Pourquoi AeroX ?",
@@ -578,14 +581,24 @@
   "bf.steps.s3.desc": "À la fin de la séance, votre client voit noir sur blanc : −35 W, +2.8 km/h, 42 min gagnées sur un Ironman. Il repart convaincu — et il revient.",
   "bf.faq.title": "Questions fréquentes",
   "bf.faq.q1": "Combien coûte AeroX pour un bike fitter ?",
+  "bf.faq.short1": "Deux licences pro (Standard et Premium), à partir de 109 €/mois. ROI immédiat.",
+  "bf.faq.more1": "Détails des licences et comparaison soufflerie",
   "bf.faq.a1": "Nous proposons deux licences professionnelles adaptées aux besoins des bike fitters, disponibles en formule mensuelle ou annuelle. La version Fit AeroX Standard permet l'analyse aérodynamique dynamique sans données de puissance : idéale pour visualiser l'impact de chaque ajustement sur la surface frontale. La version Premium ajoute l'analyse du lien position/puissance et le mode Vitesse, où la résistance du home trainer est asservie à la position — le client ressent physiquement l'impact aérodynamique de chaque changement. En comparaison, une séance en soufflerie coûte 1 500 à 3 000 € et nécessite un déplacement dans un centre spécialisé. Avec AeroX, la mesure est intégrée à votre studio sans matériel supplémentaire coûteux. Le retour sur investissement est immédiat : un client qui voit ses gains revient, recommande votre studio, et accepte un tarif plus élevé pour une prestation différenciante. Contactez-nous pour plus d'informations et un devis adapté à votre activité.",
   "bf.faq.q2": "De quel matériel ai-je besoin ?",
+  "bf.faq.short2": "Une webcam et votre setup habituel. Pas de matériel supplémentaire.",
+  "bf.faq.more2": "Standard vs Premium : quel matériel pour quelle licence",
   "bf.faq.a2": "Pour la version Standard (analyse aéro sans puissance) : une webcam (intégrée ou externe, 720p minimum) et le vélo de votre client sur un support — le home trainer n'a pas besoin d'être connecté, une analyse statique suffit. Pour la version Premium (lien position/puissance et mode Vitesse) : un home trainer connecté compatible Bluetooth FTMS (Wahoo Kickr, Elite Direto, Tacx Neo, Saris H3…) est nécessaire. L'installation prend 2 minutes : placez la webcam à environ 1,30 m face au trainer, lancez AeroX, calibrez en deux clics. La webcam de votre ordinateur portable suffit ; vous pouvez aussi utiliser un smartphone en Wi-Fi comme caméra. Les capteurs de fréquence cardiaque Garmin, Polar et Suunto sont également pris en charge. En résumé : aucun investissement matériel spécifique, juste l'équipement que vous possédez déjà dans votre studio.",
   "bf.faq.q3": "Faut-il une formation pour utiliser AeroX ?",
+  "bf.faq.short3": "Onboarding de 30 min inclus — formation à l'aérodynamisme appliqué au bike fitting.",
+  "bf.faq.more3": "Ce que couvre l'onboarding et pourquoi il change votre pratique",
   "bf.faq.a3": "Un onboarding personnalisé de 30 minutes est inclus pour chaque nouveau partenaire. Il couvre l'installation, la calibration, la découverte des fonctionnalités — mais surtout, il vous forme à l'aérodynamisme appliqué au bike fitting. L'objectif : vous donner les clés pour expliquer à vos clients pourquoi l'aéro coûte cher sur le chrono, en particulier pour les cyclistes les moins rapides où chaque watt économisé compte davantage. Après cet onboarding, vous êtes autonome. L'interface a été conçue pour être utilisée en direct pendant la séance, sans interrompre votre workflow. Les données s'affichent en temps réel : CdA, watts économisés, vitesse estimée — votre client les voit pendant que vous ajustez. Un support prioritaire est inclus. Nos partenaires actuels — du Brésil aux États-Unis en passant par l'Europe — proposent l'étude aéro à tous leurs clients dès leur première séance.",
   "bf.faq.q4": "Est-ce que mes clients peuvent continuer à utiliser AeroX chez eux ?",
+  "bf.faq.short4": "Oui, avec partage de données bidirectionnel entre vous et vos clients.",
+  "bf.faq.more4": "Un levier de fidélisation pour votre activité",
   "bf.faq.a4": "Oui, et c'est un vrai levier de fidélisation pour votre activité. Vous pouvez recommander AeroX à vos clients pour qu'ils maintiennent et travaillent leur position entre deux séances sur leur propre home trainer. Ils progressent, voient les résultats en temps réel, et reviennent naturellement pour des séances de suivi. Sur son compte AeroX, le client retrouve ses données de fitting et peut suivre sa progression. De votre côté, en tant que bike fitter, vous avez aussi accès aux données de vos clients : vous suivez leur évolution entre les rendez-vous et identifiez les points à affiner lors de la prochaine séance. AeroX fonctionne sur macOS et Windows, avec la même webcam et le même home trainer que dans votre studio. Le client retrouve un environnement familier qui prolonge votre expertise et crée un lien durable entre vos séances.",
   "bf.faq.q5": "Quelle est la précision de la mesure aérodynamique ?",
+  "bf.faq.short5": "10 % en absolu, 3 % en répétabilité — idéal pour comparer chaque position en direct.",
+  "bf.faq.more5": "Pourquoi la répétabilité compte plus que la précision absolue en fitting",
   "bf.faq.a5": "AeroX mesure la surface frontale aérodynamique (CdA) en temps réel via analyse vidéo par intelligence artificielle. L'algorithme analyse la silhouette du cycliste image par image pour calculer la surface projetée face au vent. La précision absolue est de 10 %, avec une répétabilité de 3 % — moins précis qu'une soufflerie en valeur absolue, mais bien plus versatile. AeroX donne une information en direct, n'importe où, et permet de comparer efficacement des changements de position et de fit. Vous ajustez la selle de 5 mm, le CdA évolue en direct. C'est exactement ce dont un bike fitter a besoin en séance : pas une valeur absolue de laboratoire, mais un comparatif instantané et visuel entre chaque position testée. En soufflerie professionnelle, une mesure coûte 1 500 à 3 000 € et donne un résultat ponctuel. AeroX offre une mesure continue, directement exploitable pendant le fitting, accessible depuis votre studio.",
 
 "bf.lastUpdated": "Dernière mise à jour : mars 2026",

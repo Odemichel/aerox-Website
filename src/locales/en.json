@@ -209,6 +209,7 @@
   "home.faq.cta": "Write your future with AeroX",
 
   "home.faq.items.1.title": "Why AeroX?",
+  "home.faq.items.1.more": "80% of your effort fights the air — AeroX shows you where to get it back",
   "home.faq.items.1.education": "From 25 km/h, aerodynamics accounts for 70 to 95% of total resistance — it’s the number one factor slowing you down, far more than weight or equipment. Yet no standard smart trainer measures your aero position. On Zwift, MyWhoosh or Kinomap, you push harder without ever knowing if your position is costing you 30 or 50 wasted watts. AeroX changes the game: using a simple webcam, the app analyzes your silhouette in real time and calculates your frontal area (CdA). You instantly see how many km/h and watts each adjustment gains you. Results measured across 300+ sessions: +2 to 3 km/h of speed and 30 to 40 W saved at the same effort. That’s the equivalent of 30 to 45 minutes gained on an Ironman — without pedaling harder, just by optimizing your position.",
 
   "home.faq.items.2.title": "What gear do I need?",
@@ -224,6 +225,7 @@
   "home.faq.items.4.more": "Compatible with 95% of smart trainers — probably yours…",
 
   "home.faq.items.5.title": "Innovation or gadget?",
+  "home.faq.items.5.more": "Neither — AeroX is a paradigm shift in training: your speed becomes your priority",
   "home.faq.items.5.education": "20 years ago, the heart rate monitor was a gadget. Today, no one trains without one. 10 years ago, the power meter was reserved for pros. Today, most serious cyclists use one. Aerodynamics is the next lever to democratize — and that's exactly what AeroX does. Built by Olivier Demichel, former CNRS researcher and triathlete, AeroX uses AI-powered video analysis to measure your frontal area in real time. This isn't a theoretical estimate: it's a physical measurement of your silhouette, frame by frame, with 3% repeatability. The gains are concrete and measured: +2 to 3 km/h on average across 300+ sessions. AeroX doesn't replace your power meter — it complements it by adding the aerodynamic dimension that no one was measuring on a smart trainer until now.",
 
   "home.faq.items.6.title": "I ride in a bunch — is this still useful?",
@@ -235,6 +237,7 @@
   "home.faq.items.7.more": "Test with the free plan, progress with a subscription",
 
   "home.faq.items.8.title": "I’m already used to an aero position — is this still useful?",
+  "home.faq.items.8.more": "Being used to it doesn’t mean being optimized — AeroX shows you the difference",
   "home.faq.items.8.education": "Being in position isn't enough — it also needs to be effective. Most cyclists think they're aerodynamic while invisible details cost them 10 to 30 watts: head 3 cm too high, elbows 5 cm too wide, shoulders not tucked in. Without objective measurement, you can't know. AeroX makes these details visible in real time: you adjust your head, your CdA drops 2% — you see it instantly on screen. Our measurements show that even experienced cyclists still gain 1 to 2 km/h by refining their position with objective feedback. Moreover, your position degrades with fatigue: AeroX shows you how your CdA evolves throughout the session, so you learn to hold an efficient position even after 2 hours of effort. It's the difference between thinking you're aero and measuring it.",
 
 
@@ -563,14 +566,24 @@
 "bf.steps.s3.desc": "At the end of the session, your client sees it in black and white: −35 W, +2.8 km/h, 42 min saved over an Ironman. They leave convinced — and they come back.",
 "bf.faq.title": "Frequently Asked Questions",
 "bf.faq.q1": "How much does AeroX cost for a bike fitter?",
+"bf.faq.short1": "Two pro licenses (Standard and Premium), starting from €109/month. Immediate ROI.",
+"bf.faq.more1": "License details and wind tunnel comparison",
 "bf.faq.a1": "We offer two professional licenses adapted to bike fitters' needs, available monthly or annually. The Fit AeroX Standard version provides dynamic aerodynamic analysis without power data: ideal for visualizing the impact of each adjustment on frontal area. The Premium version adds position/power analysis and Speed Mode, where the smart trainer's resistance is linked to position — the client physically feels the aerodynamic impact of each change. For comparison, a wind tunnel session costs $1,500 to $3,000 and requires travel to a specialized facility. With AeroX, measurement is integrated into your studio with no expensive additional hardware. The ROI is immediate: a client who sees their gains comes back, recommends your studio, and accepts a higher rate for a differentiating service. Contact us for more information and a quote tailored to your practice.",
 "bf.faq.q2": "What equipment do I need?",
+"bf.faq.short2": "A webcam and your existing setup. No additional hardware required.",
+"bf.faq.more2": "Standard vs Premium: which equipment for which license",
 "bf.faq.a2": "For the Standard version (aero analysis without power): a webcam (built-in or external, 720p minimum) and your client's bike on a support — the trainer doesn't need to be a smart trainer, a static analysis is enough. For the Premium version (position/power analysis and Speed Mode): a Bluetooth FTMS-compatible smart trainer is required (Wahoo Kickr, Elite Direto, Tacx Neo, Saris H3…). Setup takes 2 minutes: place the webcam about 1.3 m in front of the trainer, launch AeroX, and calibrate in two clicks. Your laptop's built-in webcam works fine; you can also use a smartphone over Wi-Fi as a camera. Heart rate monitors from Garmin, Polar, and Suunto are also supported. In short: no specialized hardware investment required, just the equipment you already have in your studio.",
 "bf.faq.q3": "Do I need training to use AeroX?",
+"bf.faq.short3": "30-min onboarding included — training in aerodynamics applied to bike fitting.",
+"bf.faq.more3": "What the onboarding covers and why it changes your practice",
 "bf.faq.a3": "A personalized 30-minute onboarding is included for every new partner. It covers installation, calibration, and feature discovery — but above all, it trains you on aerodynamics applied to bike fitting. The goal: give you the keys to explain to your clients why aero costs time on the clock, especially for slower riders where every saved watt matters even more. After this onboarding, you're autonomous. The interface was designed to be used live during the session, without interrupting your workflow. Data is displayed in real time: CdA, watts saved, estimated speed — your client sees it while you adjust. Priority support is included. Our current partners — from Brazil to the United States to Europe — offer aero analysis to all their clients from their very first session.",
 "bf.faq.q4": "Can my clients continue using AeroX at home?",
+"bf.faq.short4": "Yes, with bidirectional data sharing between you and your clients.",
+"bf.faq.more4": "A retention lever for your business",
 "bf.faq.a4": "Yes, and it's a real retention lever for your business. You can recommend AeroX to your clients so they maintain and work on their position between sessions on their own smart trainer. They progress, see real-time results, and naturally come back for follow-up sessions. On their AeroX account, the client can access their fitting data and track their progress. On your side, as a bike fitter, you also have access to your clients' data: you can follow their evolution between appointments and identify areas to refine in the next session. AeroX runs on macOS and Windows, with the same webcam and smart trainer as in your studio. The client finds a familiar environment that extends your expertise and creates a lasting connection between your sessions.",
 "bf.faq.q5": "How accurate is the aerodynamic measurement?",
+"bf.faq.short5": "10% absolute, 3% repeatability — ideal for comparing positions live.",
+"bf.faq.more5": "Why repeatability matters more than absolute accuracy in fitting",
 "bf.faq.a5": "AeroX measures aerodynamic frontal area (CdA) in real time via AI-powered video analysis. The algorithm analyzes the cyclist's silhouette frame by frame to calculate the projected area facing the wind. Absolute accuracy is 10%, with 3% measurement repeatability — less precise than a wind tunnel in absolute terms, but far more versatile. AeroX provides real-time information anywhere and enables effective comparison of position and fit changes. You adjust the saddle by 5 mm, the CdA updates live. That's exactly what a bike fitter needs in a session: not an absolute lab value, but an instant, visual comparison between each tested position. In a professional wind tunnel, a measurement costs $1,500 to $3,000 and gives a one-time result. AeroX provides continuous measurement, directly usable during fitting, accessible from your studio.",
 
 "bf.lastUpdated": "Last updated: March 2026",

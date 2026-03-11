@@ -4,7 +4,7 @@
 
 ### Conversion (pour passer à 8.5+)
 - [ ] Ajouter une **vidéo démo 60s** (ou GIF animé) montrant l'interface AeroX en séance de fitting
-- [ ] **Varier les 3 CTA** : "Voir AeroX en action" (hero), "Demander une démo" (mid), "Commencer maintenant" (form)
+- [x] **Varier les 3 CTA** : "Voir AeroX en action" (hero), "Demander une démo" (mid), "Envoyer ma demande" (form)
 - [ ] Ajouter un **CTA secondaire low-commitment** : "Télécharger le guide" ou "Voir la vidéo" pour les prospects early-stage
 - [ ] Intégrer un **embed Calendly** dans la section contact pour réduire la friction
 - [ ] Ajouter un élément d'**urgence/rareté** (places limitées, offre de lancement, deadline)
@@ -20,12 +20,22 @@
 - [ ] Obtenir des **photos/logos** des studios des 3 bike fitters pour les cards
 
 ### Design
+- [x] **Micro-animations** : fade-in au scroll (Intersection Observer) + hover lift sur cards social proof
+- [x] **Icônes metrics** : remplacé les chiffres par des icônes SVG (chart, lightning, clock, trend)
+- [x] **FAQ accent** : bordure primary + texte primary sur les détails ouverts
 - [ ] Ajouter une **vidéo** ou GIF dans la section Visual Proof ou Steps
 - [ ] Ajouter des **photos des fitters** ou logos de leur studio dans les cards social proof
 
 ---
 
-## Homepage (`/fr/`) — Score : Visibilité 7/10, Conversion 6.5/10
+### Visibilité — corrigé
+- [x] **Hreflang** : articles mono-langue (aerox-innovation-fr, feel-aero-en) n'émettent plus de hreflang fantôme vers des 404
+- [x] **VideoObject schema** ajouté sur la homepage pour la hero video
+- [x] **Review/AggregateRating schema** ajouté sur la homepage (4 testimonials, 4.8/5)
+
+---
+
+## Homepage (`/fr/`) — Score : Visibilité 7.5/10, Conversion 7/10
 
 ### SEO critique (impact élevé) — FAIT
 - [x] **H1 réécrit** : "Ton home trainer / devient une soufflerie virtuelle"

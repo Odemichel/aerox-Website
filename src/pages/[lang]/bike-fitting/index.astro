@@ -434,15 +434,21 @@ const reviewSchema = reviews.map((r) => ({
       <h2 class="text-2xl md:text-3xl font-bold text-center mb-8">{t(dict, 'bf.faq.title')}</h2>
       <div class="space-y-4">
         {[1, 2, 3, 4, 5].map((i) => (
-          <details class="group rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors open:border-primary/40 open:shadow-sm">
-            <summary class="cursor-pointer px-5 py-4 font-semibold text-base flex items-center justify-between gap-3 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors group-open:text-primary">
-              {t(dict, `bf.faq.q${i}`)}
-              <svg class="w-5 h-5 shrink-0 text-muted transition-transform group-open:rotate-180 group-open:text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-            </summary>
-            <div class="px-5 pb-4 text-muted border-t border-primary/10">
-              {t(dict, `bf.faq.a${i}`)}
+          <div class="rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors">
+            <div class="px-5 py-4">
+              <h3 class="font-semibold text-base text-default">{t(dict, `bf.faq.q${i}`)}</h3>
+              <p class="mt-2 text-sm text-muted">{t(dict, `bf.faq.short${i}`)}</p>
+              <details class="mt-2 group">
+                <summary class="cursor-pointer inline-flex items-center text-muted dark:hover:text-primary font-medium select-none text-sm">
+                  {t(dict, `bf.faq.more${i}`)}
+                  <svg class="w-4 h-4 ml-1 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                </summary>
+                <div class="mt-2 p-3 rounded-xl dark:bg-black/50 text-muted text-sm leading-relaxed">
+                  {t(dict, `bf.faq.a${i}`)}
+                </div>
+              </details>
             </div>
-          </details>
+          </div>
         ))}
       </div>
     </div>
