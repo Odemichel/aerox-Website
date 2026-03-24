@@ -51,42 +51,33 @@ const effectiveMetadata: MetaDataType = merge({}, i18nCfg.metadata ?? {}, langOv
 /* ===== hreflang helpers ===== */
 const ensureTrailingSlash = (p: string) => (!p ? p : p.endsWith('/') || p.includes('.') ? p : p + '/');
 
-/** Blog slug pairs: maps fr slug → en slug and vice versa */
-const blogSlugPairs: Record<string, string> = {
-  'zwift-fr': 'zwift-en',
-  'zwift-en': 'zwift-fr',
-  'aero-gain-chronometrique-fr': 'aero-gain-chronometrique-en',
-  'aero-gain-chronometrique-en': 'aero-gain-chronometrique-fr',
-  'amstel-gold-race-2025-fr': 'amstel-gold-race-2025-en',
-  'amstel-gold-race-2025-en': 'amstel-gold-race-2025-fr',
-  'aero-feedbacks-fr': 'aero-feedbacks-en',
-  'aero-feedbacks-en': 'aero-feedbacks-fr',
-  'bf-mesurer-fr': 'bf-mesurer-en',
-  'bf-mesurer-en': 'bf-mesurer-fr',
-};
+/** Blog slug swap: extracts base slug and replaces lang suffix.
+ *  e.g. "zwift-fr" + target "en" → "zwift-en" */
+const ALL_LANG_SUFFIXES = SUPPORTED_LOCALES as readonly string[];
 
-/** Mono-language articles — skip hreflang alternate for these slugs */
-const monoLangSlugs = new Set([
-  'aerox-innovation-fr',
-  'feel-aero-en',
-]);
+function blogSlugForLang(slug: string, targetLang: string): string | null {
+  const lower = slug.toLowerCase();
+  for (const lang of ALL_LANG_SUFFIXES) {
+    if (lower.endsWith(`-${lang}`)) {
+      const base = slug.slice(0, -(lang.length));
+      return `${base}${targetLang}`;
+    }
+  }
+  return null; // slug doesn't end with a known lang suffix
+}
 
 function hrefForLang(target: Locale) {
   const parts = Astro.url.pathname.split('/').filter(Boolean);
-  const srcLang = (parts[0] === 'fr' || parts[0] === 'en') ? parts[0] : null;
+  const srcLang = (SUPPORTED_LOCALES as readonly string[]).includes(parts[0]) ? parts[0] : null;
 
   // Swap language prefix
   if (srcLang) parts[0] = target;
   else parts.unshift(target);
 
-  // Swap blog slug if we have a paired translation
+  // Swap blog slug lang suffix if we're on a blog article
   if (parts[1] === 'blog' && parts[2] && srcLang !== target) {
-    const slug = parts[2].toLowerCase();
-    // Skip hreflang for mono-language articles
-    if (monoLangSlugs.has(slug)) return null;
-    if (blogSlugPairs[slug]) {
-      parts[2] = blogSlugPairs[slug];
-    }
+    const swapped = blogSlugForLang(parts[2], target);
+    if (swapped) parts[2] = swapped;
   }
 
   const path = ensureTrailingSlash('/' + parts.join('/'));
@@ -101,6 +92,13 @@ const pathSegments = Astro.url.pathname.split('/').filter(Boolean);
 const breadcrumbLabels: Record<string, Record<string, string>> = {
   fr: { fr: 'Accueil', blog: 'Blog', team: 'Équipe', contact: 'Contact', method: 'Méthode', 'bike-fitting': 'Bike Fitting', cda: 'CdA en cyclisme' },
   en: { en: 'Home', blog: 'Blog', team: 'Team', contact: 'Contact', method: 'Method', 'bike-fitting': 'Bike Fitting', cda: 'CdA in cycling' },
+  pt: { pt: 'Início', blog: 'Blog', team: 'Equipe', contact: 'Contato', method: 'Método', 'bike-fitting': 'Bike Fitting', cda: 'CdA no ciclismo' },
+  es: { es: 'Inicio', blog: 'Blog', team: 'Equipo', contact: 'Contacto', method: 'Método', 'bike-fitting': 'Bike Fitting', cda: 'CdA en ciclismo' },
+  it: { it: 'Home', blog: 'Blog', team: 'Team', contact: 'Contatto', method: 'Metodo', 'bike-fitting': 'Bike Fitting', cda: 'CdA nel ciclismo' },
+  de: { de: 'Startseite', blog: 'Blog', team: 'Team', contact: 'Kontakt', method: 'Methode', 'bike-fitting': 'Bike Fitting', cda: 'CdA im Radsport' },
+  nl: { nl: 'Home', blog: 'Blog', team: 'Team', contact: 'Contact', method: 'Methode', 'bike-fitting': 'Bike Fitting', cda: 'CdA in wielrennen' },
+  ja: { ja: 'ホーム', blog: 'ブログ', team: 'チーム', contact: 'お問い合わせ', method: 'メソッド', 'bike-fitting': 'バイクフィッティング', cda: 'サイクリングのCdA' },
+  tr: { tr: 'Ana Sayfa', blog: 'Blog', team: 'Ekip', contact: 'İletişim', method: 'Yöntem', 'bike-fitting': 'Bike Fitting', cda: 'Bisiklette CdA' },
 };
 const labels = breadcrumbLabels[currentLang] ?? breadcrumbLabels.fr;
 

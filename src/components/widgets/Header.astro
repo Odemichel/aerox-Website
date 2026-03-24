@@ -29,7 +29,7 @@ export interface Props {
   showToggleTheme?: boolean;
   showRssFeed?: boolean;
   position?: string;
-  currentLang?: 'fr' | 'en';
+  currentLang?: string;
 }
 
 const {
@@ -47,6 +47,13 @@ const {
 const LANGS = [
   { code: 'fr', label: 'Fr', flag: '🇫🇷' },
   { code: 'en', label: 'En', flag: '🇬🇧' },
+  { code: 'pt', label: 'Pt', flag: '🇧🇷' },
+  { code: 'es', label: 'Es', flag: '🇪🇸' },
+  { code: 'it', label: 'It', flag: '🇮🇹' },
+  { code: 'de', label: 'De', flag: '🇩🇪' },
+  { code: 'nl', label: 'Nl', flag: '🇳🇱' },
+  { code: 'ja', label: 'Ja', flag: '🇯🇵' },
+  { code: 'tr', label: 'Tr', flag: '🇹🇷' },
 ];
 
 /* ====== Helpers ====== */
@@ -70,18 +77,18 @@ const urlNow = new URL(Astro.url);
 const currentPath = ensureTrailingSlash(urlNow.pathname);
 
 /* Détermine si on est sur la page d'accueil (avec ou sans langue + ancres) */
+const allLangCodes = LANGS.map((l) => l.code);
 const isHomePage =
   currentPath === '/' ||
-  currentPath === '/fr/' ||
-  currentPath === '/en/' ||
-  currentPath.startsWith('/fr/#') ||
-  currentPath.startsWith('/en/#');
+  allLangCodes.some((c) => currentPath === `/${c}/`) ||
+  allLangCodes.some((c) => currentPath.startsWith(`/${c}/#`));
 
 function langHref(target: string): string {
   const url = new URL(Astro.url);
   const parts = url.pathname.split('/').filter(Boolean);
 
-  if (parts[0] === 'fr' || parts[0] === 'en') parts[0] = target;
+  const allLangs = LANGS.map((l) => l.code);
+  if (allLangs.includes(parts[0])) parts[0] = target;
   else parts.unshift(target);
 
   url.pathname = ensureTrailingSlash('/' + parts.join('/'));
