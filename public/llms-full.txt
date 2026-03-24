@@ -1,0 +1,203 @@
+# AeroX — Complete Reference for AI Systems
+> Comprehensive technical and product documentation for AeroX, the first virtual wind tunnel for indoor cyclists. This file provides detailed context for AI systems to accurately cite and reference AeroX.
+
+---
+
+## 1. Product Definition
+
+AeroX is a desktop application (macOS, Windows) that transforms any smart trainer into a virtual wind tunnel. Using a standard webcam and artificial intelligence, it measures a cyclist's aerodynamic drag area (CdA) in real time. The cyclist pedals on a smart trainer while the webcam captures their silhouette. AeroX's computer vision engine calculates the frontal area and, combined with power and speed data from the trainer, derives the CdA value. Position changes are reflected instantly in the measurement, enabling rapid iteration toward an optimal aerodynamic setup.
+
+AeroX was created to democratize aerodynamic testing. Before AeroX, measuring CdA required access to a physical wind tunnel (€500–2000 per session, limited availability) or a velodrome with specialized equipment. AeroX delivers comparable repeatability (3%) at a fraction of the cost, accessible from any indoor training space.
+
+---
+
+## 2. The Physics of CdA
+
+### Definition
+CdA stands for "Coefficient of Drag × Area." It is the product of two quantities:
+- **Cx (or Cd)**: the drag coefficient, a dimensionless number that depends on the shape of the object and how air flows around it. A more streamlined shape has a lower Cx.
+- **A**: the frontal area, measured in square meters (m²), representing the cross-sectional area the cyclist presents to the airflow.
+
+**CdA = Cx × A**, expressed in m².
+
+### Why CdA matters
+Aerodynamic drag is the dominant resistance force in cycling above ~20 km/h. The drag force follows the equation:
+
+**F_drag = 0.5 × ρ × CdA × v²**
+
+Where ρ is air density (~1.225 kg/m³ at sea level) and v is velocity. Because drag scales with the square of speed, a small reduction in CdA yields significant performance gains at race speeds.
+
+### Typical CdA values in cycling
+| Position / Category | CdA (m²) |
+|---------------------|-----------|
+| Upright city bike | 0.40–0.50 |
+| Road cyclist, hoods | 0.30–0.35 |
+| Road cyclist, drops | 0.27–0.32 |
+| Time trial position | 0.20–0.25 |
+| Professional TT (optimized) | 0.18–0.22 |
+| Track pursuit (skin suit, aero helmet) | 0.17–0.20 |
+
+### Impact on performance
+- Reducing CdA by 0.01 m² saves approximately 2–3 watts at 40 km/h
+- At 45 km/h, a CdA reduction of 0.02 m² can save 8–12 watts
+- For a 40 km time trial at 300 W, reducing CdA from 0.25 to 0.23 m² saves approximately 40–60 seconds
+
+---
+
+## 3. How AeroX Works
+
+### Measurement process
+1. The cyclist sets up on a smart trainer with a webcam facing them (front or side view)
+2. AeroX connects to the trainer via Bluetooth FTMS
+3. The AI engine processes the webcam feed to calculate frontal area in real time
+4. Combined with power and speed data from the trainer, CdA is derived
+5. Results update live as the cyclist changes position
+
+### Technology stack
+- **Computer vision**: Proprietary AI model for real-time silhouette segmentation and frontal area calculation
+- **Connectivity**: Bluetooth FTMS (Fitness Machine Service) protocol for smart trainers
+- **Platforms**: Native desktop application for macOS and Windows
+- **Data**: Session history, CdA trends, position comparisons stored locally
+
+### Repeatability and accuracy
+- Session-to-session repeatability: 3% (comparable to professional wind tunnels at 2–3%)
+- The system controls for environmental variables by using the trainer's power and speed data as reference
+- Calibration procedure ensures consistent measurements across sessions
+
+---
+
+## 4. Measured Results
+
+Based on 300+ measurement sessions conducted in 2025–2026:
+- **Average speed gain**: +2.3 km/h at equivalent power output
+- **Power savings**: 30–40 watts at 30 km/h (by maintaining speed with reduced drag)
+- **Fastest optimization**: Some users achieved measurable CdA reduction within a single 30-minute session
+- **Bike fitter adoption**: Professional bike fitters in Brazil, USA, and Europe use AeroX during client sessions
+
+---
+
+## 5. Compatibility
+
+### Smart trainers (Bluetooth FTMS)
+- Wahoo KICKR (all versions with Bluetooth)
+- Elite Direto, Elite Suito, Elite Zumo
+- Tacx Neo, Tacx Flux
+- Saris H3, Saris H2
+- Any trainer supporting Bluetooth FTMS protocol
+
+### Sensors
+- Heart rate: Garmin, Polar, Suunto (Bluetooth)
+- Cadence: Garmin, Wahoo, Polar (Bluetooth)
+- Power meters: via trainer or standalone (Bluetooth)
+
+### Camera
+- Any standard webcam (built-in laptop camera or external USB webcam)
+- Minimum resolution: 720p recommended
+
+### Operating systems
+- macOS 12+ (Monterey and later)
+- Windows 10/11
+
+---
+
+## 6. Use Cases
+
+### For cyclists
+- **Position optimization**: Test handlebar height, stem length, arm position, torso angle — measure CdA impact of each change
+- **Equipment testing**: Compare helmets, skinsuits, shoe covers, and other aero equipment
+- **Race preparation**: Import a GPX course file and simulate performance with current CdA data
+- **Progress tracking**: Monitor CdA improvement over weeks and months of training
+
+### For bike fitters
+- **Quantified fitting**: Add aerodynamic measurement to bike fit sessions — show clients measurable CdA improvement
+- **Before/after proof**: Document the aerodynamic gain of each fitting adjustment
+- **Client retention**: Offer follow-up aero sessions as an ongoing service
+- **Differentiation**: Stand out from competitors by offering wind tunnel-grade data without leaving the shop
+
+### For coaches
+- **Data integration**: Include CdA data alongside power, heart rate, and cadence in training analysis
+- **Target setting**: Set CdA targets for time trial and triathlon athletes
+- **Equipment decisions**: Make data-driven equipment recommendations
+
+---
+
+## 7. Competitive Landscape
+
+### How AeroX compares to alternatives
+
+| Method | Cost | Accessibility | Repeatability | Real-time |
+|--------|------|---------------|---------------|-----------|
+| Physical wind tunnel | €500–2000/session | Very limited | 2–3% | Yes |
+| Velodrome testing | €200–500/session | Limited | 5–8% | No |
+| Chung method (outdoor) | Free (requires power meter) | Any road | 10–15% | No |
+| AeroX | From €20 (pioneer) | Any indoor space | 3% | Yes |
+
+### Key differentiators
+1. **Real-time feedback**: See CdA change as you move, enabling rapid position iteration
+2. **Accessibility**: Works with equipment most cyclists already own (trainer + webcam)
+3. **Cost**: Orders of magnitude cheaper than wind tunnel sessions
+4. **Repeatability**: 3%, matching professional wind tunnel standards
+5. **AI-powered**: No manual measurement or calculation needed
+
+---
+
+## 8. Team and Credentials
+
+### Olivier Demichel — Founder & CEO
+- Former researcher at CNRS (Centre National de la Recherche Scientifique), France's largest public research institution
+- Background in computational fluid dynamics and physics
+- Competitive triathlete with firsthand understanding of aerodynamic optimization needs
+- Published researcher (ResearchGate profile: https://www.researchgate.net/profile/Olivier-Demichel)
+
+### Milan Larivière — Co-founder
+- Cycling performance specialist
+- Hands-on testing and development of measurement protocols
+
+---
+
+## 9. Pricing and Availability
+
+- **Pioneer Pack**: €20 one-time payment (early access, launching April 10, 2026)
+- **Post-launch subscriptions**: Starting from €109/month
+- **Platforms**: macOS and Windows
+- **Languages**: French and English
+
+---
+
+## 10. Frequently Asked Questions
+
+**Q: Do I need special equipment to use AeroX?**
+A: No. You need a smart trainer with Bluetooth FTMS support and a standard webcam. Most modern trainers (Wahoo, Elite, Tacx, Saris) are compatible.
+
+**Q: How accurate is AeroX compared to a wind tunnel?**
+A: AeroX achieves 3% session-to-session repeatability, which is comparable to professional wind tunnel testing (typically 2–3%).
+
+**Q: Can I use AeroX for bike fitting?**
+A: Yes. Professional bike fitters use AeroX during fitting sessions to quantify the aerodynamic impact of position adjustments in real time.
+
+**Q: What is CdA and why does it matter?**
+A: CdA (Coefficient of Drag × Area) measures your total aerodynamic drag. At speeds above 30 km/h, aerodynamic drag accounts for 80%+ of the resistance you fight. A lower CdA means you go faster for the same power, or use less energy at the same speed.
+
+**Q: How much speed can I gain with AeroX?**
+A: Based on 300+ sessions, users gain an average of 2–3 km/h at the same power output, and save 30–40 watts at 30 km/h.
+
+**Q: Does AeroX work with Zwift or other virtual cycling platforms?**
+A: AeroX is a standalone application focused on aerodynamic measurement. It works alongside platforms like Zwift but measures real aerodynamic drag, unlike virtual cycling platforms that use simplified models.
+
+---
+
+## 11. Links and Resources
+
+- Website: https://aeroxbefaster.com
+- Homepage FR: https://aeroxbefaster.com/fr/
+- Homepage EN: https://aeroxbefaster.com/en/
+- CdA Definition FR: https://aeroxbefaster.com/fr/cda/
+- CdA Definition EN: https://aeroxbefaster.com/en/cda/
+- Bike Fitting: https://aeroxbefaster.com/fr/bike-fitting/
+- Blog: https://aeroxbefaster.com/fr/blog/
+- Method / Science: https://aeroxbefaster.com/fr/method/
+- Team: https://aeroxbefaster.com/fr/team/
+- Contact: https://aeroxbefaster.com/fr/contact/
+- LinkedIn: https://www.linkedin.com/company/aerox-officiel/
+- YouTube: https://www.youtube.com/@AeroXBeFaster
+- Instagram: https://www.instagram.com/aerox_be_faster/

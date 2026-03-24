@@ -14,6 +14,9 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
+User-agent: Google-Extended
+Allow: /
+
 # Training/scraping crawlers — blocked
 User-agent: CCBot
 Disallow: /

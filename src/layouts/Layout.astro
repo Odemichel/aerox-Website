@@ -99,8 +99,8 @@ const siteOrigin = SITE?.site ? new URL(SITE.site).origin : Astro.url.origin;
 const pathSegments = Astro.url.pathname.split('/').filter(Boolean);
 
 const breadcrumbLabels: Record<string, Record<string, string>> = {
-  fr: { fr: 'Accueil', blog: 'Blog', team: 'Équipe', contact: 'Contact', method: 'Méthode', 'bike-fitting': 'Bike Fitting' },
-  en: { en: 'Home', blog: 'Blog', team: 'Team', contact: 'Contact', method: 'Method', 'bike-fitting': 'Bike Fitting' },
+  fr: { fr: 'Accueil', blog: 'Blog', team: 'Équipe', contact: 'Contact', method: 'Méthode', 'bike-fitting': 'Bike Fitting', cda: 'CdA en cyclisme' },
+  en: { en: 'Home', blog: 'Blog', team: 'Team', contact: 'Contact', method: 'Method', 'bike-fitting': 'Bike Fitting', cda: 'CdA in cycling' },
 };
 const labels = breadcrumbLabels[currentLang] ?? breadcrumbLabels.fr;
 

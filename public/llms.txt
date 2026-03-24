@@ -1,34 +1,65 @@
 # AeroX — Virtual Wind Tunnel for Cyclists
-> AeroX turns your smart trainer into a virtual wind tunnel. Measure your aerodynamic frontal area (CdA) in real time with a webcam, optimize your position, and gain up to 3 km/h.
+> AeroX is a desktop application that turns any smart trainer into a virtual wind tunnel. It measures a cyclist's aerodynamic drag area (CdA) in real time using a webcam and computer vision, enabling position optimization without a physical wind tunnel.
 
-## About
-AeroX is a desktop application (macOS, Windows) that uses computer vision to measure a cyclist's frontal area in real time on a smart trainer. Founded by Olivier Demichel, former CNRS researcher and triathlete. Launching April 10, 2026.
+## What AeroX does
+AeroX is the first virtual wind tunnel for indoor cyclists. The application uses artificial intelligence and computer vision to measure CdA (coefficient of drag area, Cx × A) in real time from a simple webcam pointed at a cyclist on a smart trainer. It calculates the aerodynamic impact of every position change instantly, giving cyclists and bike fitters actionable data to reduce drag and ride faster.
+
+## Key metrics and results
+- CdA measurement in real time via webcam + smart trainer
+- Repeatability: 3% (comparable to professional wind tunnels)
+- Typical gains: +2 to 3 km/h at same power output
+- Power savings: 30 to 40 watts at 30 km/h
+- 300+ measurement sessions completed (2025–2026)
+- Used by bike fitters on 3 continents (Brazil, USA, Europe)
+
+## What is CdA?
+CdA (Coefficient of Drag × Area) is the primary metric of aerodynamic efficiency in cycling. It is expressed in m² and represents the product of the drag coefficient (Cx) and the frontal area (A). Lower CdA means less aerodynamic resistance. Typical values: road cyclist 0.30–0.35 m², time trial position 0.20–0.25 m², professional TT 0.18–0.22 m².
+
+## Technical specifications
+- Platforms: macOS and Windows (desktop application)
+- Connectivity: Bluetooth FTMS (smart trainer protocol)
+- Compatible trainers: Wahoo Kickr, Elite Direto, Tacx Neo, Saris H3, and any Bluetooth FTMS trainer
+- Compatible sensors: Garmin, Polar, Suunto (heart rate, cadence)
+- Camera: any standard webcam (built-in or external)
+- AI engine: real-time computer vision for frontal area measurement
+
+## Use cases
+1. **Self-optimization**: Cyclists test position changes at home on their trainer and measure CdA impact instantly
+2. **Bike fitting**: Professional bike fitters use AeroX during fitting sessions to quantify aerodynamic gains of each adjustment
+3. **Race simulation**: Import a GPX course profile and simulate race performance with current aerodynamic data
+4. **Time trial ranking**: Compare aerodynamic efficiency against other users on standardized courses
+
+## Target users
+- Competitive road cyclists and triathletes seeking aerodynamic gains
+- Time trial specialists optimizing their TT position
+- Professional bike fitters adding aerodynamic measurement to their services
+- Cycling coaches integrating aero data into training plans
+
+## Pricing
+- Pioneer Pack: €20 one-time (early access, launching April 10, 2026)
+- Subscriptions from €109/month (post-launch)
+
+## Team
+- **Olivier Demichel** — Founder & Engineer. Former CNRS researcher (French National Centre for Scientific Research), triathlete. Background in fluid dynamics and computational physics.
+- **Milan Larivière** — Co-founder, cycling performance specialist.
 
 ## Main pages
 - [Homepage FR](https://aeroxbefaster.com/fr/): Soufflerie virtuelle pour cyclistes indoor — mesure du CdA en temps réel
 - [Homepage EN](https://aeroxbefaster.com/en/): Virtual wind tunnel for indoor cyclists — real-time CdA measurement
-- [Bike Fitting FR](https://aeroxbefaster.com/fr/bike-fitting/): AeroX pour bike fitters professionnels — mesure aérodynamique en séance
-- [Bike Fitting EN](https://aeroxbefaster.com/en/bike-fitting/): AeroX for professional bike fitters — aero measurement during fitting sessions
-- [Our Story](https://aeroxbefaster.com/fr/team/): The team behind AeroX — Olivier Demichel and Milan Larivière
-- [Method](https://aeroxbefaster.com/fr/method/): The science behind AeroX aerodynamic optimization
+- [What is CdA? (FR)](https://aeroxbefaster.com/fr/cda/): Définition complète du CdA en cyclisme
+- [What is CdA? (EN)](https://aeroxbefaster.com/en/cda/): Complete CdA definition for cycling
+- [Bike Fitting FR](https://aeroxbefaster.com/fr/bike-fitting/): AeroX pour bike fitters professionnels
+- [Bike Fitting EN](https://aeroxbefaster.com/en/bike-fitting/): AeroX for professional bike fitters
+- [Our Story](https://aeroxbefaster.com/fr/team/): The team behind AeroX
+- [Method](https://aeroxbefaster.com/fr/method/): The science behind AeroX
 
 ## Blog
-- [Zwift vs AeroX](https://aeroxbefaster.com/fr/blog/zwift-fr/): Why Zwift doesn't train your aerodynamics — and how AeroX fills the gap
-- [Aero Gains in Numbers](https://aeroxbefaster.com/fr/blog/aero-gain-chronometrique-fr/): How aerodynamic gains translate to real race time savings
-- [Bike Fitting & Performance](https://aeroxbefaster.com/fr/blog/BF-mesurer-fr/): Measuring aerodynamics during a professional bike fit session
-- [Feel Your Aero](https://aeroxbefaster.com/en/blog/feel-aero-en/): Learning to feel aerodynamic position changes on the bike
-- [Amstel Gold Race 2025](https://aeroxbefaster.com/fr/blog/amstel-gold-race-2025-fr/): Analyse aérodynamique de l'Amstel Gold Race 2025
-- [Aero Feedbacks](https://aeroxbefaster.com/fr/blog/aero-feedbacks-fr/): Retours terrain sur l'optimisation aérodynamique avec AeroX
-- [AeroX Innovation](https://aeroxbefaster.com/fr/blog/aerox-innovation-fr/): L'innovation technologique derrière la soufflerie virtuelle AeroX
-
-## Key facts
-- Measures CdA (coefficient of drag area) in real time via webcam and smart trainer
-- Compatible with Wahoo Kickr, Elite Direto, Tacx Neo, Saris H3 and more
-- Used by bike fitters on 3 continents (Brazil, USA, Europe)
-- Typical gains: +2-3 km/h, -30 to 40 W savings at same speed
-- No wind tunnel needed — a simple webcam is enough
-- Available on macOS and Windows
-- Starting from 109 EUR/month, launching April 10, 2026
+- [Zwift vs AeroX](https://aeroxbefaster.com/fr/blog/zwift-fr/): Why Zwift doesn't train your aerodynamics
+- [Aero Gains in Numbers](https://aeroxbefaster.com/fr/blog/aero-gain-chronometrique-fr/): How aero gains translate to race time savings
+- [Bike Fitting & Performance](https://aeroxbefaster.com/fr/blog/BF-mesurer-fr/): Measuring aerodynamics during a professional bike fit
+- [Feel Your Aero](https://aeroxbefaster.com/en/blog/feel-aero-en/): Learning to feel aerodynamic position changes
+- [Amstel Gold Race 2025](https://aeroxbefaster.com/fr/blog/amstel-gold-race-2025-fr/): Aerodynamic analysis of Amstel Gold Race 2025
+- [Aero Feedbacks](https://aeroxbefaster.com/fr/blog/aero-feedbacks-fr/): Field feedback on aerodynamic optimization with AeroX
 
 ## Contact
 - Website: https://aeroxbefaster.com

@@ -1,0 +1,133 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
+import { localizedHref } from '~/utils/localize';
+
+export const prerender = true;
+export const getStaticPaths: GetStaticPaths = async () =>
+  SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
+
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
+
+const metadata = {
+  title: t(dict, 'cda.meta.title'),
+  description: t(dict, 'cda.meta.description'),
+  robots: { index: true, follow: true },
+};
+
+const Link_inscription = localizedHref(lang, '/inscription/inscription/');
+
+const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] as const;
+---
+
+<Layout metadata={metadata}>
+  <section class="py-12 md:py-16">
+    <article class="mx-auto max-w-3xl px-4 md:px-6 prose prose-lg dark:prose-invert">
+
+      <h1>{t(dict, 'cda.h1')}</h1>
+      <p set:html={t(dict, 'cda.intro')} />
+
+      <h2>{t(dict, 'cda.definition.h2')}</h2>
+      <p set:html={t(dict, 'cda.definition.p1')} />
+      <ul>
+        <li set:html={t(dict, 'cda.definition.cx')} />
+        <li set:html={t(dict, 'cda.definition.a')} />
+      </ul>
+      <p><strong>{t(dict, 'cda.definition.formula')}</strong></p>
+      <p set:html={t(dict, 'cda.definition.p2')} />
+
+      <h2>{t(dict, 'cda.why.h2')}</h2>
+      <p set:html={t(dict, 'cda.why.p1')} />
+      <p set:html={t(dict, 'cda.why.p2')} />
+
+      <h2>{t(dict, 'cda.values.h2')}</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>{t(dict, 'cda.values.header1')}</th>
+            <th>{t(dict, 'cda.values.header2')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {valueRows.map((key) => (
+            <tr>
+              <td>{t(dict, `cda.values.${key}.label`)}</td>
+              <td>{t(dict, `cda.values.${key}.value`)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h2>{t(dict, 'cda.impact.h2')}</h2>
+      <p set:html={t(dict, 'cda.impact.p1')} />
+      <ul>
+        <li>{t(dict, 'cda.impact.item1')}</li>
+        <li>{t(dict, 'cda.impact.item2')}</li>
+        <li>{t(dict, 'cda.impact.item3')}</li>
+        <li>{t(dict, 'cda.impact.item4')}</li>
+      </ul>
+
+      <h2>{t(dict, 'cda.measure.h2')}</h2>
+      <h3>{t(dict, 'cda.measure.methods.h3')}</h3>
+      <ul>
+        <li set:html={t(dict, 'cda.measure.methods.tunnel')} />
+        <li set:html={t(dict, 'cda.measure.methods.velodrome')} />
+        <li set:html={t(dict, 'cda.measure.methods.chung')} />
+        <li set:html={t(dict, 'cda.measure.methods.aerox')} />
+      </ul>
+
+      <h3>{t(dict, 'cda.measure.aerox.h3')}</h3>
+      <p set:html={t(dict, 'cda.measure.aerox.p1')} />
+      <p set:html={t(dict, 'cda.measure.aerox.p2')} />
+
+      <h2>{t(dict, 'cda.optimize.h2')}</h2>
+      <ul>
+        <li set:html={t(dict, 'cda.optimize.item1')} />
+        <li set:html={t(dict, 'cda.optimize.item2')} />
+        <li set:html={t(dict, 'cda.optimize.item3')} />
+        <li set:html={t(dict, 'cda.optimize.item4')} />
+      </ul>
+
+      <h2>{t(dict, 'cda.conclusion.h2')}</h2>
+      <p set:html={t(dict, 'cda.conclusion.p1')} />
+
+      <div class="not-prose mt-8 text-center">
+        <a
+          href={Link_inscription}
+          class="btn-primary inline-block px-8 py-3 text-lg font-semibold rounded-lg"
+        >
+          {t(dict, 'cda.cta')}
+        </a>
+      </div>
+
+      <p class="text-xs text-muted/60 mt-8 italic">{t(dict, 'cda.lastUpdated')}</p>
+    </article>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: t(dict, 'cda.h1'),
+    description: t(dict, 'cda.meta.description'),
+    author: {
+      '@type': 'Person',
+      name: 'Olivier Demichel',
+      jobTitle: lang === 'fr' ? 'Fondateur AeroX, ancien chercheur CNRS' : 'AeroX Founder, former CNRS researcher',
+      sameAs: [
+        'https://www.linkedin.com/in/olivier-demichel-b9b824ba/',
+        'https://www.researchgate.net/profile/Olivier-Demichel',
+      ],
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'AeroX',
+      url: 'https://aeroxbefaster.com',
+    },
+    datePublished: '2026-03-24',
+    dateModified: '2026-03-24',
+    mainEntityOfPage: `https://aeroxbefaster.com/${lang}/cda/`,
+    inLanguage: lang === 'fr' ? 'fr-FR' : 'en-US',
+  })} />
+</Layout>
