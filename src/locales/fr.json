@@ -670,7 +670,7 @@
 
 "success_livre.backHome": "Retour à l'accueil",
 
-"home.citableFacts": "<strong>AeroX en chiffres :</strong> 300+ sessions mesurées en 2025-2026 | +2,3 km/h gagnés en moyenne | 35 W économisés à 30 km/h | Répétabilité de 3 % (comparable à une soufflerie professionnelle) | Compatible Wahoo, Elite, Tacx, Saris via Bluetooth FTMS | Disponible sur macOS et Windows.",
+"home.citableFacts": "<strong>AeroX en chiffres :</strong> 300+ sessions mesurées en 2025-2026 | +2,3 km/h gagnés en moyenne | 35 W économisés à 30 km/h | Répétabilité de 3 % | Compatible Wahoo, Elite, Tacx, Saris via Bluetooth FTMS | Disponible sur macOS et Windows.",
 
 "cda.meta.title": "CdA en cyclisme : définition, valeurs et impact sur la performance",
 "cda.meta.description": "Le CdA (Cx × A) est la métrique clé de l'aérodynamisme en cyclisme. Découvrez sa définition physique, les valeurs typiques par catégorie et comment le mesurer avec AeroX.",
@@ -704,8 +704,8 @@
 "cda.impact.p1": "Chaque réduction de 0,01 m² de CdA permet d'économiser environ <strong>2 à 3 watts à 40 km/h</strong>. Voici des exemples concrets :",
 "cda.impact.item1": "Réduire le CdA de 0,01 m² : ~3 W économisés à 40 km/h",
 "cda.impact.item2": "Réduire le CdA de 0,02 m² : ~8-12 W économisés à 45 km/h",
-"cda.impact.item3": "Sur un contre-la-montre de 40 km à 300 W : passer de 0,25 à 0,23 m² fait gagner 40 à 60 secondes",
-"cda.impact.item4": "Sur un Ironman (180 km vélo) : -0,02 m² de CdA peut représenter 5 à 8 minutes gagnées",
+"cda.impact.item3": "Sur un contre-la-montre de 40 km : -0,02 m² de CdA fait gagner ~1 min à 40 km/h, et ~2 min à 30 km/h — plus on roule lentement, plus le gain chrono est important",
+"cda.impact.item4": "Sur un Ironman (180 km vélo) : -0,02 m² de CdA représente 5 à 8 min gagnées à 35 km/h, et jusqu'à 12 min à 28 km/h",
 "cda.measure.h2": "Comment mesurer son CdA ?",
 "cda.measure.methods.h3": "Les méthodes existantes",
 "cda.measure.methods.tunnel": "<strong>Soufflerie physique</strong> : la référence, mais coûteuse (500–2 000 €/session) et peu accessible. Répétabilité de 2-3 %.",

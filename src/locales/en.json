@@ -655,7 +655,7 @@
 
 "success_livre.backHome": "Back to home",
 
-"home.citableFacts": "<strong>AeroX in numbers:</strong> 300+ sessions measured in 2025-2026 | +2.3 km/h gained on average | 35 W saved at 30 km/h | 3% repeatability (comparable to professional wind tunnels) | Compatible with Wahoo, Elite, Tacx, Saris via Bluetooth FTMS | Available on macOS and Windows.",
+"home.citableFacts": "<strong>AeroX in numbers:</strong> 300+ sessions measured in 2025-2026 | +2.3 km/h gained on average | 35 W saved at 30 km/h | 3% repeatability | Compatible with Wahoo, Elite, Tacx, Saris via Bluetooth FTMS | Available on macOS and Windows.",
 
 "cda.meta.title": "CdA in cycling: definition, values and performance impact",
 "cda.meta.description": "CdA (Cx × A) is the key metric of cycling aerodynamics. Learn its physical definition, typical values by category and how to measure it with AeroX.",
@@ -689,8 +689,8 @@
 "cda.impact.p1": "Each 0.01 m² reduction in CdA saves approximately <strong>2-3 watts at 40 km/h</strong>. Concrete examples:",
 "cda.impact.item1": "Reduce CdA by 0.01 m²: ~3 W saved at 40 km/h",
 "cda.impact.item2": "Reduce CdA by 0.02 m²: ~8-12 W saved at 45 km/h",
-"cda.impact.item3": "On a 40 km time trial at 300 W: going from 0.25 to 0.23 m² saves 40-60 seconds",
-"cda.impact.item4": "On an Ironman bike leg (180 km): -0.02 m² CdA can save 5-8 minutes",
+"cda.impact.item3": "On a 40 km time trial: -0.02 m² CdA saves ~1 min at 40 km/h, and ~2 min at 30 km/h — the slower you ride, the bigger the time gain",
+"cda.impact.item4": "On an Ironman bike leg (180 km): -0.02 m² CdA saves 5-8 min at 35 km/h, and up to 12 min at 28 km/h",
 "cda.measure.h2": "How to measure your CdA",
 "cda.measure.methods.h3": "Existing methods",
 "cda.measure.methods.tunnel": "<strong>Wind tunnel</strong>: the gold standard, but expensive (€500–2,000/session) and limited access. Repeatability: 2-3%.",

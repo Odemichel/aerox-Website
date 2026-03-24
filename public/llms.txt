@@ -6,7 +6,7 @@ AeroX is the first virtual wind tunnel for indoor cyclists. The application uses
 
 ## Key metrics and results
 - CdA measurement in real time via webcam + smart trainer
-- Repeatability: 3% (comparable to professional wind tunnels)
+- Repeatability: 3%
 - Typical gains: +2 to 3 km/h at same power output
 - Power savings: 30 to 40 watts at 30 km/h
 - 300+ measurement sessions completed (2025–2026)
@@ -35,9 +35,9 @@ CdA (Coefficient of Drag × Area) is the primary metric of aerodynamic efficienc
 - Professional bike fitters adding aerodynamic measurement to their services
 - Cycling coaches integrating aero data into training plans
 
-## Pricing
-- Pioneer Pack: €20 one-time (early access, launching April 10, 2026)
-- Subscriptions from €109/month (post-launch)
+## Availability
+- Launching April 10, 2026
+- Available on macOS and Windows
 
 ## Team
 - **Olivier Demichel** — Founder & Engineer. Former CNRS researcher (French National Centre for Scientific Research), triathlete. Background in fluid dynamics and computational physics.

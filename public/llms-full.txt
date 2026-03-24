@@ -7,7 +7,7 @@
 
 AeroX is a desktop application (macOS, Windows) that transforms any smart trainer into a virtual wind tunnel. Using a standard webcam and artificial intelligence, it measures a cyclist's aerodynamic drag area (CdA) in real time. The cyclist pedals on a smart trainer while the webcam captures their silhouette. AeroX's computer vision engine calculates the frontal area and, combined with power and speed data from the trainer, derives the CdA value. Position changes are reflected instantly in the measurement, enabling rapid iteration toward an optimal aerodynamic setup.
 
-AeroX was created to democratize aerodynamic testing. Before AeroX, measuring CdA required access to a physical wind tunnel (€500–2000 per session, limited availability) or a velodrome with specialized equipment. AeroX delivers comparable repeatability (3%) at a fraction of the cost, accessible from any indoor training space.
+AeroX was created to democratize aerodynamic testing. Before AeroX, measuring CdA required access to a physical wind tunnel (limited availability) or a velodrome with specialized equipment. AeroX delivers 3% repeatability at a fraction of the cost, accessible from any indoor training space.
 
 ---
 
@@ -40,7 +40,7 @@ Where ρ is air density (~1.225 kg/m³ at sea level) and v is velocity. Because 
 ### Impact on performance
 - Reducing CdA by 0.01 m² saves approximately 2–3 watts at 40 km/h
 - At 45 km/h, a CdA reduction of 0.02 m² can save 8–12 watts
-- For a 40 km time trial at 300 W, reducing CdA from 0.25 to 0.23 m² saves approximately 40–60 seconds
+- On a 40 km time trial, reducing CdA by 0.02 m² saves ~1 min at 40 km/h and ~2 min at 30 km/h — slower riders gain even more time
 
 ---
 
@@ -60,7 +60,7 @@ Where ρ is air density (~1.225 kg/m³ at sea level) and v is velocity. Because 
 - **Data**: Session history, CdA trends, position comparisons stored locally
 
 ### Repeatability and accuracy
-- Session-to-session repeatability: 3% (comparable to professional wind tunnels at 2–3%)
+- Session-to-session repeatability: 3%
 - The system controls for environmental variables by using the trainer's power and speed data as reference
 - Calibration procedure ensures consistent measurements across sessions
 
@@ -127,16 +127,16 @@ Based on 300+ measurement sessions conducted in 2025–2026:
 
 | Method | Cost | Accessibility | Repeatability | Real-time |
 |--------|------|---------------|---------------|-----------|
-| Physical wind tunnel | €500–2000/session | Very limited | 2–3% | Yes |
-| Velodrome testing | €200–500/session | Limited | 5–8% | No |
+| Physical wind tunnel | Very expensive | Very limited | 2–3% | Yes |
+| Velodrome testing | Moderate | Limited | 5–8% | No |
 | Chung method (outdoor) | Free (requires power meter) | Any road | 10–15% | No |
-| AeroX | From €20 (pioneer) | Any indoor space | 3% | Yes |
+| AeroX | Affordable | Any indoor space | 3% | Yes |
 
 ### Key differentiators
 1. **Real-time feedback**: See CdA change as you move, enabling rapid position iteration
 2. **Accessibility**: Works with equipment most cyclists already own (trainer + webcam)
 3. **Cost**: Orders of magnitude cheaper than wind tunnel sessions
-4. **Repeatability**: 3%, matching professional wind tunnel standards
+4. **Repeatability**: 3% session-to-session
 5. **AI-powered**: No manual measurement or calculation needed
 
 ---
@@ -157,8 +157,7 @@ Based on 300+ measurement sessions conducted in 2025–2026:
 
 ## 9. Pricing and Availability
 
-- **Pioneer Pack**: €20 one-time payment (early access, launching April 10, 2026)
-- **Post-launch subscriptions**: Starting from €109/month
+- Launching April 10, 2026
 - **Platforms**: macOS and Windows
 - **Languages**: French and English
 
@@ -170,7 +169,7 @@ Based on 300+ measurement sessions conducted in 2025–2026:
 A: No. You need a smart trainer with Bluetooth FTMS support and a standard webcam. Most modern trainers (Wahoo, Elite, Tacx, Saris) are compatible.
 
 **Q: How accurate is AeroX compared to a wind tunnel?**
-A: AeroX achieves 3% session-to-session repeatability, which is comparable to professional wind tunnel testing (typically 2–3%).
+A: AeroX achieves 3% session-to-session repeatability.
 
 **Q: Can I use AeroX for bike fitting?**
 A: Yes. Professional bike fitters use AeroX during fitting sessions to quantify the aerodynamic impact of position adjustments in real time.
