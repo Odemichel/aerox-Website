@@ -27,20 +27,21 @@ Aerodynamic drag is the dominant resistance force in cycling above ~20 km/h. The
 
 Where ρ is air density (~1.225 kg/m³ at sea level), v is velocity, and P_aero is the power in watts required to overcome aerodynamic drag. Because aero power scales with the cube of speed (doubling speed requires 8× more watts to fight the air), even a small CdA reduction frees up watts at every speed.
 
-### Typical CdA values in cycling
-| Position / Category | CdA (m²) |
-|---------------------|-----------|
-| Upright city bike | 0.40–0.50 |
-| Road cyclist, hoods | 0.30–0.35 |
-| Road cyclist, drops | 0.27–0.32 |
-| Time trial position | 0.20–0.25 |
-| Professional TT (optimized) | 0.18–0.22 |
-| Track pursuit (skin suit, aero helmet) | 0.17–0.20 |
+### Typical frontal area values (measured with AeroX, cyclist 1m78/72 kg)
+| Position | Frontal area A (m²) | Reduction vs upright |
+|----------|---------------------|---------------------|
+| Upright, arms extended on hoods | 0.52 | reference |
+| Leaning, arms bent on hoods | 0.48 | -8% |
+| Horizontal, forearms bent on drops | 0.44 | -16% |
+| Horizontal, forearms flat on hoods | 0.42 | -20% |
+| Aerobars, head up | 0.36 | -31% |
+| Aerobars, head tucked | 0.33 | -37% |
 
-### Impact on performance
-- Reducing CdA by 0.01 m² saves approximately 2–3 watts at 40 km/h
-- At 45 km/h, a CdA reduction of 0.02 m² can save 8–12 watts
-- On a 40 km time trial, reducing CdA by 0.02 m² saves ~1 min at 40 km/h and ~2 min at 30 km/h — slower riders gain even more time
+### Impact on performance (from book data)
+- Compact road position (-20% frontal area): ~33 W saved at 30 km/h, ~53 W at 35 km/h
+- Optimized aerobars (-37% frontal area): ~63 W saved at 30 km/h, ~101 W at 35 km/h
+- Time gain is GREATER at lower speeds: at 25 km/h, optimized position saves ~10 s/km; at 35 km/h, ~7 s/km
+- Ironman (180 km) at 30 km/h: compact position saves ~24 min; optimized aerobars save ~50 min
 
 ---
 
