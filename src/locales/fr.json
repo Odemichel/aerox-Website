@@ -685,7 +685,7 @@
 "cda.definition.p2": "La puissance nécessaire pour vaincre la traînée aérodynamique suit l'équation : <strong>P<sub>aéro</sub> = 0,5 × ρ × CdA × v³</strong>, où ρ est la masse volumique de l'air (~1,225 kg/m³ au niveau de la mer) et v la vitesse. La puissance aéro croît avec le <strong>cube</strong> de la vitesse : doubler sa vitesse demande 8× plus de watts pour vaincre l'air. Inversement, réduire son CdA même légèrement libère des watts à toutes les vitesses.",
 "cda.why.h2": "Pourquoi le CdA est-il si important ?",
 "cda.why.p1": "Au-delà de 25 km/h, la résistance aérodynamique représente <strong>plus de 80 % de la résistance totale</strong> que combat un cycliste. En contre-la-montre à 45 km/h, ce chiffre atteint 90-95 %. Réduire son CdA est donc le levier de performance le plus puissant, bien plus que d'ajouter des watts.",
-"cda.why.p2": "Un cycliste qui passe d'un CdA de 0,32 m² à 0,28 m² (changement de position, sans changer de matériel) peut <strong>gagner 2 à 3 km/h à puissance identique</strong>, soit l'équivalent de 30 à 40 watts économisés.",
+"cda.why.p2": "Un cycliste qui passe d'un CdA de 0,35 m² à 0,28 m² — par exemple en optimisant sa position sur prolongateurs — peut <strong>gagner 2 à 3 km/h à puissance identique</strong>. Plus le delta de CdA est important, plus le gain est marqué, et c'est souvent sur la position du corps que se trouvent les plus gros leviers.",
 "cda.values.h2": "Valeurs typiques de CdA par catégorie",
 "cda.values.header1": "Position / Catégorie",
 "cda.values.header2": "CdA (m²)",

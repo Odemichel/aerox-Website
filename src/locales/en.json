@@ -670,7 +670,7 @@
 "cda.definition.p2": "The power required to overcome aerodynamic drag follows the equation: <strong>P<sub>aero</sub> = 0.5 × ρ × CdA × v³</strong>, where ρ is air density (~1.225 kg/m³ at sea level) and v is velocity. Aero power scales with the <strong>cube</strong> of speed: doubling your speed requires 8× more watts to fight the air. Conversely, even a small CdA reduction frees up watts at every speed.",
 "cda.why.h2": "Why does CdA matter so much?",
 "cda.why.p1": "Above 25 km/h, aerodynamic drag accounts for <strong>over 80% of the total resistance</strong> a cyclist fights. In a time trial at 45 km/h, this reaches 90-95%. Reducing CdA is therefore the most powerful performance lever — far more impactful than adding watts.",
-"cda.why.p2": "A cyclist who drops their CdA from 0.32 m² to 0.28 m² (position change alone, no equipment change) can <strong>gain 2-3 km/h at the same power</strong>, equivalent to saving 30-40 watts.",
+"cda.why.p2": "A cyclist who drops their CdA from 0.35 m² to 0.28 m² — for example by optimizing their aerobar position — can <strong>gain 2-3 km/h at the same power</strong>. The bigger the CdA improvement, the bigger the gain, and body position is where the largest gains are found.",
 "cda.values.h2": "Typical CdA values by category",
 "cda.values.header1": "Position / Category",
 "cda.values.header2": "CdA (m²)",
