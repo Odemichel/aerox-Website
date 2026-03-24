@@ -91,6 +91,7 @@ export function makeNavigation(langInput?: string) {
 
           { text: t('footer.contactUs'), href: withLang(lang, '/contact') },
           { text: t('footer.bikeFitting'), href: withLang(lang, '/bike-fitting') },
+          { text: t('footer.cda'), href: withLang(lang, '/cda') },
         ],
       },
     ],

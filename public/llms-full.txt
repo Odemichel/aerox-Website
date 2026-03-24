@@ -23,9 +23,9 @@ CdA stands for "Coefficient of Drag × Area." It is the product of two quantitie
 ### Why CdA matters
 Aerodynamic drag is the dominant resistance force in cycling above ~20 km/h. The drag force follows the equation:
 
-**F_drag = 0.5 × ρ × CdA × v²**
+**P_aero = 0.5 × ρ × CdA × v³**
 
-Where ρ is air density (~1.225 kg/m³ at sea level) and v is velocity. Because drag scales with the square of speed, a small reduction in CdA yields significant performance gains at race speeds.
+Where ρ is air density (~1.225 kg/m³ at sea level), v is velocity, and P_aero is the power in watts required to overcome aerodynamic drag. Because aero power scales with the cube of speed (doubling speed requires 8× more watts to fight the air), even a small CdA reduction frees up watts at every speed.
 
 ### Typical CdA values in cycling
 | Position / Category | CdA (m²) |
