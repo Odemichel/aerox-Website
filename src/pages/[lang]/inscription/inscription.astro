@@ -26,6 +26,27 @@ const metadata = {
     </p>
 
     <form id="signup-form" data-lang={lang} class="flex flex-col gap-4 text-left">
+      <!-- Role selector -->
+      <label class="font-medium">{t(dict, 'signup.role.label')}</label>
+      <div class="grid grid-cols-2 gap-3" id="role-selector">
+        <label
+          class="role-card flex flex-col items-center gap-1 p-4 border-2 rounded-lg cursor-pointer transition-all border-primary bg-primary/10"
+          data-role="rider"
+        >
+          <input type="radio" name="profile_type" value="rider" checked class="sr-only" />
+          <span class="text-lg font-semibold">{t(dict, 'signup.role.rider')}</span>
+          <span class="text-sm text-gray-600 dark:text-gray-400 text-center">{t(dict, 'signup.role.rider.desc')}</span>
+        </label>
+        <label
+          class="role-card flex flex-col items-center gap-1 p-4 border-2 rounded-lg cursor-pointer transition-all border-gray-300 dark:border-gray-600"
+          data-role="bike-fitter"
+        >
+          <input type="radio" name="profile_type" value="bike-fitter" class="sr-only" />
+          <span class="text-lg font-semibold">{t(dict, 'signup.role.bikefitter')}</span>
+          <span class="text-sm text-gray-600 dark:text-gray-400 text-center">{t(dict, 'signup.role.bikefitter.desc')}</span>
+        </label>
+      </div>
+
       <label for="email" class="font-medium">{t(dict, 'signup.email.label')}</label>
       <input
         type="email"
@@ -97,6 +118,19 @@ const metadata = {
     const message = document.getElementById('message');
     const lang = form?.dataset.lang || 'fr'; // fallback fr
 
+    // Role card toggle
+    const roleCards = document.querySelectorAll('.role-card');
+    roleCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        roleCards.forEach((c) => {
+          c.classList.remove('border-primary', 'bg-primary/10');
+          c.classList.add('border-gray-300', 'dark:border-gray-600');
+        });
+        card.classList.remove('border-gray-300', 'dark:border-gray-600');
+        card.classList.add('border-primary', 'bg-primary/10');
+      });
+    });
+
     let attemptCount = 0;
     let lockUntil = 0;
 
@@ -148,14 +182,16 @@ const metadata = {
           return;
         }
 
+        // --- Récupération du rôle sélectionné ---
+        const selectedRole = (document.querySelector('input[name="profile_type"]:checked') as HTMLInputElement | null)?.value || 'rider';
+
         // --- Création du compte ---
         const { error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            data: { phone, rgpd: true, cgv: true },
+            data: { phone, rgpd: true, cgv: true, profile_type: selectedRole },
             emailRedirectTo: `https://aeroxbefaster.com/${lang}/inscription/connexion/`,
-
           },
         });
 

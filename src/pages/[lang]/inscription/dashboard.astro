@@ -15,6 +15,12 @@ const metadata = {
 const role = t(dict, 'dashboard.role');
 const email = t(dict, 'dashboard.email');
 const choosePack = t(dict, 'dashboard.choosePack');
+const licence = t(dict, 'dashboard.licence');
+const noLicence = t(dict, 'dashboard.noLicence');
+const studio = t(dict, 'dashboard.studio');
+const noStudio = t(dict, 'dashboard.noStudio');
+const pendingActivation = t(dict, 'dashboard.pendingActivation');
+const activeBf = t(dict, 'dashboard.activeBf');
 ---
 
 <Layout metadata={metadata}>
@@ -22,46 +28,42 @@ const choosePack = t(dict, 'dashboard.choosePack');
     <h1 class="text-3xl font-bold mb-6 text-center">
       {t(dict, 'dashboard.title')}
     </h1>
-    <div id="dashboard-content" data-role={role} data-email={email} data-choosePack={choosePack} class="text-center">
+    <div id="dashboard-content" data-role={role} data-email={email} data-choosePack={choosePack} data-licence={licence} data-noLicence={noLicence} data-studio={studio} data-noStudio={noStudio} data-pendingActivation={pendingActivation} data-activeBf={activeBf} class="text-center">
       <p>{t(dict, 'dashboard.loading')}</p>
     </div>
 
     <!-- ✅ Script côté client -->
     <script>
-      import { COUNTDOWN_EARLY_TARGET, COUNTDOWN_TARGET } from '~/config/countdown';
       import { supabase } from '../../../config/supabaseClient';
-      const now = new Date();
-      const countdownDate = new Date(COUNTDOWN_TARGET);
-      const earlyDate = new Date(COUNTDOWN_EARLY_TARGET);
-      let user_role = 'user';
-      if (now < countdownDate) {
-        user_role = 'pionnier';
-      } else if (now < earlyDate) {
-        user_role = 'early_user';
-      }
+
       async function loadDashboard() {
         console.log('➡️ Init dashboard');
         const content = document.getElementById('dashboard-content');
-        const role = content?.dataset.role || 'Role'; // fallback en
-        const email = content?.dataset.email || 'Email'; // fallback en
-        const choosePack = content?.dataset.choosePack || 'Choisis ton pack pour profiter d’AeroX 👇';
+        const labelRole = content?.dataset.role || 'Role';
+        const labelEmail = content?.dataset.email || 'Email';
+        const choosePack = content?.dataset.choosepack || "Choisis ton pack pour profiter d'AeroX";
+        const labelLicence = content?.dataset.licence || 'Licence';
+        const labelNoLicence = content?.dataset.nolicence || 'Non définie';
+        const labelStudio = content?.dataset.studio || 'Studio';
+        const labelNoStudio = content?.dataset.nostudio || 'Non renseigné';
+        const labelPendingActivation = content?.dataset.pendingactivation || "En attente d'activation";
+        const labelActiveBf = content?.dataset.activebf || 'Compte Bike-Fitter actif';
         if (!content) return;
 
-        // Vérifie si l’utilisateur est connecté
+        // Vérifie si l'utilisateur est connecté
         const { data: userData, error } = await supabase.auth.getUser();
         if (error || !userData?.user) {
-          content.innerHTML = `<p class="text-red-600">❌ Tu n’es pas connecté.</p>`;
+          content.innerHTML = `<p class="text-red-600">Tu n'es pas connect\u00e9.</p>`;
           return;
         }
 
         const user = userData.user;
-        console.log('✅ Connecté :', user.email);
-        const phonenumber = user.user_metadata?.phone ?? null;
+        console.log('Connecté :', user.email);
 
         // Récupère son profil complet
         const { data: profile, error: profileError } = await supabase
           .from('users')
-          .select('role, is_active, licencetype')
+          .select('role, is_active, licencetype, studio_name')
           .eq('id', user.id)
           .maybeSingle();
 
@@ -70,42 +72,51 @@ const choosePack = t(dict, 'dashboard.choosePack');
         }
 
         if (profile) {
-          let licenceDisplay = '';
+          let detailsHtml = '';
 
-          if (profile.is_active) {
-            licenceDisplay = `<p><strong>Licence :</strong> ${profile.licencetype || 'Non définie'}</p>`;
+          if (profile.role === 'bike-fitter' || profile.role === 'pending_bf') {
+            // Bike-Fitter / pending BF display
+            const studioDisplay = profile.studio_name || labelNoStudio;
+            detailsHtml += `<p><strong>${labelStudio} :</strong> ${studioDisplay}</p>`;
+            if (profile.role === 'pending_bf') {
+              detailsHtml += `<p class="text-yellow-600 font-semibold mt-1">${labelPendingActivation}</p>`;
+            } else {
+              detailsHtml += `<p class="text-green-600 font-semibold mt-1">${labelActiveBf}</p>`;
+            }
+          } else if (profile.role === 'admin') {
+            // Admin: just show role, no licence
           } else {
-            licenceDisplay = `<p class="text-primary font-semibold text-center mt-2">${choosePack}</p>`;
+            // Rider display (default)
+            if (profile.is_active) {
+              detailsHtml += `<p><strong>${labelLicence} :</strong> ${profile.licencetype || labelNoLicence}</p>`;
+            } else {
+              detailsHtml += `<p class="text-primary font-semibold text-center mt-2">${choosePack}</p>`;
+            }
           }
 
           content.innerHTML = `
         <div class="mt-6 p-6 border rounded-lg bg-gray-50 dark:bg-gray-800 text-left inline-block">
-          <p><strong>${email} :</strong> ${user.email}</p>
-          <p><strong>${role} :</strong> ${profile.role}</p>
-          ${licenceDisplay}
+          <p><strong>${labelEmail} :</strong> ${user.email}</p>
+          <p><strong>${labelRole} :</strong> ${profile.role}</p>
+          ${detailsHtml}
         </div>`;
         } else {
-          const { error: insertError } = await supabase
+          // public.users est créé automatiquement par le trigger
+          // handle_email_confirmed côté Supabase à la validation de l'email.
+          // Si le profil n'existe pas encore, la confirmation email est peut-être
+          // encore en cours de propagation — on retente après un court délai.
+          await new Promise(r => setTimeout(r, 1500));
+          const { data: retry } = await supabase
             .from('users')
-            .insert({
-              id: user.id,
-              email: user.email,
-              phonenumber,
-              role: user_role,
-              is_active: false,
-              licencetype: null,
-            })
-            .select('*')
-            .single();
+            .select('role, is_active, licencetype, studio_name')
+            .eq('id', user.id)
+            .maybeSingle();
 
-          if (insertError) {
-            console.error('Erreur insert user:', insertError);
-            content.innerHTML = `<p class="text-red-600">⚠️ Erreur lors de la création du profil.</p>`;
+          if (retry) {
+            loadDashboard();
             return;
           }
-
-          loadDashboard();
-          return; // important
+          content.innerHTML = `<p class="text-red-600">Profil non trouvé. Vérifie que ton email est bien confirmé.</p>`;
         }
       }
 
