@@ -5,8 +5,8 @@
   "ourStory.hero.title": "AeroX：ひとつの悩みが革新的なイノベーションに変わるまで",
   "ourStory.hero.subtitle": "トライアスロンで経験した課題から、すべてのサイクリストに届く革命へ",
   "ourStory.h2": "AeroXの原点",
-  "ourStory.p1": "すべては<strong>スマートトレーナー</strong>での長時間のトレーニングから始まりました。ワット数は上がり、数値は改善していましたが、レースでの現実は厳しいものでした。登りではみんなに追いつけるのに、平地では置いていかれる。その理由は？<strong>エアロダイナミクス</strong>です。25\u00a0km/hで抵抗の70\u00a0%を占め、高速では95\u00a0%にも達する、この見えないパラメーターこそが原因でした。",
-  "ourStory.p2": "多くの人と同じように、Zwiftでワット数が上がれば成長していると信じていました。しかし空力ポジションの練習はしたことがなく、屋外では数分しか維持できませんでした。追い抜いていくライダーはもっと良いバイクやホイールを持っていると思っていました。しかしCNRSでの研究者としての経歴が現実を突きつけました：<strong>空力損失の80\u00a0%は機材ではなく身体から生じている</strong>のです。本当のブレーキは自分自身でした。",
+  "ourStory.p1": "すべては<strong>スマートトレーナー</strong>での長時間のトレーニングから始まりました。ワット数は上がり、数値は改善していましたが、レースでの現実は厳しいものでした。登りではみんなに追いつけるのに、平地では置いていかれる。その理由は？<strong>エアロダイナミクス</strong>です。25 km/hで抵抗の70 %を占め、高速では95 %にも達する、この見えないパラメーターこそが原因でした。",
+  "ourStory.p2": "多くの人と同じように、Zwiftでワット数が上がれば成長していると信じていました。しかし空力ポジションの練習はしたことがなく、屋外では数分しか維持できませんでした。追い抜いていくライダーはもっと良いバイクやホイールを持っていると思っていました。しかしCNRSでの研究者としての経歴が現実を突きつけました：<strong>空力損失の80 %は機材ではなく身体から生じている</strong>のです。本当のブレーキは自分自身でした。",
   "ourStory.p3": "問題はシンプルです。感覚が私たちを騙すのです。もっと強く踏めば速くなると思い込みます。実際には、頭を上げたりエアロバーを広げたりすると何十ワットも無駄になり、速度は数km/h低下します。スマートトレーナーでは、ポジションを学び、理解し、修正するためのフィードバックがありません。さらにZwiftでは下り坂でペダリングをやめるとアバターが自動的にエアロポジションを取ります。これは誤解を生みます。フィードバックなし。制約なし。持続的な成長なし。",
   "ourStory.p4": "この悔しさから<span class=\"text-primary\"><span class=\"font-bold\">AeroX</span>が誕生しました。<em>スマートトレーナーをバーチャル風洞に変えるアプリ</em></span>です。Webカメラだけで、ポジションの影響をリアルタイムに可視化できます。ワットを節約し、スピードアップを実現します。プロが1日1800ユーロかける風洞テストと同等のことが、自宅のリビングから、1日コーヒー1杯分の価格で体験できます。",
   "ourStory.p5": "最初のテストから効果は明らかでした。AeroXは私のトレーニングを根本から変えました。エアロバーを狭め、頭を低くし、常にポジションを維持することで、レースで3km/hのスピードアップを達成しました。単なる個人的なツールにとどまらず、AeroXは<strong>何千人ものサイクリストやトライアスリート</strong>がエアロダイナミクスを学び、測定し、体感し、すべてのワットを実際の速度に変えるためのスマートなトレーニングを実現する機会です。",
@@ -21,22 +21,19 @@
   "ourStory.cta.aria": "AeroXのプランを見てパイオニアに参加する",
   "ourStory.cta.label": "🚀 AeroXパイオニアに参加する",
   "ourStory.cta.sub": "リアルタイム空力分析でインドアトレーニングを変革する最初の一人になりましょう。",
-
   "home.meta.title": "AeroX — スマートトレーナーをバーチャル風洞に変える",
   "home.meta.description": "AeroXはスマートトレーナーをバーチャル風洞に変えます。Webカメラでポジションを測定し、3 km/hのスピードアップと40 Wの節約を実現。今すぐお試しください。",
-
   "home.hero.tagline": "4月10日ローンチ",
   "home.hero.title.l1": "あなたのスマートトレーナーが",
-  "home.hero.title.l2": "バーチャル風洞に変わる",
+  "home.hero.title.l2": "エアロダイナミクス分析ツールに変わる",
   "home.hero.subtitle": "前面投影面積をリアルタイムで測定し、ポジションを最適化して、すべてのワットをスピードに変換します。Wahoo、Elite、Tacx、Saris対応。",
-  "home.hero.paragraph": "最大\u00a0<span class=\"font-bold text-accent\">3&#8239;km/h</span>のスピードアップ、\u00a0<span class=\"font-bold text-accent\">40&#8239;W<br /></span>の節約をWebカメラだけで。",
+  "home.hero.paragraph": "最大 <span class=\"font-bold text-accent\">3&#8239;km/h</span>のスピードアップ、 <span class=\"font-bold text-accent\">40&#8239;W<br /></span>の節約をWebカメラだけで。",
   "home.hero.countdown.prefix": "残り",
   "home.hero.cta.text": "今すぐAeroXを試す",
   "home.hero.cta.subtext": "AeroXパイオニア限定",
   "home.hero.cta.seo": "AeroXをダウンロード、エアロダイナミクス対応インドアサイクリングアプリ",
   "home.herovideo.alt": "AeroXデモ",
-
-  "home.definition": "<strong>AeroXはインドアサイクリスト向け初のバーチャル風洞です。</strong>スマートトレーナー前に設置したWebカメラで<strong><a href='/ja/cda/' class='underline hover:text-primary'>CdA</a>（空力的前面投影面積）</strong>をリアルタイム測定します。AIがポジション変更の影響を即座に計算。<strong>一般的な効果：+2〜3 km/hのスピードアップと30〜40ワットの節約。</strong><strong>Wahoo、Elite、Tacx、Saris</strong>対応 — macOSとWindowsで利用可能。",
+  "home.definition": "<strong>AeroXはインドアサイクリストのためのエアロダイナミクス分析のリファレンスアプリです。</strong>シンプルなウェブカメラだけで、AeroXはサイクリストの前面投影面積を測定し、<a href='/ja/cda/' class='underline hover:text-primary'><strong>CdA</strong></a>（Cx × A）をリアルタイムで評価します。風洞やハイテクセンサーの手軽な代替として、ポジション変更のエアロダイナミクスへの影響を即座にフィードバックし、毎日のトレーニングで速度を最適化できます。",
   "footer.cda": "CdAとは？",
   "home.compat.title": "互換性",
   "home.compat.subtitle": "AeroXは主要なスマートトレーナーブランドと心拍計に対応し、スムーズで信頼性の高いインドアトレーニング環境を提供します。Tacx、Elite、Wahoo、Sarisすべてに対応しています。",
@@ -49,11 +46,9 @@
   "home.compat.logos.polar": "Polarロゴ - AeroX対応",
   "home.compat.logos.garmin": "Garminロゴ - AeroX対応",
   "home.compat.logos.suunto": "Suuntoロゴ - AeroX対応",
-
   "home.stats.pioneers": "パイオニア",
   "home.stats.kmhAvg": "平均獲得km/h",
   "home.stats.savedAt30": "30km/hで節約",
-
   "home.note1.title": "私たちの哲学：",
   "home.note1.desc": "イノベーション、シンプルさ、効率性",
   "home.note2.title": "私たちのミッション：",
@@ -64,7 +59,6 @@
   "home.note4.desc": "壁を壊す、予算は壊さない",
   "home.note5.title": "私たちの情熱：",
   "home.note5.desc": "スリル、スピード、感覚",
-
   "home.features2.tagline": "機能",
   "home.features2.title": "スマートトレーナーがバーチャル風洞に変わる",
   "home.features2.subtitle": "あなたをより速くするためのイノベーション",
@@ -74,28 +68,23 @@
   "home.features2.items.power.obj": "すべてのワットをkm/hに変換",
   "home.features2.items.power.videoAlt": "パワーモードのデモ",
   "home.features2.items.power.cta": "今すぐスピードアップ",
-
   "home.features2.items.speed.title": "スピードモード",
   "home.features2.items.speed.obj": "ワットを節約する",
   "home.features2.items.speed.desc": "エアロダイナミクスに応じて抵抗が変化する感覚を体験できます。",
   "home.features2.items.speed.cta": "ポジションのコストを体感する",
-
   "home.features2.items.sim.title": "シミュレーションモード",
   "home.features2.items.sim.desc": "実際のレースのようにタイムをシミュレーション。",
   "home.features2.items.sim.obj": "エアロが本当に影響する唯一のシミュレーション",
   "home.features2.items.sim.cta": "エアロ付きで次の目標をシミュレーション",
-
   "home.features2.items.tt.title": "タイムトライアル",
   "home.features2.items.tt.desc": "ポジションを取れ。全力で踏め。最速を目指せ。",
   "home.features2.items.tt.obj": "エアロ対応の唯一のインドアレース",
   "home.features2.items.tt.cta": "トップに挑戦",
-
   "home.features2.items.challenges.title": "チャレンジ",
   "home.features2.items.challenges.desc": "パワーとエアロを組み合わせてスピードを維持。",
   "home.features2.items.challenges.obj": "AeroXバッジがあなたの成長を映し出します",
   "home.features2.items.challenges.imgAlt": "パワーモードのデモ",
   "home.features2.items.challenges.cta": "あなたのスピードに挑戦",
-
   "home.features2.items.editor.title": "ワークアウトエディター",
   "home.features2.items.editor.desc": "自分のセッションやコーチのセッションを作成、<span class=\"font-bold\">エアロ付き。</span>",
   "home.features2.items.editor.obj": "直感的で素早い、2分でカスタムセッション作成",
@@ -103,7 +92,6 @@
   "home.features2.items.tt.imgAlt": "エアロポジション対応のAeroXタイムトライアルランキング",
   "home.features2.items.editor.imgAlt": "AeroXワークアウトセッションエディター",
   "home.features2.items.editor.cta": "エアロワークアウトをカスタマイズ",
-
   "home.testimonials.title": "ユーザーの声",
   "home.testimonials.subtitle": "トライアスリート、サイクリスト、コーチがAeroXを選んだ理由",
   "home.testimonials.subsubtitle": "AeroXユーザーレビュー：アマチュア・エリートのトライアスリート、サイクリスト、コーチがリアルタイムエアロダイナミクスでスピードアップとワット節約をどのように実現しているか。Zwift、MyWhoosh、Kinomapの実用的な代替ツール。",
@@ -122,53 +110,44 @@
   "home.testimonials.cta": "AeroXパイオニアに参加する",
   "livre.testimonials.title": "ユーザーの声",
   "livre.testimonials.subtitle": "読者の方々からの感想",
-
   "home.features.title": "もっと強く踏まずにスピードアップする方法は？",
   "home.features.subtitle": "すべてのワットが大切、あなたの予算もです！",
   "home.features.ctaDetails": "AeroXパイオニアになって<span class=\"font-bold text-accent\">インドアサイクリングの未来</span>を一緒に作るチャンスはあと <CountDown /> です！",
-
   "home.features.items.gain.title": "努力を増やさず1〜5 km/hアップ",
   "home.features.items.gain.desc": "AeroXはポジションによって失っているkm/hをリアルタイムで表示します。25&#8239;km/hでも1km/hアップ！45&#8239;km/hなら+5km/h。5000&#8239;€のバイクより効果的です。",
   "home.features.items.gain.education": "25&#8239;km/hからパワーの約70&#8239;%を空気抵抗が消費し、45&#8239;km/hでは95&#8239;%に達します。あなたの身体はパラシュートのように作用します。AeroXはそのサイズ（前面投影面積）を測定し、姿勢を小さくした時のゲインを計算します。結果：25km/hで+1&#8239;km/h、45km/hで最大+5&#8239;km/h。肘を折り、頭を下げ、エアロバーを狭める — 細部がすべて無料のスピードに変わります。AeroXがそれを見せてくれます。<br /><br />👉 いつもより速く帰宅できる走りを想像してください。無理はせず、ただ風を切る感覚。パフォーマンスだけでなく、走る喜びです。",
   "home.features.items.gain.more": "数値を詳しく解説します…",
   "home.features.items.gain.cta": "AeroXで1-5&#8239;km/hアップ",
   "home.features.items.gain.aria": "AeroXをダウンロード、エアロダイナミクスで1-5 km/hアップのインドアサイクリングアプリ",
-
   "home.features.items.real.title": "仮想パワーではなく、リアルスピードを手に入れる",
   "home.features.items.real.desc": "スマートトレーナーでは仮想世界で成長します。<br />AeroXなら、あなた自身が40&#8239;Wを節約。実際の走行で速くなります。",
   "home.features.items.real.education": "スマートトレーナーでの唯一の目標はパワーの向上です。バーチャルレースを楽しむには最適ですが、屋外では必ずしも速くなりません。むしろ遅くなることも。エアロポジションは不快で、40&#8239;Wが気づかないうちに消えています。リアルタイムの空力フィードバックでトレーニングすることで、ポジション最適化と習慣化の2つのメリットがあります。実際のトレーニングを楽しみ、本番のレースで結果を出すために。",
   "home.features.items.real.more": "詳しくはこちら…",
   "home.features.items.real.cta": "AeroXでワットを節約",
-
   "home.features.items.pro.title": "エリート予算なしでプロのようにトレーニング",
   "home.features.items.pro.desc": "プロはパワー、心拍数…そしてエアロダイナミクスを習得しています。風洞テストは1500&#8239;€以上。<br />AeroXなら同じ効果をスマートトレーナーから、Webカメラだけで。ついにエアロが身近に。",
   "home.features.items.pro.education": "一般的なトレーニングプランはパワーと心拍に限られます。しかしEvenpoelがTTの世界チャンピオンなのはワットだけのおかげではありません。最適なエアロポジションで高出力を維持する能力があるからです。<br/><br/>残念ながらエアロダイナミクスのテストはサイクリストの99&#8239;%にとって手が届きません（風洞、ベロドローム、高価なセンサー）。<br/><br/>AeroXはこれを変えます。スマートトレーナーからWebカメラだけで、トレーニング中にリアルタイムデータにアクセスしてポジションを最適化できます。<br/><br/>👉 プロが何千ユーロもかけているものが、自宅で手に入る。「プロと同じトレーニングをしている」というあの高揚感。",
   "home.features.items.pro.more": "プロのトレーニングを理解する…",
   "home.features.items.pro.cta": "AeroXでプロのようにトレーニング",
-
   "home.features.items.cost.title": "数千ユーロかけずにもっと速く",
   "home.features.items.cost.desc": "エアロの90&#8239;%はポジション次第。バイクでもホイールでもヘルメットでもありません。<br />AeroXでその最適化を学べます。エアロソックス1足より安く！",
   "home.features.items.cost.education": "ディープホイール、ハイエンドフレーム、最新ヘルメット…マーケティングに乗せられて毎年何千ユーロも使い、わずかなワットを稼ぐ。しかし実際には空気抵抗の90&#8239;%は身体から生じ、機材からではありません。世界最高のバイクでも、5分間維持できないポジションを補うことはできません。AeroXなら、本当に効果のある部分に投資できます：あなたのポジションです。<br />ハイエンド機材には、ハイエンドなトレーニングがふさわしい。",
   "home.features.items.cost.more": "詳しくはこちら…",
   "home.features.items.cost.cta": "追加費用なしで加速",
-
   "home.features.items.proof.title": "AeroXは本当に効果があります",
   "home.features.items.proof.desc": "AeroXで+3&#8239;km/h達成、36から39&#8239;km/hへ。2008年製700&#8239;€のバイクで。新しいバイクは不要でした。",
   "home.features.items.proof.education": "AeroXの開発・テストを通じて、25&#8239;km/h以上でのエアロポジション維持の重要性を理解しました。エアロバーを狭め、姿勢を伸ばし、頭と肩を下げました。登りでも速度が25&#8239;km/hを超えればポジションを維持。結果：2008年製700&#8239;€のバイクで36から39&#8239;km/hへ。FTPは変わらず。以前は平地で置いていかれましたが、もうそんなことはありません。リアルタイムフィードバックなしでは不可能でした。— Olivier D.、トライアスリート、AeroX創業者",
   "home.features.items.proof.more": "すべてお伝えします…",
   "home.features.items.proof.cta": "AeroXコミュニティに参加",
-
   "home.prices.title": "料金プラン",
   "home.prices.subtitle": "目標に合ったプランを選べます",
   "home.prices.subsubtitle": "サイクリスト・トライアスリート向けAeroXの料金プランをご覧ください。Zwift、MyWhoosh、Kinomapと比較して、スマートトレーナー（Tacx、Elite、Wahoo）に最適なソリューションを見つけてください。Ironman準備やインドアトレーニングに最適です。",
-
   "home.prices.packDiscover.title": "お試しパック",
   "home.prices.packDiscover.subtitle": "エアロをテスト",
   "home.prices.packDiscover.period": "10日間",
   "home.prices.packDiscover.items.1": "AeroXの全機能にアクセス",
   "home.prices.packDiscover.items.2": "1日最大1時間テスト可能",
   "home.prices.packDiscover.cta": "2025年12月1日ローンチ",
-
   "home.prices.packPioneer.title": "パイオニアパック",
   "home.prices.packPioneer.subtitle": "インドアトレーニングの未来をいち早く体験",
   "home.prices.packPioneer.period": "一括払い",
@@ -178,7 +157,6 @@
   "home.prices.packPioneer.items.4": "AeroXの開発を応援 🚀",
   "home.prices.packPioneer.cta": "AeroXパイオニアになる",
   "home.prices.packPioneer.ribbon": "パイオニア",
-
   "home.prices.packProgress.title": "プログレスパック",
   "home.prices.packProgress.title1": "年間プラン",
   "home.prices.packProgress.subtitle1": "年間を通じてポジションを強化、30%オフ",
@@ -187,14 +165,12 @@
   "home.prices.packProgress.items1.2": "年間を通じて新機能追加",
   "home.prices.packProgress.items1.3": "目標に向けた本格的な準備に最適",
   "home.prices.packProgress.cta1": "2025年12月1日ローンチ",
-
   "home.prices.packProgress.title2": "月間プラン",
   "home.prices.packProgress.subtitle2": "契約縛りなしでエアロを強化",
   "home.prices.packProgress.period2": "2026年2月より22€/月",
   "home.prices.packProgress.items2.1": "AeroXの全機能にアクセス",
   "home.prices.packProgress.items2.2": "夏シーズンの準備に最適",
   "home.prices.packProgress.cta2": "2025年11月1日ローンチ",
-
   "home.steps.title": "2分でAeroXトレーニングを開始",
   "home.steps.subsubtitle": "簡単セットアップ。スマートトレーナーですぐに使えます。主要ブランド対応（Tacx、Garmin、Wahoo、Elite、Saris）。Zwift、MyWhoosh、Kinomapと同様にスムーズに使えますが、唯一の違いはリアルタイムのエアロダイナミクス分析でスピードアップとワット節約を実現すること。",
   "home.steps.items.1.title": "ステップ1：<span class=\"font-semibold\">AeroXをダウンロード</span>",
@@ -206,43 +182,33 @@
   "home.steps.items.4.desc": "Bluetoothで自動検出、複雑な設定不要。AeroXがスマートトレーナーと心拍計を検出します。デバイスを選択すれば、次回から自動接続。Wahoo、Elite、Tacx、Saris、Kickr、Suitoなどに対応。心拍数はGarmin、Polar、Suuntoに対応。",
   "home.steps.items.5.title": "ペダルを回そう！",
   "home.steps.cta": "AeroXをダウンロード",
-
   "home.faq.title": "よくあるご質問",
   "home.faq.subtitle": "FAQ",
   "home.faq.cta": "AeroXで未来を切り拓く",
-
   "home.faq.items.1.title": "なぜAeroXなのですか？",
   "home.faq.items.1.more": "努力の80%は空気と戦っています — AeroXがその回収方法を示します",
   "home.faq.items.1.education": "25 km/h以上では、エアロダイナミクスが全抵抗の70〜95%を占めます。体重や機材よりもはるかに大きな減速要因です。しかし、従来のスマートトレーナーはエアロポジションを測定しません。Zwift、MyWhoosh、Kinomapでは、ポジションが30Wまたは50Wの無駄を生んでいるか知ることなく、ただ強く踏むだけです。AeroXはこれを変えます。Webカメラでシルエットをリアルタイム分析し、前面投影面積（CdA）を計算。各調整で何km/h・何ワット得られるかを即座に表示します。300回以上のセッションで測定された結果：+2〜3 km/hのスピードアップと同じ努力で30〜40 Wの節約。これはIronmanで30〜45分の短縮に相当します。より強く踏むのではなく、ポジションを最適化するだけで。",
-
   "home.faq.items.2.title": "どんな機材が必要ですか？",
   "home.faq.items.2.education": "AeroXの使用に必要なのは、パソコン（macOSまたはWindows）、サポートに乗せた自転車、カメラ（ノートPC内蔵カメラ、USBウェブカメラ、Wi-Fi経由のスマートフォンでもOK）です。基本的な空力分析にはこれだけで十分です。AeroXは追加センサーなしでリアルタイムにCdAを測定します。パワーモード（ポジションとワットの連動）とスピードモード（ポジションに応じた負荷調整）にはBluetooth FTMS対応スマートトレーナーが必要です。Wahoo Kickr、Elite Direto、Tacx Neo、Saris H3など、最近のほとんどのモデルに対応しています。Garmin、Polar、Suuntoの心拍計にも対応。セットアップは2分。カメラをトレーナーの約1.3m前に設置し、AeroXを起動して2クリックでキャリブレーション完了です。",
   "home.faq.items.2.more": "パソコン、スマートトレーナー、カメラ",
-
   "home.faq.items.3.title": "セットアップにどれくらい時間がかかりますか？",
   "home.faq.items.3.education": "2分もかかりません。Webカメラをトレーナーの約1.3m前に設置します（三脚、棚、椅子の上でもOK）。パソコンでAeroXを起動し、ハンドルバーの両端をクリックしてキャリブレーション完了。初回はカメラとバイクの距離も設定します。これらの設定は保存されるので、次回からは起動してすぐに走れます。AeroXはBluetoothでスマートトレーナーと心拍計を自動検出し、複雑な設定は不要です。トレーナーがインタラクティブでなくても、ビジュアル分析モードで前面投影面積の変化をリアルタイムで確認できます。風洞テストでは移動とセットアップに2〜4時間。AeroXなら、セットアップからペダリングまで120秒です。",
   "home.faq.items.3.more": "2分以内でスマートトレーナーがバーチャル風洞に…",
-
   "home.faq.items.4.title": "私のスマートトレーナーやセンサーはAeroXに対応していますか？",
   "home.faq.items.4.education": "AeroXはBluetooth FTMSにより市場の95%のスマートトレーナーに対応しています。Wahoo Kickr、Elite DiretoおよびSuito、Tacx NeoおよびFlux、Saris H3、そして最近のほとんどのモデルが対応しています。基本的な空力分析（リアルタイムCdA測定）にはスマートトレーナーは必須ではなく、Webカメラとサポートに乗せたバイクがあれば十分です。パワーモードとスピードモードにはFTMSトレーナーが必要です。Garmin、Polar、Suuntoの心拍計に対応。AeroXはmacOSとWindowsで動作します。メイン画面にタブレットやスマートフォンは不要です。お使いのトレーナーがリストにない場合はお問い合わせください。定期的に新モデルを追加しています。つまり、ZwiftやMyWhooshで走っているなら、お持ちの機材はAeroXに対応しています。",
   "home.faq.items.4.more": "スマートトレーナーの95%に対応、おそらくあなたのも…",
-
   "home.faq.items.5.title": "イノベーション？それともガジェット？",
   "home.faq.items.5.more": "どちらでもありません。AeroXはトレーニングのパラダイムシフト：速度が優先事項になります",
   "home.faq.items.5.education": "20年前、心拍計はガジェットでした。今では誰もがトレーニングで使っています。10年前、パワーメーターはプロ専用でした。今では真剣なサイクリストの大半が装備しています。エアロダイナミクスは次に民主化すべきレバー — それがまさにAeroXの役割です。元CNRS研究者でトライアスリートのOlivier Demichelが開発したAeroXは、AIによるビデオ分析で前面投影面積をリアルタイム測定します。理論的な推定ではなく、フレームごとの物理的な測定で、再現性は3%です。300回以上のセッションで平均+2〜3 km/h。AeroXはパワーメーターの代わりではなく、スマートトレーナーで誰も測定していなかった空力の次元を追加する補完ツールです。",
-
   "home.faq.items.6.title": "集団で走るサイクリストにも本当に役立ちますか？",
   "home.faq.items.6.education": "正直に言えば、集団の中にただいるだけがサイクリングの現実ではありません。横風のエシュロン、逃げ、集団を牽引する場面ではエアロダイナミクスが差を生みます。+3km/hあれば、アタックが楽しくなるかもしれません。",
   "home.faq.items.6.more": "もちろんです — ずっと後ろにいるつもりでなければ！",
-
   "home.faq.items.7.title": "最適なポジションを見つけてテストするのにサブスクリプションは必要ですか？",
   "home.faq.items.7.education": "無料プランで初日からAeroXをお試しいただけます。ポジションを分析し、CdAを測定し、各調整の影響をリアルタイムで確認できます。主な空力レバーを発見し、可能なゲインを把握するには十分です。サブスクリプションは高度な機能を解放します：パワーモード（ポジションとワットの連動）、スピードモード（エアロダイナミクスに応じたトレーナー負荷調整）、GPXシミュレーション、ランキング付きタイムトライアル。最も重要なのは、サブスクリプションが一度きりの体験を持続的な習慣に変えることです。効率的なエアロポジションの維持は偶然できることではありません。ダンシングやコーナー出口の加速と同じ技術的スキルで、反復が必要です。AeroXでの定期的なトレーニングにより、エアロポジションが自然な反射に — 屋外で走る時の第六感になります。",
   "home.faq.items.7.more": "無料プランでテスト、サブスクリプションで成長",
-
   "home.faq.items.8.title": "すでにエアロポジションに慣れていますが、それでも役立ちますか？",
   "home.faq.items.8.more": "慣れていることと最適化されていることは違います — AeroXがその差を示します",
   "home.faq.items.8.education": "ポジションを取っているだけでは不十分です — 効果的でなければ意味がありません。ほとんどのサイクリストは空力的だと思っていますが、見えない細部で10〜30ワットを失っています。頭が3cm高すぎ、肘が5cm開きすぎ、肩が収まっていない。客観的な測定なしでは気づけません。AeroXはこれらの細部をリアルタイムで可視化します。頭を調整するとCdAが2%低下 — 画面上で即座に確認できます。経験豊富なサイクリストでも客観的フィードバックでポジションを微調整することで1〜2 km/hの改善があることが測定で示されています。さらに、疲労とともにポジションは崩れます。AeroXはセッション中のCdAの変化を表示し、2時間の努力の後でも効率的なポジションを維持する方法を学べます。エアロだと思うことと、それを測定することの違いです。",
-
   "home.faq.schema.q1": "なぜAeroXなのですか？",
   "home.faq.schema.a1": "25 km/h以上ではエアロダイナミクスが抵抗の70〜95%を占めます。AeroXはポジションを可視化・最適化して、スピードアップとワット節約を実現します。",
   "home.faq.schema.q2": "AeroXの使用にはどんなツールや機材が必要ですか？",
@@ -263,16 +229,13 @@
   "home.faq.schema.a9": "コーチはセッションを計画できますが、ポジションの実効性をセッション全体を通じて測定できるのはAeroXだけです。両者は補完的な関係です。",
   "home.faq.schema.q10": "AeroXは海外レースの準備にどう役立ちますか？",
   "home.faq.schema.a10": "GPXモードでレースの正確なコースをインポートできます。AeroXが地形、風、エアロダイナミクスの影響をシミュレーションし、現地にいるかのようなトレーニングが可能です。",
-
   "home.common.more": "詳しくはこちら…",
-
   "home.leadmagnet.title": "ローンチ情報をいち早くお届け",
   "home.leadmagnet.subtitle": "登録して4月10日の優先アクセスを手に入れましょう。",
   "home.leadmagnet.placeholder": "メールアドレス",
   "home.leadmagnet.cta": "登録する",
   "home.leadmagnet.success": "登録完了！最新情報をいち早くお届けします。",
   "home.leadmagnet.error": "エラーが発生しました。もう一度お試しください。",
-
   "home.explore.title": "AeroXを探索",
   "home.explore.bf.title": "バイクフィッター向けAeroX",
   "home.explore.bf.desc": "クライアントのエアロをリアルタイムで測定",
@@ -282,7 +245,6 @@
   "home.explore.blog.aero.desc": "ブログ記事",
   "home.explore.blog.feel.title": "エアロを体感する方法",
   "home.explore.blog.feel.desc": "ブログ記事",
-
   "nav.home": "ホーム",
   "nav.features": "機能",
   "nav.why": "なぜAeroX？",
@@ -294,11 +256,9 @@
   "nav.blog": "エアロブログ",
   "nav.book": "AeroXメソッド",
   "nav.login": "ログイン",
-
   "nav.cta.mobile": "ダウンロード",
-  "nav.cta.desktop": "AeroXを\u00a0試す",
+  "nav.cta.desktop": "AeroXを 試す",
   "nav.cta.subtext": "AeroXパイオニア限定",
-
   "footer.contact.title": "お問い合わせ",
   "footer.team": "チーム",
   "footer.story": "AeroXストーリー",
@@ -307,12 +267,10 @@
   "footer.privacy": "プライバシーポリシー",
   "footer.terms": "利用規約",
   "footer.footnote": "Made by O. Demichel · All rights reserved.",
-
   "blog.title": "エアロダイナミクスブログ",
   "blog.aerox.offers": "AeroXを見る",
   "blog.aerox.method": "空力トレーニングの基礎を学ぶ",
   "blog.subtitle": "サイクリングとトライアスロンのトレーニングを最適化するヒント、分析、イノベーション",
-
   "contact.title": "AeroXへのお問い合わせ",
   "contact.description": "ご質問やご相談がございましたら、AeroXチームまでメールでお気軽にお問い合わせください。",
   "contact.heading": "AeroXへのお問い合わせ",
@@ -320,10 +278,8 @@
   "contact.intro": "先行テストやその他のお問い合わせは、こちらまで直接ご連絡ください：",
   "contact.aria": "contact@aeroxbefaster.comにメールを送信",
   "contact.delay": "通常2〜3営業日以内にご返信いたします。",
-
   "privacy.title": "プライバシーポリシー — AeroX",
   "privacy.description": "AeroXがお客様の個人データをどのように収集、使用、保護するかをご説明します。",
-
   "signup.meta.title": "登録してエアロ体験を始めよう",
   "signup.meta.description": "AeroXアカウントを作成して、アプリとサブスクリプションにアクセスしましょう。",
   "signup.title": "AeroXへようこそ",
@@ -353,7 +309,6 @@
   "signup.role.rider.desc": "走って、トレーニングしています",
   "signup.role.bikefitter": "バイクフィッター",
   "signup.role.bikefitter.desc": "バイクフィッティングをしています",
-
   "login.meta.title": "ログイン — AeroX",
   "login.meta.description": "AeroXアカウントにログインして、アプリとサブスクリプションにアクセスしましょう。",
   "login.title": "AeroXマイページにアクセス",
@@ -369,13 +324,11 @@
   "login.noAccount.link": "アカウントを作成",
   "login.errors.missingFields": "すべての項目を入力してください。",
   "login.success": "ログインに成功しました！",
-
   "confirm.meta.title": "登録確認 — AeroX",
   "confirm.meta.description": "メールを確認してAeroXアカウントを有効化してください。",
   "confirm.title": "✅ メール送信完了",
   "confirm.message": "ありがとうございます！確認メールを送信しました。<br/>メール内のリンクをクリックしてAeroXアカウントを有効化してください。<br/><br/>⚠️ 迷惑メールフォルダもご確認ください。",
   "confirm.button": "ログイン",
-
   "dashboard.meta.title": "ダッシュボード — AeroX",
   "dashboard.meta.description": "AeroXマイページ：サブスクリプション、ステータス、アプリへのアクセス。",
   "dashboard.title": "AeroXマイページへようこそ",
@@ -397,14 +350,11 @@
   "dashboard.noStudio": "未登録",
   "dashboard.pendingActivation": "アクティベーション待ち",
   "dashboard.activeBf": "バイクフィッターアカウント有効",
-
   "hero.video.title": "AeroXデモ動画：リアルタイムエアロダイナミクス対応のインドアサイクリング。Zwift、MyWhoosh、Kinomapを超えて速くなろう。",
   "hero.video.caption": "AeroXはスマートトレーナーを風洞に変えます。ポジションをリアルタイムのパワーゲインに変換。",
   "hero.video.aria": "AeroX動画：リアルタイムエアロダイナミクスでスマートトレーナーで2〜3 km/hアップ、40 Wの節約。",
-
   "pricing.remaining": "残り",
   "pricing.offer": "でオファーを利用可能",
-
   "success.meta.title": "お支払い完了",
   "success.meta.description": "AeroXへのご支援ありがとうございます。インドアトレーニングの未来へようこそ。",
   "success.title": "ご信頼いただきありがとうございます！",
@@ -418,21 +368,18 @@
   "success.download2mac": "",
   "success.download2win": "",
   "success.backHome": "ホームに戻る",
-
   "cancel.meta.title": "お支払いキャンセル",
   "cancel.meta.description": "お支払いが完了しませんでした。もう一度お試しいただくか、AeroXサポートにお問い合わせください。",
   "cancel.title": "エラーが発生しました",
   "cancel.message1": "問題が発生しました。サブスクリプションは有効化されていません。",
   "cancel.message2": "もう一度お支払いをお試しいただくか、管理者にお問い合わせください。",
   "cancel.backHome": "ホームに戻る",
-
   "cancel.livre.meta.title": "お支払いキャンセル",
   "cancel.livre.meta.description": "お支払いが完了しませんでした。もう一度お試しいただくか、AeroXサポートにお問い合わせください。",
   "cancel.livre.title": "エラーが発生しました",
   "cancel.livre.message1": "問題が発生しました。お支払いが拒否されました。",
   "cancel.livre.message2": "もう一度お支払いをお試しいただくか、管理者にお問い合わせください。",
   "cancel.livre.backHome": "ホームに戻る",
-
   "book.meta.title": "サイクリング空力学の科学的ガイド",
   "book.meta.description": "パワーとスピードの関係を理解し、効果的な空力トレーニングを構築しましょう。",
   "book.hero.alt": "空力ガイドの表紙",
@@ -450,7 +397,6 @@
   "mailerlite_sub.hero.title.l1": "エアロはプロだけのものではありません。",
   "mailerlite_sub.hero.title.l2": "AeroXが常識を変えます。",
   "mailerlite_sub.hero.text": "AeroXはエアロダイナミクスを誰もが使えるものにし、サイクリングトレーニングに革命を起こします。<br/>機材やレベルを変えずに、ポジションを最適化してスピードアップする方法を、コミュニティで一緒に発見しましょう。",
-
   "book.testimonials.t1": "一気に読みました。トレーニングへの考え方が根本から変わります！",
   "book.testimonials.t2": "この新しい知識で、AeroXは間違いなくクライアントのパフォーマンスに大きな影響を与えるでしょう！",
   "book.testimonials.t3": "すべてが明確かつスムーズに説明されています。<br/>教育への配慮が一貫しており、誰もが読むべき素晴らしいガイドです。",
@@ -461,7 +407,6 @@
   "book.testimonials.triathlete": "トライアスリート",
   "book.testimonials.bikefitter": "バイクフィッター",
   "book.testimonials.cyclist": "アマチュアサイクリスト",
-
   "book.gain.title": "Ironmanで最大45分短縮、50 W節約",
   "book.gain.desc": "最適化された空力ポジションにより、測定可能かつトレーニング可能。<br/><span class='text-primary'>機材やフィットネスレベルを変えることなく。</span>",
   "book.vision.title": "私たちのビジョン",
@@ -502,7 +447,6 @@
   "book.philo.title": "私たちの哲学",
   "book.philo.desc": "トレーニングの意思決定は信念ではなく科学に基づくべきです。",
   "book.cta.question": "今のレベルで何分短縮できるでしょうか？",
-
   "bf.meta.title": "バイクフィッター向けAeroX — クライアントのエアロダイナミクスを測定",
   "bf.meta.description": "バイクフィッティングセッションにリアルタイムの空力測定を追加しましょう。AeroXはすべての調整を測定可能なスピードゲインに変換します。デモをリクエスト。",
   "bf.definition": "空力バイクフィッティングは、サイクリストのポジションを最適化して空気抵抗（CdA）を低減するプロセスです。快適さとバイオメカニクスに焦点を当てた従来のフィッティングとは異なり、エアロフィッティングではサドル高、エアロバーの角度、頭の位置など各調整がライダーの前面投影面積に与える影響を測定します。AeroXを使えば、この測定をWebカメラとスマートトレーナーで、バイクフィッターのスタジオ内でリアルタイムに行えます。クライアントは各変更で何ワット・何km/h得られるかを即座に確認できます。結果：より説得力のあるセッション、リピートするクライアント、そして他のフィッターにはない差別化サービスです。",
@@ -592,7 +536,6 @@
   "bf.faq.short5": "絶対精度10%、再現性3% — ライブでのポジション比較に最適。",
   "bf.faq.more5": "フィッティングで再現性が絶対精度より重要な理由",
   "bf.faq.a5": "AeroXはAIビデオ分析により前面投影面積（CdA）をリアルタイムで測定します。アルゴリズムがフレームごとにサイクリストのシルエットを分析し、風に対する投影面積を計算します。絶対精度は10%、再現性は3% — 絶対値では風洞より劣りますが、はるかに汎用性が高いです。AeroXはどこでもリアルタイム情報を提供し、ポジションやフィット変更の効果的な比較を可能にします。サドルを5mm調整すればCdAがライブで変化します。フィッターがセッション中に必要なのはまさにこれ：ラボの絶対値ではなく、テストした各ポジション間の即座のビジュアル比較です。風洞テストは1測定で1,500〜3,000ドル、一回限りの結果。AeroXは継続的な測定を提供し、フィッティング中にそのまま活用でき、スタジオからアクセス可能です。",
-
   "bf.lastUpdated": "最終更新：2026年3月",
   "bf.table.title": "AeroX vs 風洞 vs 従来のフィッティング",
   "bf.table.col1": "基準",
@@ -619,7 +562,6 @@
   "bf.table.followup.aerox": "セッションごと",
   "bf.table.followup.tunnel": "単発",
   "bf.table.followup.classic": "主観的",
-
   "home.lastUpdated": "最終更新：2026年3月",
   "home.table.title": "サイクリストプロフィール別の一般的なゲイン",
   "home.table.col1": "プロフィール",
@@ -639,7 +581,6 @@
   "home.table.elite.watts": "30〜50 W",
   "home.table.elite.impact": "Ironmanで30〜45分短縮",
   "home.stats.source": "2025〜2026年、300回以上のAeroXセッションで測定されたデータ",
-
   "success_livre.meta.title": "お支払い確認 — AeroX",
   "success_livre.meta.description": "ご購入が確認されました。空力ガイドをダウンロードしてください。",
   "success_livre.title": "お支払い確認",
@@ -648,9 +589,7 @@
   "success_livre.download": "ガイドをダウンロード",
   "success_livre.validity": "リンクは10分間有効です",
   "success_livre.backHome": "ホームに戻る",
-
   "home.citableFacts": "<strong>AeroXの実績：</strong>2025〜2026年に300回以上のセッションを測定 | 平均+2.3 km/hアップ | 30 km/hで35 W節約 | 再現性3% | Bluetooth FTMS経由でWahoo、Elite、Tacx、Saris対応 | macOSおよびWindowsで利用可能。",
-
   "cda.meta.title": "サイクリングにおけるCdA：定義、数値、パフォーマンスへの影響",
   "cda.meta.description": "CdA（Cx × A）はサイクリング空力学の最重要指標です。物理的定義、カテゴリー別の一般的な数値、AeroXでの測定方法をご紹介します。",
   "cda.h1": "サイクリングにおけるCdAとは？",

@@ -21,13 +21,11 @@
   "ourStory.cta.aria": "Bekijk AeroX-aanbiedingen en sluit je aan bij de pioniers",
   "ourStory.cta.label": "🚀 Word een AeroX-pionier",
   "ourStory.cta.sub": "Wees een van de eersten die hun indoortraining transformeert met realtime aerodynamische analyse.",
-
   "home.meta.title": "AeroX — Verander je fietstrainer in een virtuele windtunnel",
   "home.meta.description": "AeroX verandert je fietstrainer in een virtuele windtunnel. Meet je positie met een webcam, win 3 km/u en bespaar 40 W. Probeer het nu.",
-
   "home.hero.tagline": "Lancering op 10 april",
   "home.hero.title.l1": "Je fietstrainer",
-  "home.hero.title.l2": "wordt een virtuele windtunnel",
+  "home.hero.title.l2": "wordt jouw aerodynamische analyzer",
   "home.hero.subtitle": "Meet je frontaal oppervlak in realtime, optimaliseer je positie en zet elke watt om in snelheid. Compatibel met Wahoo, Elite, Tacx, Saris.",
   "home.hero.paragraph": "Win tot&nbsp;<span class=\"font-bold text-accent\">3&#8239;km/u</span>, bespaar&nbsp;<span class=\"font-bold text-accent\">40&#8239;W<br /></span> met een eenvoudige webcam.",
   "home.hero.countdown.prefix": "Nog maar",
@@ -35,10 +33,9 @@
   "home.hero.cta.subtext": "Alleen voor AeroX-pioniers",
   "home.hero.cta.seo": "Download AeroX, indoor fiets-app met aerodynamica",
   "home.herovideo.alt": "AeroX-demonstratie",
-
-  "home.definition": "<strong>AeroX is de eerste virtuele windtunnel voor indoor wielrenners.</strong> De applicatie meet in realtime de <strong><a href='/nl/cda/' class='underline hover:text-primary'>CdA</a> (aerodynamisch frontaal oppervlak)</strong> via een eenvoudige webcam voor je fietstrainer. Dankzij kunstmatige intelligentie berekent het direct de impact van elke positieverandering. <strong>Typische winst: +2 tot 3 km/u en 30 tot 40 watt bespaard.</strong> Compatibel met <strong>Wahoo, Elite, Tacx, Saris</strong> — op macOS en Windows.",
+  "home.definition": "<strong>AeroX is de referentie-app voor aerodynamische analyse voor indoor wielrenners.</strong> Met een eenvoudige webcam meet AeroX het frontale oppervlak van de fietser en evalueert zijn <a href='/nl/cda/' class='underline hover:text-primary'><strong>CdA</strong></a> (Cx × A) in real time. Als toegankelijk alternatief voor windtunnels en high-tech sensoren geeft de app directe feedback over de aerodynamische impact van elke positieverandering, om elke dag te trainen op het optimaliseren van je snelheid op de fiets.",
   "footer.cda": "Wat is CdA?",
-"home.compat.title": "Compatibiliteit",
+  "home.compat.title": "Compatibiliteit",
   "home.compat.subtitle": "AeroX werkt met de belangrijkste merken fietstrainers en hartslagsensoren, voor een soepele en betrouwbare indoortraining. Tacx, Elite, Wahoo, Saris — alles is compatibel.",
   "home.compat2.title": "Compatibiliteit ",
   "home.compat.logos.wahoo": "Logo Wahoo - compatibel met AeroX",
@@ -49,11 +46,9 @@
   "home.compat.logos.polar": "Logo Polar - compatibel met AeroX",
   "home.compat.logos.garmin": "Logo Garmin - compatibel met AeroX",
   "home.compat.logos.suunto": "Logo Suunto - compatibel met AeroX",
-
   "home.stats.pioneers": "Pioniers",
   "home.stats.kmhAvg": "Gemiddeld gewonnen km/u",
   "home.stats.savedAt30": "Bespaard bij 30 km/u",
-
   "home.note1.title": "Onze Filosofie:",
   "home.note1.desc": "Innovatie, eenvoud, efficiëntie",
   "home.note2.title": "Onze Missie:",
@@ -64,7 +59,6 @@
   "home.note4.desc": "Barrières doorbreken, niet je budget",
   "home.note5.title": "Onze Passie:",
   "home.note5.desc": "Sensatie, snelheid, gevoel",
-
   "home.features2.tagline": "Functies",
   "home.features2.title": "Je fietstrainer wordt een virtuele windtunnel",
   "home.features2.subtitle": "Onze innovaties om je sneller te maken",
@@ -74,28 +68,23 @@
   "home.features2.items.power.obj": "Zet elke watt om in km/u",
   "home.features2.items.power.videoAlt": "Demonstratie Vermogensmodus",
   "home.features2.items.power.cta": "Word nu sneller",
-
   "home.features2.items.speed.title": "Snelheidsmodus",
   "home.features2.items.speed.obj": "Bespaar je watt",
   "home.features2.items.speed.desc": "Voel de weerstand zich aanpassen aan je aerodynamica.",
   "home.features2.items.speed.cta": "Voel wat je positie je kost",
-
   "home.features2.items.sim.title": "Simulatiemodus",
   "home.features2.items.sim.desc": "Simuleer je chrono zoals in het echt.",
   "home.features2.items.sim.obj": "De enige simulatie waar aero echt telt",
   "home.features2.items.sim.cta": "Simuleer je volgende doel met aero",
-
   "home.features2.items.tt.title": "Tijdrit",
   "home.features2.items.tt.desc": "Positioneer je. Geef vol gas. Wees de beste.",
   "home.features2.items.tt.obj": "De enige indoorrace met aero",
   "home.features2.items.tt.cta": "Daag de besten uit",
-
   "home.features2.items.challenges.title": "Uitdagingen",
   "home.features2.items.challenges.desc": "Combineer vermogen en aero om de snelheid vast te houden.",
   "home.features2.items.challenges.obj": "Je AeroX-badges zijn de spiegel van je vooruitgang",
   "home.features2.items.challenges.imgAlt": "Demonstratie Vermogensmodus",
   "home.features2.items.challenges.cta": "Daag je snelheid uit",
-
   "home.features2.items.editor.title": "Training-editor",
   "home.features2.items.editor.desc": "Maak je eigen trainingen of die van je coach, <span class=\"font-bold\">met aero erbij.</span>",
   "home.features2.items.editor.obj": "Intuïtief en snel, je persoonlijke trainingen in 2 min",
@@ -103,7 +92,6 @@
   "home.features2.items.tt.imgAlt": "AeroX tijdrit-klassement met aerodynamische positie",
   "home.features2.items.editor.imgAlt": "AeroX trainingseditor",
   "home.features2.items.editor.cta": "Personaliseer je aero-trainingen",
-
   "home.testimonials.title": "Getuigenissen",
   "home.testimonials.subtitle": "Triatleten, wielrenners en coaches: zij kozen voor AeroX",
   "home.testimonials.subsubtitle": "Ervaringen van AeroX-gebruikers: triatleten, amateurwielrenners en coaches vertellen hoe ze snelheid winnen en watt besparen dankzij realtime aerodynamica. Een alternatief voor Zwift, MyWhoosh en Kinomap.",
@@ -122,53 +110,44 @@
   "home.testimonials.cta": "Sluit je aan bij de AeroX-pioniers",
   "livre.testimonials.title": "Getuigenissen",
   "livre.testimonials.subtitle": "Wat lezers zeggen over ons boek",
-
   "home.features.title": "Hoe win je snelheid zonder harder te trappen?",
   "home.features.subtitle": "Elke watt telt — en je budget ook!",
   "home.features.ctaDetails": "Nog maar <CountDown /> om AeroX-pionier te worden en mee te bouwen aan <span class=\"font-bold text-accent\">de toekomst van indoor wielrennen!</span>",
-
   "home.features.items.gain.title": "Win 1 tot 5 km/u zonder extra inspanning",
   "home.features.items.gain.desc": "AeroX onthult in realtime hoeveel km/u je positie je kost. Zelfs bij 25&#8239;km/u kun je 1 km/u winnen! Bij 45&#8239;km/u tot +5 km/u. Beter dan een fiets van €5000.",
   "home.features.items.gain.education": "Vanaf 25&#8239;km/u absorbeert de lucht ~70&#8239;% van je vermogen, en bij 45&#8239;km/u tot 95&#8239;%. Je lichaam werkt als een parachute: AeroX meet de grootte ervan (frontaal oppervlak) en berekent je winst wanneer je het verkleint. Resultaat: +1&#8239;km/u bij 25, tot +5&#8239;km/u bij 45. Buig je ellebogen, trek je hoofd in, breng je aerobars dichter bij elkaar: elk detail wordt gratis snelheid. AeroX laat het je zien.<br /><br />👉 Stel je voor dat je je rit afmaakt en sneller thuiskomt dan gewoonlijk, zonder harder te werken. Gewoon het gevoel van door de lucht snijden… meer dan prestatie, plezier.",
   "home.features.items.gain.more": "We leggen de cijfers uit…",
   "home.features.items.gain.cta": "Start AeroX, win 1-5&#8239;km/u",
   "home.features.items.gain.aria": "Download AeroX, indoor fiets-app om 1-5 km/u te winnen dankzij je aerodynamica",
-
   "home.features.items.real.title": "Win echte snelheid, geen virtueel vermogen",
   "home.features.items.real.desc": "Op de fietstrainer ga je vooruit in een virtuele wereld.<br />Met AeroX bespaar jij 40&#8239;W. Je wordt sneller in het echte leven.",
   "home.features.items.real.education": "Op de fietstrainer is je enige doel je vermogen verbeteren. En dat is prima… voor virtuele races. Maar buiten ben je niet sneller, soms zelfs langzamer en je aero-positie voelt oncomfortabel. Dat zijn 40&#8239;W die verdampen zonder dat je het merkt. Trainen met realtime aerodynamische feedback heeft een dubbel voordeel: je positie optimaliseren én er een automatisme van maken, zodat je geniet van je trainingen en presteert in echte wedstrijden, waar het telt.",
   "home.features.items.real.more": "Meer weten…",
   "home.features.items.real.cta": "Probeer AeroX, bespaar je watt",
-
   "home.features.items.pro.title": "Train als een prof, zonder elitebudget",
   "home.features.items.pro.desc": "Profs beheersen vermogen, hartslag… én aerodynamica. Een windtunneltest? Minimaal €1500.<br />AeroX biedt je dezelfde hefboom, vanuit je fietstrainer, met een eenvoudige webcam. Aero eindelijk toegankelijk.",
   "home.features.items.pro.education": "Klassieke trainingsplannen beperken zich tot vermogen en hartslag. Maar Evenepoel is geen wereldkampioen tijdrijden alleen dankzij zijn watt: hij heeft geleerd krachtig te blijven in een optimale aero-positie.<br/><br/>Helaas blijft het testen van aerodynamica onbereikbaar voor 99&#8239;% van de wielrenners (windtunnels, velodromen, sensoren kosten heel veel).<br/><br/>AeroX verandert de spelregels: vanuit je fietstrainer, met een eenvoudige webcam, krijg je toegang tot deze gegevens in realtime om je positie te optimaliseren tijdens de training.<br/><br/>👉 Wat de profs duizenden euro's betalen, kun je nu thuis hebben. En je voelt die tineling: 'ik train als hen'.",
   "home.features.items.pro.more": "Begrijp de training van profs…",
   "home.features.items.pro.cta": "Train als een prof met AeroX",
-
   "home.features.items.cost.title": "Rijd sneller zonder duizenden euro's uit te geven",
   "home.features.items.cost.desc": "90&#8239;% van je aero komt van je positie. Niet van je fiets, wielen of helm.<br />AeroX leert je die te optimaliseren… voor minder dan een paar aero-sokken!",
   "home.features.items.cost.education": "Profielwielen, topframe, nieuwste helm… Marketingeffecten laten je elk jaar duizenden euro's uitgeven voor enkele watt winst. Maar in werkelijkheid komt 90&#8239;% van de luchtweerstand van je lichaam, niet van het materiaal. De beste fiets ter wereld compenseert nooit een positie die je niet langer dan 5 minuten kunt aanhouden. Met AeroX investeer je daar waar het echt loont: je positie.<br />Je topmateriaal verdient een toptraining.",
   "home.features.items.cost.more": "Meer weten…",
   "home.features.items.cost.cta": "Versnel zonder meer uit te geven",
-
   "home.features.items.proof.title": "AeroX werkt echt",
   "home.features.items.proof.desc": "Met AeroX won ik +3&#8239;km/u, van 36 naar 39&#8239;km/u, met mijn fiets van 2008 van €700. Geen nieuwe fiets nodig om sneller te gaan.",
   "home.features.items.proof.education": "Bij het ontwikkelen en testen van AeroX begreep ik het belang van het aanhouden van een aero-positie vanaf 25&#8239;km/u. Ik bracht mijn aerobars dichter bij elkaar, verlengde mijn houding, verlaagde hoofd en schouders. Zelfs bergop hield ik de positie zodra de snelheid boven 25&#8239;km/u kwam. Resultaat: van 36 naar 39&#8239;km/u met een fiets van 2008 van €700, zonder verandering in FTP. Eerst werd ik gelost op het vlakke; nu niet meer. Niets was mogelijk geweest zonder realtime feedback. Olivier D., triatleet, oprichter van AeroX",
   "home.features.items.proof.more": "Ik vertel je alles…",
   "home.features.items.proof.cta": "Sluit je aan bij de AeroX-community",
-
   "home.prices.title": "Onze Pakketten",
   "home.prices.subtitle": "Een pakket voor elk doel",
   "home.prices.subsubtitle": "Ontdek de AeroX-tarieven voor wielrenners en triatleten. Vergelijk met Zwift, MyWhoosh of Kinomap en profiteer van een unieke oplossing voor je fietstrainer (Tacx, Elite, Wahoo). Ideaal voor Ironman-voorbereiding en indoortraining.",
-
   "home.prices.packDiscover.title": "Ontdekkingspakket",
   "home.prices.packDiscover.subtitle": "Test je aero",
   "home.prices.packDiscover.period": "gedurende 10 dagen",
   "home.prices.packDiscover.items.1": "Volledige toegang tot AeroX",
   "home.prices.packDiscover.items.2": "Test tot 1u/dag",
   "home.prices.packDiscover.cta": "Lancering op 01/12/2025",
-
   "home.prices.packPioneer.title": "Pionierspakket",
   "home.prices.packPioneer.subtitle": "Geniet exclusief van de toekomst van indoortraining",
   "home.prices.packPioneer.period": "eenmalige betaling",
@@ -178,7 +157,6 @@
   "home.prices.packPioneer.items.4": "Steun de ontwikkeling van AeroX 🚀",
   "home.prices.packPioneer.cta": "Word AeroX-pionier",
   "home.prices.packPioneer.ribbon": "Pionier",
-
   "home.prices.packProgress.title": "Vooruitgangspakket",
   "home.prices.packProgress.title1": "Jaarlijks",
   "home.prices.packProgress.subtitle1": "Versterk je positie het hele jaar door, bespaar 30%",
@@ -187,14 +165,12 @@
   "home.prices.packProgress.items1.2": "Nieuwe functies het hele jaar",
   "home.prices.packProgress.items1.3": "Ideaal om je doelen serieus voor te bereiden",
   "home.prices.packProgress.cta1": "Lancering op 01/12/2025",
-
   "home.prices.packProgress.title2": "Maandelijks",
   "home.prices.packProgress.subtitle2": "Versterk je aero zonder verplichtingen",
   "home.prices.packProgress.period2": "€22/maand in februari 2026",
   "home.prices.packProgress.items2.1": "Volledige toegang tot AeroX",
   "home.prices.packProgress.items2.2": "Ideaal voor de voorbereiding op het zomerseizoen",
   "home.prices.packProgress.cta2": "Lancering op 01/11/2025",
-
   "home.steps.title": "Start je training met AeroX in 2 minuten",
   "home.steps.subsubtitle": "AeroX is eenvoudig te installeren en werkt direct met je fietstrainer. Compatibel met de belangrijkste merken (Tacx, Garmin, Wahoo, Elite, Saris), je apparatuur wordt automatisch gedetecteerd. De ervaring is net zo soepel als Zwift, MyWhoosh of Kinomap, maar met een uniek voordeel: realtime analyse van je aerodynamica om snelheid te winnen en watt te besparen. Ideaal voor wielrenners en triatleten die hun positie willen optimaliseren en een Ironman of indoorwedstrijd willen voorbereiden.",
   "home.steps.items.1.title": "Stap 1: <span class=\"font-semibold\">Download AeroX</span>",
@@ -206,43 +182,33 @@
   "home.steps.items.4.desc": "Detectie via Bluetooth — snel en zonder complexe configuratie. AeroX detecteert je fietstrainer en hartslagmeter. Kies je apparaten, de verbinding is daarna automatisch. Compatibel met Wahoo, Elite, Tacx, Saris, Kickr, Suito, Zwift, etc. Werkt met Garmin, Polar, Suunto voor hartslag.",
   "home.steps.items.5.title": "Trap!",
   "home.steps.cta": "Download AeroX",
-
   "home.faq.title": "Antwoorden op je vragen",
   "home.faq.subtitle": "Veelgestelde vragen",
   "home.faq.cta": "Schrijf je toekomst met AeroX",
-
   "home.faq.items.1.title": "Waarom AeroX?",
   "home.faq.items.1.more": "80% van je inspanning vecht tegen de lucht — AeroX laat je zien waar je het terugwint",
   "home.faq.items.1.education": "Vanaf 25 km/u is aerodynamica verantwoordelijk voor 70 tot 95% van de totale weerstand — het is de nummer één factor die je vertraagt, veel meer dan gewicht of materiaal. Toch meet geen enkele standaard fietstrainer je aero-positie. Op Zwift, MyWhoosh of Kinomap trap je harder zonder ooit te weten of je positie je 30 of 50 watt kost. AeroX verandert het spel: met een eenvoudige webcam analyseert de app je silhouet in realtime en berekent je frontaal oppervlak (CdA). Je ziet direct hoeveel km/u en watt elke aanpassing oplevert. Resultaat gemeten over 300+ sessies: +2 tot 3 km/u snelheid en 30 tot 40 W bespaard bij dezelfde inspanning. Dat is het equivalent van 30 tot 45 minuten winst op een Ironman — zonder harder te trappen, alleen door je positie te optimaliseren.",
-
   "home.faq.items.2.title": "Welke uitrusting heb ik nodig?",
   "home.faq.items.2.education": "Om AeroX te gebruiken heb je een computer nodig (macOS of Windows), je fiets op een ondersteuning en een camera — de ingebouwde webcam van je laptop, een USB-webcam of zelfs je smartphone via wifi. Dat is alles voor de basis aerodynamische analyse: AeroX meet je frontaal oppervlak (CdA) in realtime zonder extra sensoren. Voor de Vermogensmodus (positie/watt koppeling) en Snelheidsmodus (weerstand gekoppeld aan je positie) is een Bluetooth FTMS fietstrainer nodig: Wahoo Kickr, Elite Direto, Tacx Neo, Saris H3 en de meeste recente modellen zijn compatibel. Hartslagmeters van Garmin, Polar en Suunto worden ook ondersteund. Installatie duurt 2 minuten: plaats de camera op ongeveer 1,3 m voor de trainer, start AeroX, kalibreer in twee klikken — en je bent klaar.",
   "home.faq.items.2.more": "Een computer, je fietstrainer, een camera",
-
   "home.faq.items.3.title": "Hoe lang duurt de installatie?",
   "home.faq.items.3.education": "Minder dan 2 minuten. Plaats je webcam op ongeveer 1,3 m voor je trainer — op een statief, een plank of zelfs op een stoel. Start AeroX op je computer, klik op beide uiteinden van je stuur om afstand en breedte te kalibreren: klaar. De eerste keer stel je ook de camera-fietsafstand in. Deze instellingen worden opgeslagen: volgende sessies start je gewoon en rijd je. AeroX detecteert automatisch je fietstrainer en hartslagband via Bluetooth — geen complexe configuratie. Als je trainer niet interactief is, kun je toch de visuele analysemodus gebruiken om je frontaal oppervlak in realtime te zien veranderen. Ter vergelijking: een windtunnelsessie vereist 2 tot 4 uur reis- en installatietijd. Met AeroX ga je in 120 seconden van installatie naar trappen.",
   "home.faq.items.3.more": "In minder dan 2 minuten wordt je trainer een virtuele windtunnel…",
-
   "home.faq.items.4.title": "Is mijn fietstrainer of sensor compatibel met AeroX?",
   "home.faq.items.4.education": "AeroX is compatibel met 95% van de fietstrainers op de markt via Bluetooth FTMS: Wahoo Kickr, Elite Direto en Suito, Tacx Neo en Flux, Saris H3, en de meeste recente modellen. Voor de basis aerodynamische analyse (realtime CdA-meting) is een slimme fietstrainer niet verplicht — een eenvoudige webcam en je fiets op een ondersteuning volstaan. De Vermogensmodus en Snelheidsmodus vereisen een FTMS-trainer om de weerstand aan je positie te koppelen. Hartslagmeters van Garmin, Polar en Suunto worden ondersteund. AeroX werkt op macOS en Windows — geen tablet of smartphone nodig voor het hoofdscherm. Als je trainer niet in de lijst staat, neem dan contact met ons op: we voegen regelmatig nieuwe modellen toe. Kortom, als je al rijdt op Zwift of MyWhoosh, is je materiaal compatibel met AeroX.",
   "home.faq.items.4.more": "Compatibel met 95% van de slimme trainers — waarschijnlijk de jouwe…",
-
   "home.faq.items.5.title": "Innovatie of gadget?",
   "home.faq.items.5.more": "Geen van beide — AeroX is een paradigmaverschuiving in training: je snelheid wordt je prioriteit",
   "home.faq.items.5.education": "20 jaar geleden was de hartslagmeter een gadget. Vandaag traint niemand zonder. 10 jaar geleden was de vermogensmeter voorbehouden aan profs. Vandaag gebruikt de meerderheid van serieuze wielrenners er een. Aerodynamica is de volgende hefboom om te democratiseren — en dat is precies wat AeroX doet. Ontwikkeld door Olivier Demichel, voormalig CNRS-onderzoeker en triatleet, gebruikt AeroX AI-gestuurde videoanalyse om je frontaal oppervlak in realtime te meten. Dit is geen theoretische schatting: het is een fysieke meting van je silhouet, beeld voor beeld, met 3% herhaalbaarheid. De winst is concreet en gemeten: gemiddeld +2 tot 3 km/u over 300+ sessies. AeroX vervangt je vermogensmeter niet — het vult deze aan door de aerodynamische dimensie toe te voegen die niemand eerder mat op een fietstrainer.",
-
   "home.faq.items.6.title": "Ik ben wielrenner, is dit echt nuttig als je in een peloton rijdt?",
   "home.faq.items.6.education": "Laten we eerlijk zijn: midden in het peloton blijven is niet de realiteit van wielrennen. Waaiers, ontsnappingen of het peloton op kop nemen zijn situaties waarin je aerodynamica het verschil maakt. En wie weet, met 3 km/u extra, zou je er plezier in kunnen hebben om te ontsnappen.",
   "home.faq.items.6.more": "Ja, tenzij je achteraan wilt blijven!",
-
   "home.faq.items.7.title": "Heb ik een abonnement nodig om mijn optimale positie te vinden en te testen?",
   "home.faq.items.7.education": "Je kunt AeroX vanaf dag één testen met het gratis plan: analyseer je positie, meet je CdA, zie de impact van elke aanpassing in realtime. Dat is voldoende om je belangrijkste aerodynamische hefbomen te ontdekken en de mogelijke winst te zien. Het abonnement ontgrendelt geavanceerde functies: Vermogensmodus om je positie aan je watt te koppelen, Snelheidsmodus waarbij de trainerweerstand zich aanpast aan je aerodynamica, GPX-simulatie om een echt parcours voor te bereiden, en tijdritten met klassement. Bovenal verandert het abonnement een eenmalige ontdekking in een duurzame gewoonte. Een efficiënte aero-positie aanhouden gaat niet vanzelf — het is een technische vaardigheid die herhaling vereist, zoals uit het zadel trappen of versnellen uit een bocht. Met regelmatige training op AeroX wordt je aero-positie een natuurlijke reflex: je zesde zintuig als je buiten rijdt.",
   "home.faq.items.7.more": "Test met het gratis plan, groei met een abonnement",
-
   "home.faq.items.8.title": "Ik ben al gewend aan een aero-positie — is dit nog nuttig voor mij?",
   "home.faq.items.8.more": "Gewend zijn betekent niet geoptimaliseerd zijn — AeroX laat je het verschil zien",
   "home.faq.items.8.education": "In positie zitten is niet genoeg — de positie moet ook effectief zijn. De meeste wielrenners denken dat ze aerodynamisch zijn terwijl onzichtbare details hen 10 tot 30 watt kosten: hoofd 3 cm te hoog, ellebogen 5 cm te wijd, schouders niet ingetrokken. Zonder objectieve meting kun je het niet weten. AeroX maakt deze details zichtbaar in realtime: je past je hoofd aan, je CdA daalt 2% — je ziet het direct op het scherm. Onze metingen tonen aan dat zelfs ervaren wielrenners nog 1 tot 2 km/u winnen door hun positie te verfijnen met objectieve feedback. Bovendien verslechtert je positie door vermoeidheid: AeroX laat je zien hoe je CdA evolueert gedurende de sessie, zodat je leert een efficiënte positie aan te houden, zelfs na 2 uur inspanning. Dat is het verschil tussen denken dat je aero bent en het meten.",
-
   "home.faq.schema.q1": "Waarom AeroX?",
   "home.faq.schema.a1": "Vanaf 25 km/u is aerodynamica verantwoordelijk voor 70 tot 95% van de weerstand. AeroX laat je je positie visualiseren en optimaliseren om sneller te rijden en watt te besparen.",
   "home.faq.schema.q2": "Welke hulpmiddelen en materialen heb ik nodig om AeroX te gebruiken?",
@@ -263,16 +229,13 @@
   "home.faq.schema.a9": "Je coach kan trainingen plannen, maar alleen AeroX meet de werkelijke effectiviteit van je positie van begin tot eind. De twee zijn complementair.",
   "home.faq.schema.q10": "Hoe helpt AeroX me bij de voorbereiding op een wedstrijd in het buitenland?",
   "home.faq.schema.a10": "Met de GPX-modus importeer je het exacte parcours van je wedstrijd. AeroX simuleert het terrein, de wind en de impact van je aerodynamica zodat je kunt trainen alsof je er al bent.",
-
   "home.common.more": "Meer weten…",
-
   "home.leadmagnet.title": "Wees de eerste die het weet",
   "home.leadmagnet.subtitle": "Schrijf je in en krijg prioritaire toegang op 10 april.",
   "home.leadmagnet.placeholder": "Je e-mail",
   "home.leadmagnet.cta": "Schrijf me in",
   "home.leadmagnet.success": "Genoteerd! Je ontvangt de info als eerste.",
   "home.leadmagnet.error": "Er is een fout opgetreden, probeer opnieuw.",
-
   "home.explore.title": "Ontdek AeroX",
   "home.explore.bf.title": "AeroX voor Bike Fitters",
   "home.explore.bf.desc": "Meet de aero van je klanten in realtime",
@@ -282,7 +245,6 @@
   "home.explore.blog.aero.desc": "Blogartikel",
   "home.explore.blog.feel.title": "Leer aero te voelen",
   "home.explore.blog.feel.desc": "Blogartikel",
-
   "nav.home": "Home",
   "nav.features": "Functies",
   "nav.why": "Waarom AeroX?",
@@ -294,43 +256,33 @@
   "nav.blog": "Aero Blog",
   "nav.book": "De AeroX-Methode",
   "nav.login": "Inloggen",
-
   "nav.cta.mobile": "Downloaden",
-  "nav.cta.desktop": "Test\u00a0AeroX",
+  "nav.cta.desktop": "Test AeroX",
   "nav.cta.subtext": "Alleen voor AeroX-pioniers",
-
   "footer.contact.title": "Contact",
   "footer.team": "Team",
   "footer.story": "Het verhaal van AeroX",
-
   "footer.contactUs": "Neem contact op",
   "footer.bikeFitting": "AeroX voor Bike Fitters",
   "footer.privacy": "Privacybeleid",
   "footer.terms": "Algemene voorwaarden",
   "footer.footnote": "Made by O. Demichel · Alle rechten voorbehouden.",
-
   "blog.title": "Aerodynamica Blog",
   "blog.aerox.offers": "Ontdek AeroX",
   "blog.aerox.method": "Ontdek de basis van aerodynamische training",
-
   "blog.subtitle": "Tips, analyses en innovaties om je fiets- en triathlontraining te optimaliseren",
-
   "contact.title": "Contact AeroX",
   "contact.description": "Hulp nodig of informatie gewenst? Neem rechtstreeks contact op met het AeroX-team per e-mail.",
   "contact.heading": "Contact AeroX",
   "contact.not_ready": "AeroX bevindt zich in de laatste optimalisatiefase en zal binnenkort beschikbaar zijn.",
-
   "contact.intro": "Om als eerste te testen of voor elke andere vraag, neem rechtstreeks contact met ons op:",
   "contact.aria": "Stuur een e-mail naar contact@aeroxbefaster.com",
   "contact.delay": "We antwoorden doorgaans binnen 24 tot 48 uur (werkdagen).",
-
   "privacy.title": "Privacybeleid — AeroX",
   "privacy.description": "Ontdek hoe AeroX je persoonlijke gegevens verzamelt, gebruikt en beschermt.",
-
   "signup.meta.title": "Registreer en begin je aero-ervaring",
   "signup.meta.description": "Maak je AeroX-account aan om toegang te krijgen tot de app en abonnementen.",
   "signup.title": "Welkom bij AeroX",
-
   "signup.subtitle1": "Maak je account aan om je aero-ervaring te starten.",
   "signup.email.label": "E-mail",
   "signup.email.placeholder": "jouw@email.com",
@@ -357,7 +309,6 @@
   "signup.role.rider.desc": "Ik rijd en train",
   "signup.role.bikefitter": "Bike-Fitter",
   "signup.role.bikefitter.desc": "Ik doe bike fitting",
-
   "login.meta.title": "Inloggen — AeroX",
   "login.meta.description": "Log in op je AeroX-account om toegang te krijgen tot de app en je abonnementen.",
   "login.title": "Toegang tot je AeroX-ruimte",
@@ -373,13 +324,11 @@
   "login.noAccount.link": "Account aanmaken",
   "login.errors.missingFields": "Vul alle velden in.",
   "login.success": "Succesvol ingelogd!",
-
   "confirm.meta.title": "Registratiebevestiging — AeroX",
   "confirm.meta.description": "Controleer je e-mail om je AeroX-account te activeren.",
   "confirm.title": "✅ E-mail verzonden",
   "confirm.message": "Bedankt! Er is een bevestigingsmail naar je verstuurd.<br/>Klik op de link om je AeroX-account te activeren.<br/><br/>⚠️ Controleer ook je spammap.",
   "confirm.button": "Inloggen",
-
   "dashboard.meta.title": "Dashboard — AeroX",
   "dashboard.meta.description": "Je persoonlijke AeroX-ruimte: abonnement, status en app-toegang.",
   "dashboard.title": "Welkom op je AeroX-dashboard",
@@ -401,19 +350,15 @@
   "dashboard.noStudio": "Niet opgegeven",
   "dashboard.pendingActivation": "Wacht op activering",
   "dashboard.activeBf": "Actief Bike-Fitter account",
-
   "hero.video.title": "AeroX-demovideo: indoor wielrennen met realtime aerodynamica. Verder dan Zwift, MyWhoosh en Kinomap — word sneller.",
   "hero.video.caption": "AeroX verandert je fietstrainer in een windtunnel: je positie vertaald in realtime vermogenswinst.",
   "hero.video.aria": "AeroX-video: win 2–3 km/u en bespaar 40 W op je fietstrainer dankzij realtime aerodynamica.",
-
   "pricing.remaining": "Nog maar",
   "pricing.offer": "om van het aanbod te profiteren",
-
   "success.meta.title": "Betaling geslaagd",
   "success.meta.description": "Bedankt voor je steun aan AeroX. Welkom bij de toekomst van indoortraining.",
   "success.title": "Bedankt voor je vertrouwen!",
   "success.subtitle1": "Welkom bij de toekomst van indoortraining.",
-
   "success.livre.subtitle1": "Je gaat de principes van aerodynamische training kunnen toepassen.",
   "success.subtitle2": "Je feedback helpt ons AeroX naar jouw beeld te vormen!",
   "success.download1": "Downloaden",
@@ -423,21 +368,18 @@
   "success.download2mac": "voor",
   "success.download2win": "voor",
   "success.backHome": "Terug naar home",
-
   "cancel.meta.title": "Betaling geannuleerd",
   "cancel.meta.description": "De betaling is niet voltooid. Je kunt opnieuw proberen of contact opnemen met AeroX-support.",
   "cancel.title": "Oeps!",
   "cancel.message1": "Er is iets misgegaan — je abonnement is niet geactiveerd.",
   "cancel.message2": "Probeer de betaling opnieuw of neem contact op met de beheerder.",
   "cancel.backHome": "Terug naar home",
-
   "cancel.livre.meta.title": "Betaling geannuleerd",
   "cancel.livre.meta.description": "De betaling is niet voltooid. Je kunt opnieuw proberen of contact opnemen met AeroX-support.",
   "cancel.livre.title": "Oeps!",
   "cancel.livre.message1": "Er is iets misgegaan, je betaling is geweigerd.",
   "cancel.livre.message2": "Probeer de betaling opnieuw of neem contact op met de beheerder.",
   "cancel.livre.backHome": "Terug naar home",
-
   "book.meta.title": "De wetenschappelijke gids voor wielren-aerodynamica",
   "book.meta.description": "Begrijp de relatie tussen vermogen en snelheid en structureer een effectieve aerodynamische training.",
   "book.hero.alt": "Omslag van het aerodynamica-boek",
@@ -455,7 +397,6 @@
   "mailerlite_sub.hero.title.l1": "Aero is niet alleen voor profs,",
   "mailerlite_sub.hero.title.l2": "AeroX gaat de spelregels veranderen.",
   "mailerlite_sub.hero.text": "AeroX revolutioneert de wielrentraining door aerodynamica toegankelijk te maken voor iedereen. <br/>Word lid van onze community en ontdek hoe je je positie optimaliseert en snelheid wint, zonder je materiaal of niveau te veranderen.",
-
   "book.testimonials.t1": "Ik heb dit boek in één keer verslonden. Het verandert alles radicaal... en mijn trainingsperspectief!",
   "book.testimonials.t2": "Met deze nieuwe kennis zal AeroX duidelijk impact hebben op de prestaties van mijn klanten!!",
   "book.testimonials.t3": "Voor mij is alles uitstekend uitgelegd, helder en vloeiend. <br/> De pedagogische inspanning is constant, een uitstekend boek dat iedereen zou moeten lezen.",
@@ -466,26 +407,21 @@
   "book.testimonials.triathlete": "Triatleet",
   "book.testimonials.bikefitter": "Bike Fitter",
   "book.testimonials.cyclist": "Amateurwielrenner",
-
   "book.gain.title": "Tot 45 minuten winst op Ironman, 50 W bespaard",
   "book.gain.desc": "Dankzij een geoptimaliseerde aerodynamische positie — meetbaar en trainbaar.<br/><span class='text-primary'>Zonder je materiaal of niveau te veranderen.</span>",
-
   "book.vision.title": "Onze visie",
   "book.vision.desc": "Aerodynamica is een belangrijke prestatiehefboom in het wielrennen.",
-
   "book.target.title": "Voor wie is deze methode",
   "book.target.good.title": "Voor wie weigert willekeurig te optimaliseren",
   "book.target.good.desc": "Atleten, coaches en bike fitters die zich bewust zijn van de beslissende impact van positie op prestatie.",
   "book.target.bad.title": "Deze gids is niet voor jou",
   "book.target.bad.desc": "Als je denkt dat prestatie alleen draait om meer watt produceren of materiaal wisselen.",
-
   "book.errors.e1.title": "Mythe #1",
   "book.errors.e1.desc": "Onder 30 km/u heeft aerodynamica geen zin.",
   "book.errors.e2.title": "Mythe #2",
   "book.errors.e2.desc": "Om sneller te gaan heb je eerst nieuw materiaal nodig.",
   "book.errors.e3.title": "Mythe #3",
   "book.errors.e3.desc": "Om sneller te gaan moet je harder trappen.",
-
   "book.method.title": "Trainen op aerodynamica",
   "book.method.p1.title": "Doorbreek gangbare mythes",
   "book.method.p1.desc": "Aerodynamica zou pas boven 35 km/u tellen of alleen een kwestie van materiaal zijn. De natuurkunde laat iets anders zien.",
@@ -495,28 +431,22 @@
   "book.method.p3.desc": "De aerodynamische efficiëntie van je positie meten is de basis om sneller te rijden zonder meer inspanning.",
   "book.method.p4.title": "Win km/u",
   "book.method.p4.desc": "Een optimale positie vermindert de luchtweerstand met tot 30%.",
-
   "book.concrete.title": "Wat deze methode echt gaat veranderen voor jou: ",
   "book.concrete.p1.title": "Begrijp waarom je gevoel je minuten kost",
   "book.concrete.p2.title": "Beoordeel hoeveel tijd je kunt winnen met een geoptimaliseerde positie",
   "book.concrete.p3.title": "Ontdek de 3 pijlers van echte aerodynamische vaardigheid",
   "book.concrete.p4.title": "Structureer je training om je aerodynamica te beheersen",
   "book.concrete.p5.title": "Ervaar sensaties van snelheid en vloeiendheid die je nog nooit hebt gekend",
-
   "book.content.title": "Wat de gids concreet bevat",
   "book.content.p1": "Een heldere en beknopte gids van 60 pagina's",
   "book.content.p2": "Natuurkundige principes eenvoudig uitgelegd om aerodynamica te begrijpen",
   "book.content.p3": "Analyse van 4 echte prestaties gebaseerd op werkelijke aerodynamische beheersing",
   "book.content.p4": "Een methode om je winst in snelheid, minuten en watt concreet te schatten",
   "book.content.p5": "Een praktische methodologie om je positie effectief te trainen",
-
   "book.price.desc": "Een wetenschappelijk, concreet en direct toepasbaar werk om je aerodynamica te begrijpen en te trainen.",
-
   "book.philo.title": "Onze filosofie",
   "book.philo.desc": "Trainingsbeslissingen moeten gebaseerd zijn op wetenschap, niet op overtuigingen.",
-
   "book.cta.question": "Hoeveel minuten zou je kunnen winnen met je huidige niveau?",
-
   "bf.meta.title": "AeroX voor Bike Fitters — Meet de aerodynamica van je klanten",
   "bf.meta.description": "Voeg realtime aerodynamische meting toe aan je bike fitting sessies. AeroX zet elke aanpassing om in meetbare snelheidswinst. Vraag een demo aan.",
   "bf.definition": "Aerodynamische bike fitting optimaliseert de positie van de wielrenner om de luchtweerstand (CdA) te verminderen. In tegenstelling tot klassieke fitting gericht op comfort en biomechanica, meet aero fitting de impact van elke aanpassing — zadelhoogte, aerobarhoek, hoofdpositie — op het frontaal oppervlak van de wielrenner. Met AeroX gebeurt deze meting in realtime via een webcam en een fietstrainer, direct in de studio van de bike fitter. De klant ziet onmiddellijk hoeveel watt en km/u elke wijziging oplevert. Resultaat: een overtuigendere sessie, een loyale klant en een onderscheidende dienst die weinig fitters vandaag aanbieden.",
@@ -606,7 +536,6 @@
   "bf.faq.short5": "10% absoluut, 3% herhaalbaarheid — ideaal om posities live te vergelijken.",
   "bf.faq.more5": "Waarom herhaalbaarheid belangrijker is dan absolute nauwkeurigheid bij fitting",
   "bf.faq.a5": "AeroX meet het aerodynamisch frontaal oppervlak (CdA) in realtime via AI-gestuurde videoanalyse. Het algoritme analyseert het silhouet van de wielrenner beeld voor beeld om het geprojecteerde oppervlak tegenover de wind te berekenen. De absolute nauwkeurigheid is 10%, met 3% meetherhaalbaarheid — minder precies dan een windtunnel in absolute waarde, maar veel veelzijdiger. AeroX geeft realtime informatie, overal, en maakt effectieve vergelijking van positie- en fittingwijzigingen mogelijk. U past het zadel 5 mm aan, de CdA verandert live. Dat is precies wat een bike fitter nodig heeft in een sessie: geen absolute laboratoriumwaarde, maar een directe, visuele vergelijking tussen elke geteste positie. In een professionele windtunnel kost een meting €1.500 tot €3.000 en levert een eenmalig resultaat. AeroX biedt continue meting, direct bruikbaar tijdens fitting, toegankelijk vanuit uw studio.",
-
   "bf.lastUpdated": "Laatst bijgewerkt: maart 2026",
   "bf.table.title": "AeroX vs Windtunnel vs Klassieke Fitting",
   "bf.table.col1": "Criterium",
@@ -633,7 +562,6 @@
   "bf.table.followup.aerox": "Sessie per sessie",
   "bf.table.followup.tunnel": "Eenmalig",
   "bf.table.followup.classic": "Subjectief",
-
   "home.lastUpdated": "Laatst bijgewerkt: maart 2026",
   "home.table.title": "Typische winst per wielrennersprofiel",
   "home.table.col1": "Profiel",
@@ -653,7 +581,6 @@
   "home.table.elite.watts": "30–50 W",
   "home.table.elite.impact": "30–45 min bespaard op Ironman",
   "home.stats.source": "Gegevens gemeten over 300+ AeroX-sessies, 2025–2026",
-
   "success_livre.meta.title": "Betaling bevestigd — AeroX",
   "success_livre.meta.description": "Je aankoop is bevestigd. Download je aerodynamica-gids.",
   "success_livre.title": "Betaling bevestigd",
@@ -662,9 +589,7 @@
   "success_livre.download": "Download de gids",
   "success_livre.validity": "Link geldig gedurende 10 minuten",
   "success_livre.backHome": "Terug naar home",
-
   "home.citableFacts": "<strong>AeroX in cijfers:</strong> 300+ sessies gemeten in 2025-2026 | +2,3 km/u gemiddeld gewonnen | 35 W bespaard bij 30 km/u | 3% herhaalbaarheid | Compatibel met Wahoo, Elite, Tacx, Saris via Bluetooth FTMS | Beschikbaar op macOS en Windows.",
-
   "cda.meta.title": "CdA in het wielrennen: definitie, waarden en impact op prestatie",
   "cda.meta.description": "CdA (Cx × A) is de belangrijkste metriek van aerodynamica in het wielrennen. Ontdek de fysische definitie, typische waarden per categorie en hoe je het meet met AeroX.",
   "cda.h1": "Wat is CdA in het wielrennen?",

@@ -27,7 +27,7 @@
 
   "home.hero.tagline": "Launching April 10",
   "home.hero.title.l1": "Your smart trainer",
-  "home.hero.title.l2": "becomes a virtual wind tunnel",
+  "home.hero.title.l2": "becomes your aerodynamic analyzer",
   "home.hero.subtitle": "Measure your frontal area in real time, optimize your position and turn every watt into speed. Compatible with Wahoo, Elite, Tacx, Saris.",
   "home.hero.paragraph": "Gain up to&nbsp;<span class=\"font-bold text-accent\">3&#8239;km/h</span>, save&nbsp;<span class=\"font-bold text-accent\">40&#8239;W<br /></span> — with just a webcam.",
   "home.hero.countdown.prefix": "Only",
@@ -36,7 +36,7 @@
   "home.hero.cta.seo": "Download AeroX, an indoor-cycling app with aerodynamics",
   "home.herovideo.alt": "AeroX demo",
 
-  "home.definition": "<strong>AeroX is the first virtual wind tunnel for indoor cyclists.</strong> The application measures <strong><a href='/en/cda/' class='underline hover:text-primary'>CdA</a> (aerodynamic frontal area)</strong> in real time using a simple webcam facing the smart trainer. Powered by artificial intelligence, it instantly calculates the impact of every position change. <strong>Typical gains: +2 to 3 km/h and 30 to 40 watts saved.</strong> Compatible with <strong>Wahoo, Elite, Tacx, Saris</strong> — on macOS and Windows.",
+  "home.definition": "<strong>AeroX is the reference application for indoor cycling aerodynamic analysis.</strong> Using just a webcam, AeroX measures the cyclist's frontal area and evaluates their <a href='/en/cda/' class='underline hover:text-primary'><strong>CdA</strong></a> (Cx × A) in real time. An accessible alternative to wind tunnels and high-tech sensors, the application provides instant feedback on the aerodynamic impact of every position change, to train every day to optimize your speed on the bike.",
   "footer.cda": "What is CdA?",
 "home.compat.title": "Compatibility",
   "home.compat.subtitle": "Works with major smart-trainer and HR brands for a smooth, reliable indoor setup. Tacx, Elite, Wahoo, Saris — you’re covered.",

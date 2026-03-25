@@ -27,7 +27,7 @@
 
   "home.hero.tagline": "Lancement le 10 avril",
   "home.hero.title.l1": "Ton home trainer",
-  "home.hero.title.l2": "devient une soufflerie virtuelle",
+  "home.hero.title.l2": "devient ton analyseur aérodynamique",
   "home.hero.subtitle": "Mesure ta surface frontale en temps réel, optimise ta position et transforme chaque watt en vitesse. Compatible Wahoo, Elite, Tacx, Saris.",
   "home.hero.paragraph": "Gagne jusqu'à&nbsp;<span class=\"font-bold text-accent\">3&#8239;km/h</span>, économise&nbsp;<span class=\"font-bold text-accent\">40&#8239;W<br /></span> avec une simple webcam.",
   "home.hero.countdown.prefix": "Plus que",
@@ -36,7 +36,7 @@
   "home.hero.cta.seo": "Télécharger AeroX, application de cyclisme indoor avec aérodynamisme",
   "home.herovideo.alt": "Démonstration AeroX",
 
-  "home.definition": "<strong>AeroX est la première soufflerie virtuelle pour cyclistes indoor.</strong> L'application mesure en temps réel le <strong><a href='/fr/cda/' class='underline hover:text-primary'>CdA</a> (surface frontale aérodynamique)</strong> via une simple webcam face au home trainer. Grâce à l'intelligence artificielle, elle calcule instantanément l'impact de chaque changement de position. <strong>Gains typiques : +2 à 3 km/h et 30 à 40 watts économisés.</strong> Compatible <strong>Wahoo, Elite, Tacx, Saris</strong> — sur macOS et Windows.",
+  "home.definition": "<strong>AeroX est l'application de référence de l'analyse aérodynamique pour cyclistes indoor.</strong> À l'aide d'une simple webcam, AeroX mesure la surface frontale du cycliste et évalue son <a href='/fr/cda/' class='underline hover:text-primary'><strong>CdA</strong></a> (Cx × A) en temps réel. Alternative accessible aux souffleries et capteurs high-tech, l'application fournit un retour instantané sur l'impact aérodynamique de chaque changement de position, pour s'entraîner chaque jour à optimiser sa vitesse à vélo.",
   "footer.cda": "Qu'est-ce que le CdA ?",
 "home.compat.title": "Compatibilité",
   "home.compat.subtitle": "AeroX fonctionne avec les principales marques de home trainer connectés et capteurs cardio, pour un entraînement indoor fluide et fiable. Tacx, Elite, Wahoo, Saris tout est compatible.",
