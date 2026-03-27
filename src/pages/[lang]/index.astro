@@ -82,7 +82,6 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
         <span
           id="hero-rotating"
           class="text-5xl md:text-6xl text-primary inline-block"
-          style="opacity:1"
           data-texts={JSON.stringify([
             t(dict, 'home.hero.title.l2'),
             t(dict, 'home.hero.title.l2.alt1'),
@@ -125,14 +124,12 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
       var blue = 'hsl(210,100%,60%)';
 
       function scramble(target) {
-        var steps = 12;
+        var steps = 10;
         var step = 0;
-        var original = el.textContent;
-        var len = Math.max(original.length, target.length);
+        var len = Math.max(el.textContent.length, target.length);
         var iv = setInterval(function() {
           var t = '';
           for (var j = 0; j < len; j++) {
-            /* Progressively reveal target characters */
             var progress = step / steps;
             if (progress > 0.5 && j < target.length * ((progress - 0.5) * 2)) {
               t += target[j];
@@ -141,23 +138,20 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
             }
           }
           el.textContent = t;
-
-          /* Glitch: random text-shadow offset with orange/blue split */
-          var dx = (Math.random() * 6 - 3).toFixed(1);
-          var dy = (Math.random() * 4 - 2).toFixed(1);
+          var dx = (Math.random() * 5 - 2.5).toFixed(1);
+          var dy = (Math.random() * 3 - 1.5).toFixed(1);
           el.style.textShadow = dx + 'px ' + dy + 'px 0 ' + orange + ', ' + (-dx) + 'px ' + (-dy) + 'px 0 ' + blue;
-          el.style.transform = 'translate(' + (Math.random()*6-3).toFixed(1) + 'px,' + (Math.random()*3-1.5).toFixed(1) + 'px) skewX(' + (Math.random()*6-3).toFixed(1) + 'deg)';
-          el.style.opacity = (0.7 + Math.random() * 0.3).toFixed(2);
-
+          el.style.transform = 'translate(' + (Math.random()*4-2).toFixed(1) + 'px,' + (Math.random()*2-1).toFixed(1) + 'px) skewX(' + (Math.random()*4-2).toFixed(1) + 'deg)';
+          el.style.filter = 'blur(' + (Math.random() * 2).toFixed(1) + 'px)';
           step++;
           if (step > steps) {
             clearInterval(iv);
             el.textContent = target;
             el.style.textShadow = '';
             el.style.transform = '';
-            el.style.opacity = '1';
+            el.style.filter = '';
           }
-        }, 40);
+        }, 45);
       }
 
       setInterval(function() {
