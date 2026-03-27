@@ -1,11 +1,14 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
 /**
  * Props:
  * - title?: string
- * - logos: Array<{ src: string; alt: string; href?: string }>
+ * - logos: Array<{ src: ImageMetadata; alt: string; href?: string }>
  * - id?: string
  */
-const { title = '', logos = [], id, subtitle ='' } = Astro.props;
+const { title = '', logos = [], id, subtitle = '' } = Astro.props;
 
 // id unique pour le carrousel
 const carouselId = `logos-${Math.random().toString(36).slice(2, 8)}`;
@@ -18,7 +21,6 @@ const carouselId = `logos-${Math.random().toString(36).slice(2, 8)}`;
     <h3 class="sr-only text-center text-muted text-xl md:text-2xl font-semibold mb-4">{subtitle}</h3>
   )}
   <div class="relative">
-   
 
     <!-- Piste -->
     <div
@@ -31,20 +33,22 @@ const carouselId = `logos-${Math.random().toString(36).slice(2, 8)}`;
         <div class="snap-center shrink-0">
           {href ? (
             <a href={href} target="_blank" rel="noopener noreferrer" class="block focus:outline-none">
-              <img
+              <Image
                 src={src}
                 alt={alt}
+                height={48}
                 loading="lazy"
-                class="h-12 md:h-16 w-auto object-contain  
+                class="h-12 md:h-16 w-auto object-contain
                        opacity-80 hover:opacity-100"
               />
             </a>
           ) : (
-            <img
+            <Image
               src={src}
               alt={alt}
+              height={48}
               loading="lazy"
-              class="h-12 md:h-16 w-auto object-contain 
+              class="h-12 md:h-16 w-auto object-contain
                      opacity-80 hover:opacity-100"
             />
           )}
@@ -72,7 +76,7 @@ const carouselId = `logos-${Math.random().toString(36).slice(2, 8)}`;
   // const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
   // if (reduceMotion) return;
 
-  // 1) Duplique au besoin pour forcer l’overflow (si peu de logos)
+  // 1) Duplique au besoin pour forcer l'overflow (si peu de logos)
   const ensureOverflow = () => {
     if (!AUTO_DUPLICATE) return;
     const minFactor = 1.25; // on veut au moins 125% de largeur

@@ -121,7 +121,7 @@ const currentLangObj = LANGS.find((l) => l.code === currentLang) ?? LANGS[0];
           <details class="relative group">
             <summary
               class="list-none inline-flex items-center gap-1 px-6 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer select-none"
-              aria-label="Change language"
+              aria-label={`Change language: ${currentLangObj.label}`}
             >
               <Icon name="fluent-emoji-flat:globe-showing-europe-africa" class="w-5 h-5" />
               <span class="text-sm font-medium">{currentLangObj.label}</span>
@@ -183,6 +183,7 @@ const currentLangObj = LANGS.find((l) => l.code === currentLang) ?? LANGS[0];
                     <button
                       type="button"
                       class="hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap"
+                      aria-label={`Menu : ${text}`}
                     >
                       {text}{' '}
                       <Icon

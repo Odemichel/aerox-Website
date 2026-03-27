@@ -9,7 +9,9 @@ import editeurSeance from '~/assets/images/editeurSeance.jpg';
 import Milan_HT from '~/assets/images/Milan_HT.jpg';
 import Milan_Tete from '~/assets/images/Milan_tete.jpg';
 import Olivier_Tete from '~/assets/images/Olivier_tete2.png';
-import posterPuissance from '~/assets/images/posterPuissance.jpg?url';
+import posterPuissanceSrc from '~/assets/images/posterPuissance.jpg';
+import { getImage } from 'astro:assets';
+const posterPuissance = (await getImage({ src: posterPuissanceSrc, width: 800, format: 'webp' })).src;
 import Ropert_Tete from '~/assets/images/ropert1.jpg';
 import simulationGPX from '~/assets/images/simulationGPX.jpg';
 import Frederic_tete from '~/assets/images/Frederic_tete.jpg';
@@ -27,14 +29,14 @@ import Prices from '~/components/widgets/Pricing.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import StepsSansImage from '~/components/widgets/StepsSansImage.astro';
 import Testimonials from '~/components/widgets/Testimonials.astro';
-import logo_elite from '~/assets/images/logos/elite.png?url';
-import logo_saris from '~/assets/images/logos/saris.png?url';
-import logo_tacx from '~/assets/images/logos/tacx.jpg?url';
-import logo_vanrysel from '~/assets/images/logos/vanrysel.png?url';
-import logo_wahoo from '~/assets/images/logos/wahoo.jpg?url';
-import logo_garmin from '~/assets/images/logos/garmin.png?url';
-import logo_polar from '~/assets/images/logos/polar.png?url';
-import logo_suunto from '~/assets/images/logos/suunto.png?url';
+import logo_elite from '~/assets/images/logos/elite.png';
+import logo_saris from '~/assets/images/logos/saris.png';
+import logo_tacx from '~/assets/images/logos/tacx.jpg';
+import logo_vanrysel from '~/assets/images/logos/vanrysel.png';
+import logo_wahoo from '~/assets/images/logos/wahoo.jpg';
+import logo_garmin from '~/assets/images/logos/garmin.png';
+import logo_polar from '~/assets/images/logos/polar.png';
+import logo_suunto from '~/assets/images/logos/suunto.png';
 import LogosCarousel from '~/components/widgets/LogosCarousel.astro';
 import { localizedHref } from '~/utils/localize';
 
@@ -77,7 +79,15 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
     <Fragment slot="title">
       <span class="font-bold">
         {t(dict, 'home.hero.title.l1')}<br />
-        <span class="text-5xl md:text-6xl text-primary intersect-once intersect-quarter motion-safe:opacity-1 motion-safe:intersect:animate-blur">
+        <span
+          id="hero-rotating"
+          class="text-5xl md:text-6xl text-primary intersect-once intersect-quarter motion-safe:opacity-1 motion-safe:intersect:animate-blur inline-block transition-opacity duration-500"
+          data-texts={JSON.stringify([
+            t(dict, 'home.hero.title.l2'),
+            t(dict, 'home.hero.title.l2.alt1'),
+            t(dict, 'home.hero.title.l2.alt2'),
+          ])}
+        >
           {t(dict, 'home.hero.title.l2')}
         </span>
       </span>
@@ -95,6 +105,27 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
       {t(dict, 'home.hero.countdown.prefix')} <CountDown targetDate={new Date(COUNTDOWN_TARGET)} /> !
     </Fragment>
   </Hero>
+
+  <script is:inline>
+    (() => {
+      const el = document.getElementById('hero-rotating');
+      if (!el) return;
+      if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) return;
+
+      const texts = JSON.parse(el.dataset.texts || '[]');
+      if (texts.length < 2) return;
+
+      let i = 0;
+      setInterval(() => {
+        el.style.opacity = '0';
+        setTimeout(() => {
+          i = (i + 1) % texts.length;
+          el.textContent = texts[i];
+          el.style.opacity = '1';
+        }, 500);
+      }, 3000);
+    })();
+  </script>
 
   <HeroVideo video={{ src: heroVideo, alt: t(dict, 'home.herovideo.alt') }} />
 
@@ -125,7 +156,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
             id="email-leadmagnet"
             placeholder={t(dict, 'home.leadmagnet.placeholder')}
             required
-            class="w-full sm:flex-1 border border-gray-300 dark:border-slate-600 rounded-lg px-4 py-2.5 text-sm text-secondary bg-white dark:bg-slate-800"
+            class="w-full sm:flex-1 border border-gray-300 dark:border-slate-600 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white bg-white dark:bg-slate-800 placeholder:text-gray-500 dark:placeholder:text-slate-400"
           />
           <button type="submit" class="btn-primary px-6 py-2.5 text-sm font-semibold whitespace-nowrap rounded-lg">
             {t(dict, 'home.leadmagnet.cta')}

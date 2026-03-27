@@ -1,8 +1,11 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
 export interface Member {
   name: string;
   role: string;
-  image: { src: string; alt: string };
+  image: { src: ImageMetadata; alt: string };
   description: string;
 }
 
@@ -28,9 +31,11 @@ const { title, subtitle, members = [] } = Astro.props;
       <div class="flex flex-col items-center text-center">
         <!-- Photo -->
         <div class="w-40 h-40 mb-6 rounded-full overflow-hidden shadow-lg ring-4 ring-primary/20">
-          <img
+          <Image
             src={member.image.src}
             alt={member.image.alt}
+            width={160}
+            height={160}
             class="object-cover w-full h-full"
             loading="lazy"
           />

@@ -28,11 +28,11 @@ export default defineConfig({
 
   /** 🌍 Ajout du bloc i18n */
   i18n: {
-    defaultLocale: 'fr',
+    defaultLocale: 'en',
     locales: ['fr', 'en', 'pt', 'es', 'it', 'de', 'nl', 'ja', 'tr'],
     routing: {
-      prefixDefaultLocale: true,       // ✅ URLs avec /fr/
-      redirectToDefaultLocale: true,   // ✅ Redirige / vers /fr/
+      prefixDefaultLocale: true,       // URLs avec /en/, /fr/, etc.
+      redirectToDefaultLocale: false,  // Pas de redirection auto, géré par middleware
     },
   },
 

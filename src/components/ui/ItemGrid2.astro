@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import { twMerge } from 'tailwind-merge';
 import type { ItemGrid as Props } from '~/types';
@@ -137,12 +138,24 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 8)}`;
                       </>
                     ) : (
                       <div class="relative overflow-visible h-full video-ratio border dark:rounded-xl dark:border-secondary">
-                        <img
-                          src={srcFrom(image)}
-                          alt={image?.alt ?? ''}
-                          loading="lazy"
-                          class="w-full h-full video-ratio object-contain bg-black rounded-xl dark:border-secondary"
-                        />
+                        {typeof image?.src === 'object' ? (
+                          <Image
+                            src={image.src as ImageMetadata}
+                            alt={image?.alt ?? ''}
+                            width={800}
+                            loading="lazy"
+                            class="w-full h-full video-ratio object-contain bg-black rounded-xl dark:border-secondary"
+                          />
+                        ) : (
+                          <img
+                            src={srcFrom(image)}
+                            alt={image?.alt ?? ''}
+                            width="800"
+                            height="450"
+                            loading="lazy"
+                            class="w-full h-full video-ratio object-contain bg-black rounded-xl dark:border-secondary"
+                          />
+                        )}
                       </div>
                     )}
 

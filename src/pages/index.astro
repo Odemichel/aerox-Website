@@ -1,15 +1,7 @@
 ---
 // src/pages/index.astro
+// Fallback: le middleware rewrite `/` vers `/en/` en interne.
+// Ce fichier ne devrait pas etre atteint, mais au cas ou,
+// on fait un redirect serveur vers /en/ (pas de meta refresh).
+return Astro.redirect('/en/', 301);
 ---
-<!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta http-equiv="refresh" content="0; url=/fr/" />
-    <script>
-      window.location.href = "/fr/";
-    </script>
-  </head>
-  <body>
-    <p>Redirection vers <a href="/fr/">la version française</a>...</p>
-  </body>
-</html>

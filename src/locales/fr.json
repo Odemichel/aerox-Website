@@ -1,6 +1,6 @@
 {
-  "ourStory.meta.title": "Notre histoire - AeroX",
-  "ourStory.meta.description": "Découvrez l’histoire d’AeroX, la première soufflerie virtuelle pour cyclistes et triathlètes. Née d’un besoin réel : optimiser sa position aérodynamique sur home trainer connecté, gagner en vitesse et économiser des watts.",
+  "ourStory.meta.title": "Notre histoire",
+  "ourStory.meta.description": "L’histoire d’AeroX, la soufflerie virtuelle pour cyclistes et triathlètes. Optimisez votre position aéro sur home trainer, gagnez en vitesse et économisez des watts.",
   "ourStory.hero.tagline": "Notre histoire",
   "ourStory.hero.title": "AeroX : quand une douleur se transforme en innovation majeure",
   "ourStory.hero.subtitle": "D’un problème vécu en triathlon à une révolution accessible à tous les cyclistes",
@@ -22,12 +22,14 @@
   "ourStory.cta.label": "🚀 Rejoins les pionniers AeroX",
   "ourStory.cta.sub": "Deviens l’un des premiers à transformer ton entraînement indoor avec l’analyse en temps réel de ton aérodynamisme.",
 
-  "home.meta.title": "AeroX — Transforme ton home trainer en soufflerie virtuelle",
+  "home.meta.title": "Optimise ton aérodynamisme, roule plus vite",
   "home.meta.description": "AeroX transforme ton home trainer en soufflerie virtuelle. Mesure ta position avec une webcam, gagne 3 km/h et économise 40 W. Essaie maintenant.",
 
   "home.hero.tagline": "Lancement le 10 avril",
   "home.hero.title.l1": "Ton home trainer",
   "home.hero.title.l2": "devient ton analyseur aérodynamique",
+  "home.hero.title.l2.alt1": "devient ta soufflerie virtuelle",
+  "home.hero.title.l2.alt2": "devient ton coach aéro",
   "home.hero.subtitle": "Mesure ta surface frontale en temps réel, optimise ta position et transforme chaque watt en vitesse. Compatible Wahoo, Elite, Tacx, Saris.",
   "home.hero.paragraph": "Gagne jusqu'à&nbsp;<span class=\"font-bold text-accent\">3&#8239;km/h</span>, économise&nbsp;<span class=\"font-bold text-accent\">40&#8239;W<br /></span> avec une simple webcam.",
   "home.hero.countdown.prefix": "Plus que",
@@ -105,7 +107,7 @@
   "home.features2.items.editor.cta": "Personnalise tes séances aéro",
 
   "home.testimonials.title": "Témoignages",
-  "home.testimonials.subtitle": "Triathlètes, cyslistes et entraineurs: ils ont choisi AeroX",
+  "home.testimonials.subtitle": "Triathlètes, cyclistes et entraîneurs : ils ont choisi AeroX",
   "home.testimonials.subsubtitle": "Avis utilisateurs AeroX : triathlètes, cyclistes amateurs et entraîneurs expliquent comment ils gagnent en vitesse et économisent des watts grâce à l’aérodynamisme en temps réel. Une alternative à Zwift, MyWhoosh et Kinomap.",
   "home.testimonials.items.milan.text": "\"Incroyable qu’un dispositif si simple soit aussi précis. Je gagne 35&#8239;W rien qu’avec ma position. J'ai plus d’énergie pour la CAP.\"",
   "home.testimonials.items.milan.job": "Triathlète élite- 2<sup>e</sup> Coupe d'Europe Junior (2025)",
@@ -137,7 +139,7 @@
   "home.features.items.real.title": "Gagne en vitesse réelle, pas en puissance virtuelle",
   "home.features.items.real.desc": "Sur home-trainer, tu progresses dans un monde virtuel.<br />Avec AeroX, c'est toi qui économises 40&#8239;W. Tu deviens plus rapide dans la vraie vie.",
   "home.features.items.real.education": "Sur home-trainer, ton seul objectif est d'améliorer ta puissance. Et c'est très bien… pour t'amuser sur des courses virtuelles. Mais dehors, tu n’es pas plus rapide, parfois même moins et ta position aéro est inconfortable. C'est 40&#8239;W qui s'évaporent sans que tu t'en rendes compte. S'entraîner avec un feedback aérodynamique en temps réel a le double avantage: optimiser ta position et en faire un automatisme pour prendre plaisir sur tes entrainements et performer sur de vraies courses, là où ça compte.",
-  "home.features.items.real.more": "En savoir plus…",
+  "home.features.items.real.more": "En savoir plus sur l'analyse…",
   "home.features.items.real.cta": "Essaie AeroX, économise tes watts",
 
   "home.features.items.pro.title": "Entraîne-toi comme un pro, sans budget élite",
@@ -149,7 +151,7 @@
   "home.features.items.cost.title": "Roule plus vite sans dépenser des milliers d'euros",
   "home.features.items.cost.desc": "90&#8239;% de ton aéro, vient de ta position. Pas de ton vélo, ni de tes roues ou ton casque.<br />AeroX t'apprend à l'optimiser… pour moins cher qu'une paire de chaussettes aéro !",
   "home.features.items.cost.education": "Roues profilées, cadre haut de gamme, casque dernier cri… Les effets marketing te font dépenser des milliers d’euros chaque année pour gagner quelques watts. Mais en réalité, 90&#8239;% de la résistance aérodynamique vient de ton corps, pas du matériel. Le meilleur vélo du monde ne compensera jamais une position que tu ne tiens pas plus de 5 minutes, autant rouler en vélib'. Avec AeroX, tu investis là où ça paie vraiment : ta position. <br />Ton équipement haut de gamme mérite un entraînement haut de gamme.",
-  "home.features.items.cost.more": "En savoir plus…",
+  "home.features.items.cost.more": "En savoir plus sur les gains…",
   "home.features.items.cost.cta": "Accélère sans dépenser plus",
 
   "home.features.items.proof.title": "AeroX, ça marche vraiment",
@@ -264,7 +266,7 @@
   "home.faq.schema.q10": "Comment AeroX m’aide à préparer une course à l’étranger ?",
   "home.faq.schema.a10": "Avec le mode GPX, tu importes le parcours exact de ta course. AeroX simule le relief, le vent et l’impact de ton aérodynamisme pour t’entraîner comme si tu y étais déjà.",
 
-  "home.common.more": "En savoir plus…",
+  "home.common.more": "Détails…",
 
   "home.leadmagnet.title": "Sois le premier informé du lancement",
   "home.leadmagnet.subtitle": "Inscris-toi et reçois un accès prioritaire le 10 avril.",
@@ -315,7 +317,7 @@
 
   "blog.subtitle": "Conseils, analyses et innovations pour optimiser ton entraînement vélo et triathlon",
 
-  "contact.title": "Contact AeroX",
+  "contact.title": "Contact",
   "contact.description": "Besoin d'aide ou d'informations ? Contactez directement l'équipe AeroX par email.",
   "contact.heading": "Contact AeroX",
   "contact.not_ready": "AeroX est en phase finale d'optimisation et sera disponible très bientôt.",
@@ -324,12 +326,12 @@
   "contact.aria": "Envoyer un email à contact@aeroxbefaster.com",
   "contact.delay": "Nous répondons généralement sous 24 à 48h (jours ouvrés).",
 
-   "privacy.title": "Politique de Confidentialité — AeroX",
+   "privacy.title": "Politique de Confidentialité",
   "privacy.description": "Découvrez comment AeroX collecte, utilise et protège vos données personnelles.",
 
-  "signup.meta.title": "Inscris-toi et débute ton expéreince aero ",
+  "signup.meta.title": "Inscris-toi et débute ton expérience aéro",
   "signup.meta.description": "Crée ton compte AeroX pour accéder à l'application et aux abonnements.",
-  "signup.title": "Bienvenu sur AeroX",
+  "signup.title": "Bienvenue sur AeroX",
 
   "signup.subtitle1": "Inscris-toi pour débuter ton expérience aéro.",
   "signup.email.label": "Email",
@@ -359,7 +361,7 @@
   "signup.role.bikefitter.desc": "Je fais du bike fitting",
 
 
-  "login.meta.title": "Connexion — AeroX",
+  "login.meta.title": "Connexion",
   "login.meta.description": "Connecte-toi à ton compte AeroX pour accéder à l'application et à tes abonnements.",
   "login.title": "Accède à ton espace AeroX",
   "login.subtitle": "Connecte-toi avec ton email et ton mot de passe.",
@@ -375,13 +377,13 @@
   "login.errors.missingFields": "Merci de remplir tous les champs.",
   "login.success": "Connexion réussie !",
 
-  "confirm.meta.title": "Confirmation d'inscription — AeroX",
+  "confirm.meta.title": "Confirmation d'inscription",
   "confirm.meta.description": "Vérifie ton email pour activer ton compte AeroX.",
   "confirm.title": "✅ Email envoyé",
   "confirm.message": "Merci ! Un email de confirmation t’a été envoyé.<br/>Clique sur le lien pour activer ton compte AeroX.<br/><br/>⚠️ Vérifie aussi dans ton dossier spam.",
   "confirm.button": "Se connecter",
 
-  "dashboard.meta.title": "Dashboard — AeroX",
+  "dashboard.meta.title": "Dashboard",
   "dashboard.meta.description": "Ton espace personnel AeroX : abonnement, statut et accès à l'application.",
   "dashboard.title": "Bienvenue sur ton espace AeroX",
   "dashboard.loading": "Chargement de ton profil...",
@@ -521,8 +523,8 @@
 
 "book.cta.question": "Combien de minutes pourrais-tu gagner avec ton niveau actuel ?",
 
-"bf.meta.title": "AeroX pour Bike Fitters — Mesurez l'aérodynamique de vos clients",
-"bf.meta.description": "Ajoutez la mesure aérodynamique en temps réel à vos séances de bike fitting. AeroX transforme chaque ajustement en gain de vitesse mesurable. Demandez une démo.",
+"bf.meta.title": "Bike Fitters — Mesurez l'aérodynamique de vos clients",
+"bf.meta.description": "Ajoutez la mesure aéro en temps réel à vos séances de bike fitting. Chaque ajustement devient un gain de vitesse mesurable. Demandez une démo.",
 "bf.definition": "Le bike fitting aérodynamique consiste à optimiser la position du cycliste pour réduire sa traînée aérodynamique (CdA). Contrairement au fitting classique centré sur le confort et la biomécanique, le fitting aéro mesure l'impact de chaque ajustement — hauteur de selle, angle des prolongateurs, position de la tête — sur la surface frontale du cycliste. Avec AeroX, cette mesure se fait en temps réel grâce à une webcam et un home trainer connecté, directement dans le studio du bike fitter. Le client voit instantanément combien de watts et de km/h chaque modification lui fait gagner. Résultat : une séance plus convaincante, un client fidélisé, et un service différenciant que peu de fitters proposent aujourd'hui.",
   "bf.hero.tagline": "Pour les professionnels du bike fitting",
 "bf.hero.title.l1": "Votre fitting améliore les performances",
@@ -658,7 +660,7 @@
 "home.table.elite.impact": "30–45 min gagnées sur Ironman",
 "home.stats.source": "Données mesurées sur 300+ sessions AeroX, 2025–2026",
 
-"success_livre.meta.title": "Paiement confirmé — AeroX",
+"success_livre.meta.title": "Paiement confirmé",
 "success_livre.meta.description": "Votre achat est confirmé. Téléchargez votre guide d’aérodynamique.",
 
 "success_livre.title": "Paiement confirmé",
@@ -673,8 +675,8 @@
 
 "home.citableFacts": "<strong>AeroX en chiffres :</strong> 300+ sessions mesurées en 2025-2026 | +2,3 km/h gagnés en moyenne | 35 W économisés à 30 km/h | Répétabilité de 3 % | Compatible Wahoo, Elite, Tacx, Saris via Bluetooth FTMS | Disponible sur macOS et Windows.",
 
-"cda.meta.title": "CdA en cyclisme : définition, valeurs et impact sur la performance",
-"cda.meta.description": "Le CdA (Cx × A) est la métrique clé de l'aérodynamisme en cyclisme. Découvrez sa définition physique, les valeurs typiques par catégorie et comment le mesurer avec AeroX.",
+"cda.meta.title": "CdA en cyclisme : définition, valeurs et impact",
+"cda.meta.description": "Le CdA (Cx × A) est la métrique clé de l'aérodynamisme cycliste. Définition, valeurs typiques par catégorie et comment le mesurer avec AeroX.",
 "cda.h1": "Qu'est-ce que le CdA en cyclisme ?",
 "cda.intro": "Le CdA est <strong>la métrique la plus importante pour quantifier l'efficacité aérodynamique d'un cycliste</strong>. Comprendre le CdA, c'est comprendre pourquoi certains cyclistes roulent plus vite que d'autres à puissance égale.",
 "cda.definition.h2": "Définition physique du CdA",

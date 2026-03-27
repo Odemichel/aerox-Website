@@ -10,7 +10,7 @@ import tr from "../locales/tr.json";
 
 export const SUPPORTED_LOCALES = ["fr", "en", "pt", "es", "it", "de", "nl", "ja", "tr"] as const;
 export type Locale = (typeof SUPPORTED_LOCALES)[number];
-export const DEFAULT_LOCALE: Locale = "fr";
+export const DEFAULT_LOCALE: Locale = "en";
 
 const dictionaries: Record<Locale, Record<string, string>> = {
   fr: fr as Record<string, string>,

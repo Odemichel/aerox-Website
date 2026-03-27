@@ -10,6 +10,7 @@ import { getFormattedDate } from '~/utils/utils';
 import { blogImages } from '../../data/blogImages';
 import Button from '../ui/Button.astro';
 
+import { Image } from 'astro:assets';
 import { getDict, SUPPORTED_LOCALES, t, type Locale } from '~/lib/i18n';
 import AuthorPhoto from '~/assets/images/Olivier_tete2.png';
 
@@ -98,11 +99,10 @@ const image = post.imageKey ? blogImages[post.imageKey] : undefined;
       <!-- ✅ Image via dictionnaire -->
       {
         image ? (
-          <img
-            src={image.src}
-            width={image.width}
-            height={image.height}
+          <Image
+            src={image}
             alt={post.title}
+            width={400}
             class="max-w-[300px] lg:max-w-[400px] mx-auto mb-6 sm:rounded-md bg-gray-400 dark:bg-slate-700"
             loading="eager"
             decoding="async"
@@ -150,11 +150,11 @@ const image = post.imageKey ? blogImages[post.imageKey] : undefined;
     <div class="mx-auto px-6 sm:px-6 max-w-3xl mt-10 border-t dark:border-slate-700 pt-8">
       <div class="flex items-start gap-4">
         <a href={withLang(lang, '/team/')} class="shrink-0">
-          <img
-            src={AuthorPhoto.src}
-            width="64"
-            height="64"
+          <Image
+            src={AuthorPhoto}
             alt={t(dict, 'ourStory.team.olivier.alt')}
+            width={64}
+            height={64}
             class="rounded-full w-16 h-16 object-cover"
             loading="lazy"
           />

@@ -1,7 +1,10 @@
 ---
+import { getImage } from 'astro:assets';
 import { DEFAULT_LOCALE, getDict, SUPPORTED_LOCALES, t, type Locale } from '~/lib/i18n';
-import posterPuissance from '../../assets/images/posterPuissance.jpg?url';
+import posterSrc from '../../assets/images/posterPuissance.jpg';
 import type { HeroVideo as Props } from '~/types';
+
+const posterPuissance = (await getImage({ src: posterSrc, width: 800, format: 'webp' })).src;
 
 const { video, id, bg } = Astro.props as Props;
 

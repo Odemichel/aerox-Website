@@ -1,6 +1,6 @@
 {
-  "ourStory.meta.title": "Our story - AeroX",
-  "ourStory.meta.description": "The story behind AeroX — the virtual wind tunnel for cyclists and triathletes. Born from a real training need: optimize your aero on a smart trainer, ride faster, save watts.",
+  "ourStory.meta.title": "Our story",
+  "ourStory.meta.description": "The story behind AeroX, the virtual wind tunnel for cyclists and triathletes. Optimize your aero on a smart trainer, ride faster, save watts.",
   "ourStory.hero.tagline": "Our story",
   "ourStory.hero.title": "AeroX: from pain point to breakthrough",
   "ourStory.hero.subtitle": "A triathlon problem turned into a tool any cyclist can use",
@@ -22,12 +22,14 @@
   "ourStory.cta.label": "🚀 Join the AeroX pioneers",
   "ourStory.cta.sub": "Be among the first to transform your indoor training with real-time aero analysis.",
 
-  "home.meta.title": "AeroX — Turn your smart trainer into a virtual wind tunnel",
+  "home.meta.title": "Optimize your aerodynamics, ride faster",
   "home.meta.description": "AeroX turns your smart trainer into a virtual wind tunnel. Measure your position with a webcam, gain 3 km/h and save 40 W. Try it now.",
 
   "home.hero.tagline": "Launching April 10",
   "home.hero.title.l1": "Your smart trainer",
   "home.hero.title.l2": "becomes your aerodynamic analyzer",
+  "home.hero.title.l2.alt1": "becomes your virtual wind tunnel",
+  "home.hero.title.l2.alt2": "becomes your aero coach",
   "home.hero.subtitle": "Measure your frontal area in real time, optimize your position and turn every watt into speed. Compatible with Wahoo, Elite, Tacx, Saris.",
   "home.hero.paragraph": "Gain up to&nbsp;<span class=\"font-bold text-accent\">3&#8239;km/h</span>, save&nbsp;<span class=\"font-bold text-accent\">40&#8239;W<br /></span> — with just a webcam.",
   "home.hero.countdown.prefix": "Only",
@@ -135,7 +137,7 @@
   "home.features.items.real.title": "Gain real speed, not virtual power",
   "home.features.items.real.desc": "On a trainer you progress in a virtual world. With AeroX, you save 40&#8239;W — and get faster outside.",
   "home.features.items.real.education": "Smart trainers push you to chase power — great for virtual fun. Outside, you’re not always faster, and aero may feel awkward. That’s 40&#8239;W lost. Real-time aero feedback both optimizes your position and turns it into a habit, so you enjoy outdoor rides and perform when it counts.",
-  "home.features.items.real.more": "Learn more…",
+  "home.features.items.real.more": "More about real-time analysis…",
   "home.features.items.real.cta": "Try AeroX, save your watts",
 
   "home.features.items.pro.title": "Train like a pro — without an elite budget",
@@ -147,7 +149,7 @@
   "home.features.items.cost.title": "Ride faster without spending thousands",
   "home.features.items.cost.desc": "90&#8239;% of aero drag is your position — not bike, wheels or helmet. Learn to optimize it for less than aero socks.",
   "home.features.items.cost.education": "Deep wheels, high-end frames, fancy helmets… marketing sells a few watts for thousands of euros. In reality, your body creates most of the drag. The best bike won’t fix a position you can’t hold for 5 minutes. Invest where it pays: your position. Your top-end gear deserves top-end training.",
-  "home.features.items.cost.more": "Learn more…",
+  "home.features.items.cost.more": "More about cost savings…",
   "home.features.items.cost.cta": "Go faster without spending more",
 
   "home.features.items.proof.title": "AeroX really works",
@@ -263,7 +265,7 @@
   "home.faq.schema.q10": "How does AeroX help me prepare for a race abroad?",
   "home.faq.schema.a10": "With GPX mode, you import the exact course of your race. AeroX simulates the terrain, wind, and impact of your aerodynamics so you can train as if you were already there.",
 
-  "home.common.more": "Learn more…",
+  "home.common.more": "Details…",
 
   "home.leadmagnet.title": "Be the first to know",
   "home.leadmagnet.subtitle": "Sign up and get priority access on April 10.",
@@ -311,7 +313,7 @@
   "blog.aerox.method":"Learn Basics of aerodynamic training",
   "blog.subtitle": "Tips, insights, and innovations to optimize your cycling and triathlon training",
 
-   "contact.title": "Contact AeroX",
+   "contact.title": "Contact",
   "contact.description": "Need help or information? Get in touch directly with the AeroX team by email.",
   "contact.heading": "Contact AeroX",
    "contact.not_ready": "AeroX is in its final optimisation step, and will be ready pretty soon",
@@ -321,7 +323,7 @@
   "contact.aria": "Send an email to contact@aeroxbefaster.com",
   "contact.delay": "We usually reply within 24 to 48 hours (business days).",
 
-  "privacy.title": "Privacy Policy — AeroX",
+  "privacy.title": "Privacy Policy",
   "privacy.description": "Learn how AeroX collects, uses, and protects your personal data.",
 
   
@@ -355,7 +357,7 @@
   "signup.role.bikefitter": "Bike-Fitter",
   "signup.role.bikefitter.desc": "I do bike fitting",
 
-  "login.meta.title": "Login — AeroX",
+  "login.meta.title": "Login",
   "login.meta.description": "Log in to your AeroX account to access the app and your subscriptions.",
   "login.title": "Access your AeroX space",
   "login.subtitle": "Sign in with your email and password.",
@@ -371,13 +373,13 @@
   "login.errors.missingFields": "Please fill in all fields.",
   "login.success": "Login successful!",
 
-  "confirm.meta.title": "Registration Confirmation — AeroX",
+  "confirm.meta.title": "Registration Confirmation",
   "confirm.meta.description": "Check your email to activate your AeroX account.",
   "confirm.title": "✅ Email sent",
   "confirm.message": "Thank you! A confirmation email has been sent to you.<br/>Click the link inside to activate your AeroX account.<br/><br/>⚠️ Also check your spam folder.",
   "confirm.button": "Log in",
 
-   "dashboard.meta.title": "Dashboard — AeroX",
+   "dashboard.meta.title": "Dashboard",
   "dashboard.meta.description": "Your personal AeroX space: subscription, status, and app access.",
   "dashboard.title": "Welcome to your AeroX dashboard",
   "dashboard.loading": "Loading your profile...",
@@ -506,7 +508,7 @@
 "book.philo.desc": "Training decisions should rely on science, not beliefs.",
 
 "book.cta.question": "How many minutes could you gain with your current level?",
-"bf.meta.title": "AeroX for Bike Fitters — Measure Your Clients' Aerodynamics",
+"bf.meta.title": "Bike Fitters — Measure Your Clients' Aerodynamics",
 "bf.meta.description": "Add real-time aerodynamic measurement to your bike fitting sessions. AeroX turns every adjustment into measurable speed gains. Request a demo.",
 "bf.definition": "Aerodynamic bike fitting optimizes a cyclist's position to reduce aerodynamic drag (CdA). Unlike traditional fitting focused on comfort and biomechanics, aero fitting measures how each adjustment — saddle height, aerobar angle, head position — affects the rider's frontal area. With AeroX, this measurement happens in real time using a webcam and a smart trainer, right in the bike fitter's studio. The client instantly sees how many watts and km/h each change is worth. The result: a more convincing session, a loyal client, and a differentiating service that few fitters offer today.",
 "bf.hero.tagline": "For bike fitting professionals",
@@ -643,7 +645,7 @@
 "home.table.elite.impact": "30–45 min saved on Ironman",
 "home.stats.source": "Data measured across 300+ AeroX sessions, 2025–2026",
 
-"success_livre.meta.title": "Payment confirmed — AeroX",
+"success_livre.meta.title": "Payment confirmed",
 "success_livre.meta.description": "Your purchase is confirmed. Download your aerodynamics guide.",
 
 "success_livre.title": "Payment confirmed",
