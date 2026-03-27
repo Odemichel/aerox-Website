@@ -106,6 +106,19 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
     </Fragment>
   </Hero>
 
+  <style is:inline>
+    #hero-rotating { position: relative; }
+    .glitch-line {
+      position: absolute;
+      left: 0; width: 100%;
+      overflow: hidden;
+      color: inherit;
+      font: inherit;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+  </style>
+
   <script is:inline>
     function initHeroRotation() {
       var el = document.getElementById('hero-rotating');
@@ -120,36 +133,68 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
       el.dataset.init = '1';
       var idx = 0;
       var orange = 'hsl(35,95%,58%)';
-      var blue = 'hsl(210,100%,60%)';
+
+      /* Create 3 scanline overlay spans */
+      var lines = [];
+      for (var l = 0; l < 3; l++) {
+        var span = document.createElement('span');
+        span.className = 'glitch-line';
+        span.style.display = 'none';
+        span.style.textShadow = (l % 2 === 0 ? '2' : '-2') + 'px 0 ' + orange;
+        el.appendChild(span);
+        lines.push(span);
+      }
 
       function glitchSwap(target) {
         var frames = 0;
-        var totalFrames = 12;
+        var totalFrames = 14;
         var swapped = false;
-        var iv = setInterval(function() {
-          /* Random jitter on every frame */
-          var dx = (Math.random() * 8 - 4).toFixed(1);
-          var dy = (Math.random() * 4 - 2).toFixed(1);
-          el.style.textShadow = dx + 'px ' + dy + 'px 0 ' + orange + ', ' + (-dx) + 'px ' + (-dy) + 'px 0 ' + blue;
-          el.style.transform = 'translate(' + (Math.random()*6-3).toFixed(1) + 'px,' + (Math.random()*3-1.5).toFixed(1) + 'px) skewX(' + (Math.random()*8-4).toFixed(1) + 'deg)';
-          el.style.filter = 'blur(' + (Math.random() * 3).toFixed(1) + 'px)';
+        var h = el.offsetHeight;
+        var text = el.childNodes[0] ? el.childNodes[0].textContent : el.textContent;
 
-          /* Swap text at the midpoint while it's glitching */
+        /* Show scanline clones */
+        lines.forEach(function(s) {
+          s.textContent = text;
+          s.style.display = 'block';
+          s.style.top = '0';
+        });
+
+        var iv = setInterval(function() {
+          /* Each line gets a random horizontal slice */
+          lines.forEach(function(s, i) {
+            var sliceTop = Math.floor(Math.random() * 100);
+            var sliceH = 10 + Math.floor(Math.random() * 25);
+            s.style.clipPath = 'inset(' + sliceTop + '% 0 ' + (100 - sliceTop - sliceH) + '% 0)';
+            s.style.transform = 'translateX(' + (Math.random() * 16 - 8).toFixed(0) + 'px)';
+          });
+
+          /* Main text jitter */
+          el.style.transform = 'translateX(' + (Math.random() * 6 - 3).toFixed(0) + 'px)';
+          el.style.textShadow = (Math.random() * 4 - 2).toFixed(1) + 'px 0 ' + orange;
+
+          /* Swap at midpoint */
           if (!swapped && frames >= totalFrames / 2) {
-            el.textContent = target;
+            el.childNodes[0].textContent = target;
+            lines.forEach(function(s) { s.textContent = target; });
             swapped = true;
           }
 
           frames++;
           if (frames > totalFrames) {
             clearInterval(iv);
-            el.textContent = target;
-            el.style.textShadow = '';
+            el.childNodes[0].textContent = target;
             el.style.transform = '';
-            el.style.filter = '';
+            el.style.textShadow = '';
+            lines.forEach(function(s) { s.style.display = 'none'; });
           }
-        }, 40);
+        }, 35);
       }
+
+      /* Wrap text in a text node so we can control it separately from line spans */
+      var textNode = document.createTextNode(el.textContent);
+      el.textContent = '';
+      el.appendChild(textNode);
+      lines.forEach(function(s) { el.appendChild(s); });
 
       setInterval(function() {
         idx = (idx + 1) % texts.length;
