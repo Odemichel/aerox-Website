@@ -109,7 +109,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
 
   <style is:inline>
     .glitch-active {
-      animation: glitch-base 0.3s step-end forwards;
+      animation: glitch-base 0.25s step-end forwards;
     }
     .glitch-active::before,
     .glitch-active::after {
@@ -123,11 +123,11 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
     }
     .glitch-active::before {
       text-shadow: -3px 0 hsl(210,60%,30%);
-      animation: glitch-top 0.3s step-end forwards;
+      animation: glitch-top 0.25s step-end forwards;
     }
     .glitch-active::after {
       text-shadow: 3px 0 hsl(35,95%,58%);
-      animation: glitch-bottom 0.3s step-end forwards;
+      animation: glitch-bottom 0.25s step-end forwards;
     }
 
     @keyframes glitch-base {
@@ -198,18 +198,18 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
         setTimeout(function() {
           el.textContent = target;
           el.setAttribute('data-text', target);
-        }, 150);
+        }, 125);
 
         /* Clean up after animation ends */
         setTimeout(function() {
           el.classList.remove('glitch-active');
-        }, 320);
+        }, 270);
       }
 
       setInterval(function() {
         idx = (idx + 1) % texts.length;
         glitchSwap(texts[idx]);
-      }, 1400);
+      }, 1600);
     }
 
     document.addEventListener('DOMContentLoaded', initHeroRotation);
