@@ -1,7 +1,5 @@
 ---
 // src/pages/index.astro
-// Fallback: le middleware rewrite `/` vers `/en/` en interne.
-// Ce fichier ne devrait pas etre atteint, mais au cas ou,
-// on fait un redirect serveur vers /en/ (pas de meta refresh).
+// Fallback si le middleware n'intercepte pas la requête.
 return Astro.redirect('/en/', 301);
 ---

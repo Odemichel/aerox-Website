@@ -16,7 +16,7 @@ function detect(req: Request): Locale {
   return DEFAULT_LOCALE;
 }
 export const onRequest: MiddlewareHandler = async (context, next) => {
-  const { request, redirect, url, locals, rewrite } = context;
+  const { request, redirect, url, locals } = context;
   const pathname = url.pathname;
 
   if (
@@ -40,13 +40,7 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
       path = path + "/";
     }
 
-    // Rewrite interne pour la racine (pas de redirect 302 = pas de latence)
-    if (path === "/") {
-      locals.lang = lang;
-      return rewrite(`/${lang}/${url.search}`);
-    }
-
-    return redirect(`/${lang}${path}${url.search}`, 302);
+    return redirect(`/${lang}${path}${url.search}`, 301);
   }
 
   locals.lang = segments[0] as Locale;
