@@ -26,7 +26,8 @@
   "home.meta.description": "AeroX transforme ton home trainer en soufflerie virtuelle. Mesure ta position avec une webcam, gagne 3 km/h et économise 40 W. Essaie maintenant.",
 
   "home.hero.tagline": "Lancement le 10 avril",
-  "home.hero.title.l1": "Ton home trainer devient",
+  "home.hero.title.l1": "Ton home trainer",
+  "home.hero.title.verb": "devient",
   "home.hero.title.l2": "ton analyseur aérodynamique",
   "home.hero.title.l2.alt1": "ta soufflerie virtuelle",
   "home.hero.title.l2.alt2": "ton coach aéro",

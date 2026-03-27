@@ -26,7 +26,8 @@
   "home.meta.description": "AeroX turns your smart trainer into a virtual wind tunnel. Measure your position with a webcam, gain 3 km/h and save 40 W. Try it now.",
 
   "home.hero.tagline": "Launching April 10",
-  "home.hero.title.l1": "Your smart trainer becomes",
+  "home.hero.title.l1": "Your smart trainer",
+  "home.hero.title.verb": "becomes",
   "home.hero.title.l2": "your aerodynamic analyzer",
   "home.hero.title.l2.alt1": "your virtual wind tunnel",
   "home.hero.title.l2.alt2": "your aero coach",
