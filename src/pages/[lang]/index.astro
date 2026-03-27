@@ -118,14 +118,15 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
   </style>
 
   <script is:inline>
-    (() => {
+    function initHeroRotation() {
       const el = document.getElementById('hero-rotating');
-      if (!el) return;
+      if (!el || el.dataset.initialized) return;
       if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) return;
 
       const texts = JSON.parse(el.dataset.texts || '[]');
       if (texts.length < 2) return;
 
+      el.dataset.initialized = 'true';
       let i = 0;
       setInterval(() => {
         el.classList.add('out');
@@ -135,7 +136,11 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
           el.classList.remove('out');
         }, 600);
       }, 3000);
-    })();
+    }
+
+    document.addEventListener('DOMContentLoaded', initHeroRotation);
+    document.addEventListener('astro:page-load', initHeroRotation);
+    if (document.readyState !== 'loading') initHeroRotation();
   </script>
 
   <HeroVideo video={{ src: heroVideo, alt: t(dict, 'home.herovideo.alt') }} />
