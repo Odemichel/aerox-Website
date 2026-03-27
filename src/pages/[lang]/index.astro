@@ -82,6 +82,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
         <span
           id="hero-rotating"
           class="text-5xl md:text-6xl text-primary inline-block"
+          style="opacity:1"
           data-texts={JSON.stringify([
             t(dict, 'home.hero.title.l2'),
             t(dict, 'home.hero.title.l2.alt1'),
@@ -123,24 +124,30 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
       var orange = 'hsl(35,95%,58%)';
       var blue = 'hsl(210,100%,60%)';
 
-      function scramble(target, callback) {
-        var steps = 8;
+      function scramble(target) {
+        var steps = 12;
         var step = 0;
-        var len = Math.max(el.textContent.length, target.length);
+        var original = el.textContent;
+        var len = Math.max(original.length, target.length);
         var iv = setInterval(function() {
           var t = '';
           for (var j = 0; j < len; j++) {
-            if (step > steps * 0.6 && j < target.length * (step / steps)) {
+            /* Progressively reveal target characters */
+            var progress = step / steps;
+            if (progress > 0.5 && j < target.length * ((progress - 0.5) * 2)) {
               t += target[j];
             } else {
               t += chars[Math.floor(Math.random() * chars.length)];
             }
           }
           el.textContent = t;
-          /* Alternate glitch shadows */
-          var dx = (Math.random() * 4 - 2).toFixed(1);
-          el.style.textShadow = dx + 'px 0 ' + orange + ', ' + (-dx) + 'px 0 ' + blue;
-          el.style.transform = 'translate(' + (Math.random()*4-2).toFixed(1) + 'px,' + (Math.random()*2-1).toFixed(1) + 'px)';
+
+          /* Glitch: random text-shadow offset with orange/blue split */
+          var dx = (Math.random() * 6 - 3).toFixed(1);
+          var dy = (Math.random() * 4 - 2).toFixed(1);
+          el.style.textShadow = dx + 'px ' + dy + 'px 0 ' + orange + ', ' + (-dx) + 'px ' + (-dy) + 'px 0 ' + blue;
+          el.style.transform = 'translate(' + (Math.random()*6-3).toFixed(1) + 'px,' + (Math.random()*3-1.5).toFixed(1) + 'px) skewX(' + (Math.random()*6-3).toFixed(1) + 'deg)';
+          el.style.opacity = (0.7 + Math.random() * 0.3).toFixed(2);
 
           step++;
           if (step > steps) {
@@ -148,9 +155,9 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
             el.textContent = target;
             el.style.textShadow = '';
             el.style.transform = '';
-            if (callback) callback();
+            el.style.opacity = '1';
           }
-        }, 50);
+        }, 40);
       }
 
       setInterval(function() {
