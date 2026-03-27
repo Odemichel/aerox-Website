@@ -107,13 +107,46 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
   </Hero>
 
   <style is:inline>
-    .hero-rotate {
-      transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
+    .hero-rotate { position: relative; display: inline-block; }
+
+    @keyframes glitch-1 {
+      0%   { clip-path: inset(20% 0 60% 0); transform: translate(-3px, 2px); }
+      20%  { clip-path: inset(60% 0 10% 0); transform: translate(3px, -1px); }
+      40%  { clip-path: inset(40% 0 30% 0); transform: translate(-2px, 1px); }
+      60%  { clip-path: inset(10% 0 70% 0); transform: translate(2px, -2px); }
+      80%  { clip-path: inset(70% 0 5% 0);  transform: translate(-1px, 2px); }
+      100% { clip-path: inset(30% 0 40% 0); transform: translate(3px, -1px); }
     }
-    .hero-rotate.out {
-      opacity: 0;
-      filter: blur(12px);
-      transform: scale(0.95);
+    @keyframes glitch-2 {
+      0%   { clip-path: inset(65% 0 5% 0);  transform: translate(3px, -2px); }
+      20%  { clip-path: inset(10% 0 70% 0); transform: translate(-3px, 1px); }
+      40%  { clip-path: inset(50% 0 20% 0); transform: translate(2px, 2px); }
+      60%  { clip-path: inset(25% 0 50% 0); transform: translate(-2px, -1px); }
+      80%  { clip-path: inset(80% 0 0% 0);  transform: translate(1px, 2px); }
+      100% { clip-path: inset(5% 0 80% 0);  transform: translate(-3px, -2px); }
+    }
+
+    .hero-rotate.glitch {
+      animation: glitch-1 0.15s linear infinite;
+      text-shadow: 2px 0 hsl(35 95% 58%), -2px 0 hsl(210 100% 60%);
+    }
+    .hero-rotate.glitch::before,
+    .hero-rotate.glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      color: inherit;
+    }
+    .hero-rotate.glitch::before {
+      animation: glitch-1 0.2s linear infinite reverse;
+      text-shadow: -2px 0 hsl(35 95% 58%);
+      opacity: 0.8;
+    }
+    .hero-rotate.glitch::after {
+      animation: glitch-2 0.25s linear infinite;
+      text-shadow: 2px 0 hsl(210 100% 60%);
+      opacity: 0.8;
     }
   </style>
 
@@ -128,13 +161,23 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
 
       el.dataset.initialized = 'true';
       let i = 0;
+
       setInterval(() => {
-        el.classList.add('out');
+        /* Phase 1 — glitch out (400ms) */
+        el.dataset.text = el.textContent;
+        el.classList.add('glitch');
+
         setTimeout(() => {
+          /* Phase 2 — swap text while still glitching */
           i = (i + 1) % texts.length;
           el.textContent = texts[i];
-          el.classList.remove('out');
-        }, 600);
+          el.dataset.text = texts[i];
+
+          /* Phase 3 — stop glitch after 200ms more */
+          setTimeout(() => {
+            el.classList.remove('glitch');
+          }, 200);
+        }, 400);
       }, 3000);
     }
 
