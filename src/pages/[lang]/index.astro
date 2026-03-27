@@ -81,7 +81,8 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
         {t(dict, 'home.hero.title.l1')}<br />
         <span
           id="hero-rotating"
-          class="text-5xl md:text-6xl text-primary inline-block"
+          class="text-5xl md:text-6xl text-primary inline-block relative"
+          data-text={t(dict, 'home.hero.title.l2')}
           data-texts={JSON.stringify([
             t(dict, 'home.hero.title.l2'),
             t(dict, 'home.hero.title.l2.alt1'),
@@ -107,15 +108,72 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
   </Hero>
 
   <style is:inline>
-    #hero-rotating { position: relative; }
-    .glitch-line {
+    .glitch-active {
+      animation: glitch-base 0.5s step-end forwards;
+    }
+    .glitch-active::before,
+    .glitch-active::after {
+      content: attr(data-text);
       position: absolute;
-      left: 0; width: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       overflow: hidden;
-      color: inherit;
-      font: inherit;
-      white-space: nowrap;
       pointer-events: none;
+      will-change: clip-path, transform;
+    }
+    .glitch-active::before {
+      text-shadow: -3px 0 hsl(185,100%,50%);
+      animation: glitch-top 0.5s step-end forwards;
+    }
+    .glitch-active::after {
+      text-shadow: 3px 0 hsl(35,95%,58%);
+      animation: glitch-bottom 0.5s step-end forwards;
+    }
+
+    @keyframes glitch-base {
+      0%   { transform: translate(0); }
+      10%  { transform: translate(-3px, 1px); }
+      20%  { transform: translate(2px, -1px); }
+      30%  { transform: translate(-1px, 0); }
+      40%  { transform: translate(3px, 1px); }
+      50%  { transform: translate(0); }
+      60%  { transform: translate(-2px, -1px); }
+      70%  { transform: translate(1px, 1px); }
+      80%  { transform: translate(0); }
+      90%  { transform: translate(-1px, 0); }
+      100% { transform: translate(0); }
+    }
+    @keyframes glitch-top {
+      0%   { clip-path: inset(10% 0 70% 0); transform: translate(-5px, 0) skewX(-3deg); }
+      10%  { clip-path: inset(50% 0 20% 0); transform: translate(4px, 0) skewX(2deg); }
+      20%  { clip-path: inset(5% 0 80% 0);  transform: translate(-6px, -1px); }
+      30%  { clip-path: inset(35% 0 40% 0); transform: translate(3px, 0) skewX(-4deg); }
+      40%  { clip-path: inset(70% 0 5% 0);  transform: translate(-4px, 1px) skewX(2deg); }
+      50%  { clip-path: inset(15% 0 60% 0); transform: translate(5px, 0); }
+      60%  { clip-path: inset(55% 0 15% 0); transform: translate(-3px, -1px) skewX(-2deg); }
+      70%  { clip-path: inset(25% 0 50% 0); transform: translate(6px, 0) skewX(3deg); }
+      80%  { clip-path: inset(45% 0 30% 0); transform: translate(-2px, 1px); }
+      90%  { clip-path: inset(80% 0 0% 0);  transform: translate(4px, 0) skewX(-1deg); }
+      100% { clip-path: inset(0 0 100% 0);  transform: translate(0); }
+    }
+    @keyframes glitch-bottom {
+      0%   { clip-path: inset(60% 0 10% 0); transform: translate(4px, 0) skewX(4deg); }
+      10%  { clip-path: inset(20% 0 55% 0); transform: translate(-5px, 1px) skewX(-2deg); }
+      20%  { clip-path: inset(75% 0 0% 0);  transform: translate(6px, 0); }
+      30%  { clip-path: inset(8% 0 65% 0);  transform: translate(-3px, -1px) skewX(3deg); }
+      40%  { clip-path: inset(40% 0 35% 0); transform: translate(5px, 0) skewX(-3deg); }
+      50%  { clip-path: inset(65% 0 10% 0); transform: translate(-6px, 1px); }
+      60%  { clip-path: inset(30% 0 45% 0); transform: translate(3px, 0) skewX(2deg); }
+      70%  { clip-path: inset(85% 0 0% 0);  transform: translate(-4px, -1px) skewX(-4deg); }
+      80%  { clip-path: inset(12% 0 70% 0); transform: translate(5px, 0); }
+      90%  { clip-path: inset(50% 0 25% 0); transform: translate(-3px, 1px) skewX(1deg); }
+      100% { clip-path: inset(0 0 100% 0);  transform: translate(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .glitch-active,
+      .glitch-active::before,
+      .glitch-active::after { animation: none !important; }
     }
   </style>
 
@@ -132,69 +190,21 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
 
       el.dataset.init = '1';
       var idx = 0;
-      var orange = 'hsl(35,95%,58%)';
-
-      /* Create 3 scanline overlay spans */
-      var lines = [];
-      for (var l = 0; l < 3; l++) {
-        var span = document.createElement('span');
-        span.className = 'glitch-line';
-        span.style.display = 'none';
-        span.style.textShadow = (l % 2 === 0 ? '2' : '-2') + 'px 0 ' + orange;
-        el.appendChild(span);
-        lines.push(span);
-      }
 
       function glitchSwap(target) {
-        var frames = 0;
-        var totalFrames = 14;
-        var swapped = false;
-        var h = el.offsetHeight;
-        var text = el.childNodes[0] ? el.childNodes[0].textContent : el.textContent;
+        el.classList.add('glitch-active');
 
-        /* Show scanline clones */
-        lines.forEach(function(s) {
-          s.textContent = text;
-          s.style.display = 'block';
-          s.style.top = '0';
-        });
+        /* Swap text at midpoint (250ms into 500ms animation) */
+        setTimeout(function() {
+          el.textContent = target;
+          el.setAttribute('data-text', target);
+        }, 250);
 
-        var iv = setInterval(function() {
-          /* Each line gets a random horizontal slice */
-          lines.forEach(function(s, i) {
-            var sliceTop = Math.floor(Math.random() * 100);
-            var sliceH = 10 + Math.floor(Math.random() * 25);
-            s.style.clipPath = 'inset(' + sliceTop + '% 0 ' + (100 - sliceTop - sliceH) + '% 0)';
-            s.style.transform = 'translateX(' + (Math.random() * 16 - 8).toFixed(0) + 'px)';
-          });
-
-          /* Main text jitter */
-          el.style.transform = 'translateX(' + (Math.random() * 6 - 3).toFixed(0) + 'px)';
-          el.style.textShadow = (Math.random() * 4 - 2).toFixed(1) + 'px 0 ' + orange;
-
-          /* Swap at midpoint */
-          if (!swapped && frames >= totalFrames / 2) {
-            el.childNodes[0].textContent = target;
-            lines.forEach(function(s) { s.textContent = target; });
-            swapped = true;
-          }
-
-          frames++;
-          if (frames > totalFrames) {
-            clearInterval(iv);
-            el.childNodes[0].textContent = target;
-            el.style.transform = '';
-            el.style.textShadow = '';
-            lines.forEach(function(s) { s.style.display = 'none'; });
-          }
-        }, 35);
+        /* Clean up after animation ends */
+        setTimeout(function() {
+          el.classList.remove('glitch-active');
+        }, 520);
       }
-
-      /* Wrap text in a text node so we can control it separately from line spans */
-      var textNode = document.createTextNode(el.textContent);
-      el.textContent = '';
-      el.appendChild(textNode);
-      lines.forEach(function(s) { el.appendChild(s); });
 
       setInterval(function() {
         idx = (idx + 1) % texts.length;
