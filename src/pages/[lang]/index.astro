@@ -81,7 +81,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
         {t(dict, 'home.hero.title.l1')}<br />
         <span
           id="hero-rotating"
-          class="text-5xl md:text-6xl text-primary intersect-once intersect-quarter motion-safe:opacity-1 motion-safe:intersect:animate-blur inline-block transition-opacity duration-500"
+          class="text-5xl md:text-6xl text-primary intersect-once intersect-quarter motion-safe:opacity-1 motion-safe:intersect:animate-blur inline-block hero-rotate"
           data-texts={JSON.stringify([
             t(dict, 'home.hero.title.l2'),
             t(dict, 'home.hero.title.l2.alt1'),
@@ -106,6 +106,17 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
     </Fragment>
   </Hero>
 
+  <style is:inline>
+    .hero-rotate {
+      transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
+    }
+    .hero-rotate.out {
+      opacity: 0;
+      filter: blur(12px);
+      transform: scale(0.95);
+    }
+  </style>
+
   <script is:inline>
     (() => {
       const el = document.getElementById('hero-rotating');
@@ -117,12 +128,12 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
 
       let i = 0;
       setInterval(() => {
-        el.style.opacity = '0';
+        el.classList.add('out');
         setTimeout(() => {
           i = (i + 1) % texts.length;
           el.textContent = texts[i];
-          el.style.opacity = '1';
-        }, 500);
+          el.classList.remove('out');
+        }, 600);
       }, 3000);
     })();
   </script>
