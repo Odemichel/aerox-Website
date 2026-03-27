@@ -119,44 +119,41 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
 
       el.dataset.init = '1';
       var idx = 0;
-      var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
       var orange = 'hsl(35,95%,58%)';
       var blue = 'hsl(210,100%,60%)';
 
-      function scramble(target) {
-        var steps = 10;
-        var step = 0;
-        var len = Math.max(el.textContent.length, target.length);
+      function glitchSwap(target) {
+        var frames = 0;
+        var totalFrames = 12;
+        var swapped = false;
         var iv = setInterval(function() {
-          var t = '';
-          for (var j = 0; j < len; j++) {
-            var progress = step / steps;
-            if (progress > 0.5 && j < target.length * ((progress - 0.5) * 2)) {
-              t += target[j];
-            } else {
-              t += chars[Math.floor(Math.random() * chars.length)];
-            }
-          }
-          el.textContent = t;
-          var dx = (Math.random() * 5 - 2.5).toFixed(1);
-          var dy = (Math.random() * 3 - 1.5).toFixed(1);
+          /* Random jitter on every frame */
+          var dx = (Math.random() * 8 - 4).toFixed(1);
+          var dy = (Math.random() * 4 - 2).toFixed(1);
           el.style.textShadow = dx + 'px ' + dy + 'px 0 ' + orange + ', ' + (-dx) + 'px ' + (-dy) + 'px 0 ' + blue;
-          el.style.transform = 'translate(' + (Math.random()*4-2).toFixed(1) + 'px,' + (Math.random()*2-1).toFixed(1) + 'px) skewX(' + (Math.random()*4-2).toFixed(1) + 'deg)';
-          el.style.filter = 'blur(' + (Math.random() * 2).toFixed(1) + 'px)';
-          step++;
-          if (step > steps) {
+          el.style.transform = 'translate(' + (Math.random()*6-3).toFixed(1) + 'px,' + (Math.random()*3-1.5).toFixed(1) + 'px) skewX(' + (Math.random()*8-4).toFixed(1) + 'deg)';
+          el.style.filter = 'blur(' + (Math.random() * 3).toFixed(1) + 'px)';
+
+          /* Swap text at the midpoint while it's glitching */
+          if (!swapped && frames >= totalFrames / 2) {
+            el.textContent = target;
+            swapped = true;
+          }
+
+          frames++;
+          if (frames > totalFrames) {
             clearInterval(iv);
             el.textContent = target;
             el.style.textShadow = '';
             el.style.transform = '';
             el.style.filter = '';
           }
-        }, 45);
+        }, 40);
       }
 
       setInterval(function() {
         idx = (idx + 1) % texts.length;
-        scramble(texts[idx]);
+        glitchSwap(texts[idx]);
       }, 3500);
     }
 
