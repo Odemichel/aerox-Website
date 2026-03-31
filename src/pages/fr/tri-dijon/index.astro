@@ -1,0 +1,147 @@
+---
+import Layout from '~/layouts/Layout.astro';
+
+const metadata = {
+  title: 'Offres Diagnostique Aéro — Tri Dijon | AeroX',
+  description: 'Offres promotionnelles exclusives AeroX pour les participants du Tri Dijon. Diagnostique aérodynamique avec AeroX.',
+  robots: { index: false, follow: false },
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- Bannière "En construction" -->
+  <div class="bg-amber-400 text-amber-900 text-center py-3 px-4 font-semibold text-sm tracking-wide">
+    🚧 Page en construction — Offres bientôt disponibles
+  </div>
+
+  <section class="max-w-5xl mx-auto px-4 py-12 md:py-16">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <p class="text-sm font-semibold uppercase tracking-widest text-amber-500 mb-3">Tri Dijon × AeroX</p>
+      <h1 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+        Diagnostique Aérodynamique
+      </h1>
+      <p class="text-lg text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
+        Découvrez votre profil aéro et gagnez du temps sur votre prochain triathlon.
+        Offres exclusives pour les participants du Tri Dijon.
+      </p>
+    </div>
+
+    <!-- Cartes diagnostique -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- Carte 1 — Express -->
+      <div class="relative flex flex-col rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-md overflow-hidden">
+        <div class="bg-slate-100 dark:bg-slate-700 px-6 py-5">
+          <p class="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">Découverte</p>
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white">Diagnostique Express</h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Idéal pour commencer</p>
+        </div>
+        <div class="px-6 py-5 flex flex-col flex-grow">
+          <div class="mb-4">
+            <span class="text-3xl font-extrabold text-slate-900 dark:text-white">—</span>
+            <span class="text-sm text-slate-500 dark:text-slate-400 ml-1">prix à venir</span>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300 flex-grow">
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-0.5">✓</span>
+              Analyse de position en temps réel
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-0.5">✓</span>
+              Mesure du CdA instantané
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-0.5">✓</span>
+              Rapport synthèse envoyé par email
+            </li>
+          </ul>
+          <button disabled class="mt-6 w-full py-2.5 rounded-xl bg-slate-200 dark:bg-slate-600 text-slate-400 dark:text-slate-500 text-sm font-semibold cursor-not-allowed">
+            Bientôt disponible
+          </button>
+        </div>
+      </div>
+
+      <!-- Carte 2 — Complet (mise en avant) -->
+      <div class="relative flex flex-col rounded-2xl border-2 border-amber-400 bg-white dark:bg-slate-800 shadow-xl overflow-hidden">
+        <div class="absolute top-4 right-4">
+          <span class="bg-amber-400 text-amber-900 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">Populaire</span>
+        </div>
+        <div class="bg-amber-50 dark:bg-amber-900/20 px-6 py-5">
+          <p class="text-xs font-semibold uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-1">Recommandé</p>
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white">Diagnostique Complet</h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">La référence pour progresser</p>
+        </div>
+        <div class="px-6 py-5 flex flex-col flex-grow">
+          <div class="mb-4">
+            <span class="text-3xl font-extrabold text-slate-900 dark:text-white">—</span>
+            <span class="text-sm text-slate-500 dark:text-slate-400 ml-1">prix à venir</span>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300 flex-grow">
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-0.5">✓</span>
+              Tout le diagnostique Express
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-0.5">✓</span>
+              Comparaison multi-positions
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-0.5">✓</span>
+              Recommandations personnalisées
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-0.5">✓</span>
+              Suivi 30 jours inclus
+            </li>
+          </ul>
+          <button disabled class="mt-6 w-full py-2.5 rounded-xl bg-amber-400/50 text-amber-700 text-sm font-semibold cursor-not-allowed">
+            Bientôt disponible
+          </button>
+        </div>
+      </div>
+
+      <!-- Carte 3 — Pro -->
+      <div class="relative flex flex-col rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-md overflow-hidden">
+        <div class="bg-slate-100 dark:bg-slate-700 px-6 py-5">
+          <p class="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">Performance</p>
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white">Diagnostique Pro</h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Pour les triathlètes exigeants</p>
+        </div>
+        <div class="px-6 py-5 flex flex-col flex-grow">
+          <div class="mb-4">
+            <span class="text-3xl font-extrabold text-slate-900 dark:text-white">—</span>
+            <span class="text-sm text-slate-500 dark:text-slate-400 ml-1">prix à venir</span>
+          </div>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300 flex-grow">
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-0.5">✓</span>
+              Tout le diagnostique Complet
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-0.5">✓</span>
+              Analyse position TT avancée
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-0.5">✓</span>
+              Séance de coaching dédiée
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-0.5">✓</span>
+              Accès AeroX 3 mois offert
+            </li>
+          </ul>
+          <button disabled class="mt-6 w-full py-2.5 rounded-xl bg-slate-200 dark:bg-slate-600 text-slate-400 dark:text-slate-500 text-sm font-semibold cursor-not-allowed">
+            Bientôt disponible
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer note -->
+    <p class="text-center text-sm text-slate-500 dark:text-slate-400 mt-10">
+      Des questions ? Contactez-nous à <a href="mailto:contact@aeroxbefaster.com" class="text-amber-500 hover:underline">contact@aeroxbefaster.com</a>
+    </p>
+  </section>
+</Layout>
