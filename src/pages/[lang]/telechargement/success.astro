@@ -22,20 +22,21 @@ const metadata = {
       {t(dict, 'success.subtitle1')}<br />
       {t(dict, 'success.subtitle2')}
     </p>
-     
 
     <!-- ✅ Boutons Mac + Windows -->
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
       <!-- macOS -->
       <a
-        href="https://github.com/Odemichel/AeroX-release/releases/download/MacOs_V1.0.0/AeroX-macos-V1.0.0.zip"
+        href="https://github.com/Odemichel/AeroX-release/releases/download/MacOs_V1.0.0/AeroX.zip"
         class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
         download
       >
         <Icon name="tabler:brand-apple-filled" class="w-10 h-10" />
         <span class="text-left">
           <span class="block text-xs leading-none pb-1">
-            {t(dict, 'success.download1')} <span class="text-primary font-bold">AeroX</span> {t(dict, 'success.download2mac')}
+            {t(dict, 'success.download1')}
+            <span class="text-primary font-bold">AeroX</span>
+            {t(dict, 'success.download2mac')}
           </span>
           <span class="block text-base font-semibold leading-none">macOS</span>
         </span>
@@ -43,14 +44,16 @@ const metadata = {
 
       <!-- Windows -->
       <a
-        href="https://github.com/Odemichel/AeroX-release/releases/download/WindowsV1.0.0/AeroX-V1.zip"
+        href="https://github.com/Odemichel/AeroX-release/releases/download/WindowsV1.0.0/AeroX.zip"
         class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
         download
       >
         <Icon name="tabler:brand-windows-filled" class="w-10 h-10" />
         <span class="text-left">
           <span class="block text-xs leading-none pb-1">
-            {t(dict, 'success.download1')} <span class="text-primary font-bold">AeroX</span> {t(dict, 'success.download2win')}
+            {t(dict, 'success.download1')}
+            <span class="text-primary font-bold">AeroX</span>
+            {t(dict, 'success.download2win')}
           </span>
           <span class="block text-base font-semibold leading-none">Windows</span>
         </span>
@@ -58,19 +61,21 @@ const metadata = {
     </div>
 
     <!-- What'sApp -->
-      <a
-        href="https://chat.whatsapp.com/JSojpi1bYYn7lYPurZ5SOq?mode=ems_email_t"
-        class="inline-flex items-center justify-center  mb-10 gap-3 bg-green-600 hover:bg-neutral-800 text-white rounded-xl px-4 py-2 shadow-md transition"
-        download
-      >
-        <Icon name="tabler:brand-whatsapp-filled" class="w-10 h-10" />
-        <span class="text-left">
-          <span class="block text-xs leading-none pb-1 font-bold">
-            {t(dict, 'success.whatsapp1')} <span class="text-primary text-base">AeroX</span> {t(dict, 'success.whatsapp2')} 
-          </span>
-          <span class="block text-base font-semibold leading-none">{t(dict, 'success.whatsapp3')}</span>
+    <a
+      href="https://chat.whatsapp.com/JSojpi1bYYn7lYPurZ5SOq?mode=ems_email_t"
+      class="inline-flex items-center justify-center mb-10 gap-3 bg-green-600 hover:bg-neutral-800 text-white rounded-xl px-4 py-2 shadow-md transition"
+      download
+    >
+      <Icon name="tabler:brand-whatsapp-filled" class="w-10 h-10" />
+      <span class="text-left">
+        <span class="block text-xs leading-none pb-1 font-bold">
+          {t(dict, 'success.whatsapp1')}
+          <span class="text-primary text-base">AeroX</span>
+          {t(dict, 'success.whatsapp2')}
         </span>
-      </a>
+        <span class="block text-base font-semibold leading-none">{t(dict, 'success.whatsapp3')}</span>
+      </span>
+    </a>
 
     <!-- ✅ Retour accueil -->
     <div class="flex justify-center">
