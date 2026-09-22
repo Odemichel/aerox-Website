@@ -499,6 +499,7 @@
   "bf.form.submit": "Mijn aanvraag versturen",
   "bf.form.success": "Bedankt! We nemen binnen 48 uur contact met u op.",
   "bf.form.error": "Er is iets misgegaan, probeer opnieuw of mail ons rechtstreeks.",
+  "lead.form.sending": "Verzenden…",
   "bf.metrics.title": "Wat meet AeroX tijdens een bike fitting sessie?",
   "bf.metrics.intro": "Bij een klassieke fitting past u het zadel, stuur en schoenplaatjes aan. Met AeroX <strong>vertaalt elke aanpassing zich direct in meetbare data</strong> die uw klant live ziet.",
   "bf.metrics.m1.title": "CdA — aerodynamisch frontaal oppervlak",

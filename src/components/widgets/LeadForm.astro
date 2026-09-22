@@ -13,6 +13,34 @@ const dict = getDict(lang);
 
 const isTestPeriod = topic === 'test-period';
 
+/**
+ * Libellés dépendants du topic : `bike-fitter` a son propre jeu de clés
+ * (`bf.form.*`, traduit dans les 9 langues, ton B2B professionnel) resté
+ * distinct des clés `lead.form.*` (traduites en fr/en seulement, ton B2C
+ * pensé pour le topic `test-period`). `lead.form.sending` est la seule clé
+ * partagée par les deux — elle n'a pas d'équivalent `bf.*` et vaut le même
+ * texte pour les deux topics.
+ */
+const LABELS: Record<Props['topic'], Record<'name' | 'email' | 'message' | 'submit' | 'success' | 'error', string>> = {
+  'bike-fitter': {
+    name: 'bf.form.name.placeholder',
+    email: 'bf.form.email.placeholder',
+    message: 'bf.form.message.placeholder',
+    submit: 'bf.form.submit',
+    success: 'bf.form.success',
+    error: 'bf.form.error',
+  },
+  'test-period': {
+    name: 'lead.form.name.placeholder',
+    email: 'lead.form.email.placeholder',
+    message: 'lead.form.message.placeholder',
+    submit: 'lead.form.submit',
+    success: 'lead.form.success',
+    error: 'lead.form.error',
+  },
+};
+const labels = LABELS[topic];
+
 const availabilitySlots = [
   { value: 'semaine-matin', key: 'lead.form.availability.weekMorning' },
   { value: 'semaine-apres-midi', key: 'lead.form.availability.weekAfternoon' },
@@ -29,12 +57,12 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
   id={`lead-form-${topic}`}
   class={`lead-form flex flex-col gap-4 max-w-md mx-auto text-left ${className}`}
   data-topic={topic}
-  data-success={t(dict, 'lead.form.success')}
-  data-error={t(dict, 'lead.form.error')}
+  data-success={t(dict, labels.success)}
+  data-error={t(dict, labels.error)}
   data-sending={t(dict, 'lead.form.sending')}
 >
-  <input type="text" name="name" required placeholder={t(dict, 'lead.form.name.placeholder')} class={inputClass} />
-  <input type="email" name="email" required placeholder={t(dict, 'lead.form.email.placeholder')} class={inputClass} />
+  <input type="text" name="name" required placeholder={t(dict, labels.name)} class={inputClass} />
+  <input type="email" name="email" required placeholder={t(dict, labels.email)} class={inputClass} />
 
   {isTestPeriod && (
     <>
@@ -69,7 +97,7 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
     </>
   )}
 
-  <textarea name="message" rows="3" placeholder={t(dict, 'lead.form.message.placeholder')} class={inputClass}></textarea>
+  <textarea name="message" rows="3" placeholder={t(dict, labels.message)} class={inputClass}></textarea>
 
   {/* Honeypot : invisible pour l'humain, rempli par les bots. Jamais de label. */}
   <input
@@ -82,7 +110,7 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
   />
 
   <button type="submit" class="btn-primary px-8 py-3 text-lg w-full font-semibold">
-    {t(dict, 'lead.form.submit')}
+    {t(dict, labels.submit)}
   </button>
   <p class="lead-form-msg text-sm mt-2 hidden"></p>
 </form>

@@ -499,6 +499,7 @@
   "bf.form.submit": "Talebimi gonder",
   "bf.form.success": "Tesekkurler! 48 saat icinde size donecegiz.",
   "bf.form.error": "Bir hata olustu, lutfen tekrar deneyin veya dogrudan bize yazin.",
+  "lead.form.sending": "Gonderiliyor…",
   "bf.metrics.title": "AeroX bir bike fitting seansi sirasinda ne olcer?",
   "bf.metrics.intro": "Geleneksel bir fitting'de sele, gidon ve plakalari ayarlarsiniz. AeroX ile <strong>her ayarlama aninda olculebilir verilere donusur</strong> ve musteriniz canli olarak gorur.",
   "bf.metrics.m1.title": "CdA — aerodinamik on cephe alani",

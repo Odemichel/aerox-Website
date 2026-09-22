@@ -499,6 +499,7 @@
   "bf.form.submit": "Invia la mia richiesta",
   "bf.form.success": "Grazie! Vi ricontatteremo entro 48 ore.",
   "bf.form.error": "Si è verificato un errore, riprovate o scriveteci direttamente.",
+  "lead.form.sending": "Invio…",
   "bf.metrics.title": "Cosa misura AeroX durante una sessione di bike fitting?",
   "bf.metrics.intro": "In un fitting classico, regolate la sella, il manubrio, le tacchette. Con AeroX, <strong>ogni regolazione si traduce immediatamente in dati misurabili</strong> che il vostro cliente vede in diretta.",
   "bf.metrics.m1.title": "CdA — area frontale aerodinamica",

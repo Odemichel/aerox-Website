@@ -499,6 +499,7 @@
   "bf.form.submit": "Anfrage senden",
   "bf.form.success": "Danke! Wir melden uns innerhalb von 48 Stunden.",
   "bf.form.error": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut oder schreiben Sie uns direkt.",
+  "lead.form.sending": "Wird gesendet…",
   "bf.metrics.title": "Was misst AeroX während einer Bike-Fitting-Sitzung?",
   "bf.metrics.intro": "Bei einem klassischen Fitting passen Sie Sattel, Lenker und Schuhplatten an. Mit AeroX <strong>wird jede Einstellung sofort in messbare Daten übersetzt</strong>, die Ihr Kunde live sieht.",
   "bf.metrics.m1.title": "CdA — aerodynamische Stirnfläche",

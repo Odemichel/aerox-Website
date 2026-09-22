@@ -499,6 +499,7 @@
   "bf.form.submit": "リクエストを送信",
   "bf.form.success": "ありがとうございます！48時間以内にご連絡いたします。",
   "bf.form.error": "エラーが発生しました。もう一度お試しいただくか、直接メールでお問い合わせください。",
+  "lead.form.sending": "送信中…",
   "bf.metrics.title": "バイクフィッティングセッション中にAeroXは何を測定しますか？",
   "bf.metrics.intro": "従来のフィッティングでは、サドル、ハンドル、クリートを調整します。AeroXなら、<strong>すべての調整が即座に測定可能なデータに変換</strong>され、クライアントがライブで確認できます。",
   "bf.metrics.m1.title": "CdA — 空力的前面投影面積",
