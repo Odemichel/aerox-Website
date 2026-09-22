@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateLead, isHoneypotFilled, LEAD_TOPICS } from '../src/lib/leadValidation';
+import { validateLead, isHoneypotFilled, LEAD_TOPICS, LEAD_INTENTS } from '../src/lib/leadValidation';
 
 const base = { topic: 'test-period', name: 'Olivier', email: 'o@example.com' };
 
@@ -194,5 +194,50 @@ describe('isHoneypotFilled — profondeur bornée', () => {
     const wide = [[], [], [], [], [], [], [], [], []];
     expect(isHoneypotFilled(wide)).toBe(false);
     expect(wide.length).toBeGreaterThanOrEqual(9);
+  });
+});
+
+describe('intent', () => {
+  it('vaut demo par défaut quand rien n’est envoyé', () => {
+    const r = validateLead(base);
+    expect(r.ok && r.lead.intent).toBe('demo');
+  });
+
+  it('accepte chacune des valeurs de la liste', () => {
+    for (const intent of LEAD_INTENTS) {
+      const r = validateLead({ ...base, intent });
+      expect(r.ok && r.lead.intent).toBe(intent);
+    }
+  });
+
+  it('normalise la casse et les espaces', () => {
+    const r = validateLead({ ...base, intent: '  DEVIS ' });
+    expect(r.ok && r.lead.intent).toBe('devis');
+  });
+
+  it('retombe sur demo plutôt que de rejeter une valeur inconnue', () => {
+    for (const v of ['spam', '', 42, null, {}, ['devis']]) {
+      const r = validateLead({ ...base, intent: v });
+      expect(r.ok && r.lead.intent).toBe('demo');
+    }
+  });
+});
+
+describe('phone', () => {
+  it('est vide quand absent', () => {
+    expect(validateLead(base).ok && validateLead(base).lead.phone).toBe('');
+  });
+
+  it('conserve un numéro dans n’importe quel format, espaces rognés', () => {
+    const r = validateLead({ ...base, phone: '  +33 6 12 34 56 78 ' });
+    expect(r.ok && r.lead.phone).toBe('+33 6 12 34 56 78');
+  });
+
+  it('refuse un type non textuel', () => {
+    expect(validateLead({ ...base, phone: 42 })).toEqual({ ok: false, error: 'invalid_field' });
+  });
+
+  it('refuse un numéro au-delà de la borne commune', () => {
+    expect(validateLead({ ...base, phone: '0'.repeat(2001) })).toEqual({ ok: false, error: 'field_too_long' });
   });
 });

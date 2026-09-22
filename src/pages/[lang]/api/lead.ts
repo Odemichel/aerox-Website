@@ -118,7 +118,16 @@ export const POST: APIRoute = async (context) => {
   if (lead.availability) fields.dispos = lead.availability;
   if (lead.trainer) fields.home_trainer = lead.trainer;
   if (lead.webcam) fields.webcam = lead.webcam;
-  if (lead.topic === 'bike-fitter') fields.company = 'bike-fitter';
+  if (lead.phone) fields.phone = lead.phone;
+  // Champs de qualification bike-fitter : `bf_intent` dit ce qu'il demande
+  // (démo, devis, ou simple création de compte), `bf_status` et `bf_signup`
+  // alignent la fiche MailerLite sur ce que porte déjà Supabase.
+  if (lead.topic === 'bike-fitter') {
+    fields.company = 'bike-fitter';
+    fields.bf_intent = lead.intent;
+    fields.bf_status = 'pending_bf';
+    fields.bf_signup = new Date().toISOString().slice(0, 10);
+  }
 
   // Un incident réseau (DNS, timeout, connexion refusée) lève avant tout statut
   // HTTP : sans ce try/catch, l'exception sortirait du chemin de réponse contrôlé.

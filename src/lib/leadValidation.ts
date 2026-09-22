@@ -11,6 +11,15 @@ const HONEYPOT_MAX_DEPTH = 8;
 // Le but est d'écarter le bruit, pas de valider la RFC 5322.
 const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
 
+/**
+ * Ce qu'un bike-fitter demande, et donc à quel point il est chaud :
+ * `demo` et `devis` viennent du formulaire, `inscription` de la création de
+ * compte directe. Toute autre valeur retombe sur `demo` plutôt que de rejeter
+ * la requête : c'est un champ d'information commerciale, pas un contrôle.
+ */
+export const LEAD_INTENTS = ['demo', 'devis', 'inscription'] as const;
+export type LeadIntent = (typeof LEAD_INTENTS)[number];
+
 export type LeadInput = {
   topic?: unknown;
   name?: unknown;
@@ -19,6 +28,8 @@ export type LeadInput = {
   availability?: unknown;
   trainer?: unknown;
   webcam?: unknown;
+  intent?: unknown;
+  phone?: unknown;
   hp?: unknown;
 };
 
@@ -30,6 +41,8 @@ export type Lead = {
   availability: string;
   trainer: string;
   webcam: 'oui' | 'non' | '';
+  intent: LeadIntent;
+  phone: string;
 };
 
 export type LeadResult = { ok: true; honeypot: boolean; lead: Lead } | { ok: false; error: string };
@@ -108,6 +121,18 @@ export function validateLead(input: LeadInput): LeadResult {
   const webcamRaw = typeof input.webcam === 'string' ? input.webcam.trim().toLowerCase() : '';
   const webcam: Lead['webcam'] = webcamRaw === 'oui' || webcamRaw === 'non' ? webcamRaw : '';
 
+  const intentRaw = typeof input.intent === 'string' ? input.intent.trim().toLowerCase() : '';
+  const intent: LeadIntent = (LEAD_INTENTS as readonly string[]).includes(intentRaw)
+    ? (intentRaw as LeadIntent)
+    : 'demo';
+
+  // Le téléphone est borné comme les autres champs texte, mais jamais validé
+  // sur sa forme : les formats varient trop d'un pays à l'autre, et un numéro
+  // mal saisi vaut mieux qu'un lead rejeté.
+  const phone = asText(input.phone);
+  if (phone === null) return { ok: false, error: 'invalid_field' };
+  if (phone.length > MAX_FIELD_LENGTH) return { ok: false, error: 'field_too_long' };
+
   // Le honeypot se déclenche sur toute valeur non vide, quel que soit son type :
   // un bot qui poste `hp: 1` ou `hp: ['x']` ne doit pas passer au travers du
   // filtre simplement parce que ce n'est pas une chaîne.
@@ -116,6 +141,6 @@ export function validateLead(input: LeadInput): LeadResult {
   return {
     ok: true,
     honeypot,
-    lead: { topic: topic as LeadTopic, name, email, message, availability, trainer, webcam },
+    lead: { topic: topic as LeadTopic, name, email, message, availability, trainer, webcam, intent, phone },
   };
 }

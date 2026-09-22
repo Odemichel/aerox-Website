@@ -224,6 +224,33 @@ const metadata = {
           showMessage('❌ ' + error.message);
         } else {
           attemptCount = 0; // reset si succès
+
+          // Un bike-fitter qui crée un compte n'existait jusqu'ici que dans
+          // Supabase : aucune séquence d'e-mails ne pouvait l'atteindre. On le
+          // pousse donc aussi dans MailerLite, via la route de lead qui porte
+          // déjà validation, limitation de débit et notification admin.
+          //
+          // Volontairement sans `await` et sans traitement d'erreur : cet appel
+          // ne doit jamais retarder ni empêcher la redirection. Le compte est
+          // créé, c'est ce qui compte ; une synchro perdue se rattrape à la main.
+          //
+          // `name` reçoit la partie locale de l'e-mail : le formulaire
+          // d'inscription ne demande pas de nom, et la route l'exige.
+          if (selectedRole === 'bike-fitter') {
+            fetch(`/${lang}/api/lead/`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                topic: 'bike-fitter',
+                intent: 'inscription',
+                name: email.split('@')[0],
+                email,
+                phone,
+              }),
+              keepalive: true,
+            }).catch(() => {});
+          }
+
           window.location.href = `/${lang}/inscription/confirmation/`;
         }
       });

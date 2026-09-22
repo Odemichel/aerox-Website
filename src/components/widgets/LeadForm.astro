@@ -103,9 +103,35 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
       class={`lead-form flex w-full flex-col gap-4 text-left ${showBooking ? '' : 'mx-auto max-w-md'} ${className}`}
       data-topic="bike-fitter"
       data-success={t(dict, LABELS.success)}
+      data-success-devis={t(dict, 'lead.form.success.devis')}
       data-error={t(dict, LABELS.error)}
       data-sending={t(dict, 'lead.form.sending')}
     >
+      {/*
+        Ce que demande le bike-fitter : une démo, ou seulement un tarif. Remonté
+        tel quel dans MailerLite (`bf_intent`), c'est ce qui sépare un curieux
+        d'un prospect chaud. `demo` est coché par défaut — c'est l'action que
+        la page met en avant.
+      */}
+      <fieldset class="border-0 p-0 m-0">
+        <legend class="mb-2 font-semibold">{t(dict, 'lead.form.intent.label')}</legend>
+        <div class="grid grid-cols-2 gap-3">
+          {[
+            { v: 'demo', checked: true },
+            { v: 'devis', checked: false },
+          ].map(({ v, checked }) => (
+            <label
+              class={`intent-card flex cursor-pointer flex-col items-center gap-1 rounded-lg border-2 p-3 text-center transition-all ${checked ? 'border-primary bg-primary/10' : 'border-gray-300 dark:border-gray-600'}`}
+              data-intent={v}
+            >
+              <input type="radio" name="intent" value={v} checked={checked} class="sr-only" />
+              <span class="text-sm font-semibold">{t(dict, `lead.form.intent.${v}`)}</span>
+              <span class="text-xs text-gray-600 dark:text-gray-400">{t(dict, `lead.form.intent.${v}.desc`)}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
       <input type="text" name="name" required placeholder={t(dict, LABELS.name)} class={inputClass} />
       <input type="email" name="email" required placeholder={t(dict, LABELS.email)} class={inputClass} />
 
@@ -168,6 +194,20 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
       const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
       const initialLabel = button?.textContent ?? '';
 
+      // Bascule purement visuelle : la valeur retenue à la soumission est celle
+      // du radio natif, jamais la classe CSS.
+      const intentCards = form.querySelectorAll<HTMLLabelElement>('.intent-card');
+      intentCards.forEach((card) => {
+        card.addEventListener('click', () => {
+          intentCards.forEach((c) => {
+            c.classList.remove('border-primary', 'bg-primary/10');
+            c.classList.add('border-gray-300', 'dark:border-gray-600');
+          });
+          card.classList.remove('border-gray-300', 'dark:border-gray-600');
+          card.classList.add('border-primary', 'bg-primary/10');
+        });
+      });
+
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!button) {
@@ -190,6 +230,7 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
           message: String(data.get('message') ?? '').trim(),
           trainer: String(data.get('trainer') ?? '').trim(),
           webcam: String(data.get('webcam') ?? ''),
+          intent: String(data.get('intent') ?? 'demo'),
           hp: String(data.get('hp') ?? ''),
         };
 
@@ -207,8 +248,12 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
           ok = false;
         }
 
+        // Un devis n'appelle pas à réserver un créneau : le message de succès
+        // change avec la demande, sinon on renvoie vers un agenda sans objet.
+        const wantsQuote = form.querySelector<HTMLInputElement>('input[name="intent"]:checked')?.value === 'devis';
+        const successText = wantsQuote ? form.dataset.successDevis : form.dataset.success;
         if (msg) {
-          msg.textContent = (ok ? form.dataset.success : form.dataset.error) ?? '';
+          msg.textContent = (ok ? successText : form.dataset.error) ?? '';
           msg.classList.remove('hidden', 'text-red-600', 'text-green-600');
           msg.classList.add(ok ? 'text-green-600' : 'text-red-600');
         }
