@@ -3,56 +3,41 @@ import { type Locale, getDict, t } from '~/lib/i18n';
 import { LINKS } from '~/config/links';
 
 interface Props {
-  topic: 'test-period' | 'bike-fitter';
   class?: string;
 }
 
-const { topic, class: className = '' } = Astro.props;
+const { class: className = '' } = Astro.props;
 
 const lang = (Astro.params.lang as Locale) ?? 'fr';
 const dict = getDict(lang);
 
-const isTestPeriod = topic === 'test-period';
+// Un seul public depuis l'unification du tunnel : la page /periode-test/ est
+// la réservation de démo des bike-fitters. Le cycliste, lui, pré-réserve le
+// Diagnostic depuis la section Tarifs — il n'a aucun créneau à prendre.
+// C'est la valeur envoyée à /api/lead, qui la route vers le bon groupe MailerLite.
+const TOPIC = 'bike-fitter';
 
-// Agenda de réservation (plage de rendez-vous Google), encadré dans la page
-// et révélé au succès du formulaire — uniquement pour le topic `test-period`,
-// et seulement si les deux URL sont configurées (voir src/config/links.ts).
-// Sinon le bloc n'est pas rendu du tout : pas d'agenda mort en prod.
+// Agenda de réservation (plage de rendez-vous Google), encadré dans la page.
+// Rendu seulement si les deux URL sont configurées (voir src/config/links.ts) :
+// pas d'agenda mort en prod.
 const bookingUrl = LINKS.booking;
 // `hl` traduit l'agenda Google dans la langue de la page (vérifié : sans lui il
 // rend en anglais même sur /fr/). L'URL de base porte déjà `?gv=true`, d'où le
 // `&`. `lang` vient de la route, donc d'une locale connue, mais l'encodage
 // reste posé : il coûte rien et ferme la question.
 const bookingEmbedUrl = LINKS.bookingEmbed ? `${LINKS.bookingEmbed}&hl=${encodeURIComponent(lang)}` : '';
-const showBooking = isTestPeriod && bookingUrl.length > 0 && bookingEmbedUrl.length > 0;
+const showBooking = bookingUrl.length > 0 && bookingEmbedUrl.length > 0;
 
-/**
- * Libellés dépendants du topic : `bike-fitter` a son propre jeu de clés
- * (`bf.form.*`, traduit dans les 9 langues, ton B2B professionnel) resté
- * distinct des clés `lead.form.*` (traduites en fr/en seulement, ton B2C
- * pensé pour le topic `test-period`). `lead.form.sending` est la seule clé
- * partagée par les deux — elle n'a pas d'équivalent `bf.*` et vaut le même
- * texte pour les deux topics.
- */
-const LABELS: Record<Props['topic'], Record<'name' | 'email' | 'message' | 'submit' | 'success' | 'error', string>> = {
-  'bike-fitter': {
-    name: 'bf.form.name.placeholder',
-    email: 'bf.form.email.placeholder',
-    message: 'bf.form.message.placeholder',
-    submit: 'bf.form.submit',
-    success: 'bf.form.success',
-    error: 'bf.form.error',
-  },
-  'test-period': {
-    name: 'lead.form.name.placeholder',
-    email: 'lead.form.email.placeholder',
-    message: 'lead.form.message.placeholder',
-    submit: 'lead.form.submit',
-    success: 'lead.form.success',
-    error: 'lead.form.error',
-  },
-};
-const labels = LABELS[topic];
+// Libellés B2B (`bf.form.*`, vouvoiement). `lead.form.*` porte ce qui est
+// commun au formulaire et à l'agenda : envoi, succès, mentions de réservation.
+const LABELS = {
+  name: 'bf.form.name.placeholder',
+  email: 'bf.form.email.placeholder',
+  message: 'bf.form.message.placeholder',
+  submit: 'lead.form.submit',
+  success: 'lead.form.success',
+  error: 'bf.form.error',
+} as const;
 
 const inputClass = 'w-full border rounded p-3 text-secondary';
 ---
@@ -60,7 +45,7 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
 <div class={showBooking ? 'grid items-start gap-8 xl:grid-cols-12' : ''}>
   {
     showBooking && (
-      <div id={`lead-booking-${topic}`} class="lead-form-booking xl:col-span-7">
+      <div id="lead-booking" class="lead-form-booking xl:col-span-7">
         {/*
           `color-scheme: light` force l'agenda en clair. Sans elle, Google suit
           le thème du visiteur : en sombre son fond devient transparent, le
@@ -114,75 +99,34 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
 
   <div class={showBooking ? 'xl:col-span-5' : ''}>
     <form
-      id={`lead-form-${topic}`}
+      id="lead-form"
       class={`lead-form flex w-full flex-col gap-4 text-left ${showBooking ? '' : 'mx-auto max-w-md'} ${className}`}
-      data-topic={topic}
-      data-success={t(dict, labels.success)}
-      data-error={t(dict, labels.error)}
+      data-topic="bike-fitter"
+      data-success={t(dict, LABELS.success)}
+      data-error={t(dict, LABELS.error)}
       data-sending={t(dict, 'lead.form.sending')}
     >
-      {
-        isTestPeriod && (
-          <fieldset class="border-0 p-0 m-0">
-            <legend class="mb-2 font-semibold">{t(dict, 'lead.form.profile.label')}</legend>
-            <div class="grid grid-cols-2 gap-3">
-              <label
-                class="profile-card flex flex-col items-center gap-1 p-4 border-2 rounded-lg cursor-pointer transition-all border-primary bg-primary/10"
-                data-profile="rider"
-              >
-                <input type="radio" name="profile_type" value="rider" checked class="sr-only" />
-                <span class="text-sm font-semibold">{t(dict, 'lead.form.profile.rider')}</span>
-                <span class="text-xs text-gray-600 dark:text-gray-400 text-center">
-                  {t(dict, 'lead.form.profile.rider.desc')}
-                </span>
-              </label>
-              <label
-                class="profile-card flex flex-col items-center gap-1 p-4 border-2 rounded-lg cursor-pointer transition-all border-gray-300 dark:border-gray-600"
-                data-profile="bike-fitter"
-              >
-                <input type="radio" name="profile_type" value="bike-fitter" class="sr-only" />
-                <span class="text-sm font-semibold">{t(dict, 'lead.form.profile.bikefitter')}</span>
-                <span class="text-xs text-gray-600 dark:text-gray-400 text-center">
-                  {t(dict, 'lead.form.profile.bikefitter.desc')}
-                </span>
-              </label>
-            </div>
-          </fieldset>
-        )
-      }
+      <input type="text" name="name" required placeholder={t(dict, LABELS.name)} class={inputClass} />
+      <input type="email" name="email" required placeholder={t(dict, LABELS.email)} class={inputClass} />
 
-      <input type="text" name="name" required placeholder={t(dict, labels.name)} class={inputClass} />
-      <input type="email" name="email" required placeholder={t(dict, labels.email)} class={inputClass} />
+      <label class="flex flex-col gap-1">
+        <span class="font-semibold">{t(dict, 'lead.form.trainer.label')}</span>
+        <input type="text" name="trainer" placeholder={t(dict, 'lead.form.trainer.placeholder')} class={inputClass} />
+      </label>
 
-      {
-        isTestPeriod && (
-          <>
-            <label class="flex flex-col gap-1">
-              <span class="font-semibold">{t(dict, 'lead.form.trainer.label')}</span>
-              <input
-                type="text"
-                name="trainer"
-                placeholder={t(dict, 'lead.form.trainer.placeholder')}
-                class={inputClass}
-              />
-            </label>
+      <fieldset class="border-0 p-0 m-0">
+        <legend class="mb-2 font-semibold">{t(dict, 'lead.form.webcam.label')}</legend>
+        <div class="flex gap-4">
+          <label class="inline-flex items-center gap-2 text-sm">
+            <input type="radio" name="webcam" value="oui" /> {t(dict, 'lead.form.webcam.yes')}
+          </label>
+          <label class="inline-flex items-center gap-2 text-sm">
+            <input type="radio" name="webcam" value="non" /> {t(dict, 'lead.form.webcam.no')}
+          </label>
+        </div>
+      </fieldset>
 
-            <fieldset class="border-0 p-0 m-0">
-              <legend class="mb-2 font-semibold">{t(dict, 'lead.form.webcam.label')}</legend>
-              <div class="flex gap-4">
-                <label class="inline-flex items-center gap-2 text-sm">
-                  <input type="radio" name="webcam" value="oui" /> {t(dict, 'lead.form.webcam.yes')}
-                </label>
-                <label class="inline-flex items-center gap-2 text-sm">
-                  <input type="radio" name="webcam" value="non" /> {t(dict, 'lead.form.webcam.no')}
-                </label>
-              </div>
-            </fieldset>
-          </>
-        )
-      }
-
-      <textarea name="message" rows="3" placeholder={t(dict, labels.message)} class={inputClass}></textarea>
+      <textarea name="message" rows="3" placeholder={t(dict, LABELS.message)} class={inputClass}></textarea>
 
       {/* Honeypot : invisible pour l'humain, rempli par les bots. Jamais de label. */}
       <input
@@ -195,7 +139,7 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
       />
 
       <button type="submit" class="btn-primary px-8 py-3 text-lg w-full font-semibold">
-        {t(dict, labels.submit)}
+        {t(dict, LABELS.submit)}
       </button>
       <p class="lead-form-msg text-sm mt-2 hidden"></p>
     </form>
@@ -224,33 +168,6 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
       const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
       const initialLabel = button?.textContent ?? '';
 
-      // Sélecteur cycliste / bike-fitter (topic `test-period` uniquement) :
-      // toggle purement visuel, l'état réellement retenu à la soumission est
-      // celui du radio `profile_type:checked` natif.
-      const profileCards = form.querySelectorAll<HTMLLabelElement>('.profile-card');
-      const selectProfile = (card: HTMLLabelElement) => {
-        profileCards.forEach((c) => {
-          c.classList.remove('border-primary', 'bg-primary/10');
-          c.classList.add('border-gray-300', 'dark:border-gray-600');
-        });
-        card.classList.remove('border-gray-300', 'dark:border-gray-600');
-        card.classList.add('border-primary', 'bg-primary/10');
-      };
-      profileCards.forEach((card) => card.addEventListener('click', () => selectProfile(card)));
-
-      // Présélection depuis l'URL : /periode-test/?profil=bike-fitter, le lien
-      // posé sur la page bike-fitting. Le radio est coché en plus du style,
-      // car c'est lui — et non la classe — qui est lu à la soumission.
-      const wanted = new URLSearchParams(window.location.search).get('profil');
-      if (wanted) {
-        const card = form.querySelector<HTMLLabelElement>(`.profile-card[data-profile="${CSS.escape(wanted)}"]`);
-        const radio = card?.querySelector<HTMLInputElement>('input[name="profile_type"]');
-        if (card && radio) {
-          radio.checked = true;
-          selectProfile(card);
-        }
-      }
-
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!button) {
@@ -266,13 +183,8 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
         button.textContent = form.dataset.sending ?? '…';
 
         const data = new FormData(form);
-        // Seul le `topic` envoyé bascule selon le profil choisi — les libellés
-        // affichés restent ceux du topic passé en prop (fixés au rendu par
-        // `LABELS`), jamais réévalués ici.
-        const selectedProfile = form.querySelector<HTMLInputElement>('input[name="profile_type"]:checked')?.value;
-        const effectiveTopic = selectedProfile === 'bike-fitter' ? 'bike-fitter' : form.dataset.topic;
         const payload = {
-          topic: effectiveTopic,
+          topic: form.dataset.topic,
           name: String(data.get('name') ?? '').trim(),
           email: String(data.get('email') ?? '').trim(),
           message: String(data.get('message') ?? '').trim(),

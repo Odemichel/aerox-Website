@@ -28,11 +28,11 @@ const metadata = {
 
 const homeHref = `/${lang}/`;
 const blogBfHref = `/${lang}/blog/BF-mesurer-${lang}/`;
-// Tous les CTA de cette page mènent au formulaire de réservation unique, avec
-// le profil bike-fitter présélectionné. Ils visaient l'ancre #contact-bf, qui
-// ne contient plus de formulaire depuis l'unification : s'y arrêter imposait
-// un second clic.
-const reservationHref = `/${lang}/periode-test/?profil=bike-fitter#reservation`;
+// Tous les CTA de cette page mènent à la page de réservation de démo.
+// Elle ne s'adresse qu'aux bike-fitters, d'où la disparition du paramètre
+// `?profil=` qui servait à présélectionner un profil dans l'ancien
+// formulaire mixte.
+const reservationHref = `/${lang}/periode-test/#reservation`;
 
 /* ===== FAQPage JSON-LD ===== */
 const faqItems = [1, 2, 3, 4, 5].map((i) => ({
