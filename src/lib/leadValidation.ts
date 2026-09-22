@@ -37,6 +37,11 @@ function asText(value: unknown): string | null {
 }
 
 export function validateLead(input: LeadInput): LeadResult {
+  // Garde contre null, undefined, non-objets (primitives, arrays)
+  if (!input || typeof input !== 'object' || Array.isArray(input)) {
+    return { ok: false, error: 'invalid_topic' };
+  }
+
   const topic = input.topic;
   if (typeof topic !== 'string' || !(LEAD_TOPICS as readonly string[]).includes(topic)) {
     return { ok: false, error: 'invalid_topic' };
@@ -49,6 +54,7 @@ export function validateLead(input: LeadInput): LeadResult {
   const rawEmail = asText(input.email);
   if (rawEmail === null) return { ok: false, error: 'invalid_email' };
   const email = rawEmail.toLowerCase();
+  if (email.length > MAX_FIELD_LENGTH) return { ok: false, error: 'field_too_long' };
   if (!EMAIL_RE.test(email)) return { ok: false, error: 'invalid_email' };
 
   const message = asText(input.message);

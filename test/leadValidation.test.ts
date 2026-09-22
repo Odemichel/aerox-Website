@@ -86,4 +86,35 @@ describe('validateLead', () => {
   it('expose la liste blanche des topics', () => {
     expect(LEAD_TOPICS).toEqual(['test-period', 'bike-fitter']);
   });
+
+  it('refuse un email de plus de 2000 caractères', () => {
+    const r = validateLead({ ...base, email: 'a'.repeat(2001) + '@b.com' });
+    expect(r).toEqual({ ok: false, error: 'field_too_long' });
+  });
+
+  it('accepte un email de 2000 caractères ou moins', () => {
+    const longEmail = 'a'.repeat(1990) + '@b.com';
+    const r = validateLead({ ...base, email: longEmail });
+    expect(r.ok).toBe(true);
+  });
+
+  it('refuse validateLead(null) sans exception', () => {
+    const r = validateLead(null as any);
+    expect(r).toEqual({ ok: false, error: 'invalid_topic' });
+  });
+
+  it('refuse validateLead(42) sans exception', () => {
+    const r = validateLead(42 as any);
+    expect(r).toEqual({ ok: false, error: 'invalid_topic' });
+  });
+
+  it('refuse validateLead([]) sans exception', () => {
+    const r = validateLead([] as any);
+    expect(r).toEqual({ ok: false, error: 'invalid_topic' });
+  });
+
+  it('refuse validateLead(\'x\') sans exception', () => {
+    const r = validateLead('x' as any);
+    expect(r).toEqual({ ok: false, error: 'invalid_topic' });
+  });
 });
