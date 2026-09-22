@@ -28,6 +28,11 @@ const metadata = {
 
 const homeHref = `/${lang}/`;
 const blogBfHref = `/${lang}/blog/BF-mesurer-${lang}/`;
+// Tous les CTA de cette page mènent au formulaire de réservation unique, avec
+// le profil bike-fitter présélectionné. Ils visaient l'ancre #contact-bf, qui
+// ne contient plus de formulaire depuis l'unification : s'y arrêter imposait
+// un second clic.
+const reservationHref = `/${lang}/periode-test/?profil=bike-fitter#reservation`;
 
 /* ===== FAQPage JSON-LD ===== */
 const faqItems = [1, 2, 3, 4, 5].map((i) => ({
@@ -167,7 +172,7 @@ const reviewSchema = reviews.map((r) => ({
         </div>
         <div class="mt-8">
           <a
-            href="#contact-bf"
+            href={reservationHref}
             class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold"
           >
             {t(dict, 'bf.hero.cta')}
@@ -303,7 +308,7 @@ const reviewSchema = reviews.map((r) => ({
 
       <!-- CTA intermédiaire -->
       <div class="mt-10 text-center">
-        <a href="#contact-bf" class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold">
+        <a href={reservationHref} class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold">
           {t(dict, 'bf.metrics.cta')}
         </a>
       </div>
@@ -467,10 +472,7 @@ const reviewSchema = reviews.map((r) => ({
           sans ce paramètre, un bike-fitter venu d'ici arriverait sur un
           formulaire réglé sur « cycliste ».
         */}
-        <a
-          href={`/${lang}/periode-test/?profil=bike-fitter#reservation`}
-          class="btn-primary px-8 py-3 text-lg font-semibold inline-block"
-        >
+        <a href={reservationHref} class="btn-primary px-8 py-3 text-lg font-semibold inline-block">
           {t(dict, 'bf.cta.button')}
         </a>
       </div>
