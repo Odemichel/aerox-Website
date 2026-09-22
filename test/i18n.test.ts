@@ -15,7 +15,7 @@ describe('mergeDicts', () => {
     expect(mergeDicts({ a: 'A' }, { z: 'Z' })).toEqual({ a: 'A', z: 'Z' });
   });
 
-  it('ne modifie aucun des deux dictionnaires d\'entrée', () => {
+  it("ne modifie aucun des deux dictionnaires d'entrée", () => {
     const base = { a: 'A' };
     const loc = { a: 'A-fr' };
     mergeDicts(base, loc);
@@ -29,11 +29,11 @@ describe('mergeDicts', () => {
 });
 
 describe('getDict', () => {
-  it('privilégie la traduction locale sur l\'anglais', () => {
+  it("privilégie la traduction locale sur l'anglais", () => {
     expect(getDict('fr')['nav.home']).not.toBe(getDict('en')['nav.home']);
   });
 
-  it('retombe sur l\'anglais pour une locale inconnue', () => {
+  it("retombe sur l'anglais pour une locale inconnue", () => {
     expect(getDict('xx')['nav.home']).toBe(getDict('en')['nav.home']);
   });
 
@@ -41,7 +41,10 @@ describe('getDict', () => {
     const enKeys = Object.keys(enDict);
     for (const loc of SUPPORTED_LOCALES) {
       const d = getDict(loc);
-      expect(enKeys.filter((k) => d[k] === undefined), `locale ${loc}`).toEqual([]);
+      expect(
+        enKeys.filter((k) => d[k] === undefined),
+        `locale ${loc}`
+      ).toEqual([]);
     }
   });
 

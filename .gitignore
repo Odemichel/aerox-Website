@@ -23,3 +23,6 @@ pnpm-debug.log*
 pnpm-lock.yaml
 
 .astro
+
+# Supabase CLI local state
+supabase/.temp/

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createRateLimiter } from '../src/lib/rateLimit';
 
 describe('createRateLimiter', () => {
-  it('laisse passer jusqu\'à la limite', () => {
+  it("laisse passer jusqu'à la limite", () => {
     const rl = createRateLimiter({ limit: 3, windowMs: 1000 });
     expect(rl.check('ip1', 0)).toBe(true);
     expect(rl.check('ip1', 1)).toBe(true);

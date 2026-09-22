@@ -28,11 +28,11 @@ describe('validateLead', () => {
     expect(validateLead({ ...base, email: undefined })).toEqual({ ok: false, error: 'invalid_email' });
   });
 
-  it.each(['pasunemail', 'a@', '@b.fr', 'a b@c.fr', 'a@b', ''])('refuse l\'email invalide %s', (email) => {
+  it.each(['pasunemail', 'a@', '@b.fr', 'a b@c.fr', 'a@b', ''])("refuse l'email invalide %s", (email) => {
     expect(validateLead({ ...base, email })).toEqual({ ok: false, error: 'invalid_email' });
   });
 
-  it('normalise l\'email en minuscules et sans espaces', () => {
+  it("normalise l'email en minuscules et sans espaces", () => {
     const r = validateLead({ ...base, email: '  Olivier@Example.COM ' });
     expect(r.ok && r.lead.email).toBe('olivier@example.com');
   });
@@ -77,8 +77,12 @@ describe('validateLead', () => {
   });
 
   it('normalise webcam en oui/non et ignore le reste', () => {
-    expect(validateLead({ ...base, webcam: 'oui' }).ok && validateLead({ ...base, webcam: 'oui' }).lead.webcam).toBe('oui');
-    expect(validateLead({ ...base, webcam: 'non' }).ok && validateLead({ ...base, webcam: 'non' }).lead.webcam).toBe('non');
+    expect(validateLead({ ...base, webcam: 'oui' }).ok && validateLead({ ...base, webcam: 'oui' }).lead.webcam).toBe(
+      'oui'
+    );
+    expect(validateLead({ ...base, webcam: 'non' }).ok && validateLead({ ...base, webcam: 'non' }).lead.webcam).toBe(
+      'non'
+    );
     const r = validateLead({ ...base, webcam: 'peut-être' });
     expect(r.ok && r.lead.webcam).toBe('');
   });
@@ -88,13 +92,13 @@ describe('validateLead', () => {
     expect(r.ok && r.lead.availability).toBe('semaine-matin, weekend-soir');
   });
 
-  it('ignore les entrées non-textuelles d\'un tableau de disponibilités', () => {
+  it("ignore les entrées non-textuelles d'un tableau de disponibilités", () => {
     const r = validateLead({ ...base, availability: ['semaine-matin', 42, null, 'weekend-soir'] });
     expect(r.ok && r.lead.availability).toBe('semaine-matin, weekend-soir');
   });
 
   it('refuse des disponibilités dont le total dépasse 2000 caractères', () => {
-    const r = validateLead({ ...base, availability: [ 'a'.repeat(1500), 'b'.repeat(600) ] });
+    const r = validateLead({ ...base, availability: ['a'.repeat(1500), 'b'.repeat(600)] });
     expect(r).toEqual({ ok: false, error: 'field_too_long' });
   });
 
@@ -133,7 +137,7 @@ describe('validateLead', () => {
     expect(r).toEqual({ ok: false, error: 'invalid_topic' });
   });
 
-  it('refuse validateLead(\'x\') sans exception', () => {
+  it("refuse validateLead('x') sans exception", () => {
     const r = validateLead('x' as any);
     expect(r).toEqual({ ok: false, error: 'invalid_topic' });
   });
@@ -179,7 +183,7 @@ describe('isHoneypotFilled — profondeur bornée', () => {
     expect(isHoneypotFilled(nest(3, 'rempli'))).toBe(true);
   });
 
-  it('ne confond pas l\'indice de tableau avec la profondeur', () => {
+  it("ne confond pas l'indice de tableau avec la profondeur", () => {
     // Un tableau plat de chaînes ne discrimine rien : la profondeur n'est
     // lue que dans la branche tableau, jamais pour un élément scalaire.
     // Il faut des éléments eux-mêmes tableaux, à un indice >= la borne, pour
