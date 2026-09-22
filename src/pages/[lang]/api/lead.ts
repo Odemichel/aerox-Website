@@ -41,7 +41,10 @@ export const POST: APIRoute = async ({ request, params, clientAddress }) => {
   // Le bot ne peut pas distinguer un succès d'un rejet.
   if (result.honeypot) return json({ success: true }, 200);
 
-  const ip = clientAddress ?? request.headers.get('x-forwarded-for') ?? 'inconnue';
+  // `x-forwarded-for` peut porter une liste `client, proxy1, proxy2` ; on ne garde
+  // que la première entrée pour rester cohérent avec l'IP unique de `clientAddress`.
+  const forwardedFor = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+  const ip = clientAddress ?? forwardedFor ?? 'inconnue';
   if (!leadRateLimiter.check(ip)) return json({ error: 'rate_limited' }, 429);
 
   const { lead } = result;
@@ -56,14 +59,23 @@ export const POST: APIRoute = async ({ request, params, clientAddress }) => {
   if (lead.webcam) fields.webcam = lead.webcam;
   if (lead.topic === 'bike-fitter') fields.company = 'bike-fitter';
 
-  const mlRes = await fetch('https://connect.mailerlite.com/api/subscribers', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${import.meta.env.MAILERLITE_API_KEY}`,
-    },
-    body: JSON.stringify({ email: lead.email, fields, groups }),
-  });
+  // Un incident réseau (DNS, timeout, connexion refusée) lève avant tout statut
+  // HTTP : sans ce try/catch, l'exception sortirait du chemin de réponse contrôlé.
+  // Elle doit produire exactement la même réponse opaque qu'un statut non-2xx.
+  let mlRes: Response;
+  try {
+    mlRes = await fetch('https://connect.mailerlite.com/api/subscribers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${import.meta.env.MAILERLITE_API_KEY}`,
+      },
+      body: JSON.stringify({ email: lead.email, fields, groups }),
+    });
+  } catch (err) {
+    console.error('MailerLite unreachable', err);
+    return json({ error: 'subscribe_failed' }, 502);
+  }
 
   if (!mlRes.ok) {
     console.error('MailerLite error', mlRes.status, await mlRes.text());
