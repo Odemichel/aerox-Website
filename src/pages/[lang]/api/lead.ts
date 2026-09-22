@@ -1,5 +1,6 @@
 export const prerender = false;
 
+import { createHash } from 'node:crypto';
 import type { APIContext, APIRoute } from 'astro';
 import { validateLead, type Lead } from '~/lib/leadValidation';
 import { leadRateLimiter } from '~/lib/rateLimit';
@@ -29,6 +30,16 @@ function json(body: unknown, status: number) {
 // perte de lead que cette route existe pour éviter.
 const MAILERLITE_TIMEOUT_MS = 8000;
 const NOTIFY_TIMEOUT_MS = 5000;
+
+/**
+ * Identifiant de journal dérivé de l'email, pour ne pas écrire d'adresse en
+ * clair dans des journaux conservés par la plateforme. Stable d'un appel à
+ * l'autre : deux rejets de la même adresse portent le même identifiant, ce qui
+ * suffit à corréler un faux positif.
+ */
+function emailDigest(email: string): string {
+  return createHash('sha256').update(email).digest('hex').slice(0, 12);
+}
 
 /**
  * Adresse à utiliser comme clé du limiteur.
@@ -76,18 +87,23 @@ export const POST: APIRoute = async (context) => {
   // discriminée sur un discriminant booléen via la négation logique.
   if (result.ok === false) return json({ error: result.error }, 400);
 
+  // Le contrôle de quota passe *avant* la branche honeypot : celle-ci écrit
+  // désormais dans les journaux, et une branche à effet de bord placée devant
+  // le limiteur laisserait n'importe qui provoquer un volume illimité
+  // d'écritures en postant `hp: 1`, sans jamais croiser un 429.
+  const ip = rateLimitKey(context);
+  if (!leadRateLimiter.check(ip)) return json({ error: 'rate_limited' }, 429);
+
   // Honeypot : on répond comme si tout s'était bien passé, sans rien faire.
   // Le bot ne peut pas distinguer un succès d'un rejet. La trace serveur est
   // le seul moyen de repérer un faux positif (gestionnaire de mots de passe
   // qui remplit le champ invisible) : sans elle, le lead disparaîtrait
-  // silencieusement.
+  // silencieusement. L'email y figure haché, pas en clair : ces journaux sont
+  // conservés par la plateforme, et un identifiant stable suffit à corréler.
   if (result.honeypot) {
-    console.error('honeypot déclenché, lead ignoré', result.lead.email);
+    console.error('honeypot déclenché, lead ignoré', emailDigest(result.lead.email));
     return json({ success: true }, 200);
   }
-
-  const ip = rateLimitKey(context);
-  if (!leadRateLimiter.check(ip)) return json({ error: 'rate_limited' }, 429);
 
   const { lead } = result;
   const lang = params.lang ?? 'fr';
@@ -127,13 +143,29 @@ export const POST: APIRoute = async (context) => {
   }
 
   if (!mlRes.ok) {
-    console.error('MailerLite error', mlRes.status, await mlRes.text());
+    // Ce `text()` est hors du `try` ci-dessus, et `AbortSignal.timeout` couvre
+    // aussi la lecture du corps : un amont qui rend un statut non-2xx puis
+    // s'enlise sur son corps ferait rejeter cette lecture à 8 s, sans personne
+    // pour la capter — 500 du framework au lieu de la réponse opaque prévue.
+    // La lecture est donc rendue infaillible : le corps n'est qu'un détail de
+    // journalisation, il ne doit jamais décider du code de retour.
+    const detail = await mlRes.text().catch(() => '<corps illisible>');
+    console.error('MailerLite error', mlRes.status, detail);
     return json({ error: 'subscribe_failed' }, 502);
   }
 
   // La notification ne doit jamais faire échouer l'inscription du lead :
   // le contact est déjà enregistré chez MailerLite à ce stade.
   try {
+    // Secret absent au build : l'en-tête part avec la chaîne "undefined",
+    // l'Edge Function rejette en 403 et la notification est perdue. L'échec
+    // fermé est le bon sens, mais il serait muet — on l'annonce donc au
+    // journal, sinon la seule trace visible serait un 403 sans explication.
+    if (!import.meta.env.LEAD_HOOK_SECRET) {
+      console.error(
+        "LEAD_HOOK_SECRET absent de l'environnement de build : notify-admin-lead va rejeter en 403, la notification sera perdue"
+      );
+    }
     const notifyRes = await fetch(NOTIFY_URL, {
       method: 'POST',
       headers: {
