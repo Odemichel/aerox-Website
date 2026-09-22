@@ -23,7 +23,12 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     pathname.startsWith("/_astro") ||
     pathname.startsWith("/_image") ||
     pathname.startsWith("/favicon") ||
-    pathname.startsWith("/assets")
+    pathname.startsWith("/assets") ||
+    // Endpoint machine appelé par Stripe : il n'a pas de langue, et Stripe ne
+    // suit pas les redirections — une 301 vers /en/... est comptée comme un
+    // échec de livraison. Sans cette exemption la route est injoignable, même
+    // avec le slash final.
+    pathname.startsWith("/api/stripe-webhook")
   ) {
     return next();
   }
