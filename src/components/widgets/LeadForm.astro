@@ -68,12 +68,31 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
           La propriété s'applique bien au document encadré (vérifié sur WebKit
           et Chromium) ; `bg-white` couvre l'instant précédant le chargement.
         */}
-        <iframe
-          class="lead-booking-frame w-full h-[900px] md:h-[700px] rounded-xl border-0 bg-white [color-scheme:light]"
-          src={bookingEmbedUrl}
-          loading="lazy"
-          title={t(dict, 'lead.form.booking.title')}
-        />
+        {/*
+          Fenêtre de hauteur fixe : l'agenda ne s'étire jamais, quel que soit le
+          nombre de créneaux du jour. La page de Google n'a aucun conteneur
+          défilant interne (vérifié) et l'iframe est d'une autre origine, donc
+          on ne peut pas faire défiler la seule colonne des créneaux. On
+          recadre : l'iframe est plus haute que la fenêtre et remontée de la
+          hauteur de l'en-tête Google (avatar, nom de la plage, mention Meet),
+          qui redit ce que la page affiche déjà.
+
+          Hauteur de l'iframe = décalage + hauteur de la fenêtre. C'est la
+          condition pour que le défilement interne atteigne le dernier créneau :
+          en dessous, les derniers seraient hors d'atteinte.
+
+          Le décalage vaut 231 px dès 640 px de large (mesuré à 658, 770 et
+          900 px). En dessous, l'en-tête se replie et grandit jusqu'à 308 px :
+          trop instable pour être recadré, on le laisse visible en mobile.
+        */}
+        <div class="h-[900px] md:h-[700px] overflow-hidden rounded-xl bg-white [color-scheme:light]">
+          <iframe
+            class="lead-booking-frame w-full h-[900px] md:h-[931px] md:-mt-[231px] border-0"
+            src={bookingEmbedUrl}
+            loading="lazy"
+            title={t(dict, 'lead.form.booking.title')}
+          />
+        </div>
         {/*
           Fuseau : l'agenda affiche les créneaux à l'heure de Paris quel que
           soit celui du visiteur — vérifié depuis Europe/Paris, Asia/Tokyo et
