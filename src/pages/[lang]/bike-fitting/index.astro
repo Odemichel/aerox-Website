@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
 import Features from '~/components/widgets/Features.astro';
+import LeadForm from '~/components/widgets/LeadForm.astro';
 
 import aeroxHero from '~/assets/images/aerox-hero.jpg';
 import bikePower from '~/assets/images/bike-fitter/bikefitting-bike-power.jpg';
@@ -461,74 +462,11 @@ const reviewSchema = reviews.map((r) => ({
         <h2 class="text-3xl md:text-4xl font-bold tracking-tighter mb-4">{t(dict, 'bf.cta.title')}</h2>
         <p class="text-xl text-muted dark:text-slate-400 mb-8">{t(dict, 'bf.cta.subtitle')}</p>
 
-        <form
-          id="form-bf"
-          class="flex flex-col items-center gap-4 max-w-md mx-auto"
-          data-success={t(dict, 'bf.form.success')}
-          data-error={t(dict, 'bf.form.error')}
-        >
-          <input
-            type="text"
-            id="name-bf"
-            placeholder={t(dict, 'bf.form.name.placeholder')}
-            required
-            class="w-full border rounded p-3 text-secondary"
-          />
-          <input
-            type="email"
-            id="email-bf"
-            placeholder={t(dict, 'bf.form.email.placeholder')}
-            required
-            class="w-full border rounded p-3 text-secondary"
-          />
-          <textarea
-            id="message-bf"
-            placeholder={t(dict, 'bf.form.message.placeholder')}
-            rows="3"
-            class="w-full border rounded p-3 text-secondary"
-          ></textarea>
-          <button type="submit" class="btn-primary px-8 py-3 text-lg w-full font-semibold">
-            {t(dict, 'bf.form.submit')}
-          </button>
-          <p id="msg-bf" class="text-sm mt-2 hidden"></p>
-        </form>
+        <LeadForm topic="bike-fitter" />
       </div>
     </div>
   </section>
 </Layout>
-
-<script>
-  const form = document.getElementById('form-bf') as HTMLFormElement | null;
-  const msg = document.getElementById('msg-bf');
-
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const name = (document.getElementById('name-bf') as HTMLInputElement).value.trim();
-    const email = (document.getElementById('email-bf') as HTMLInputElement).value.trim();
-    const message = (document.getElementById('message-bf') as HTMLTextAreaElement).value.trim();
-
-    const lang = window.location.pathname.split('/')[1] || 'fr';
-    const res = await fetch(`/${lang}/bike-fitting/api/contact/`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, message }),
-    });
-
-    const data = await res.json();
-    msg?.classList.remove('hidden', 'text-red-600', 'text-green-600');
-
-    if (data.success) {
-      msg!.textContent = form?.dataset.success ?? '';
-      msg?.classList.add('text-green-600');
-      form.reset();
-    } else {
-      msg!.textContent = form?.dataset.error ?? '';
-      msg?.classList.add('text-red-600');
-    }
-    msg?.classList.remove('hidden');
-  });
-</script>
 
 <style>
   .bf-fade-in {
