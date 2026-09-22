@@ -114,34 +114,53 @@ const metadata = {
   <script>
     import { supabase } from '~/config/supabaseClient';
 
-    const form = document.getElementById('signup-form');
-    const message = document.getElementById('message');
-    const lang = form?.dataset.lang || 'fr'; // fallback fr
-
-    // Role card toggle
-    const roleCards = document.querySelectorAll('.role-card');
-    roleCards.forEach((card) => {
-      card.addEventListener('click', () => {
-        roleCards.forEach((c) => {
-          c.classList.remove('border-primary', 'bg-primary/10');
-          c.classList.add('border-gray-300', 'dark:border-gray-600');
-        });
-        card.classList.remove('border-gray-300', 'dark:border-gray-600');
-        card.classList.add('border-primary', 'bg-primary/10');
-      });
-    });
-
+    // Portée module, délibérément hors de `initSignupForm` : sous `ClientRouter`,
+    // quitter la page puis y revenir rejoue l'initialisation. Des variables
+    // locales remettraient le verrou anti-force-brute à zéro à chaque retour,
+    // ce qui suffirait à le contourner. Le module, lui, survit à la navigation.
     let attemptCount = 0;
     let lockUntil = 0;
 
-    function showMessage(text, isError = true) {
-      if (!message) return;
-      message.textContent = text;
-      message.classList.remove('text-red-600', 'text-green-600');
-      message.classList.add(isError ? 'text-red-600' : 'text-green-600');
-    }
+    // Attache en deux temps, et idempotente :
+    //  - appel à la racine du script -> couvre le premier rendu. `astro:page-load`
+    //    ne suffit pas : il est câblé sur le `load` de window (voir
+    //    astro/dist/transitions/router.js), donc il attend toutes les
+    //    sous-ressources de la page (scripts tiers différés, images, vidéos) —
+    //    plusieurs secondes pendant lesquelles aucun `preventDefault` ne serait
+    //    posé et où ClientRouter récupérerait la soumission ;
+    //  - écouteur `astro:page-load` -> couvre les navigations ClientRouter, un
+    //    script module ne se ré-exécutant jamais après sa première exécution
+    //    dans la session (cache `scriptsAlreadyRan` d'Astro).
+    // Le marqueur `dataset.leadFormBound` posé plus bas rend le double appel sans
+    // effet : un formulaire déjà lié n'est jamais ré-attaché.
+    function initSignupForm() {
+      const form = document.getElementById('signup-form');
+      if (!form || form.dataset.leadFormBound === '1') return;
+      form.dataset.leadFormBound = '1';
 
-    if (form) {
+      const message = document.getElementById('message');
+      const lang = form.dataset.lang || 'fr'; // fallback fr
+
+      // Role card toggle
+      const roleCards = document.querySelectorAll('.role-card');
+      roleCards.forEach((card) => {
+        card.addEventListener('click', () => {
+          roleCards.forEach((c) => {
+            c.classList.remove('border-primary', 'bg-primary/10');
+            c.classList.add('border-gray-300', 'dark:border-gray-600');
+          });
+          card.classList.remove('border-gray-300', 'dark:border-gray-600');
+          card.classList.add('border-primary', 'bg-primary/10');
+        });
+      });
+
+      function showMessage(text, isError = true) {
+        if (!message) return;
+        message.textContent = text;
+        message.classList.remove('text-red-600', 'text-green-600');
+        message.classList.add(isError ? 'text-red-600' : 'text-green-600');
+      }
+
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -209,5 +228,8 @@ const metadata = {
         }
       });
     }
+
+    initSignupForm();
+    document.addEventListener('astro:page-load', initSignupForm);
   </script>
 </Layout>

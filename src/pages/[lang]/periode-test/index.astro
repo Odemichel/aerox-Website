@@ -1,0 +1,66 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '~/layouts/PageLayout.astro';
+import LeadForm from '~/components/widgets/LeadForm.astro';
+import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
+
+export const prerender = true;
+export const getStaticPaths: GetStaticPaths = async () => SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
+
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
+
+const metadata = {
+  title: t(dict, 'testPeriod.meta.title'),
+  description: t(dict, 'testPeriod.meta.description'),
+  robots: { index: true, follow: true },
+  ignoreTitleTemplate: true,
+};
+
+const steps = ['1', '2', '3', '4'];
+const requirements = ['1', '2', '3'];
+---
+
+<Layout metadata={metadata}>
+  <section class="relative not-prose">
+    <div class="mx-auto max-w-4xl px-4 md:px-6 py-16 md:py-20 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tighter mb-4">{t(dict, 'testPeriod.title')}</h1>
+      <p class="text-xl text-muted dark:text-slate-400">{t(dict, 'testPeriod.subtitle')}</p>
+    </div>
+  </section>
+
+  <section class="relative not-prose">
+    <div class="mx-auto max-w-4xl px-4 md:px-6 pb-12 grid gap-10 md:grid-cols-2">
+      <div>
+        <h2 class="text-2xl font-bold mb-4">{t(dict, 'testPeriod.steps.title')}</h2>
+        <ol class="space-y-3">
+          {
+            steps.map((n) => (
+              <li class="flex gap-3">
+                <span class="shrink-0 w-7 h-7 rounded-full bg-primary text-white grid place-items-center text-sm font-bold">
+                  {n}
+                </span>
+                <span class="text-muted dark:text-slate-400">{t(dict, `testPeriod.steps.${n}`)}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold mb-4">{t(dict, 'testPeriod.requirements.title')}</h2>
+        <ul class="space-y-3 list-disc list-inside text-muted dark:text-slate-400">
+          {requirements.map((n) => <li>{t(dict, `testPeriod.requirements.${n}`)}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="reservation" class="relative not-prose scroll-mt-[72px]">
+    <div class="mx-auto max-w-3xl px-4 md:px-6 pb-20">
+      <div class="p-6 md:p-10 rounded-2xl shadow-xl dark:shadow-none dark:border dark:border-slate-600">
+        <h2 class="text-3xl font-bold tracking-tighter mb-8 text-center">{t(dict, 'testPeriod.form.title')}</h2>
+        <LeadForm topic="test-period" />
+      </div>
+    </div>
+  </section>
+</Layout>

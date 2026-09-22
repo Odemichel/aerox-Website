@@ -83,11 +83,26 @@ const metadata = {
   </section>
 
   <script>
+    // Attache en deux temps, et idempotente :
+    //  - appel à la racine du script -> couvre le premier rendu. `astro:page-load`
+    //    ne suffit pas : il est câblé sur le `load` de window (voir
+    //    astro/dist/transitions/router.js), donc il attend toutes les
+    //    sous-ressources de la page (scripts tiers différés, images, vidéos) —
+    //    plusieurs secondes pendant lesquelles aucun `preventDefault` ne serait
+    //    posé et où ClientRouter récupérerait la soumission ;
+    //  - écouteur `astro:page-load` -> couvre les navigations ClientRouter, un
+    //    script module ne se ré-exécutant jamais après sa première exécution
+    //    dans la session (cache `scriptsAlreadyRan` d'Astro).
+    // Le marqueur `dataset.leadFormBound` posé plus bas rend le double appel sans
+    // effet : un formulaire déjà lié n'est jamais ré-attaché.
     async function submitForm(formId: string, msgId: string) {
       const form = document.getElementById(formId) as HTMLFormElement | null;
+      if (!form || form.dataset.leadFormBound === '1') return;
+      form.dataset.leadFormBound = '1';
+
       const msg = document.getElementById(msgId);
 
-      form?.addEventListener('submit', async (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const suffix = formId === 'form-livre' ? 'livre' : 'livre-final';
@@ -117,8 +132,13 @@ const metadata = {
       });
     }
 
-    submitForm('form-livre', 'msg-livre');
-    submitForm('form-livre-final', 'msg-livre-final');
+    function initMethodForms() {
+      submitForm('form-livre', 'msg-livre');
+      submitForm('form-livre-final', 'msg-livre-final');
+    }
+
+    initMethodForms();
+    document.addEventListener('astro:page-load', initMethodForms);
   </script>
 
   <style>

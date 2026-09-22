@@ -320,53 +320,73 @@ const metadata = {
   </section>
 
   <script>
-    const form = document.getElementById('form-tri-dijon') as HTMLFormElement | null;
-    const msg = document.getElementById('msg-tri-dijon');
+    // Attache en deux temps, et idempotente :
+    //  - appel à la racine du script -> couvre le premier rendu. `astro:page-load`
+    //    ne suffit pas : il est câblé sur le `load` de window (voir
+    //    astro/dist/transitions/router.js), donc il attend toutes les
+    //    sous-ressources de la page (scripts tiers différés, images, vidéos) —
+    //    plusieurs secondes pendant lesquelles aucun `preventDefault` ne serait
+    //    posé et où ClientRouter récupérerait la soumission ;
+    //  - écouteur `astro:page-load` -> couvre les navigations ClientRouter, un
+    //    script module ne se ré-exécutant jamais après sa première exécution
+    //    dans la session (cache `scriptsAlreadyRan` d'Astro).
+    // Le marqueur `dataset.leadFormBound` posé plus bas rend le double appel sans
+    // effet : un formulaire déjà lié n'est jamais ré-attaché.
+    function initTriDijonForm() {
+      const form = document.getElementById('form-tri-dijon') as HTMLFormElement | null;
+      if (!form || form.dataset.leadFormBound === '1') return;
+      form.dataset.leadFormBound = '1';
 
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
+      const msg = document.getElementById('msg-tri-dijon');
 
-      const name = (document.getElementById('name-tri-dijon') as HTMLInputElement).value.trim();
-      const email = (document.getElementById('email-tri-dijon') as HTMLInputElement).value.trim();
-      const phone = (document.getElementById('phone-tri-dijon') as HTMLInputElement).value.trim();
-      const betaTester = (document.getElementById('beta-tester-tri-dijon') as HTMLInputElement).checked;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-      const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
-      const originalLabel = submitBtn?.textContent ?? 'Je veux tester en premier';
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Envoi en cours…';
-      }
+        const name = (document.getElementById('name-tri-dijon') as HTMLInputElement).value.trim();
+        const email = (document.getElementById('email-tri-dijon') as HTMLInputElement).value.trim();
+        const phone = (document.getElementById('phone-tri-dijon') as HTMLInputElement).value.trim();
+        const betaTester = (document.getElementById('beta-tester-tri-dijon') as HTMLInputElement).checked;
 
-      try {
-        const res = await fetch('/fr/tri-dijon/api/subscribe/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, phone, betaTester }),
-        });
+        const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+        const originalLabel = submitBtn?.textContent ?? 'Je veux tester en premier';
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Envoi en cours…';
+        }
 
-        const data = await res.json();
-        msg?.classList.remove('hidden', 'text-red-600', 'text-green-600');
+        try {
+          const res = await fetch('/fr/tri-dijon/api/subscribe/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, phone, betaTester }),
+          });
 
-        if (data.success) {
-          msg!.textContent = form.dataset.success ?? '';
-          msg?.classList.add('text-green-600');
-          form.reset();
-        } else {
+          const data = await res.json();
+          msg?.classList.remove('hidden', 'text-red-600', 'text-green-600');
+
+          if (data.success) {
+            msg!.textContent = form.dataset.success ?? '';
+            msg?.classList.add('text-green-600');
+            form.reset();
+          } else {
+            msg!.textContent = form.dataset.error ?? '';
+            msg?.classList.add('text-red-600');
+          }
+          msg?.classList.remove('hidden');
+        } catch (_err) {
           msg!.textContent = form.dataset.error ?? '';
           msg?.classList.add('text-red-600');
+          msg?.classList.remove('hidden');
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalLabel;
+          }
         }
-        msg?.classList.remove('hidden');
-      } catch (_err) {
-        msg!.textContent = form.dataset.error ?? '';
-        msg?.classList.add('text-red-600');
-        msg?.classList.remove('hidden');
-      } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalLabel;
-        }
-      }
-    });
+      });
+    }
+
+    initTriDijonForm();
+    document.addEventListener('astro:page-load', initTriDijonForm);
   </script>
 </Layout>

@@ -1,0 +1,199 @@
+---
+import { type Locale, getDict, t } from '~/lib/i18n';
+
+interface Props {
+  topic: 'test-period' | 'bike-fitter';
+  class?: string;
+}
+
+const { topic, class: className = '' } = Astro.props;
+
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
+
+const isTestPeriod = topic === 'test-period';
+
+/**
+ * Libellés dépendants du topic : `bike-fitter` a son propre jeu de clés
+ * (`bf.form.*`, traduit dans les 9 langues, ton B2B professionnel) resté
+ * distinct des clés `lead.form.*` (traduites en fr/en seulement, ton B2C
+ * pensé pour le topic `test-period`). `lead.form.sending` est la seule clé
+ * partagée par les deux — elle n'a pas d'équivalent `bf.*` et vaut le même
+ * texte pour les deux topics.
+ */
+const LABELS: Record<Props['topic'], Record<'name' | 'email' | 'message' | 'submit' | 'success' | 'error', string>> = {
+  'bike-fitter': {
+    name: 'bf.form.name.placeholder',
+    email: 'bf.form.email.placeholder',
+    message: 'bf.form.message.placeholder',
+    submit: 'bf.form.submit',
+    success: 'bf.form.success',
+    error: 'bf.form.error',
+  },
+  'test-period': {
+    name: 'lead.form.name.placeholder',
+    email: 'lead.form.email.placeholder',
+    message: 'lead.form.message.placeholder',
+    submit: 'lead.form.submit',
+    success: 'lead.form.success',
+    error: 'lead.form.error',
+  },
+};
+const labels = LABELS[topic];
+
+const availabilitySlots = [
+  { value: 'semaine-matin', key: 'lead.form.availability.weekMorning' },
+  { value: 'semaine-apres-midi', key: 'lead.form.availability.weekAfternoon' },
+  { value: 'semaine-soir', key: 'lead.form.availability.weekEvening' },
+  { value: 'weekend-matin', key: 'lead.form.availability.weekendMorning' },
+  { value: 'weekend-apres-midi', key: 'lead.form.availability.weekendAfternoon' },
+  { value: 'weekend-soir', key: 'lead.form.availability.weekendEvening' },
+];
+
+const inputClass = 'w-full border rounded p-3 text-secondary';
+---
+
+<form
+  id={`lead-form-${topic}`}
+  class={`lead-form flex flex-col gap-4 max-w-md mx-auto text-left ${className}`}
+  data-topic={topic}
+  data-success={t(dict, labels.success)}
+  data-error={t(dict, labels.error)}
+  data-sending={t(dict, 'lead.form.sending')}
+>
+  <input type="text" name="name" required placeholder={t(dict, labels.name)} class={inputClass} />
+  <input type="email" name="email" required placeholder={t(dict, labels.email)} class={inputClass} />
+
+  {
+    isTestPeriod && (
+      <>
+        <fieldset class="border-0 p-0 m-0">
+          <legend class="mb-2 font-semibold">{t(dict, 'lead.form.availability.label')}</legend>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {availabilitySlots.map((slot) => (
+              <label class="inline-flex items-center gap-2 text-sm">
+                <input type="checkbox" name="availability" value={slot.value} class="rounded" />
+                {t(dict, slot.key)}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <label class="flex flex-col gap-1">
+          <span class="font-semibold">{t(dict, 'lead.form.trainer.label')}</span>
+          <input type="text" name="trainer" placeholder={t(dict, 'lead.form.trainer.placeholder')} class={inputClass} />
+        </label>
+
+        <fieldset class="border-0 p-0 m-0">
+          <legend class="mb-2 font-semibold">{t(dict, 'lead.form.webcam.label')}</legend>
+          <div class="flex gap-4">
+            <label class="inline-flex items-center gap-2 text-sm">
+              <input type="radio" name="webcam" value="oui" /> {t(dict, 'lead.form.webcam.yes')}
+            </label>
+            <label class="inline-flex items-center gap-2 text-sm">
+              <input type="radio" name="webcam" value="non" /> {t(dict, 'lead.form.webcam.no')}
+            </label>
+          </div>
+        </fieldset>
+      </>
+    )
+  }
+
+  <textarea name="message" rows="3" placeholder={t(dict, labels.message)} class={inputClass}></textarea>
+
+  {/* Honeypot : invisible pour l'humain, rempli par les bots. Jamais de label. */}
+  <input
+    type="text"
+    name="hp"
+    tabindex="-1"
+    autocomplete="off"
+    aria-hidden="true"
+    class="absolute left-[-9999px] w-px h-px opacity-0"
+  />
+
+  <button type="submit" class="btn-primary px-8 py-3 text-lg w-full font-semibold">
+    {t(dict, labels.submit)}
+  </button>
+  <p class="lead-form-msg text-sm mt-2 hidden"></p>
+</form>
+
+<script>
+  // Attache en deux temps, et idempotente :
+  //  - appel à la racine du script -> couvre le premier rendu. `astro:page-load`
+  //    ne suffit pas : il est câblé sur le `load` de window (voir
+  //    astro/dist/transitions/router.js), donc il attend toutes les
+  //    sous-ressources de la page (scripts tiers différés, images, vidéos) —
+  //    plusieurs secondes pendant lesquelles aucun `preventDefault` ne serait
+  //    posé et où ClientRouter récupérerait la soumission ;
+  //  - écouteur `astro:page-load` -> couvre les navigations ClientRouter, un
+  //    script module ne se ré-exécutant jamais après sa première exécution
+  //    dans la session (cache `scriptsAlreadyRan` d'Astro).
+  // Le marqueur `dataset.leadFormBound` posé plus bas rend le double appel sans
+  // effet : un formulaire déjà lié n'est jamais ré-attaché.
+  function initLeadForms() {
+    document.querySelectorAll<HTMLFormElement>('form.lead-form').forEach((form) => {
+      if (form.dataset.leadFormBound === '1') return;
+      form.dataset.leadFormBound = '1';
+
+      const msg = form.querySelector<HTMLParagraphElement>('.lead-form-msg');
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const initialLabel = button?.textContent ?? '';
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!button) {
+          // Soumission annulée par le preventDefault ci-dessus : sans trace, le
+          // visiteur verrait un formulaire inerte et le lead serait perdu en silence.
+          console.error('[LeadForm] bouton submit introuvable, soumission abandonnée', {
+            topic: form.dataset.topic,
+          });
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = form.dataset.sending ?? '…';
+
+        const data = new FormData(form);
+        const payload = {
+          topic: form.dataset.topic,
+          name: String(data.get('name') ?? '').trim(),
+          email: String(data.get('email') ?? '').trim(),
+          message: String(data.get('message') ?? '').trim(),
+          trainer: String(data.get('trainer') ?? '').trim(),
+          webcam: String(data.get('webcam') ?? ''),
+          availability: data.getAll('availability').map(String),
+          hp: String(data.get('hp') ?? ''),
+        };
+
+        const lang = window.location.pathname.split('/')[1] || 'fr';
+
+        let ok = false;
+        try {
+          const res = await fetch(`/${lang}/api/lead/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          ok = res.ok && (await res.json())?.success === true;
+        } catch {
+          ok = false;
+        }
+
+        if (msg) {
+          msg.textContent = (ok ? form.dataset.success : form.dataset.error) ?? '';
+          msg.classList.remove('hidden', 'text-red-600', 'text-green-600');
+          msg.classList.add(ok ? 'text-green-600' : 'text-red-600');
+        }
+
+        if (ok) {
+          form.reset();
+        }
+        button.textContent = initialLabel;
+        button.disabled = false;
+      });
+    });
+  }
+
+  initLeadForms();
+  document.addEventListener('astro:page-load', initLeadForms);
+</script>

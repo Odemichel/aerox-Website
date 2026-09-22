@@ -181,9 +181,6 @@ export interface Price {
   price?: number | string;
   price1?: number | string;
   price2?: number | string;
-  countdownTarget?:targetDate ;
-  countdownTarget1?:targetDate ;
-  countdownTarget2?:targetDate ;
   period?: string;
   items?: Array<Item>;
   period1?: string;

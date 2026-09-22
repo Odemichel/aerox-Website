@@ -69,14 +69,11 @@ export function makeNavigation(langInput?: string) {
     actions: [
       {
         variant: 'primary',
-        text: `
-          <span class="md:hidden">${t('nav.cta.mobile')}</span>
-          <span class="hidden md:inline">${t('nav.cta.desktop')}</span>
-        `,
-        icon: 'tabler:download',
-        href: withLang(lang, '/inscription/inscription/'), // => "/{lang}/#pricing"
+        text: t('cta.testPeriod.text'),
+        icon: 'tabler:calendar-event',
+        href: withLang(lang, '/periode-test/'),
         target: '',
-        subtext: t('nav.cta.subtext'),
+        subtext: t('cta.testPeriod.subtext'),
       },
     ],
   };

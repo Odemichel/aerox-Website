@@ -2,7 +2,6 @@
 import type { GetStaticPaths } from 'astro';
 
 import heroVideo from '~/assets/videos/aerox_hero.mp4';
-import { COUNTDOWN_TARGET } from '~/config/countdown';
 import challengesBadges from '~/assets/images/challengesBadges.jpg';
 import classementCLM from '~/assets/images/classementCLM.jpg';
 import editeurSeance from '~/assets/images/editeurSeance.jpg';
@@ -18,7 +17,6 @@ import Frederic_tete from '~/assets/images/Frederic_tete.jpg';
 import demoPuissance from '~/assets/videos/demo_puissance.mp4';
 
 import Layout from '~/layouts/PageLayout.astro';
-import CountDown from '~/components/widgets/CountDown.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Features from '~/components/widgets/Features.astro';
 import Features2 from '~/components/widgets/Features2.astro';
@@ -57,25 +55,25 @@ const metadata = {
   ignoreTitleTemplate: true,
 };
 const Link_inscription = localizedHref(lang, '/inscription/inscription/');
+const Link_testPeriod = localizedHref(lang, '/periode-test/');
 ---
 <Layout metadata={metadata}>
   <!-- Hero Widget ******************* -->
   <Hero
     id="Accueil"
+    tagline={t(dict, 'home.hero.tagline')}
     actions={[
       {
         variant: 'primary',
-        text: t(dict, 'home.hero.cta.text'),
-        icon: 'tabler:download',
-        subtext: t(dict, 'home.hero.cta.subtext'),
-      href: Link_inscription,
+        text: t(dict, 'cta.testPeriod.text'),
+        icon: 'tabler:calendar-event',
+        subtext: t(dict, 'cta.testPeriod.subtext'),
+        href: Link_testPeriod,
         target: '',
         seo: t(dict, 'home.hero.cta.seo'),
       },
     ]}
   >
-    tagline={t(dict, 'home.hero.tagline')}
-
     <Fragment slot="title">
       <span class="font-bold">
         {t(dict, 'home.hero.title.l1')} <span class="italic font-normal">{t(dict, 'home.hero.title.verb')}</span><br />
@@ -101,10 +99,6 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
 
     <Fragment slot="paragraph">
       <span set:html={t(dict, 'home.hero.paragraph')}></span>
-    </Fragment>
-
-    <Fragment slot="content">
-      {t(dict, 'home.hero.countdown.prefix')} <CountDown targetDate={new Date(COUNTDOWN_TARGET)} /> !
     </Fragment>
   </Hero>
 
@@ -425,10 +419,10 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
     ]}
     callToAction={{
       variant: 'primary',
-      text: t(dict, 'home.testimonials.cta'),
-      href: Link_inscription,
+      text: t(dict, 'cta.testPeriod.text'),
+      href: Link_testPeriod,
       target: '',
-      icon: 'tabler:users',
+      icon: 'tabler:calendar-event',
     }}
   />
 
@@ -539,7 +533,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
 
   <Note title={t(dict, 'home.note4.title')} description={t(dict, 'home.note4.desc')} />
 
-  {/* Section Pricing masquée temporairement — à réactiver après le lancement du 10 avril
+  {/* Section Pricing masquée temporairement — à réactiver à l'ouverture des offres payantes
   <Prices
     title={t(dict, 'home.prices.title')}
     id="pricing"
@@ -562,7 +556,6 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
       {
         title: t(dict, 'home.prices.packPioneer.title'),
         subtitle: t(dict, 'home.prices.packPioneer.subtitle'),
-        countdownTarget: new Date(COUNTDOWN_TARGET),
         price: '20',
         period: t(dict, 'home.prices.packPioneer.period'),
         items: [
@@ -638,7 +631,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
       },
       { title: t(dict, 'home.steps.items.5.title'), icon: 'tabler:check' },
     ]}
-    actions={[{ variant: 'primary', text: t(dict, 'home.steps.cta'), href: Link_inscription, target: '', icon: 'tabler:download' }]}
+    actions={[{ variant: 'primary', text: t(dict, 'cta.testPeriod.text'), href: Link_testPeriod, target: '', icon: 'tabler:calendar-event' }]}
   />
 
   <Note title={t(dict, 'home.note5.title')} description={t(dict, 'home.note5.desc')} />
@@ -690,7 +683,7 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
     subtitle={t(dict, 'home.faq.subtitle')}
     tagline="FAQs"
     classes={{ container: 'max-w-6xl' }}
-    actions={[{ variant: 'primary', text: t(dict, 'home.faq.cta'), href: Link_inscription, target: '' }]}
+    actions={[{ variant: 'primary', text: t(dict, 'cta.testPeriod.text'), href: Link_testPeriod, target: '' }]}
     items={[
       { title: t(dict, 'home.faq.items.1.title'), education: t(dict, 'home.faq.items.1.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.1.more'), defaultOpen: false },
       { title: t(dict, 'home.faq.items.2.title'), education: t(dict, 'home.faq.items.2.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.2.more'), defaultOpen: false },
@@ -745,33 +738,53 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
   </script>
 
   <script>
-    const formLM = document.getElementById('form-leadmagnet') as HTMLFormElement | null;
-    const msgLM = document.getElementById('msg-leadmagnet');
+    // Attache en deux temps, et idempotente :
+    //  - appel à la racine du script -> couvre le premier rendu. `astro:page-load`
+    //    ne suffit pas : il est câblé sur le `load` de window (voir
+    //    astro/dist/transitions/router.js), donc il attend toutes les
+    //    sous-ressources de la page (scripts tiers différés, images, vidéos) —
+    //    plusieurs secondes pendant lesquelles aucun `preventDefault` ne serait
+    //    posé et où ClientRouter récupérerait la soumission ;
+    //  - écouteur `astro:page-load` -> couvre les navigations ClientRouter, un
+    //    script module ne se ré-exécutant jamais après sa première exécution
+    //    dans la session (cache `scriptsAlreadyRan` d'Astro).
+    // Le marqueur `dataset.leadFormBound` posé plus bas rend le double appel sans
+    // effet : un formulaire déjà lié n'est jamais ré-attaché.
+    function initLeadMagnetForm() {
+      const formLM = document.getElementById('form-leadmagnet') as HTMLFormElement | null;
+      if (!formLM || formLM.dataset.leadFormBound === '1') return;
+      formLM.dataset.leadFormBound = '1';
 
-    formLM?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = (document.getElementById('email-leadmagnet') as HTMLInputElement).value.trim();
-      const lang = window.location.pathname.split('/')[1] || 'fr';
+      const msgLM = document.getElementById('msg-leadmagnet');
 
-      const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name: '' }),
+      formLM.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = (document.getElementById('email-leadmagnet') as HTMLInputElement).value.trim();
+        const lang = window.location.pathname.split('/')[1] || 'fr';
+
+        const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, name: '' }),
+        });
+
+        const data = await res.json();
+        msgLM?.classList.remove('hidden', 'text-red-600', 'text-green-600');
+
+        if (data.success) {
+          msgLM!.textContent = formLM?.dataset.success ?? '';
+          msgLM?.classList.add('text-green-600');
+          formLM.reset();
+        } else {
+          msgLM!.textContent = formLM?.dataset.error ?? '';
+          msgLM?.classList.add('text-red-600');
+        }
+        msgLM?.classList.remove('hidden');
       });
+    }
 
-      const data = await res.json();
-      msgLM?.classList.remove('hidden', 'text-red-600', 'text-green-600');
-
-      if (data.success) {
-        msgLM!.textContent = formLM?.dataset.success ?? '';
-        msgLM?.classList.add('text-green-600');
-        formLM.reset();
-      } else {
-        msgLM!.textContent = formLM?.dataset.error ?? '';
-        msgLM?.classList.add('text-red-600');
-      }
-      msgLM?.classList.remove('hidden');
-    });
+    initLeadMagnetForm();
+    document.addEventListener('astro:page-load', initLeadMagnetForm);
   </script>
 
   <script type="application/ld+json" set:html={JSON.stringify({

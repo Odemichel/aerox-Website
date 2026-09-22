@@ -63,18 +63,33 @@ const metadata = {
   <script>
     import { supabase } from '~/config/supabaseClient';
 
-    const form = document.getElementById('login-form');
-    const message = document.getElementById('message');
-    const lang = form?.dataset.lang || 'fr'; // fallback fr
+    // Attache en deux temps, et idempotente :
+    //  - appel à la racine du script -> couvre le premier rendu. `astro:page-load`
+    //    ne suffit pas : il est câblé sur le `load` de window (voir
+    //    astro/dist/transitions/router.js), donc il attend toutes les
+    //    sous-ressources de la page (scripts tiers différés, images, vidéos) —
+    //    plusieurs secondes pendant lesquelles aucun `preventDefault` ne serait
+    //    posé et où ClientRouter récupérerait la soumission ;
+    //  - écouteur `astro:page-load` -> couvre les navigations ClientRouter, un
+    //    script module ne se ré-exécutant jamais après sa première exécution
+    //    dans la session (cache `scriptsAlreadyRan` d'Astro).
+    // Le marqueur `dataset.leadFormBound` posé plus bas rend le double appel sans
+    // effet : un formulaire déjà lié n'est jamais ré-attaché.
+    function initLoginForm() {
+      const form = document.getElementById('login-form');
+      if (!form || form.dataset.leadFormBound === '1') return;
+      form.dataset.leadFormBound = '1';
 
-    function showMessage(text, isError = true) {
-      if (!message) return;
-      message.textContent = text;
-      message.classList.remove('text-red-600', 'text-green-600');
-      message.classList.add(isError ? 'text-red-600' : 'text-green-600');
-    }
+      const message = document.getElementById('message');
+      const lang = form.dataset.lang || 'fr'; // fallback fr
 
-    if (form) {
+      function showMessage(text, isError = true) {
+        if (!message) return;
+        message.textContent = text;
+        message.classList.remove('text-red-600', 'text-green-600');
+        message.classList.add(isError ? 'text-red-600' : 'text-green-600');
+      }
+
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -101,5 +116,8 @@ const metadata = {
         }
       });
     }
+
+    initLoginForm();
+    document.addEventListener('astro:page-load', initLoginForm);
   </script>
 </Layout>
