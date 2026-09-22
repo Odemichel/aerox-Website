@@ -101,11 +101,29 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (body.product) {
       // --- Chemin « vente d'un produit » : tout est décidé ici, côté serveur.
-      const lookupKey = PRODUCT_PRICE_LOOKUP_KEYS[body.product];
-      if (!lookupKey) {
+      //
+      // `Object.hasOwn` et non la véracité de la valeur trouvée : la table est
+      // un objet littéral, elle hérite donc de `Object.prototype`. Une garde
+      // `if (!lookupKey)` laissait passer `__proto__` (un objet) et
+      // `constructor` (une fonction), tous deux « truthy ». La valeur
+      // non-textuelle ne faisait pas échouer l'appel Stripe : le sérialiseur
+      // du SDK la supprimait silencieusement, l'appel devenait
+      // `prices.list({ active: true })` — tous les prix actifs du compte — et
+      // le code retenait `data[0].id`. Le prix facturé redevenait une
+      // conséquence d'une valeur du corps. Seul le webhook, qui exige
+      // `product === 'diagnostic'`, empêchait le déblocage : une sûreté
+      // située dans un autre fichier, donc circonstancielle.
+      //
+      // On teste l'appartenance plutôt que le type de la valeur (`typeof
+      // lookupKey !== 'string'`) : les deux ferment la faille aujourd'hui,
+      // mais l'appartenance dit exactement l'invariant voulu — « ce produit
+      // est-il au catalogue ? » — sans dépendre de la forme de ce que
+      // `Object.prototype` expose.
+      if (!Object.hasOwn(PRODUCT_PRICE_LOOKUP_KEYS, body.product)) {
         console.error('create-api-checkout: produit inconnu —', body.product);
         return fail(400, 'E_PRODUCT');
       }
+      const lookupKey = PRODUCT_PRICE_LOOKUP_KEYS[body.product];
 
       const user = await authenticatedUser(request);
       if (!user) return fail(401, 'E_AUTH');
