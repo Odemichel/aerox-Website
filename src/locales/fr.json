@@ -35,8 +35,8 @@
   "home.hero.subtitle": "Mesure ta surface frontale en temps réel, optimise ta position et transforme chaque watt en vitesse. Compatible Wahoo, Elite, Tacx, Saris.",
   "home.hero.paragraph": "Gagne jusqu'à&nbsp;<span class=\"font-bold text-accent\">3&#8239;km/h</span>, économise&nbsp;<span class=\"font-bold text-accent\">40&#8239;W<br /></span> avec une simple webcam.",
   "home.hero.countdown.prefix": "Plus que",
-  "home.hero.cta.text": "Essaie AeroX maintenant",
-  "home.hero.cta.subtext": "Réservé aux pionniers AeroX",
+  "cta.testPeriod.text": "Programme ta période de test",
+  "cta.testPeriod.subtext": "Séance accompagnée, sur rendez-vous",
   "home.hero.cta.seo": "Télécharger AeroX, application de cyclisme indoor avec aérodynamisme",
   "home.herovideo.alt": "Démonstration AeroX",
 
@@ -123,7 +123,6 @@
   "home.testimonials.items.frederic.imgAlt": "Frédéric Petit, cycliste amateur et utilisateur AeroX",
   "home.testimonials.items.olivier.imgAlt": "Olivier Demichel, fondateur AeroX et chercheur CNRS",
   "home.testimonials.items.james.imgAlt": "James Ropert, coach cyclisme et utilisateur AeroX",
-  "home.testimonials.cta": "Rejoins les pionniers AeroX",
   "livre.testimonials.title": "Témoignages",
   "livre.testimonials.subtitle": "Ce que les lecteurs disent de notre livre",
 
@@ -209,11 +208,9 @@
   "home.steps.items.4.title": "Étape 4: <span class=\"font-semibold\">Connecte ton home-trainer (20 sec)</span>",
   "home.steps.items.4.desc": "La détection se fait en Bluetooth — rapide et sans configuration complexe. AeroX détecte ton home-trainer et ton cardio. Choisis tes équipements, la connexion sera ensuite automatique. Compatible avec Wahoo, Elite, Tacx, Saris, Kickr, Suito, Zwift, etc. Fonctionne avec Garmin, Polar, Suunto pour la fréquence cardiaque.",
   "home.steps.items.5.title": "Pédale!",
-  "home.steps.cta": "Télécharge AeroX",
 
   "home.faq.title": "Nos réponses à vos questions",
   "home.faq.subtitle": "Questions fréquentes",
-  "home.faq.cta": "Écris ton futur avec AeroX",
 
   "home.faq.items.1.title": "Pourquoi AeroX ?",
   "home.faq.items.1.more": "80 % de ton effort combat l'air — AeroX te montre où le récupérer",
@@ -298,10 +295,6 @@
   "nav.blog": "Blog Aéro",
   "nav.book":"La Méthode AeroX",
   "nav.login": "Connexion",
-
-  "nav.cta.mobile": "Télécharger",
-  "nav.cta.desktop": "Je\u00a0teste\u00a0AeroX",
-  "nav.cta.subtext": "Réservé aux pionniers AeroX",
 
   "footer.contact.title": "Contact",
   "footer.team": "Équipe",
