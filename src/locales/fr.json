@@ -728,6 +728,25 @@
 "cda.conclusion.h2": "Le CdA, le levier de performance négligé",
 "cda.conclusion.p1": "La plupart des cyclistes investissent dans la puissance (entraînement, nutrition) et le matériel (cadre, roues) mais négligent le CdA, qui est pourtant le facteur le plus impactant sur la vitesse au-delà de 25 km/h. Mesurer et optimiser son CdA est aujourd'hui accessible à tous grâce à des outils comme AeroX.",
 "cda.cta": "Mesurer mon CdA avec AeroX",
-"cda.lastUpdated": "Dernière mise à jour : mars 2026. Données basées sur 300+ sessions AeroX et la littérature scientifique en aérodynamisme cycliste."
+"cda.lastUpdated": "Dernière mise à jour : mars 2026. Données basées sur 300+ sessions AeroX et la littérature scientifique en aérodynamisme cycliste.",
+  "lead.form.name.placeholder": "Ton prénom et ton nom",
+  "lead.form.email.placeholder": "Ton email",
+  "lead.form.message.placeholder": "Une question, une précision ?",
+  "lead.form.trainer.label": "Ton home-trainer",
+  "lead.form.trainer.placeholder": "Marque et modèle (ex. Tacx Neo 2T)",
+  "lead.form.webcam.label": "As-tu une webcam ?",
+  "lead.form.webcam.yes": "Oui",
+  "lead.form.webcam.no": "Non",
+  "lead.form.availability.label": "Tes disponibilités",
+  "lead.form.availability.weekMorning": "Semaine — matin",
+  "lead.form.availability.weekAfternoon": "Semaine — après-midi",
+  "lead.form.availability.weekEvening": "Semaine — soir",
+  "lead.form.availability.weekendMorning": "Week-end — matin",
+  "lead.form.availability.weekendAfternoon": "Week-end — après-midi",
+  "lead.form.availability.weekendEvening": "Week-end — soir",
+  "lead.form.submit": "Envoyer ma demande",
+  "lead.form.sending": "Envoi…",
+  "lead.form.success": "C'est noté. Olivier te recontacte pour caler ton créneau.",
+  "lead.form.error": "L'envoi a échoué. Réessaie dans un instant."
 }
 
