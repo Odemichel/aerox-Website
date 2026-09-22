@@ -35,6 +35,9 @@
   "home.hero.subtitle": "Measure your frontal area in real time, optimize your position and turn every watt into speed. Compatible with Wahoo, Elite, Tacx, Saris.",
   "home.hero.paragraph": "Gain up to&nbsp;<span class=\"font-bold text-accent\">3&#8239;km/h</span>, save&nbsp;<span class=\"font-bold text-accent\">40&#8239;W<br /></span> — with just a webcam.",
   "home.hero.countdown.prefix": "Only",
+  "cta.preorder.text": "Pre-order your AeroX Diagnostic",
+  "cta.preorder.subtext": "−40% until 31 October · delivered 1 November",
+  "cta.bikefitter.text": "Bike fitters: book a demo",
   "cta.testPeriod.text": "Book your test session",
   "cta.testPeriod.subtext": "Guided session, by appointment",
   "home.hero.cta.seo": "Download AeroX, an indoor-cycling app with aerodynamics",
@@ -383,7 +386,7 @@
   "pricing.b2b.items.1": "Volume-based pricing",
   "pricing.b2b.items.2": "Multi-client tracking",
   "pricing.b2b.items.3": "Hands-on onboarding",
-  "pricing.b2b.cta": "Contact us",
+  "pricing.b2b.cta": "Contact us to use AeroX",
 
   "success.meta.title": "Payment successful",
   "success.meta.description": "Thank you for supporting AeroX. Welcome to the future of indoor training.",

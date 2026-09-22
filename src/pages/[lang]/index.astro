@@ -54,7 +54,11 @@ const metadata = {
   robots: { index: true, follow: true },
   ignoreTitleTemplate: true,
 };
-const Link_testPeriod = localizedHref(lang, '/periode-test/');
+// Les CTA de l'accueil s'adressent au cycliste : ils mènent à la
+// pré-réservation du Diagnostic, pas à l'agenda — qui est le tunnel
+// bike-fitter (voir /bike-fitting/).
+const Link_preorder = localizedHref(lang, '/#pricing');
+const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
 ---
 <Layout metadata={metadata}>
   <!-- Hero Widget ******************* -->
@@ -64,12 +68,19 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
     actions={[
       {
         variant: 'primary',
-        text: t(dict, 'cta.testPeriod.text'),
-        icon: 'tabler:calendar-event',
-        subtext: t(dict, 'cta.testPeriod.subtext'),
-        href: Link_testPeriod,
+        text: t(dict, 'cta.preorder.text'),
+        icon: 'tabler:discount-2',
+        subtext: t(dict, 'cta.preorder.subtext'),
+        href: Link_preorder,
         target: '',
         seo: t(dict, 'home.hero.cta.seo'),
+      },
+      {
+        variant: 'secondary',
+        text: t(dict, 'cta.bikefitter.text'),
+        icon: 'tabler:tool',
+        href: Link_bikeFitting,
+        target: '',
       },
     ]}
   >
@@ -300,7 +311,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
         callToAction: {
           variant: 'primary',
           text: t(dict, 'home.features2.items.power.cta'),
-          href: Link_testPeriod,
+          href: Link_preorder,
           target: '',
           icon: 'tabler:bolt-filled',
         },
@@ -314,7 +325,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
         callToAction: {
           variant: 'primary',
           text: t(dict, 'home.features2.items.speed.cta'),
-          href: Link_testPeriod,
+          href: Link_preorder,
           target: '',
           icon: 'tabler:player-play-filled',
         },
@@ -328,7 +339,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
         callToAction: {
           variant: 'primary',
           text: t(dict, 'home.features2.items.sim.cta'),
-          href: Link_testPeriod,
+          href: Link_preorder,
           target: '',
           icon: 'tabler:bike-filled',
         },
@@ -342,7 +353,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
         callToAction: {
           variant: 'primary',
           text: t(dict, 'home.features2.items.tt.cta'),
-          href: Link_testPeriod,
+          href: Link_preorder,
           target: '',
           icon: 'tabler:download',
         },
@@ -356,7 +367,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
         callToAction: {
           variant: 'primary',
           text: t(dict, 'home.features2.items.challenges.cta'),
-          href: Link_testPeriod,
+          href: Link_preorder,
           target: '',
           icon: 'tabler:arrow-badge-up-filled',
         },
@@ -370,7 +381,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
         callToAction: {
           variant: 'primary',
           text: t(dict, 'home.features2.items.editor.cta'),
-          href: Link_testPeriod,
+          href: Link_preorder,
           target: '',
           icon: 'tabler:pencil-cog',
         },
@@ -418,8 +429,8 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
     ]}
     callToAction={{
       variant: 'primary',
-      text: t(dict, 'cta.testPeriod.text'),
-      href: Link_testPeriod,
+      text: t(dict, 'cta.preorder.text'),
+      href: Link_preorder,
       target: '',
       icon: 'tabler:calendar-event',
     }}
@@ -443,7 +454,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
         classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
         callToAction: {
           text: t(dict, 'home.features.items.gain.cta'),
-          href: Link_testPeriod,
+          href: Link_preorder,
           target: '',
           icon: 'tabler:download',
           variant: 'primary',
@@ -462,7 +473,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
         classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
         callToAction: {
           text: t(dict, 'home.features.items.real.cta'),
-          href: Link_testPeriod,
+          href: Link_preorder,
           target: '',
           icon: 'tabler:bolt',
           variant: 'primary',
@@ -480,7 +491,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
         classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
         callToAction: {
           text: t(dict, 'home.features.items.pro.cta'),
-          href: Link_testPeriod,
+          href: Link_preorder,
           target: '',
           icon: 'tabler:download',
           variant: 'primary',
@@ -498,7 +509,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
         classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
         callToAction: {
           text: t(dict, 'home.features.items.cost.cta'),
-          href: Link_testPeriod,
+          href: Link_preorder,
           target: '',
           icon: 'tabler:currency-euro',
           variant: 'primary',
@@ -516,7 +527,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
         classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
         callToAction: {
           text: t(dict, 'home.features.items.proof.cta'),
-          href: Link_testPeriod,
+          href: Link_preorder,
           target: '',
           icon: 'tabler:download',
           variant: 'primary',
@@ -568,7 +579,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
       },
       { title: t(dict, 'home.steps.items.5.title'), icon: 'tabler:check' },
     ]}
-    actions={[{ variant: 'primary', text: t(dict, 'cta.testPeriod.text'), href: Link_testPeriod, target: '', icon: 'tabler:calendar-event' }]}
+    actions={[{ variant: 'primary', text: t(dict, 'cta.preorder.text'), href: Link_preorder, target: '', icon: 'tabler:calendar-event' }]}
   />
 
   <Note title={t(dict, 'home.note5.title')} description={t(dict, 'home.note5.desc')} />
@@ -620,7 +631,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
     subtitle={t(dict, 'home.faq.subtitle')}
     tagline="FAQs"
     classes={{ container: 'max-w-6xl' }}
-    actions={[{ variant: 'primary', text: t(dict, 'cta.testPeriod.text'), href: Link_testPeriod, target: '' }]}
+    actions={[{ variant: 'primary', text: t(dict, 'cta.preorder.text'), href: Link_preorder, target: '' }]}
     items={[
       { title: t(dict, 'home.faq.items.1.title'), education: t(dict, 'home.faq.items.1.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.1.more'), defaultOpen: false },
       { title: t(dict, 'home.faq.items.2.title'), education: t(dict, 'home.faq.items.2.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.2.more'), defaultOpen: false },

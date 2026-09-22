@@ -69,11 +69,11 @@ export function makeNavigation(langInput?: string) {
     actions: [
       {
         variant: 'primary',
-        text: t('cta.testPeriod.text'),
-        icon: 'tabler:calendar-event',
-        href: withLang(lang, '/periode-test/'),
+        text: t('cta.preorder.text'),
+        icon: 'tabler:discount-2',
+        href: withLang(lang, '#pricing'),
         target: '',
-        subtext: t('cta.testPeriod.subtext'),
+        subtext: t('cta.preorder.subtext'),
       },
     ],
   };
