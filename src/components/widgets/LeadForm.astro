@@ -57,127 +57,131 @@ const labels = LABELS[topic];
 const inputClass = 'w-full border rounded p-3 text-secondary';
 ---
 
-{
-  showBooking && (
-    <div id={`lead-booking-${topic}`} class="lead-form-booking w-full mb-10">
-      {/*
-        Mention du fuseau : l'agenda affiche les créneaux à l'heure de Paris
-        quel que soit le fuseau du visiteur — vérifié depuis Europe/Paris,
-        Asia/Tokyo et America/New_York, la page lit bien le fuseau simulé et
-        affiche Paris dans les trois cas, et les paramètres `ctz`/`tz` sont
-        ignorés. Google l'étiquette « Central European Time - Paris », mais
-        en anglais uniquement : sur les 8 autres langues du site, la mention
-        ci-dessous est la seule indication lisible.
-      */}
-      <p class="text-sm mb-3 text-center text-muted dark:text-slate-400">{t(dict, 'lead.form.booking.timezone')}</p>
-      {/*
-        Agenda affiché d'emblée : réserver ne doit demander aucun clic
-        préalable. `loading="lazy"` diffère malgré tout la connexion à Google
-        jusqu'à ce que le bloc approche de la fenêtre — natif, sans JS.
-      */}
-      <iframe
-        class="lead-booking-frame w-full h-[1000px] sm:h-[720px] rounded-lg border-0"
-        src={bookingEmbedUrl}
-        loading="lazy"
-        title={t(dict, 'lead.form.booking.title')}
+<div class={showBooking ? 'grid items-start gap-8 xl:grid-cols-12' : ''}>
+  {
+    showBooking && (
+      <div id={`lead-booking-${topic}`} class="lead-form-booking xl:col-span-7">
+        {/*
+          `color-scheme: light` force l'agenda en clair. Sans elle, Google suit
+          le thème du visiteur : en sombre son fond devient transparent, le
+          fond bleu du site traverse et le texte gris devient illisible.
+          La propriété s'applique bien au document encadré (vérifié sur WebKit
+          et Chromium) ; `bg-white` couvre l'instant précédant le chargement.
+        */}
+        <iframe
+          class="lead-booking-frame w-full h-[900px] md:h-[700px] rounded-xl border-0 bg-white [color-scheme:light]"
+          src={bookingEmbedUrl}
+          loading="lazy"
+          title={t(dict, 'lead.form.booking.title')}
+        />
+        {/*
+          Fuseau : l'agenda affiche les créneaux à l'heure de Paris quel que
+          soit celui du visiteur — vérifié depuis Europe/Paris, Asia/Tokyo et
+          America/New_York. Google l'étiquette lui-même, mais en anglais
+          seulement : sur les 8 autres langues, cette ligne est la seule
+          indication lisible. Le lien de repli reste visible en permanence :
+          l'iframe peut rester vide sans qu'aucun événement JS ne le signale
+          (blocage des contenus tiers).
+        */}
+        <p class="mt-3 text-xs text-muted dark:text-slate-400">
+          {t(dict, 'lead.form.booking.timezone')} {t(dict, 'lead.form.booking.intro')}{' '}
+          <a href={bookingUrl} target="_blank" rel="noopener noreferrer" class="underline">
+            {t(dict, 'lead.form.booking.cta')}
+          </a>
+        </p>
+      </div>
+    )
+  }
+
+  <div class={showBooking ? 'xl:col-span-5' : ''}>
+    <form
+      id={`lead-form-${topic}`}
+      class={`lead-form flex w-full flex-col gap-4 text-left ${showBooking ? '' : 'mx-auto max-w-md'} ${className}`}
+      data-topic={topic}
+      data-success={t(dict, labels.success)}
+      data-error={t(dict, labels.error)}
+      data-sending={t(dict, 'lead.form.sending')}
+    >
+      {
+        isTestPeriod && (
+          <fieldset class="border-0 p-0 m-0">
+            <legend class="mb-2 font-semibold">{t(dict, 'lead.form.profile.label')}</legend>
+            <div class="grid grid-cols-2 gap-3">
+              <label
+                class="profile-card flex flex-col items-center gap-1 p-4 border-2 rounded-lg cursor-pointer transition-all border-primary bg-primary/10"
+                data-profile="rider"
+              >
+                <input type="radio" name="profile_type" value="rider" checked class="sr-only" />
+                <span class="text-sm font-semibold">{t(dict, 'lead.form.profile.rider')}</span>
+                <span class="text-xs text-gray-600 dark:text-gray-400 text-center">
+                  {t(dict, 'lead.form.profile.rider.desc')}
+                </span>
+              </label>
+              <label
+                class="profile-card flex flex-col items-center gap-1 p-4 border-2 rounded-lg cursor-pointer transition-all border-gray-300 dark:border-gray-600"
+                data-profile="bike-fitter"
+              >
+                <input type="radio" name="profile_type" value="bike-fitter" class="sr-only" />
+                <span class="text-sm font-semibold">{t(dict, 'lead.form.profile.bikefitter')}</span>
+                <span class="text-xs text-gray-600 dark:text-gray-400 text-center">
+                  {t(dict, 'lead.form.profile.bikefitter.desc')}
+                </span>
+              </label>
+            </div>
+          </fieldset>
+        )
+      }
+
+      <input type="text" name="name" required placeholder={t(dict, labels.name)} class={inputClass} />
+      <input type="email" name="email" required placeholder={t(dict, labels.email)} class={inputClass} />
+
+      {
+        isTestPeriod && (
+          <>
+            <label class="flex flex-col gap-1">
+              <span class="font-semibold">{t(dict, 'lead.form.trainer.label')}</span>
+              <input
+                type="text"
+                name="trainer"
+                placeholder={t(dict, 'lead.form.trainer.placeholder')}
+                class={inputClass}
+              />
+            </label>
+
+            <fieldset class="border-0 p-0 m-0">
+              <legend class="mb-2 font-semibold">{t(dict, 'lead.form.webcam.label')}</legend>
+              <div class="flex gap-4">
+                <label class="inline-flex items-center gap-2 text-sm">
+                  <input type="radio" name="webcam" value="oui" /> {t(dict, 'lead.form.webcam.yes')}
+                </label>
+                <label class="inline-flex items-center gap-2 text-sm">
+                  <input type="radio" name="webcam" value="non" /> {t(dict, 'lead.form.webcam.no')}
+                </label>
+              </div>
+            </fieldset>
+          </>
+        )
+      }
+
+      <textarea name="message" rows="3" placeholder={t(dict, labels.message)} class={inputClass}></textarea>
+
+      {/* Honeypot : invisible pour l'humain, rempli par les bots. Jamais de label. */}
+      <input
+        type="text"
+        name="hp"
+        tabindex="-1"
+        autocomplete="off"
+        aria-hidden="true"
+        class="absolute left-[-9999px] w-px h-px opacity-0"
       />
-      {/*
-        Repli permanent, pas un message d'erreur : l'iframe peut rester vide
-        sans qu'aucun événement JS ne le signale (blocage des contenus tiers,
-        extension de vie privée). Le lien est donc toujours visible.
-      */}
-      <p class="text-sm mt-3 text-center text-muted dark:text-slate-400">
-        {t(dict, 'lead.form.booking.intro')}{' '}
-        <a href={bookingUrl} target="_blank" rel="noopener noreferrer" class="underline font-semibold">
-          {t(dict, 'lead.form.booking.cta')}
-        </a>
-      </p>
-    </div>
-  )
-}
 
-<form
-  id={`lead-form-${topic}`}
-  class={`lead-form flex flex-col gap-4 max-w-md mx-auto text-left ${className}`}
-  data-topic={topic}
-  data-success={t(dict, labels.success)}
-  data-error={t(dict, labels.error)}
-  data-sending={t(dict, 'lead.form.sending')}
->
-  {
-    isTestPeriod && (
-      <fieldset class="border-0 p-0 m-0">
-        <legend class="mb-2 font-semibold">{t(dict, 'lead.form.profile.label')}</legend>
-        <div class="grid grid-cols-2 gap-3">
-          <label
-            class="profile-card flex flex-col items-center gap-1 p-4 border-2 rounded-lg cursor-pointer transition-all border-primary bg-primary/10"
-            data-profile="rider"
-          >
-            <input type="radio" name="profile_type" value="rider" checked class="sr-only" />
-            <span class="text-sm font-semibold">{t(dict, 'lead.form.profile.rider')}</span>
-            <span class="text-xs text-gray-600 dark:text-gray-400 text-center">
-              {t(dict, 'lead.form.profile.rider.desc')}
-            </span>
-          </label>
-          <label
-            class="profile-card flex flex-col items-center gap-1 p-4 border-2 rounded-lg cursor-pointer transition-all border-gray-300 dark:border-gray-600"
-            data-profile="bike-fitter"
-          >
-            <input type="radio" name="profile_type" value="bike-fitter" class="sr-only" />
-            <span class="text-sm font-semibold">{t(dict, 'lead.form.profile.bikefitter')}</span>
-            <span class="text-xs text-gray-600 dark:text-gray-400 text-center">
-              {t(dict, 'lead.form.profile.bikefitter.desc')}
-            </span>
-          </label>
-        </div>
-      </fieldset>
-    )
-  }
-
-  <input type="text" name="name" required placeholder={t(dict, labels.name)} class={inputClass} />
-  <input type="email" name="email" required placeholder={t(dict, labels.email)} class={inputClass} />
-
-  {
-    isTestPeriod && (
-      <>
-        <label class="flex flex-col gap-1">
-          <span class="font-semibold">{t(dict, 'lead.form.trainer.label')}</span>
-          <input type="text" name="trainer" placeholder={t(dict, 'lead.form.trainer.placeholder')} class={inputClass} />
-        </label>
-
-        <fieldset class="border-0 p-0 m-0">
-          <legend class="mb-2 font-semibold">{t(dict, 'lead.form.webcam.label')}</legend>
-          <div class="flex gap-4">
-            <label class="inline-flex items-center gap-2 text-sm">
-              <input type="radio" name="webcam" value="oui" /> {t(dict, 'lead.form.webcam.yes')}
-            </label>
-            <label class="inline-flex items-center gap-2 text-sm">
-              <input type="radio" name="webcam" value="non" /> {t(dict, 'lead.form.webcam.no')}
-            </label>
-          </div>
-        </fieldset>
-      </>
-    )
-  }
-
-  <textarea name="message" rows="3" placeholder={t(dict, labels.message)} class={inputClass}></textarea>
-
-  {/* Honeypot : invisible pour l'humain, rempli par les bots. Jamais de label. */}
-  <input
-    type="text"
-    name="hp"
-    tabindex="-1"
-    autocomplete="off"
-    aria-hidden="true"
-    class="absolute left-[-9999px] w-px h-px opacity-0"
-  />
-
-  <button type="submit" class="btn-primary px-8 py-3 text-lg w-full font-semibold">
-    {t(dict, labels.submit)}
-  </button>
-  <p class="lead-form-msg text-sm mt-2 hidden"></p>
-</form>
-
+      <button type="submit" class="btn-primary px-8 py-3 text-lg w-full font-semibold">
+        {t(dict, labels.submit)}
+      </button>
+      <p class="lead-form-msg text-sm mt-2 hidden"></p>
+    </form>
+  </div>
+</div>
 
 <script>
   // Attache en deux temps, et idempotente :
