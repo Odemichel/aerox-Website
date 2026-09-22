@@ -87,14 +87,15 @@ Deno.serve(async (req) => {
     // Nom du visiteur pour le sujet : pas d'échappement HTML (ce n'est pas du HTML),
     // nettoyage des caractères de contrôle pour défense en profondeur.
     // On retire aussi les caractères invisibles et bidirectionnels : U+200B-U+200F,
-    // U+202A-U+202E et U+2066-U+2069 permettent de retourner l'affichage du sujet
-    // dans le client mail du destinataire (usurpation visuelle), U+2028/U+2029 sont
-    // des sauts de ligne Unicode, U+007F et U+0085 des contrôles hors \x00-\x1f.
+    // U+202A-U+202E, U+2066-U+2069 et U+061C (ALM) permettent de retourner ou de
+    // masquer l'affichage du sujet dans le client mail du destinataire (usurpation
+    // visuelle), U+2028/U+2029 sont des sauts de ligne Unicode, U+FEFF un espace
+    // insécable de largeur nulle, U+007F et U+0085 des contrôles hors \x00-\x1f.
     const subjectName = (
       typeof (fields as Record<string, unknown>).name === "string"
         ? String((fields as Record<string, unknown>).name)
         : ""
-    ).replace(/[\r\n\x00-\x1f\u007f\u0085\u200b-\u200f\u2028\u2029\u202a-\u202e\u2066-\u2069]/g, "");
+    ).replace(/[\r\n\x00-\x1f\u007f\u0085\u061c\u200b-\u200f\u2028\u2029\u202a-\u202e\u2066-\u2069\ufeff]/g, "");
 
     const htmlBody = `
 <!DOCTYPE html>
