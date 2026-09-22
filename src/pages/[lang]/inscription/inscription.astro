@@ -114,6 +114,13 @@ const metadata = {
   <script>
     import { supabase } from '~/config/supabaseClient';
 
+    // Portée module, délibérément hors de `initSignupForm` : sous `ClientRouter`,
+    // quitter la page puis y revenir rejoue l'initialisation. Des variables
+    // locales remettraient le verrou anti-force-brute à zéro à chaque retour,
+    // ce qui suffirait à le contourner. Le module, lui, survit à la navigation.
+    let attemptCount = 0;
+    let lockUntil = 0;
+
     // Idempotent et rejoué à chaque `astro:page-load` (premier chargement
     // inclus) : un script module ne se ré-exécute jamais après sa première
     // exécution dans la session (ClientRouter actif), donc un appel
@@ -138,9 +145,6 @@ const metadata = {
           card.classList.add('border-primary', 'bg-primary/10');
         });
       });
-
-      let attemptCount = 0;
-      let lockUntil = 0;
 
       function showMessage(text, isError = true) {
         if (!message) return;
