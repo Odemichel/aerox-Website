@@ -30,6 +30,7 @@ const {
               title,
               subtitle,
               price,
+              priceLabel,
               period,
               items,
               callToAction,
@@ -135,17 +136,21 @@ const {
                     {/* ----- Prix ----- */}
                     <div class="my-8">
                       {!hasChoice ? (
-                        <>
-                          <div class="flex flex-col items-center justify-center text-center mb-1">
+                        <div class="flex flex-col items-center justify-center text-center mb-1">
+                          {price !== undefined && price !== '' ? (
                             <div class="flex items-center justify-center">
                               <span class="text-5xl">€</span>
                               <span class="text-6xl font-extrabold">{price}</span>
                             </div>
-                            <span class="text-base leading-6 lowercase text-gray-600 dark:text-slate-400">
-                              {period}
-                            </span>
-                          </div>
-                        </>
+                          ) : (
+                            <div class="flex items-center justify-center">
+                              <span class="text-4xl font-extrabold">{priceLabel}</span>
+                            </div>
+                          )}
+                          <span class="text-base leading-6 lowercase text-gray-600 dark:text-slate-400">
+                            {period}
+                          </span>
+                        </div>
                       ) : (
                         <>
                           <div class="flex flex-col items-center justify-center text-center mb-4" data-v="1">
