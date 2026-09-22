@@ -24,11 +24,23 @@ const dictionaries: Record<Locale, Record<string, string>> = {
   tr: tr as Record<string, string>,
 };
 
+/**
+ * Fusionne un dictionnaire de locale sur un socle. Les deux entrées sont
+ * laissées intactes. Utilisé pour que l'anglais serve de filet : une clé
+ * absente de la locale s'affiche en anglais, jamais en brut.
+ */
+export function mergeDicts(
+  base: Record<string, string>,
+  locale: Record<string, string>,
+): Record<string, string> {
+  return { ...base, ...locale };
+}
+
 export function getDict(lang: string): Record<string, string> {
   const l = (SUPPORTED_LOCALES as readonly string[]).includes(lang)
     ? (lang as Locale)
     : DEFAULT_LOCALE;
-  return dictionaries[l];
+  return mergeDicts(dictionaries[DEFAULT_LOCALE], dictionaries[l]);
 }
 
 export function t(
