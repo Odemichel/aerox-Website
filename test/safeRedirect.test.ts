@@ -52,4 +52,9 @@ describe('safeRedirect', () => {
   it('refuse un chemin trop long', () => {
     expect(safeRedirect('/' + 'a'.repeat(2048), FALLBACK)).toBe(FALLBACK);
   });
+
+  it('refuse les caractères de contrôle encodés, révélés seulement après décodage', () => {
+    expect(safeRedirect('/%00javascript:alert(1)', FALLBACK)).toBe(FALLBACK);
+    expect(safeRedirect('/fr/%0ASet-Cookie: x=1', FALLBACK)).toBe(FALLBACK);
+  });
 });
