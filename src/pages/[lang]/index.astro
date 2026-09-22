@@ -422,7 +422,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
       text: t(dict, 'cta.testPeriod.text'),
       href: Link_testPeriod,
       target: '',
-      icon: 'tabler:users',
+      icon: 'tabler:calendar-event',
     }}
   />
 
@@ -533,7 +533,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
 
   <Note title={t(dict, 'home.note4.title')} description={t(dict, 'home.note4.desc')} />
 
-  {/* Section Pricing masquée temporairement — à réactiver après le lancement du 10 avril
+  {/* Section Pricing masquée temporairement — à réactiver à l'ouverture des offres payantes
   <Prices
     title={t(dict, 'home.prices.title')}
     id="pricing"
@@ -556,7 +556,6 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
       {
         title: t(dict, 'home.prices.packPioneer.title'),
         subtitle: t(dict, 'home.prices.packPioneer.subtitle'),
-        countdownTarget: new Date(COUNTDOWN_TARGET),
         price: '20',
         period: t(dict, 'home.prices.packPioneer.period'),
         items: [
@@ -632,7 +631,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
       },
       { title: t(dict, 'home.steps.items.5.title'), icon: 'tabler:check' },
     ]}
-    actions={[{ variant: 'primary', text: t(dict, 'cta.testPeriod.text'), href: Link_testPeriod, target: '', icon: 'tabler:download' }]}
+    actions={[{ variant: 'primary', text: t(dict, 'cta.testPeriod.text'), href: Link_testPeriod, target: '', icon: 'tabler:calendar-event' }]}
   />
 
   <Note title={t(dict, 'home.note5.title')} description={t(dict, 'home.note5.desc')} />
