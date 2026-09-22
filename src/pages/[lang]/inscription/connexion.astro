@@ -62,6 +62,7 @@ const metadata = {
 
   <script>
     import { supabase } from '~/config/supabaseClient';
+    import { safeRedirect } from '~/lib/safeRedirect';
 
     // Attache en deux temps, et idempotente :
     //  - appel à la racine du script -> couvre le premier rendu. `astro:page-load`
@@ -112,7 +113,8 @@ const metadata = {
           showMessage('✅ login.success', false);
             await supabase.auth.getSession();
 
-          window.location.href = `/${lang}/inscription/dashboard/`;
+          const requested = new URLSearchParams(window.location.search).get('redirect');
+          window.location.href = safeRedirect(requested, `/${lang}/inscription/dashboard/`);
         }
       });
     }
