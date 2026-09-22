@@ -23,7 +23,7 @@ import Features2 from '~/components/widgets/Features2.astro';
 import Hero from '~/components/widgets/Hero.astro';
 import HeroVideo from '~/components/widgets/HeroVideo.astro';
 import Note from '~/components/widgets/Note.astro';
-import Prices from '~/components/widgets/Pricing.astro';
+import PricingSection from '~/components/widgets/PricingSection.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import StepsSansImage from '~/components/widgets/StepsSansImage.astro';
 import Testimonials from '~/components/widgets/Testimonials.astro';
@@ -532,69 +532,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
 
   <Note title={t(dict, 'home.note4.title')} description={t(dict, 'home.note4.desc')} />
 
-  {/* Section Pricing masquée temporairement — à réactiver à l'ouverture des offres payantes
-  <Prices
-    title={t(dict, 'home.prices.title')}
-    id="pricing"
-    subtitle={t(dict, 'home.prices.subtitle')}
-    subsubtitle={t(dict, 'home.prices.subsubtitle')}
-    prices={[
-      {
-        title: t(dict, 'home.prices.packDiscover.title'),
-        subtitle: t(dict, 'home.prices.packDiscover.subtitle'),
-        price: '5',
-        period: t(dict, 'home.prices.packDiscover.period'),
-        items: [
-          { description: t(dict, 'home.prices.packDiscover.items.1'), icon: 'tabler:award-filled' },
-          { description: t(dict, 'home.prices.packDiscover.items.2'), icon: 'tabler:award-filled' },
-        ],
-        callToAction: { target: '_blank', text: t(dict, 'home.prices.packDiscover.cta'), href: '#' },
-        hasRibbon: false,
-        ribbonTitle: '',
-      },
-      {
-        title: t(dict, 'home.prices.packPioneer.title'),
-        subtitle: t(dict, 'home.prices.packPioneer.subtitle'),
-        price: '20',
-        period: t(dict, 'home.prices.packPioneer.period'),
-        items: [
-          { description: t(dict, 'home.prices.packPioneer.items.1'), icon: 'tabler:award-filled' },
-          { description: t(dict, 'home.prices.packPioneer.items.2'), icon: 'tabler:currency-euro' },
-          { description: t(dict, 'home.prices.packPioneer.items.3'), icon: 'tabler:brand-whatsapp-filled' },
-          { description: t(dict, 'home.prices.packPioneer.items.4'), icon: 'tabler:binary-tree-filled' },
-        ],
-        callToAction: { target: '', text: t(dict, 'home.prices.packPioneer.cta'), href: Link_inscription },
-        hasRibbon: true,
-        ribbonTitle: t(dict, 'home.prices.packPioneer.ribbon'),
-      },
-      {
-        title: t(dict, 'home.prices.packProgress.title'),
-        hasChoice: true,
-        title1: t(dict, 'home.prices.packProgress.title1'),
-        subtitle1: t(dict, 'home.prices.packProgress.subtitle1'),
-        price1: 140,
-        period1: t(dict, 'home.prices.packProgress.period1'),
-        items1: [
-          { description: t(dict, 'home.prices.packProgress.items1.1'), icon: 'tabler:award-filled' },
-          { description: t(dict, 'home.prices.packProgress.items1.2'), icon: 'tabler:binary-tree-filled' },
-          { description: t(dict, 'home.prices.packProgress.items1.3'), icon: 'tabler:target-arrow' },
-        ],
-        callToAction1: { target: '_blank', text: t(dict, 'home.prices.packProgress.cta1'), href: '#' },
-        title2: t(dict, 'home.prices.packProgress.title2'),
-        subtitle2: t(dict, 'home.prices.packProgress.subtitle2'),
-        price2: 15,
-        period2: t(dict, 'home.prices.packProgress.period2'),
-        items2: [
-          { description: t(dict, 'home.prices.packProgress.items2.1'), icon: 'tabler:award-filled' },
-          { description: t(dict, 'home.prices.packProgress.items2.2'), icon: 'tabler:target-arrow' },
-        ],
-        callToAction2: { target: '_blank', text: t(dict, 'home.prices.packProgress.cta2'), href: '#' },
-        hasRibbon: false,
-        ribbonTitle: '',
-      },
-    ]}
-  />
-  */}
+  <PricingSection />
 
   <StepsSansImage
     title={t(dict, 'home.steps.title')}
