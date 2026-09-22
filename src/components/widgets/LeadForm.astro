@@ -26,6 +26,7 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
 ---
 
 <form
+  id={`lead-form-${topic}`}
   class={`lead-form flex flex-col gap-4 max-w-md mx-auto text-left ${className}`}
   data-topic={topic}
   data-success={t(dict, 'lead.form.success')}
@@ -87,55 +88,67 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
 </form>
 
 <script>
-  document.querySelectorAll<HTMLFormElement>('form.lead-form').forEach((form) => {
-    const msg = form.querySelector<HTMLParagraphElement>('.lead-form-msg');
-    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-    const initialLabel = button?.textContent ?? '';
+  // Idempotent : `astro:page-load` se déclenche aussi au premier chargement,
+  // et se rejoue à chaque navigation ClientRouter — un script module ne se
+  // ré-exécute jamais après sa première exécution dans la session (cache
+  // `scriptsAlreadyRan` d'Astro), donc c'est ce hook qui doit ré-attacher les
+  // écouteurs, jamais un appel supplémentaire à la racine du script.
+  function initLeadForms() {
+    document.querySelectorAll<HTMLFormElement>('form.lead-form').forEach((form) => {
+      if (form.dataset.leadFormBound === '1') return;
+      form.dataset.leadFormBound = '1';
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!button) return;
+      const msg = form.querySelector<HTMLParagraphElement>('.lead-form-msg');
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const initialLabel = button?.textContent ?? '';
 
-      button.disabled = true;
-      button.textContent = form.dataset.sending ?? '…';
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!button) return;
 
-      const data = new FormData(form);
-      const payload = {
-        topic: form.dataset.topic,
-        name: String(data.get('name') ?? '').trim(),
-        email: String(data.get('email') ?? '').trim(),
-        message: String(data.get('message') ?? '').trim(),
-        trainer: String(data.get('trainer') ?? '').trim(),
-        webcam: String(data.get('webcam') ?? ''),
-        availability: data.getAll('availability').map(String),
-        hp: String(data.get('hp') ?? ''),
-      };
+        button.disabled = true;
+        button.textContent = form.dataset.sending ?? '…';
 
-      const lang = window.location.pathname.split('/')[1] || 'fr';
+        const data = new FormData(form);
+        const payload = {
+          topic: form.dataset.topic,
+          name: String(data.get('name') ?? '').trim(),
+          email: String(data.get('email') ?? '').trim(),
+          message: String(data.get('message') ?? '').trim(),
+          trainer: String(data.get('trainer') ?? '').trim(),
+          webcam: String(data.get('webcam') ?? ''),
+          availability: data.getAll('availability').map(String),
+          hp: String(data.get('hp') ?? ''),
+        };
 
-      let ok = false;
-      try {
-        const res = await fetch(`/${lang}/api/lead/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        ok = res.ok && (await res.json())?.success === true;
-      } catch {
-        ok = false;
-      }
+        const lang = window.location.pathname.split('/')[1] || 'fr';
 
-      if (msg) {
-        msg.textContent = (ok ? form.dataset.success : form.dataset.error) ?? '';
-        msg.classList.remove('hidden', 'text-red-600', 'text-green-600');
-        msg.classList.add(ok ? 'text-green-600' : 'text-red-600');
-      }
+        let ok = false;
+        try {
+          const res = await fetch(`/${lang}/api/lead/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          ok = res.ok && (await res.json())?.success === true;
+        } catch {
+          ok = false;
+        }
 
-      if (ok) {
-        form.reset();
-      }
-      button.textContent = initialLabel;
-      button.disabled = false;
+        if (msg) {
+          msg.textContent = (ok ? form.dataset.success : form.dataset.error) ?? '';
+          msg.classList.remove('hidden', 'text-red-600', 'text-green-600');
+          msg.classList.add(ok ? 'text-green-600' : 'text-red-600');
+        }
+
+        if (ok) {
+          form.reset();
+        }
+        button.textContent = initialLabel;
+        button.disabled = false;
+      });
     });
-  });
+  }
+
+  document.addEventListener('astro:page-load', initLeadForms);
 </script>

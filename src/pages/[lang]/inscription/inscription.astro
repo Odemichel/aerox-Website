@@ -114,34 +114,41 @@ const metadata = {
   <script>
     import { supabase } from '~/config/supabaseClient';
 
-    const form = document.getElementById('signup-form');
-    const message = document.getElementById('message');
-    const lang = form?.dataset.lang || 'fr'; // fallback fr
+    // Idempotent et rejoué à chaque `astro:page-load` (premier chargement
+    // inclus) : un script module ne se ré-exécute jamais après sa première
+    // exécution dans la session (ClientRouter actif), donc un appel
+    // supplémentaire à la racine du script doublerait les écouteurs.
+    function initSignupForm() {
+      const form = document.getElementById('signup-form');
+      if (!form || form.dataset.leadFormBound === '1') return;
+      form.dataset.leadFormBound = '1';
 
-    // Role card toggle
-    const roleCards = document.querySelectorAll('.role-card');
-    roleCards.forEach((card) => {
-      card.addEventListener('click', () => {
-        roleCards.forEach((c) => {
-          c.classList.remove('border-primary', 'bg-primary/10');
-          c.classList.add('border-gray-300', 'dark:border-gray-600');
+      const message = document.getElementById('message');
+      const lang = form.dataset.lang || 'fr'; // fallback fr
+
+      // Role card toggle
+      const roleCards = document.querySelectorAll('.role-card');
+      roleCards.forEach((card) => {
+        card.addEventListener('click', () => {
+          roleCards.forEach((c) => {
+            c.classList.remove('border-primary', 'bg-primary/10');
+            c.classList.add('border-gray-300', 'dark:border-gray-600');
+          });
+          card.classList.remove('border-gray-300', 'dark:border-gray-600');
+          card.classList.add('border-primary', 'bg-primary/10');
         });
-        card.classList.remove('border-gray-300', 'dark:border-gray-600');
-        card.classList.add('border-primary', 'bg-primary/10');
       });
-    });
 
-    let attemptCount = 0;
-    let lockUntil = 0;
+      let attemptCount = 0;
+      let lockUntil = 0;
 
-    function showMessage(text, isError = true) {
-      if (!message) return;
-      message.textContent = text;
-      message.classList.remove('text-red-600', 'text-green-600');
-      message.classList.add(isError ? 'text-red-600' : 'text-green-600');
-    }
+      function showMessage(text, isError = true) {
+        if (!message) return;
+        message.textContent = text;
+        message.classList.remove('text-red-600', 'text-green-600');
+        message.classList.add(isError ? 'text-red-600' : 'text-green-600');
+      }
 
-    if (form) {
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -209,5 +216,7 @@ const metadata = {
         }
       });
     }
+
+    document.addEventListener('astro:page-load', initSignupForm);
   </script>
 </Layout>

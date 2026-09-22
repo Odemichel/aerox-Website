@@ -745,33 +745,44 @@ const Link_inscription = localizedHref(lang, '/inscription/inscription/');
   </script>
 
   <script>
-    const formLM = document.getElementById('form-leadmagnet') as HTMLFormElement | null;
-    const msgLM = document.getElementById('msg-leadmagnet');
+    // Idempotent et rejoué à chaque `astro:page-load` (premier chargement
+    // inclus) : un script module ne se ré-exécute jamais après sa première
+    // exécution dans la session (ClientRouter actif dans Layout.astro), donc
+    // un appel supplémentaire à la racine du script doublerait les écouteurs.
+    function initLeadMagnetForm() {
+      const formLM = document.getElementById('form-leadmagnet') as HTMLFormElement | null;
+      if (!formLM || formLM.dataset.leadFormBound === '1') return;
+      formLM.dataset.leadFormBound = '1';
 
-    formLM?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = (document.getElementById('email-leadmagnet') as HTMLInputElement).value.trim();
-      const lang = window.location.pathname.split('/')[1] || 'fr';
+      const msgLM = document.getElementById('msg-leadmagnet');
 
-      const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name: '' }),
+      formLM.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = (document.getElementById('email-leadmagnet') as HTMLInputElement).value.trim();
+        const lang = window.location.pathname.split('/')[1] || 'fr';
+
+        const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, name: '' }),
+        });
+
+        const data = await res.json();
+        msgLM?.classList.remove('hidden', 'text-red-600', 'text-green-600');
+
+        if (data.success) {
+          msgLM!.textContent = formLM?.dataset.success ?? '';
+          msgLM?.classList.add('text-green-600');
+          formLM.reset();
+        } else {
+          msgLM!.textContent = formLM?.dataset.error ?? '';
+          msgLM?.classList.add('text-red-600');
+        }
+        msgLM?.classList.remove('hidden');
       });
+    }
 
-      const data = await res.json();
-      msgLM?.classList.remove('hidden', 'text-red-600', 'text-green-600');
-
-      if (data.success) {
-        msgLM!.textContent = formLM?.dataset.success ?? '';
-        msgLM?.classList.add('text-green-600');
-        formLM.reset();
-      } else {
-        msgLM!.textContent = formLM?.dataset.error ?? '';
-        msgLM?.classList.add('text-red-600');
-      }
-      msgLM?.classList.remove('hidden');
-    });
+    document.addEventListener('astro:page-load', initLeadMagnetForm);
   </script>
 
   <script type="application/ld+json" set:html={JSON.stringify({

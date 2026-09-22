@@ -83,11 +83,18 @@ const metadata = {
   </section>
 
   <script>
+    // Idempotent et rejoué à chaque `astro:page-load` (premier chargement
+    // inclus) : un script module ne se ré-exécute jamais après sa première
+    // exécution dans la session (ClientRouter actif), donc un appel
+    // supplémentaire à la racine du script doublerait les écouteurs.
     async function submitForm(formId: string, msgId: string) {
       const form = document.getElementById(formId) as HTMLFormElement | null;
+      if (!form || form.dataset.leadFormBound === '1') return;
+      form.dataset.leadFormBound = '1';
+
       const msg = document.getElementById(msgId);
 
-      form?.addEventListener('submit', async (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const suffix = formId === 'form-livre' ? 'livre' : 'livre-final';
@@ -117,8 +124,12 @@ const metadata = {
       });
     }
 
-    submitForm('form-livre', 'msg-livre');
-    submitForm('form-livre-final', 'msg-livre-final');
+    function initMethodForms() {
+      submitForm('form-livre', 'msg-livre');
+      submitForm('form-livre-final', 'msg-livre-final');
+    }
+
+    document.addEventListener('astro:page-load', initMethodForms);
   </script>
 
   <style>
