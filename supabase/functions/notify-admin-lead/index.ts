@@ -58,11 +58,13 @@ Deno.serve(async (req) => {
       .join("");
 
     const title = escapeHtml(TOPIC_LABELS[topic]);
-    const who = escapeHtml(
+    // Nom du visiteur pour le sujet : pas d'échappement HTML (ce n'est pas du HTML),
+    // nettoyage des caractères de contrôle pour défense en profondeur
+    const subjectName = (
       typeof (fields as Record<string, unknown>).name === "string"
         ? String((fields as Record<string, unknown>).name)
-        : "",
-    );
+        : ""
+    ).replace(/[\r\n\x00-\x1f]/g, "");
 
     const htmlBody = `
 <!DOCTYPE html>
@@ -94,7 +96,7 @@ Deno.serve(async (req) => {
     const info = await transporter.sendMail({
       from: SMTP_FROM,
       to: ADMIN_EMAIL,
-      subject: `[AeroX] ${TOPIC_LABELS[topic]}${who ? ` — ${who}` : ""}`,
+      subject: `[AeroX] ${TOPIC_LABELS[topic]}${subjectName ? ` — ${subjectName}` : ""}`,
       html: htmlBody,
     });
 
