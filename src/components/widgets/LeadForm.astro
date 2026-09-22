@@ -64,38 +64,40 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
   <input type="text" name="name" required placeholder={t(dict, labels.name)} class={inputClass} />
   <input type="email" name="email" required placeholder={t(dict, labels.email)} class={inputClass} />
 
-  {isTestPeriod && (
-    <>
-      <fieldset class="border-0 p-0 m-0">
-        <legend class="mb-2 font-semibold">{t(dict, 'lead.form.availability.label')}</legend>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {availabilitySlots.map((slot) => (
+  {
+    isTestPeriod && (
+      <>
+        <fieldset class="border-0 p-0 m-0">
+          <legend class="mb-2 font-semibold">{t(dict, 'lead.form.availability.label')}</legend>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {availabilitySlots.map((slot) => (
+              <label class="inline-flex items-center gap-2 text-sm">
+                <input type="checkbox" name="availability" value={slot.value} class="rounded" />
+                {t(dict, slot.key)}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <label class="flex flex-col gap-1">
+          <span class="font-semibold">{t(dict, 'lead.form.trainer.label')}</span>
+          <input type="text" name="trainer" placeholder={t(dict, 'lead.form.trainer.placeholder')} class={inputClass} />
+        </label>
+
+        <fieldset class="border-0 p-0 m-0">
+          <legend class="mb-2 font-semibold">{t(dict, 'lead.form.webcam.label')}</legend>
+          <div class="flex gap-4">
             <label class="inline-flex items-center gap-2 text-sm">
-              <input type="checkbox" name="availability" value={slot.value} class="rounded" />
-              {t(dict, slot.key)}
+              <input type="radio" name="webcam" value="oui" /> {t(dict, 'lead.form.webcam.yes')}
             </label>
-          ))}
-        </div>
-      </fieldset>
-
-      <label class="flex flex-col gap-1">
-        <span class="font-semibold">{t(dict, 'lead.form.trainer.label')}</span>
-        <input type="text" name="trainer" placeholder={t(dict, 'lead.form.trainer.placeholder')} class={inputClass} />
-      </label>
-
-      <fieldset class="border-0 p-0 m-0">
-        <legend class="mb-2 font-semibold">{t(dict, 'lead.form.webcam.label')}</legend>
-        <div class="flex gap-4">
-          <label class="inline-flex items-center gap-2 text-sm">
-            <input type="radio" name="webcam" value="oui" /> {t(dict, 'lead.form.webcam.yes')}
-          </label>
-          <label class="inline-flex items-center gap-2 text-sm">
-            <input type="radio" name="webcam" value="non" /> {t(dict, 'lead.form.webcam.no')}
-          </label>
-        </div>
-      </fieldset>
-    </>
-  )}
+            <label class="inline-flex items-center gap-2 text-sm">
+              <input type="radio" name="webcam" value="non" /> {t(dict, 'lead.form.webcam.no')}
+            </label>
+          </div>
+        </fieldset>
+      </>
+    )
+  }
 
   <textarea name="message" rows="3" placeholder={t(dict, labels.message)} class={inputClass}></textarea>
 
@@ -116,11 +118,18 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
 </form>
 
 <script>
-  // Idempotent : `astro:page-load` se déclenche aussi au premier chargement,
-  // et se rejoue à chaque navigation ClientRouter — un script module ne se
-  // ré-exécute jamais après sa première exécution dans la session (cache
-  // `scriptsAlreadyRan` d'Astro), donc c'est ce hook qui doit ré-attacher les
-  // écouteurs, jamais un appel supplémentaire à la racine du script.
+  // Attache en deux temps, et idempotente :
+  //  - appel à la racine du script -> couvre le premier rendu. `astro:page-load`
+  //    ne suffit pas : il est câblé sur le `load` de window (voir
+  //    astro/dist/transitions/router.js), donc il attend toutes les
+  //    sous-ressources de la page (scripts tiers différés, images, vidéos) —
+  //    plusieurs secondes pendant lesquelles aucun `preventDefault` ne serait
+  //    posé et où ClientRouter récupérerait la soumission ;
+  //  - écouteur `astro:page-load` -> couvre les navigations ClientRouter, un
+  //    script module ne se ré-exécutant jamais après sa première exécution
+  //    dans la session (cache `scriptsAlreadyRan` d'Astro).
+  // Le marqueur `dataset.leadFormBound` posé plus bas rend le double appel sans
+  // effet : un formulaire déjà lié n'est jamais ré-attaché.
   function initLeadForms() {
     document.querySelectorAll<HTMLFormElement>('form.lead-form').forEach((form) => {
       if (form.dataset.leadFormBound === '1') return;
@@ -132,7 +141,14 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        if (!button) return;
+        if (!button) {
+          // Soumission annulée par le preventDefault ci-dessus : sans trace, le
+          // visiteur verrait un formulaire inerte et le lead serait perdu en silence.
+          console.error('[LeadForm] bouton submit introuvable, soumission abandonnée', {
+            topic: form.dataset.topic,
+          });
+          return;
+        }
 
         button.disabled = true;
         button.textContent = form.dataset.sending ?? '…';
@@ -178,5 +194,6 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
     });
   }
 
+  initLeadForms();
   document.addEventListener('astro:page-load', initLeadForms);
 </script>

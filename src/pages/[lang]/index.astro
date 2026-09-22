@@ -739,10 +739,18 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
   </script>
 
   <script>
-    // Idempotent et rejoué à chaque `astro:page-load` (premier chargement
-    // inclus) : un script module ne se ré-exécute jamais après sa première
-    // exécution dans la session (ClientRouter actif dans Layout.astro), donc
-    // un appel supplémentaire à la racine du script doublerait les écouteurs.
+    // Attache en deux temps, et idempotente :
+    //  - appel à la racine du script -> couvre le premier rendu. `astro:page-load`
+    //    ne suffit pas : il est câblé sur le `load` de window (voir
+    //    astro/dist/transitions/router.js), donc il attend toutes les
+    //    sous-ressources de la page (scripts tiers différés, images, vidéos) —
+    //    plusieurs secondes pendant lesquelles aucun `preventDefault` ne serait
+    //    posé et où ClientRouter récupérerait la soumission ;
+    //  - écouteur `astro:page-load` -> couvre les navigations ClientRouter, un
+    //    script module ne se ré-exécutant jamais après sa première exécution
+    //    dans la session (cache `scriptsAlreadyRan` d'Astro).
+    // Le marqueur `dataset.leadFormBound` posé plus bas rend le double appel sans
+    // effet : un formulaire déjà lié n'est jamais ré-attaché.
     function initLeadMagnetForm() {
       const formLM = document.getElementById('form-leadmagnet') as HTMLFormElement | null;
       if (!formLM || formLM.dataset.leadFormBound === '1') return;
@@ -776,6 +784,7 @@ const Link_testPeriod = localizedHref(lang, '/periode-test/');
       });
     }
 
+    initLeadMagnetForm();
     document.addEventListener('astro:page-load', initLeadMagnetForm);
   </script>
 

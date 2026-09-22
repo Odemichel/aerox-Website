@@ -121,10 +121,18 @@ const metadata = {
     let attemptCount = 0;
     let lockUntil = 0;
 
-    // Idempotent et rejoué à chaque `astro:page-load` (premier chargement
-    // inclus) : un script module ne se ré-exécute jamais après sa première
-    // exécution dans la session (ClientRouter actif), donc un appel
-    // supplémentaire à la racine du script doublerait les écouteurs.
+    // Attache en deux temps, et idempotente :
+    //  - appel à la racine du script -> couvre le premier rendu. `astro:page-load`
+    //    ne suffit pas : il est câblé sur le `load` de window (voir
+    //    astro/dist/transitions/router.js), donc il attend toutes les
+    //    sous-ressources de la page (scripts tiers différés, images, vidéos) —
+    //    plusieurs secondes pendant lesquelles aucun `preventDefault` ne serait
+    //    posé et où ClientRouter récupérerait la soumission ;
+    //  - écouteur `astro:page-load` -> couvre les navigations ClientRouter, un
+    //    script module ne se ré-exécutant jamais après sa première exécution
+    //    dans la session (cache `scriptsAlreadyRan` d'Astro).
+    // Le marqueur `dataset.leadFormBound` posé plus bas rend le double appel sans
+    // effet : un formulaire déjà lié n'est jamais ré-attaché.
     function initSignupForm() {
       const form = document.getElementById('signup-form');
       if (!form || form.dataset.leadFormBound === '1') return;
@@ -221,6 +229,7 @@ const metadata = {
       });
     }
 
+    initSignupForm();
     document.addEventListener('astro:page-load', initSignupForm);
   </script>
 </Layout>
