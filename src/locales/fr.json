@@ -18,14 +18,14 @@
   "ourStory.team.milan.role": "Ambassadeur & Triathlète élite",
   "ourStory.team.milan.alt": "Photo de Milan Larivière",
   "ourStory.team.milan.desc": "Triathlète élite, 2ᵉ de la Coupe d’Europe Junior (2025), Milan incarne la nouvelle génération du triathlon. Son retour d’expérience de haut niveau nourrit le développement d’AeroX et garantit que chaque amélioration répond aux réalités du terrain même chez les athlètes les plus exigeants.",
-  "ourStory.cta.aria": "Découvrir les offres AeroX et rejoindre les pionniers",
-  "ourStory.cta.label": "🚀 Rejoins les pionniers AeroX",
+  "ourStory.cta.aria": "Découvrir les offres AeroX",
+  "ourStory.cta.label": "🚀 Découvre AeroX",
   "ourStory.cta.sub": "Deviens l’un des premiers à transformer ton entraînement indoor avec l’analyse en temps réel de ton aérodynamisme.",
 
   "home.meta.title": "Optimise ton aérodynamisme, roule plus vite",
   "home.meta.description": "AeroX transforme ton home trainer en soufflerie virtuelle. Mesure ta position avec une webcam, gagne 3 km/h et économise 40 W. Essaie maintenant.",
 
-  "home.hero.tagline": "Lancement le 10 avril",
+  "home.hero.tagline": "Mesure ton aéro chez toi",
   "home.hero.title.l1": "Ton home trainer",
   "home.hero.title.verb": "devient",
   "home.hero.title.l2": "ton analyseur aérodynamique",
@@ -128,7 +128,7 @@
 
   "home.features.title": "Comment gagner en vitesse sans pédaler plus fort ?",
   "home.features.subtitle": "Parce que chaque watt compte, ton budget aussi !",
-  "home.features.ctaDetails": "Plus que <CountDown /> pour devenir pionniers AeroX et construire <span class=\"font-bold text-accent\">le futur du cyclisme indoor !</span>",
+  "home.features.ctaDetails": "Mesure tes positions et découvre <span class=\"font-bold text-accent\">combien de watts tu laisses dans le vent.</span>",
 
   "home.features.items.gain.title": "Gagne de 1 à 5 km/h sans plus d’effort",
   "home.features.items.gain.desc": "AeroX révèle en temps réel les km/h que ta position te fait perdre. Même à 25&#8239;km/h tu peux gagner 1km/h ! À 45&#8239;km/h, +5km/h. Mieux qu'un vélo à 5000&#8239;€.",
@@ -268,7 +268,7 @@
   "home.common.more": "Détails…",
 
   "home.leadmagnet.title": "Sois le premier informé du lancement",
-  "home.leadmagnet.subtitle": "Inscris-toi et reçois un accès prioritaire le 10 avril.",
+  "home.leadmagnet.subtitle": "Inscris-toi et reçois le guide, plus les nouveautés AeroX.",
   "home.leadmagnet.placeholder": "Ton email",
   "home.leadmagnet.cta": "Je m'inscris",
   "home.leadmagnet.success": "C'est noté ! Tu recevras les infos en avant-première.",

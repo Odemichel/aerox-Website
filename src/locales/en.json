@@ -18,14 +18,14 @@
   "ourStory.team.milan.role": "Ambassador & Elite triathlete",
   "ourStory.team.milan.alt": "Photo of Milan Larivière",
   "ourStory.team.milan.desc": "Elite triathlete, 2nd at the European Junior Cup (2025). Milan represents the new generation. His top-level feedback drives AeroX’s development so it fits real racing demands — even for the most demanding athletes.",
-  "ourStory.cta.aria": "See AeroX plans and join the pioneers",
-  "ourStory.cta.label": "🚀 Join the AeroX pioneers",
+  "ourStory.cta.aria": "Discover the AeroX offers",
+  "ourStory.cta.label": "🚀 Discover AeroX",
   "ourStory.cta.sub": "Be among the first to transform your indoor training with real-time aero analysis.",
 
   "home.meta.title": "Optimize your aerodynamics, ride faster",
   "home.meta.description": "AeroX turns your smart trainer into a virtual wind tunnel. Measure your position with a webcam, gain 3 km/h and save 40 W. Try it now.",
 
-  "home.hero.tagline": "Launching April 10",
+  "home.hero.tagline": "Measure your aero at home",
   "home.hero.title.l1": "Your smart trainer",
   "home.hero.title.verb": "becomes",
   "home.hero.title.l2": "your aerodynamic analyzer",
@@ -126,7 +126,7 @@
 
   "home.features.title": "How can you gain speed without pedaling harder?",
   "home.features.subtitle": "Every watt counts — and so does your budget.",
-  "home.features.ctaDetails": "Only <CountDown /> left to become an AeroX pioneer and help build the <span class=\"font-bold text-accent\">future of indoor cycling!</span>",
+  "home.features.ctaDetails": "Measure your positions and find out <span class=\"font-bold text-accent\">how many watts you are leaving in the wind.</span>",
 
   "home.features.items.gain.title": "Gain 1 to 5 km/h with no extra effort",
   "home.features.items.gain.desc": "See, in real time, how many km/h your position is costing you. +1 km/h at 25&#8239;km/h; up to +5 km/h at 45&#8239;km/h. Better than a €5000 bike.",
@@ -267,7 +267,7 @@
   "home.common.more": "Details…",
 
   "home.leadmagnet.title": "Be the first to know",
-  "home.leadmagnet.subtitle": "Sign up and get priority access on April 10.",
+  "home.leadmagnet.subtitle": "Sign up and get the guide, plus AeroX news.",
   "home.leadmagnet.placeholder": "Your email",
   "home.leadmagnet.cta": "Sign me up",
   "home.leadmagnet.success": "You're in! You'll get early access info first.",
