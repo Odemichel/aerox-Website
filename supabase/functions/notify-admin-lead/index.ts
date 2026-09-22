@@ -21,6 +21,20 @@ const FIELD_LABELS: Record<string, string> = {
   message: "Message",
 };
 
+// Comparaison à temps constant : le coût ne dépend pas de la longueur du
+// préfixe commun. Une comparaison naïve (`a === b`) s'arrête au premier
+// caractère différent, ce qui laisse deviner le secret octet par octet en
+// mesurant le temps de réponse. Les deux chaînes sont hexadécimales et de
+// longueur connue : le retour anticipé sur les longueurs ne révèle rien.
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) {
+    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return diff === 0;
+}
+
 // Les valeurs proviennent d'un formulaire public : rien n'est inséré brut.
 function escapeHtml(value: string): string {
   return value
@@ -32,6 +46,18 @@ function escapeHtml(value: string): string {
 }
 
 Deno.serve(async (req) => {
+  // Contrôle d'accès, avant toute autre chose et avant de lire le corps.
+  // `verify_jwt` reste actif côté Supabase, mais la clé anon qui le satisfait
+  // est servie publiquement dans le bundle du site : elle ne prouve rien.
+  // Le secret partagé est le seul contrôle réel. Réponse 403 nue : ni la
+  // cause (secret absent côté serveur, en-tête manquant, valeur erronée) ni
+  // l'existence du mécanisme ne doivent transparaître.
+  const expectedSecret = Deno.env.get("LEAD_HOOK_SECRET");
+  const providedSecret = req.headers.get("x-lead-hook-secret");
+  if (!expectedSecret || !providedSecret || !timingSafeEqual(providedSecret, expectedSecret)) {
+    return new Response("Forbidden", { status: 403 });
+  }
+
   if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405 });
   }
@@ -59,12 +85,16 @@ Deno.serve(async (req) => {
 
     const title = escapeHtml(TOPIC_LABELS[topic]);
     // Nom du visiteur pour le sujet : pas d'échappement HTML (ce n'est pas du HTML),
-    // nettoyage des caractères de contrôle pour défense en profondeur
+    // nettoyage des caractères de contrôle pour défense en profondeur.
+    // On retire aussi les caractères invisibles et bidirectionnels : U+200B-U+200F,
+    // U+202A-U+202E et U+2066-U+2069 permettent de retourner l'affichage du sujet
+    // dans le client mail du destinataire (usurpation visuelle), U+2028/U+2029 sont
+    // des sauts de ligne Unicode, U+007F et U+0085 des contrôles hors \x00-\x1f.
     const subjectName = (
       typeof (fields as Record<string, unknown>).name === "string"
         ? String((fields as Record<string, unknown>).name)
         : ""
-    ).replace(/[\r\n\x00-\x1f]/g, "");
+    ).replace(/[\r\n\x00-\x1f\u007f\u0085\u200b-\u200f\u2028\u2029\u202a-\u202e\u2066-\u2069]/g, "");
 
     const htmlBody = `
 <!DOCTYPE html>
