@@ -14,14 +14,17 @@ const dict = getDict(lang);
 
 const isTestPeriod = topic === 'test-period';
 
-// Bouton de réservation de créneau (agenda Google), affiché au succès du
-// formulaire — uniquement pour le topic `test-period`, et seulement si
-// l'URL est configurée (voir src/config/links.ts : vide tant que la plage
-// de rendez-vous n'a pas été créée à la main dans Google Calendar). Tant
-// que ce n'est pas le cas, le bloc n'est pas rendu du tout : pas de bouton
-// mort en prod.
+// Agenda de réservation (plage de rendez-vous Google), encadré dans la page
+// et révélé au succès du formulaire — uniquement pour le topic `test-period`,
+// et seulement si les deux URL sont configurées (voir src/config/links.ts).
+// Sinon le bloc n'est pas rendu du tout : pas d'agenda mort en prod.
 const bookingUrl = LINKS.booking;
-const showBooking = isTestPeriod && bookingUrl.length > 0;
+// `hl` traduit l'agenda Google dans la langue de la page (vérifié : sans lui il
+// rend en anglais même sur /fr/). L'URL de base porte déjà `?gv=true`, d'où le
+// `&`. `lang` vient de la route, donc d'une locale connue, mais l'encodage
+// reste posé : il coûte rien et ferme la question.
+const bookingEmbedUrl = LINKS.bookingEmbed ? `${LINKS.bookingEmbed}&hl=${encodeURIComponent(lang)}` : '';
+const showBooking = isTestPeriod && bookingUrl.length > 0 && bookingEmbedUrl.length > 0;
 
 /**
  * Libellés dépendants du topic : `bike-fitter` a son propre jeu de clés
@@ -73,7 +76,9 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
           >
             <input type="radio" name="profile_type" value="rider" checked class="sr-only" />
             <span class="text-sm font-semibold">{t(dict, 'lead.form.profile.rider')}</span>
-            <span class="text-xs text-gray-600 dark:text-gray-400 text-center">{t(dict, 'lead.form.profile.rider.desc')}</span>
+            <span class="text-xs text-gray-600 dark:text-gray-400 text-center">
+              {t(dict, 'lead.form.profile.rider.desc')}
+            </span>
           </label>
           <label
             class="profile-card flex flex-col items-center gap-1 p-4 border-2 rounded-lg cursor-pointer transition-all border-gray-300 dark:border-gray-600"
@@ -81,7 +86,9 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
           >
             <input type="radio" name="profile_type" value="bike-fitter" class="sr-only" />
             <span class="text-sm font-semibold">{t(dict, 'lead.form.profile.bikefitter')}</span>
-            <span class="text-xs text-gray-600 dark:text-gray-400 text-center">{t(dict, 'lead.form.profile.bikefitter.desc')}</span>
+            <span class="text-xs text-gray-600 dark:text-gray-400 text-center">
+              {t(dict, 'lead.form.profile.bikefitter.desc')}
+            </span>
           </label>
         </div>
       </fieldset>
@@ -130,23 +137,45 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
     {t(dict, labels.submit)}
   </button>
   <p class="lead-form-msg text-sm mt-2 hidden"></p>
+</form>
 
-  {
-    showBooking && (
-      <div class="lead-form-booking hidden flex flex-col items-start gap-2 mt-2">
-        <p class="text-sm">{t(dict, 'lead.form.booking.intro')}</p>
-        <a
-          href={bookingUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn-primary px-6 py-2 text-sm font-semibold inline-block"
-        >
+{
+  showBooking && (
+    <div id={`lead-booking-${topic}`} class="lead-form-booking hidden w-full mt-8 scroll-mt-[88px]">
+      {/*
+        Mention du fuseau : l'agenda affiche les créneaux à l'heure de Paris
+        quel que soit le fuseau du visiteur — vérifié depuis Europe/Paris,
+        Asia/Tokyo et America/New_York, la page lit bien le fuseau simulé et
+        affiche Paris dans les trois cas, et les paramètres `ctz`/`tz` sont
+        ignorés. Google l'étiquette « Central European Time - Paris », mais
+        en anglais uniquement : sur les 8 autres langues du site, la mention
+        ci-dessous est la seule indication lisible.
+      */}
+      <p class="text-sm mb-3 text-center text-muted dark:text-slate-400">{t(dict, 'lead.form.booking.timezone')}</p>
+      {/*
+        `src` reste vide au rendu et n'est posé qu'au succès (voir le script) :
+        sans cela, chaque visite de la page ouvrirait une connexion vers Google
+        pour un agenda que la plupart ne verront jamais.
+      */}
+      <iframe
+        class="lead-booking-frame w-full h-[1000px] sm:h-[720px] rounded-lg border-0"
+        data-src={bookingEmbedUrl}
+        title={t(dict, 'lead.form.booking.title')}
+      />
+      {/*
+        Repli permanent, pas un message d'erreur : l'iframe peut rester vide
+        sans qu'aucun événement JS ne le signale (blocage des contenus tiers,
+        extension de vie privée). Le lien est donc toujours visible.
+      */}
+      <p class="text-sm mt-3 text-center text-muted dark:text-slate-400">
+        {t(dict, 'lead.form.booking.intro')}{' '}
+        <a href={bookingUrl} target="_blank" rel="noopener noreferrer" class="underline font-semibold">
           {t(dict, 'lead.form.booking.cta')}
         </a>
-      </div>
-    )
-  }
-</form>
+      </p>
+    </div>
+  )
+}
 
 <script>
   // Attache en deux temps, et idempotente :
@@ -235,13 +264,24 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
           msg.classList.add(ok ? 'text-green-600' : 'text-red-600');
         }
 
-        // Bouton de réservation (topic `test-period`, URL configurée) :
-        // révélé uniquement au succès, en plus du message. Absent du DOM
-        // si l'URL de réservation n'est pas configurée (cf. showBooking).
-        const booking = form.querySelector<HTMLElement>('.lead-form-booking');
+        // Agenda de réservation (topic `test-period`, URL configurées) : révélé
+        // uniquement au succès. Il vit hors du <form> — donc recherché dans le
+        // document, pas dans le formulaire — et est absent du DOM tant que les
+        // URL ne sont pas configurées (cf. showBooking).
+        const booking = document.getElementById(`lead-booking-${form.dataset.topic}`);
         if (ok) {
           form.reset();
-          booking?.classList.remove('hidden');
+          if (booking) {
+            const frame = booking.querySelector<HTMLIFrameElement>('.lead-booking-frame');
+            // Une seule fois : une seconde affectation de `src` rechargerait
+            // l'agenda et effacerait la sélection en cours du visiteur.
+            if (frame && frame.dataset.loaded !== '1' && frame.dataset.src) {
+              frame.dataset.loaded = '1';
+              frame.src = frame.dataset.src;
+            }
+            booking.classList.remove('hidden');
+            booking.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
         } else {
           booking?.classList.add('hidden');
         }
