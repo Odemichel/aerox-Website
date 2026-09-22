@@ -746,6 +746,8 @@
   "lead.form.sending": "Envoi…",
   "lead.form.success": "C'est noté. Olivier te recontacte pour caler ton créneau.",
   "lead.form.error": "L'envoi a échoué. Réessaie dans un instant.",
+  "lead.form.booking.intro": "Reste à choisir ton créneau dans l'agenda.",
+  "lead.form.booking.cta": "Réserver mon créneau",
   "testPeriod.meta.title": "Période de test accompagnée — AeroX",
   "testPeriod.meta.description": "Réserve un créneau avec Olivier pour tester AeroX sur ton home-trainer et mesurer ton aéro en direct.",
   "testPeriod.title": "Teste AeroX avec Olivier",
