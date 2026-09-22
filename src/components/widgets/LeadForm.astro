@@ -51,15 +51,6 @@ const LABELS: Record<Props['topic'], Record<'name' | 'email' | 'message' | 'subm
 };
 const labels = LABELS[topic];
 
-const availabilitySlots = [
-  { value: 'semaine-matin', key: 'lead.form.availability.weekMorning' },
-  { value: 'semaine-apres-midi', key: 'lead.form.availability.weekAfternoon' },
-  { value: 'semaine-soir', key: 'lead.form.availability.weekEvening' },
-  { value: 'weekend-matin', key: 'lead.form.availability.weekendMorning' },
-  { value: 'weekend-apres-midi', key: 'lead.form.availability.weekendAfternoon' },
-  { value: 'weekend-soir', key: 'lead.form.availability.weekendEvening' },
-];
-
 const inputClass = 'w-full border rounded p-3 text-secondary';
 ---
 
@@ -103,18 +94,6 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
   {
     isTestPeriod && (
       <>
-        <fieldset class="border-0 p-0 m-0">
-          <legend class="mb-2 font-semibold">{t(dict, 'lead.form.availability.label')}</legend>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {availabilitySlots.map((slot) => (
-              <label class="inline-flex items-center gap-2 text-sm">
-                <input type="checkbox" name="availability" value={slot.value} class="rounded" />
-                {t(dict, slot.key)}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
         <label class="flex flex-col gap-1">
           <span class="font-semibold">{t(dict, 'lead.form.trainer.label')}</span>
           <input type="text" name="trainer" placeholder={t(dict, 'lead.form.trainer.placeholder')} class={inputClass} />
@@ -233,7 +212,6 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
           message: String(data.get('message') ?? '').trim(),
           trainer: String(data.get('trainer') ?? '').trim(),
           webcam: String(data.get('webcam') ?? ''),
-          availability: data.getAll('availability').map(String),
           hp: String(data.get('hp') ?? ''),
         };
 
