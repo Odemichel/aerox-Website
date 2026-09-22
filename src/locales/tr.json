@@ -493,7 +493,7 @@
   "lead.form.profile.bikefitter.desc": "AeroX'i müşterilerime sunmak istiyorum",
   "lead.form.submit": "Randevu al",
   "lead.form.booking.title": "AeroX rezervasyon takvimi",
-  "lead.form.success": "Alındı! Hemen aşağıdan saatini seç.",
+  "lead.form.success": "Alındı! Yukarıdan randevunu almayı unutma.",
   "lead.form.booking.timezone": "Saatler Paris saatine (CET/CEST) göre gösterilir.",
   "lead.form.booking.intro": "Takvim görünmüyor mu?",
   "lead.form.booking.cta": "Yeni sekmede aç",

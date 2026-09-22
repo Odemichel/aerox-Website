@@ -714,7 +714,7 @@
   "lead.form.availability.weekendEvening": "Weekend — evening",
   "lead.form.submit": "Book a slot",
   "lead.form.sending": "Sending…",
-  "lead.form.success": "Got it! Pick your slot just below.",
+  "lead.form.success": "Got it! Don't forget to book your slot above.",
   "lead.form.error": "Sending failed. Please try again in a moment.",
   "lead.form.booking.title": "AeroX booking calendar",
   "lead.form.booking.timezone": "Slots are shown in Paris time (CET/CEST).",

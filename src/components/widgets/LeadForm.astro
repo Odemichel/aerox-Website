@@ -57,6 +57,45 @@ const labels = LABELS[topic];
 const inputClass = 'w-full border rounded p-3 text-secondary';
 ---
 
+{
+  showBooking && (
+    <div id={`lead-booking-${topic}`} class="lead-form-booking w-full mb-10">
+      {/*
+        Mention du fuseau : l'agenda affiche les créneaux à l'heure de Paris
+        quel que soit le fuseau du visiteur — vérifié depuis Europe/Paris,
+        Asia/Tokyo et America/New_York, la page lit bien le fuseau simulé et
+        affiche Paris dans les trois cas, et les paramètres `ctz`/`tz` sont
+        ignorés. Google l'étiquette « Central European Time - Paris », mais
+        en anglais uniquement : sur les 8 autres langues du site, la mention
+        ci-dessous est la seule indication lisible.
+      */}
+      <p class="text-sm mb-3 text-center text-muted dark:text-slate-400">{t(dict, 'lead.form.booking.timezone')}</p>
+      {/*
+        Agenda affiché d'emblée : réserver ne doit demander aucun clic
+        préalable. `loading="lazy"` diffère malgré tout la connexion à Google
+        jusqu'à ce que le bloc approche de la fenêtre — natif, sans JS.
+      */}
+      <iframe
+        class="lead-booking-frame w-full h-[1000px] sm:h-[720px] rounded-lg border-0"
+        src={bookingEmbedUrl}
+        loading="lazy"
+        title={t(dict, 'lead.form.booking.title')}
+      />
+      {/*
+        Repli permanent, pas un message d'erreur : l'iframe peut rester vide
+        sans qu'aucun événement JS ne le signale (blocage des contenus tiers,
+        extension de vie privée). Le lien est donc toujours visible.
+      */}
+      <p class="text-sm mt-3 text-center text-muted dark:text-slate-400">
+        {t(dict, 'lead.form.booking.intro')}{' '}
+        <a href={bookingUrl} target="_blank" rel="noopener noreferrer" class="underline font-semibold">
+          {t(dict, 'lead.form.booking.cta')}
+        </a>
+      </p>
+    </div>
+  )
+}
+
 <form
   id={`lead-form-${topic}`}
   class={`lead-form flex flex-col gap-4 max-w-md mx-auto text-left ${className}`}
@@ -139,43 +178,6 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
   <p class="lead-form-msg text-sm mt-2 hidden"></p>
 </form>
 
-{
-  showBooking && (
-    <div id={`lead-booking-${topic}`} class="lead-form-booking hidden w-full mt-8 scroll-mt-[88px]">
-      {/*
-        Mention du fuseau : l'agenda affiche les créneaux à l'heure de Paris
-        quel que soit le fuseau du visiteur — vérifié depuis Europe/Paris,
-        Asia/Tokyo et America/New_York, la page lit bien le fuseau simulé et
-        affiche Paris dans les trois cas, et les paramètres `ctz`/`tz` sont
-        ignorés. Google l'étiquette « Central European Time - Paris », mais
-        en anglais uniquement : sur les 8 autres langues du site, la mention
-        ci-dessous est la seule indication lisible.
-      */}
-      <p class="text-sm mb-3 text-center text-muted dark:text-slate-400">{t(dict, 'lead.form.booking.timezone')}</p>
-      {/*
-        `src` reste vide au rendu et n'est posé qu'au succès (voir le script) :
-        sans cela, chaque visite de la page ouvrirait une connexion vers Google
-        pour un agenda que la plupart ne verront jamais.
-      */}
-      <iframe
-        class="lead-booking-frame w-full h-[1000px] sm:h-[720px] rounded-lg border-0"
-        data-src={bookingEmbedUrl}
-        title={t(dict, 'lead.form.booking.title')}
-      />
-      {/*
-        Repli permanent, pas un message d'erreur : l'iframe peut rester vide
-        sans qu'aucun événement JS ne le signale (blocage des contenus tiers,
-        extension de vie privée). Le lien est donc toujours visible.
-      */}
-      <p class="text-sm mt-3 text-center text-muted dark:text-slate-400">
-        {t(dict, 'lead.form.booking.intro')}{' '}
-        <a href={bookingUrl} target="_blank" rel="noopener noreferrer" class="underline font-semibold">
-          {t(dict, 'lead.form.booking.cta')}
-        </a>
-      </p>
-    </div>
-  )
-}
 
 <script>
   // Attache en deux temps, et idempotente :
@@ -276,27 +278,10 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
           msg.classList.add(ok ? 'text-green-600' : 'text-red-600');
         }
 
-        // Agenda de réservation (topic `test-period`, URL configurées) : révélé
-        // uniquement au succès. Il vit hors du <form> — donc recherché dans le
-        // document, pas dans le formulaire — et est absent du DOM tant que les
-        // URL ne sont pas configurées (cf. showBooking).
-        const booking = document.getElementById(`lead-booking-${form.dataset.topic}`);
-        if (ok) {
-          form.reset();
-          if (booking) {
-            const frame = booking.querySelector<HTMLIFrameElement>('.lead-booking-frame');
-            // Une seule fois : une seconde affectation de `src` rechargerait
-            // l'agenda et effacerait la sélection en cours du visiteur.
-            if (frame && frame.dataset.loaded !== '1' && frame.dataset.src) {
-              frame.dataset.loaded = '1';
-              frame.src = frame.dataset.src;
-            }
-            booking.classList.remove('hidden');
-            booking.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        } else {
-          booking?.classList.add('hidden');
-        }
+        // L'agenda est affiché en permanence au-dessus du formulaire : rien à
+        // révéler ici. Le formulaire ne sert plus qu'à transmettre le contexte
+        // de la séance, il ne conditionne plus la réservation.
+        if (ok) form.reset();
         button.textContent = initialLabel;
         button.disabled = false;
       });
