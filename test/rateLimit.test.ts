@@ -38,4 +38,25 @@ describe('createRateLimiter', () => {
     expect(rl.check('nouvelle-ip', 100_000)).toBe(true);
     expect(rl.size()).toBe(1);
   });
+
+  it('balayage complet déclenché après expiration de la fenêtre', () => {
+    const rl = createRateLimiter({ limit: 1, windowMs: 100 });
+    // Insérer plusieurs clés distinctes dans la même fenêtre
+    rl.check('ip1', 0);
+    rl.check('ip2', 50);
+    rl.check('ip3', 75);
+    expect(rl.size()).toBe(3);
+    // Avancer bien au-delà de la fenêtre pour que toutes les clés expirent
+    rl.check('ip4', 200);
+    // Les clés anciennes doivent être purgées
+    expect(rl.size()).toBe(1); // seulement ip4
+  });
+
+  it('comportement fonctionnel inchangé sur une clé : limite, rejet, réouverture', () => {
+    const rl = createRateLimiter({ limit: 2, windowMs: 1000 });
+    expect(rl.check('test-key', 0)).toBe(true);
+    expect(rl.check('test-key', 100)).toBe(true);
+    expect(rl.check('test-key', 200)).toBe(false); // dépassement de limite
+    expect(rl.check('test-key', 1001)).toBe(true); // fenêtre expiré, réouverture
+  });
 });
