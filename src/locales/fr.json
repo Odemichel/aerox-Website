@@ -161,43 +161,6 @@
   "home.features.items.proof.more": "Je t'explique tout…",
   "home.features.items.proof.cta": "Rejoins la communauté AeroX",
 
-  "home.prices.title": "Nos Packs",
-  "home.prices.subtitle": "Un pack pour chaque objectif",
-  "home.prices.subsubtitle": "Découvre les tarifs et abonnements AeroX pour cyclistes et triathlètes. Compare nos offres avec Zwift, MyWhoosh ou Kinomap et profite d’une solution unique pour ton home trainer connecté (Tacx, Elite, Wahoo). Idéal pour préparer tes Ironman et tes entraînements vélo indoor.",
-
-  "home.prices.packDiscover.title": "Pack Découverte",
-  "home.prices.packDiscover.subtitle": "Teste ton aéro",
-  "home.prices.packDiscover.period": "pendant 10 jours",
-  "home.prices.packDiscover.items.1": "Accès complet à AeroX",
-  "home.prices.packDiscover.items.2": "Teste jusqu'à 1h/j",
-  "home.prices.packDiscover.cta": "Lancement le 01/12/2025",
-
-  "home.prices.packPioneer.title": "Pack Pionnier",
-  "home.prices.packPioneer.subtitle": "Profite du futur de l'entrainement indoor en exclusivité",
-  "home.prices.packPioneer.period": "paiement unique",
-  "home.prices.packPioneer.items.1": "Accès complet à AeroX pendant 3 mois",
-  "home.prices.packPioneer.items.2": "1 an d'abonnement à 50%",
-  "home.prices.packPioneer.items.3": "Canal de discussion exclusif",
-  "home.prices.packPioneer.items.4": "Soutiens le développement d'AeroX 🚀",
-  "home.prices.packPioneer.cta": "Deviens pionnier AeroX",
-  "home.prices.packPioneer.ribbon": "Pionnier",
-
-  "home.prices.packProgress.title": "Pack Progression",
-  "home.prices.packProgress.title1": "Annuel",
-  "home.prices.packProgress.subtitle1": "Renforce ta position toute l'année, Économise 30%",
-  "home.prices.packProgress.period1": "190€/an à partir de Février 2026",
-  "home.prices.packProgress.items1.1": "Accès complet à AeroX",
-  "home.prices.packProgress.items1.2": "Nouvelles fonctionnalités toute l'année",
-  "home.prices.packProgress.items1.3": "Idéal pour préparer sérieusement tes objectifs",
-  "home.prices.packProgress.cta1": "Lancement le 01/12/2025",
-
-  "home.prices.packProgress.title2": "Mensuel",
-  "home.prices.packProgress.subtitle2": "Renforce ton aéro sans engagement",
-  "home.prices.packProgress.period2": "22€/mois en Février 2026",
-  "home.prices.packProgress.items2.1": "Accès complet à AeroX",
-  "home.prices.packProgress.items2.2": "Idéal pour préparer la saison estivale",
-  "home.prices.packProgress.cta2": "Lancement le 01/11/2025",
-
   "home.steps.title": "Commence ton entraînement avec AeroX en 2 minutes",
   "home.steps.subsubtitle": "AeroX s’installe facilement et fonctionne immédiatement avec ton home trainer connecté. Compatible avec les principales marques (Tacx, Garmin, Wahoo, Elite, Saris), ton équipement est détecté automatiquement.  L’expérience est aussi fluide que sur Zwift, MyWhoosh ou Kinomap, mais avec un avantage unique :  l’analyse en temps réel de ton aérodynamisme pour gagner en vitesse et économiser des watts.  Idéal pour les cyclistes et triathlètes qui veulent optimiser leur position et préparer un Ironman ou une course de vélo indoor.",
   "home.steps.items.1.title": "Étape 1: <span class=\"font-semibold\">Télécharge AeroX</span>",
@@ -354,7 +317,6 @@
   "signup.role.rider.desc": "Je roule et je m'entraîne",
   "signup.role.bikefitter": "Bike-Fitter",
   "signup.role.bikefitter.desc": "Je fais du bike fitting",
-
 
   "login.meta.title": "Connexion",
   "login.meta.description": "Connecte-toi à ton compte AeroX pour accéder à l'application et à tes abonnements.",
@@ -788,4 +750,3 @@
   "testPeriod.requirements.3": "Un Mac ou un PC Windows à côté du vélo.",
   "testPeriod.form.title": "Programme ton créneau"
 }
-

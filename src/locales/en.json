@@ -159,43 +159,6 @@
   "home.features.items.proof.more": "I’ll tell you everything…",
   "home.features.items.proof.cta": "Join the AeroX community",
 
-  "home.prices.title": "Our Packs",
-  "home.prices.subtitle": "A pack for every goal",
-  "home.prices.subsubtitle": "Discover AeroX pricing for cyclists and triathletes. Compare with Zwift, MyWhoosh or Kinomap and get a unique solution for your smart trainer (Tacx, Elite, Wahoo). Perfect for Ironman prep and indoor training.",
-
-  "home.prices.packDiscover.title": "Discovery Pack",
-  "home.prices.packDiscover.subtitle": "Test your aero",
-  "home.prices.packDiscover.period": "for 10 days",
-  "home.prices.packDiscover.items.1": "Full access to AeroX",
-  "home.prices.packDiscover.items.2": "Test up to 1h/day",
-  "home.prices.packDiscover.cta": "Launch on 2025-12-01",
-
-  "home.prices.packPioneer.title": "Pioneer Pack",
-  "home.prices.packPioneer.subtitle": "Enjoy the future of indoor training first",
-  "home.prices.packPioneer.period": "one-time payment",
-  "home.prices.packPioneer.items.1": "Full AeroX access for 3 months",
-  "home.prices.packPioneer.items.2": "1 year subscription at 50%",
-  "home.prices.packPioneer.items.3": "Exclusive discussion channel",
-  "home.prices.packPioneer.items.4": "Support AeroX development 🚀",
-  "home.prices.packPioneer.cta": "Become an AeroX pioneer",
-  "home.prices.packPioneer.ribbon": "Pioneer",
-
-  "home.prices.packProgress.title": "Progress Pack",
-  "home.prices.packProgress.title1": "Yearly",
-  "home.prices.packProgress.subtitle1": "Build your position year-round — save 30%",
-  "home.prices.packProgress.period1": "€190/year starting Feb 2026",
-  "home.prices.packProgress.items1.1": "Full access to AeroX",
-  "home.prices.packProgress.items1.2": "New features all year long",
-  "home.prices.packProgress.items1.3": "Ideal to seriously prepare your goals",
-  "home.prices.packProgress.cta1": "Launch on 2025-12-01",
-
-  "home.prices.packProgress.title2": "Monthly",
-  "home.prices.packProgress.subtitle2": "Boost your aero with no commitment",
-  "home.prices.packProgress.period2": "€22/month in Feb 2026",
-  "home.prices.packProgress.items2.1": "Full access to AeroX",
-  "home.prices.packProgress.items2.2": "Ideal to prep the summer season",
-  "home.prices.packProgress.cta2": "Launch on 2025-11-01",
-
   "home.steps.title": "Start training with AeroX in 2 minutes",
   "home.steps.subsubtitle": "Easy setup. Works instantly with your smart trainer. Compatible with major brands (Tacx, Garmin, Wahoo, Elite, Saris). As smooth as Zwift, MyWhoosh or Kinomap — with one unique advantage: real-time aero to gain speed and save watts.",
   "home.steps.items.1.title": "Step 1: <span class=\"font-semibold\">Download AeroX</span>",
@@ -241,7 +204,6 @@
   "home.faq.items.8.title": "I’m already used to an aero position — is this still useful?",
   "home.faq.items.8.more": "Being used to it doesn’t mean being optimized — AeroX shows you the difference",
   "home.faq.items.8.education": "Being in position isn't enough — it also needs to be effective. Most cyclists think they're aerodynamic while invisible details cost them 10 to 30 watts: head 3 cm too high, elbows 5 cm too wide, shoulders not tucked in. Without objective measurement, you can't know. AeroX makes these details visible in real time: you adjust your head, your CdA drops 2% — you see it instantly on screen. Our measurements show that even experienced cyclists still gain 1 to 2 km/h by refining their position with objective feedback. Moreover, your position degrades with fatigue: AeroX shows you how your CdA evolves throughout the session, so you learn to hold an efficient position even after 2 hours of effort. It's the difference between thinking you're aero and measuring it.",
-
 
   "home.faq.schema.q1": "Why AeroX?",
   "home.faq.schema.a1": "From 25 km/h, aerodynamics accounts for 70 to 95% of resistance. AeroX lets you visualize and optimize your position to ride faster and save watts.",
@@ -313,7 +275,6 @@
   "contact.heading": "Contact AeroX",
    "contact.not_ready": "AeroX is in its final optimisation step, and will be ready pretty soon",
 
- 
   "contact.intro": "To try AeroX or any other, contact  us directly:",
   "contact.aria": "Send an email to contact@aeroxbefaster.com",
   "contact.delay": "We usually reply within 24 to 48 hours (business days).",
@@ -321,7 +282,6 @@
   "privacy.title": "Privacy Policy",
   "privacy.description": "Learn how AeroX collects, uses, and protects your personal data.",
 
-  
   "signup.meta.title": "Sign Up and start your aero journey",
   "signup.meta.description": "Create your AeroX account to access the app and subscriptions.",
   "signup.title": "Welcome to AeroX",
