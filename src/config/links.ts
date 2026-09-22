@@ -9,10 +9,9 @@ export const LINKS = {
   contact: "/contact/",
 
   // Lien de réservation de créneau (agenda Google), affiché au succès du
-  // formulaire de la période de test. Vide pour l'instant : la plage de
-  // rendez-vous doit être créée à la main dans Google Calendar (Créer →
-  // Plage de rendez-vous, compte olivierdemichel@releve.club) — ça ne se
-  // fait pas par API. Une fois créée, le lien ressemble à
-  // https://calendar.app.google/…
-  booking: "",
+  // formulaire de la période de test. Plage de rendez-vous créée à la main
+  // dans Google Calendar (Créer → Plage de rendez-vous, compte
+  // olivierdemichel@releve.club). Forme courte (calendar.app.google), stable
+  // même si la configuration de la plage est modifiée derrière.
+  booking: "https://calendar.app.google/eNFuymZ8MWz9icFB8",
 };
