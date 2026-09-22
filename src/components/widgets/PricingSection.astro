@@ -1,0 +1,163 @@
+---
+import Prices from '~/components/widgets/Pricing.astro';
+import { type Locale, getDict, t } from '~/lib/i18n';
+import { localizedHref } from '~/utils/localize';
+
+// Section tarifs partagée par l'accueil et le dashboard : les deux rendaient
+// jusqu'ici la même grille, dupliquée props par props. Elle porte l'ancre
+// `#pricing` visée par l'entrée de menu « Tarifs » (src/navigation.ts).
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
+---
+
+<Prices
+  id="pricing"
+  title={t(dict, 'pricing.title')}
+  subtitle={t(dict, 'pricing.subtitle')}
+  subsubtitle={t(dict, 'pricing.subsubtitle')}
+  prices={[
+    {
+      title: t(dict, 'pricing.diagnostic.title'),
+      subtitle: t(dict, 'pricing.diagnostic.subtitle'),
+      price: '79',
+      period: t(dict, 'pricing.diagnostic.period'),
+      items: [
+        { description: t(dict, 'pricing.diagnostic.items.1'), icon: 'tabler:ruler-measure' },
+        { description: t(dict, 'pricing.diagnostic.items.2'), icon: 'tabler:trending-up' },
+        { description: t(dict, 'pricing.diagnostic.items.3'), icon: 'tabler:heartbeat' },
+        { description: t(dict, 'pricing.diagnostic.items.4'), icon: 'tabler:bulb' },
+      ],
+      callToAction: {
+        text: t(dict, 'pricing.diagnostic.cta'),
+        id: 'btn-buy-diagnostic',
+        type: 'button',
+      },
+      hasRibbon: true,
+      ribbonTitle: t(dict, 'pricing.diagnostic.ribbon'),
+    },
+    {
+      // Pas de `price` : la carte affiche `priceLabel` au lieu d'un € orphelin.
+      title: t(dict, 'pricing.b2b.title'),
+      subtitle: t(dict, 'pricing.b2b.subtitle'),
+      priceLabel: t(dict, 'pricing.b2b.priceLabel'),
+      period: t(dict, 'pricing.b2b.period'),
+      items: [
+        { description: t(dict, 'pricing.b2b.items.1'), icon: 'tabler:receipt-euro' },
+        { description: t(dict, 'pricing.b2b.items.2'), icon: 'tabler:users' },
+        { description: t(dict, 'pricing.b2b.items.3'), icon: 'tabler:lifebuoy' },
+      ],
+      callToAction: {
+        text: t(dict, 'pricing.b2b.cta'),
+        href: localizedHref(lang, '/bike-fitting/#contact-bf'),
+        target: '',
+      },
+      hasRibbon: false,
+      ribbonTitle: '',
+    },
+  ]}
+/>
+
+<div
+  id="buy-diagnostic-config"
+  data-lang={lang}
+  data-error={t(dict, 'pricing.diagnostic.error')}
+  class="hidden"
+>
+</div>
+
+<script>
+  import { supabase } from '~/config/supabaseClient';
+
+  // Attache en deux temps, et idempotente :
+  //  - appel à la racine du script -> couvre le premier rendu. `astro:page-load`
+  //    ne suffit pas : il est câblé sur le `load` de window (voir
+  //    astro/dist/transitions/router.js), donc il attend toutes les
+  //    sous-ressources de la page — plusieurs secondes pendant lesquelles le
+  //    clic sur « Je commande » resterait sans effet ;
+  //  - écouteur `astro:page-load` -> couvre les navigations ClientRouter, un
+  //    script module ne se ré-exécutant jamais après sa première exécution
+  //    dans la session (cache `scriptsAlreadyRan` d'Astro).
+  // Le marqueur `dataset.buyDiagnosticBound` rend le double appel sans effet.
+  function initBuyDiagnostic() {
+    const btn = document.getElementById('btn-buy-diagnostic') as HTMLButtonElement | null;
+    if (!btn || btn.dataset.buyDiagnosticBound === '1') return;
+    btn.dataset.buyDiagnosticBound = '1';
+
+    // Lu ici et non à la racine du module : après une navigation ClientRouter
+    // le nœud de configuration du nouveau document remplace l'ancien.
+    const cfg = document.getElementById('buy-diagnostic-config');
+    const lang = cfg?.dataset.lang ?? 'fr';
+    const buyError = cfg?.dataset.error ?? '';
+
+    // Deux situations mènent au même endroit : aucune session dans le
+    // navigateur, et une session que le serveur refuse (compte supprimé,
+    // secret tourné, horloge décalée). Dans les deux cas l'acheteur doit
+    // pouvoir se reconnecter et revenir ici — d'où le point de retour.
+    // `encodeURIComponent` est indispensable : le `#` non encodé deviendrait
+    // un fragment au lieu d'une valeur de paramètre, et la page de connexion,
+    // qui valide cette valeur via `safeRedirect`, retomberait sur le dashboard.
+    const goToLogin = () => {
+      const back = encodeURIComponent(`/${lang}/#pricing`);
+      window.location.href = `/${lang}/inscription/connexion/?redirect=${back}`;
+    };
+
+    btn.addEventListener('click', async () => {
+      const prev = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '…';
+
+      try {
+        // `getSession` plutôt que `getUser` : on a besoin du jeton d'accès
+        // lui-même, pas seulement du profil. C'est ce jeton que la route
+        // vérifie auprès de Supabase pour établir *qui* achète — l'identifiant
+        // ne transite plus dans le corps, où n'importe qui pouvait le
+        // remplacer par celui d'un autre compte. `getSession` rafraîchit un
+        // jeton expiré au passage (autoRefreshToken).
+        const { data } = await supabase.auth.getSession();
+        const session = data?.session;
+        const user = session?.user;
+
+        // Connexion obligatoire avant le checkout.
+        if (!user || !session) {
+          goToLogin();
+          return;
+        }
+
+        // Corps réduit à ce que le serveur ne peut pas deviner : le produit
+        // voulu et la langue. Le prix vient de la table serveur
+        // `product -> lookup_key`, l'identifiant et l'e-mail du jeton vérifié.
+        const res = await fetch(`/${lang}/telechargement/api/create-api-checkout/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            product: 'diagnostic',
+            lang,
+          }),
+        });
+        // Le serveur a refusé le jeton : c'est un « pas de session », pas une
+        // panne. Sans ce cas, la route renvoyait 401, le `catch` affichait une
+        // alerte et l'acheteur restait coincé sans issue — alors qu'une
+        // reconnexion suffit.
+        if (res.status === 401) {
+          goToLogin();
+          return;
+        }
+
+        const payload = await res.json();
+        if (!payload?.url) throw new Error(payload?.error || 'no url');
+        window.location.href = payload.url;
+      } catch (err) {
+        console.error('[PricingSection] checkout diagnostic', err);
+        alert(buyError);
+        btn.disabled = false;
+        btn.innerHTML = prev;
+      }
+    });
+  }
+
+  initBuyDiagnostic();
+  document.addEventListener('astro:page-load', initBuyDiagnostic);
+</script>

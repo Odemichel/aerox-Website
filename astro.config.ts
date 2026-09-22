@@ -26,6 +26,36 @@ export default defineConfig({
   output: 'server',
   adapter: vercel({}),
 
+  // Offre Pionnier retirée (plus commercialisée) : les deux pages sont
+  // supprimées, on redirige vers la section tarifs de la home. Motif à
+  // paramètre (`/[lang]/paiement`) testé et écarté : le placeholder n'est
+  // pas substitué dans l'URL de destination générée (Location littérale
+  // `/[lang]/#pricing`) — routes déclarées explicitement pour les 9 langues.
+  // Sources avec `/` final : `trailingSlash: 'always'` ne réécrit pas les
+  // clés de `redirects`, une source sans slash ne matche pas les requêtes
+  // réelles (`/fr/paiement/`) et retombe sur le rendu SSR de la page
+  // supprimée au lieu de rediriger.
+  redirects: {
+    '/fr/paiement/': '/fr/#pricing',
+    '/en/paiement/': '/en/#pricing',
+    '/pt/paiement/': '/pt/#pricing',
+    '/es/paiement/': '/es/#pricing',
+    '/it/paiement/': '/it/#pricing',
+    '/de/paiement/': '/de/#pricing',
+    '/nl/paiement/': '/nl/#pricing',
+    '/ja/paiement/': '/ja/#pricing',
+    '/tr/paiement/': '/tr/#pricing',
+    '/fr/telechargement/DeviensPionnier/': '/fr/#pricing',
+    '/en/telechargement/DeviensPionnier/': '/en/#pricing',
+    '/pt/telechargement/DeviensPionnier/': '/pt/#pricing',
+    '/es/telechargement/DeviensPionnier/': '/es/#pricing',
+    '/it/telechargement/DeviensPionnier/': '/it/#pricing',
+    '/de/telechargement/DeviensPionnier/': '/de/#pricing',
+    '/nl/telechargement/DeviensPionnier/': '/nl/#pricing',
+    '/ja/telechargement/DeviensPionnier/': '/ja/#pricing',
+    '/tr/telechargement/DeviensPionnier/': '/tr/#pricing',
+  },
+
   /** 🌍 Ajout du bloc i18n */
   i18n: {
     defaultLocale: 'en',

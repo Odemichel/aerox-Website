@@ -179,6 +179,7 @@ export interface Price {
   subtitle2?: string;
   description?: string;
   price?: number | string;
+  priceLabel?: string;
   price1?: number | string;
   price2?: number | string;
   period?: string;
