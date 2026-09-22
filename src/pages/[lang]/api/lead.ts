@@ -138,12 +138,15 @@ export const POST: APIRoute = async (context) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // `verify_jwt` reste activé côté Supabase : la passerelle exige encore
-        // un `Authorization`. On n'y met plus la clé anon, servie publiquement
-        // dans le bundle du site (`_astro/supabaseClient.*.js`) et donc sans
-        // valeur de preuve ; la clé service-role ne quitte jamais le serveur.
-        // Le contrôle d'accès réel reste le secret partagé ci-dessous.
-        Authorization: `Bearer ${import.meta.env.SUPABASE_SERVICE_ROLE_KEY}`,
+        // `verify_jwt` reste activé côté Supabase : la passerelle exige un
+        // `Authorization` pour laisser passer l'appel. La clé anon le satisfait
+        // et n'a aucun privilège — c'est tout ce qu'on lui demande ici. Elle
+        // n'authentifie rien : servie publiquement dans le bundle du site
+        // (`_astro/supabaseClient.*.js`), n'importe qui peut la produire.
+        // L'authentification est assurée par `x-lead-hook-secret` ci-dessous,
+        // connu du seul serveur. Ne pas remplacer ce porteur par la clé
+        // service-role : elle contourne RLS, et rien ici n'en a besoin.
+        Authorization: `Bearer ${import.meta.env.PUBLIC_SUPABASE_ANON_KEY}`,
         'x-lead-hook-secret': import.meta.env.LEAD_HOOK_SECRET,
       },
       body: JSON.stringify({
