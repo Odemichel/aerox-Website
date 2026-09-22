@@ -1,6 +1,6 @@
 export const prerender = false;
 
-import type { APIRoute } from 'astro';
+import type { APIContext, APIRoute } from 'astro';
 import { validateLead, type Lead } from '~/lib/leadValidation';
 import { leadRateLimiter } from '~/lib/rateLimit';
 
@@ -23,7 +23,46 @@ function json(body: unknown, status: number) {
   });
 }
 
-export const POST: APIRoute = async ({ request, params, clientAddress }) => {
+// Budgets d'attente des appels sortants. Sans eux, un amont qui s'enlise fait
+// tuer l'invocation par la plateforme : l'abonné est créé chez MailerLite, la
+// notification ne part jamais et le visiteur voit une erreur — exactement la
+// perte de lead que cette route existe pour éviter.
+const MAILERLITE_TIMEOUT_MS = 8000;
+const NOTIFY_TIMEOUT_MS = 5000;
+
+/**
+ * Adresse à utiliser comme clé du limiteur.
+ *
+ * `clientAddress` est un *getter* : l'adaptateur Vercel lui passe la valeur
+ * brute de `x-forwarded-for`, qui peut porter une liste `client, proxy1, …`,
+ * et le getter lève si aucun adaptateur ne fournit d'adresse. Il est donc lu
+ * ici, dans un `try`, et non déstructuré dans la signature du handler — où il
+ * serait évalué avant tout gestionnaire d'erreur.
+ */
+function rateLimitKey(context: APIContext): string {
+  let raw: string | undefined;
+  try {
+    raw = context.clientAddress;
+  } catch {
+    // Pas d'adresse exploitable : tous ces appels partagent alors le même
+    // quota, ce qui est le comportement sûr côté limiteur.
+    raw = undefined;
+  }
+  return raw?.split(',')[0]?.trim() || 'inconnue';
+}
+
+export const POST: APIRoute = async (context) => {
+  // `clientAddress` n'est volontairement pas déstructuré ici : voir rateLimitKey.
+  const { request, params } = context;
+
+  // `request.json()` parse quel que soit le type déclaré. Un formulaire HTML
+  // tiers en `enctype="text/plain"` produit un corps JSON valide sans déclencher
+  // de préflight CORS : chaque visiteur d'une page piégée soumettrait un lead
+  // depuis sa propre IP, rendant le quota par adresse inopérant. On exige donc
+  // un `Content-Type` JSON, que ce formulaire-là ne peut pas poser.
+  const mediaType = (request.headers.get('content-type') ?? '').split(';')[0].trim().toLowerCase();
+  if (mediaType !== 'application/json') return json({ error: 'invalid_type' }, 415);
+
   let body: unknown;
   try {
     body = await request.json();
@@ -38,19 +77,25 @@ export const POST: APIRoute = async ({ request, params, clientAddress }) => {
   if (result.ok === false) return json({ error: result.error }, 400);
 
   // Honeypot : on répond comme si tout s'était bien passé, sans rien faire.
-  // Le bot ne peut pas distinguer un succès d'un rejet.
-  if (result.honeypot) return json({ success: true }, 200);
+  // Le bot ne peut pas distinguer un succès d'un rejet. La trace serveur est
+  // le seul moyen de repérer un faux positif (gestionnaire de mots de passe
+  // qui remplit le champ invisible) : sans elle, le lead disparaîtrait
+  // silencieusement.
+  if (result.honeypot) {
+    console.error('honeypot déclenché, lead ignoré', result.lead.email);
+    return json({ success: true }, 200);
+  }
 
-  // `x-forwarded-for` peut porter une liste `client, proxy1, proxy2` ; on ne garde
-  // que la première entrée pour rester cohérent avec l'IP unique de `clientAddress`.
-  const forwardedFor = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
-  const ip = clientAddress ?? forwardedFor ?? 'inconnue';
+  const ip = rateLimitKey(context);
   if (!leadRateLimiter.check(ip)) return json({ error: 'rate_limited' }, 429);
 
   const { lead } = result;
   const lang = params.lang ?? 'fr';
 
-  const groups = [TOPIC_GROUPS[lead.topic], lang === 'en' ? GROUP_GLOBAL_EN : GROUP_GLOBAL_FR];
+  // Seuls deux groupes globaux existent : `fr` d'un côté, toutes les autres
+  // langues de l'autre. Router un abonné japonais ou brésilien vers la liste
+  // française serait pire que de l'envoyer dans la liste anglophone.
+  const groups = [TOPIC_GROUPS[lead.topic], lang === 'fr' ? GROUP_GLOBAL_FR : GROUP_GLOBAL_EN];
 
   const fields: Record<string, string> = { name: lead.name };
   if (lead.message) fields.message = lead.message;
@@ -71,6 +116,10 @@ export const POST: APIRoute = async ({ request, params, clientAddress }) => {
         Authorization: `Bearer ${import.meta.env.MAILERLITE_API_KEY}`,
       },
       body: JSON.stringify({ email: lead.email, fields, groups }),
+      // Le rejet du timeout est levé par `fetch` lui-même, donc capté par ce
+      // `catch` et rendu au visiteur sous la même réponse opaque qu'un incident
+      // réseau.
+      signal: AbortSignal.timeout(MAILERLITE_TIMEOUT_MS),
     });
   } catch (err) {
     console.error('MailerLite unreachable', err);
@@ -89,7 +138,13 @@ export const POST: APIRoute = async ({ request, params, clientAddress }) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${import.meta.env.PUBLIC_SUPABASE_ANON_KEY}`,
+        // `verify_jwt` reste activé côté Supabase : la passerelle exige encore
+        // un `Authorization`. On n'y met plus la clé anon, servie publiquement
+        // dans le bundle du site (`_astro/supabaseClient.*.js`) et donc sans
+        // valeur de preuve ; la clé service-role ne quitte jamais le serveur.
+        // Le contrôle d'accès réel reste le secret partagé ci-dessous.
+        Authorization: `Bearer ${import.meta.env.SUPABASE_SERVICE_ROLE_KEY}`,
+        'x-lead-hook-secret': import.meta.env.LEAD_HOOK_SECRET,
       },
       body: JSON.stringify({
         topic: lead.topic,
@@ -103,6 +158,9 @@ export const POST: APIRoute = async ({ request, params, clientAddress }) => {
           message: lead.message,
         },
       }),
+      // Comme pour MailerLite, le rejet du timeout vient de `fetch` : il est
+      // absorbé par le `catch` ci-dessous, qui ne fait déjà que journaliser.
+      signal: AbortSignal.timeout(NOTIFY_TIMEOUT_MS),
     });
     if (!notifyRes.ok) console.error('notify-admin-lead', notifyRes.status, await notifyRes.text());
   } catch (err) {
