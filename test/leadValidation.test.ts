@@ -180,10 +180,15 @@ describe('isHoneypotFilled — profondeur bornée', () => {
   });
 
   it('ne confond pas l\'indice de tableau avec la profondeur', () => {
-    // `some(isHoneypotFilled)` passerait l'indice en 2e argument : le 9e
-    // élément serait vu à une profondeur de 8 et déclencherait à tort.
-    const wide = ['', '', '', '', '', '', '', '', '', '', ''];
+    // Un tableau plat de chaînes ne discrimine rien : la profondeur n'est
+    // lue que dans la branche tableau, jamais pour un élément scalaire.
+    // Il faut des éléments eux-mêmes tableaux, à un indice >= la borne, pour
+    // que `some(isHoneypotFilled)` passerait l'indice en 2e argument et le
+    // ferait prendre pour la profondeur : le 9e élément (indice 8) serait
+    // alors vu à une profondeur de 8 et déclencherait le honeypot à tort,
+    // alors qu'un sous-tableau vide ne devrait rien déclencher.
+    const wide = [[], [], [], [], [], [], [], [], []];
     expect(isHoneypotFilled(wide)).toBe(false);
-    expect(wide.length).toBeGreaterThan(8);
+    expect(wide.length).toBeGreaterThanOrEqual(9);
   });
 });
