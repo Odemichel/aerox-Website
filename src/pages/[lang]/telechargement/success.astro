@@ -6,6 +6,12 @@ import { getDict, t } from '~/lib/i18n';
 const { lang } = Astro.params;
 const dict = getDict(lang);
 
+// `?product=diagnostic` est posé sur la success_url par la route de checkout.
+// Pas de `prerender = false` ici : astro.config.ts est en `output: 'server'` et
+// cette page n'est pas prérendue (aucun success/index.html à la construction),
+// donc les paramètres de requête sont déjà lisibles.
+const isDiagnostic = Astro.url.searchParams.get('product') === 'diagnostic';
+
 const metadata = {
   title: t(dict, 'success.meta.title'),
   description: t(dict, 'success.meta.description'),
@@ -15,12 +21,12 @@ const metadata = {
 <Layout metadata={metadata}>
   <section class="max-w-xl mx-auto py-20 text-center">
     <h1 class="text-3xl font-bold mb-4">
-      ✅ {t(dict, 'success.title')}
+      ✅ {isDiagnostic ? t(dict, 'success.diagnostic.title') : t(dict, 'success.title')}
     </h1>
 
     <p class="text-lg mb-8">
-      {t(dict, 'success.subtitle1')}<br />
-      {t(dict, 'success.subtitle2')}
+      {isDiagnostic ? t(dict, 'success.diagnostic.subtitle1') : t(dict, 'success.subtitle1')}<br />
+      {isDiagnostic ? t(dict, 'success.diagnostic.subtitle2') : t(dict, 'success.subtitle2')}
     </p>
 
     <!-- ✅ Boutons Mac + Windows -->

@@ -436,6 +436,9 @@
 
   "success.livre.subtitle1": "Tu vas pouvoir intégrer les principes d'un entrainement aérodyanmique.",
   "success.subtitle2": "Tes retours nous permettront d’améliorer AeroX à ton image !",
+  "success.diagnostic.title": "Ton diagnostic est débloqué",
+  "success.diagnostic.subtitle1": "Le paiement est passé, ton compte AeroX a accès au Diagnostic.",
+  "success.diagnostic.subtitle2": "Ouvre l'application AeroX avec ce même compte pour lancer ta séance.",
   "success.download1": "Télécharger",
   "success.whatsapp1":"Rejoins",
   "success.whatsapp2":"sur",
