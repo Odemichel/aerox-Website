@@ -95,27 +95,37 @@ const dict = getDict(lang);
       btn.innerHTML = '…';
 
       try {
-        const { data } = await supabase.auth.getUser();
-        const user = data?.user;
+        // `getSession` plutôt que `getUser` : on a besoin du jeton d'accès
+        // lui-même, pas seulement du profil. C'est ce jeton que la route
+        // vérifie auprès de Supabase pour établir *qui* achète — l'identifiant
+        // ne transite plus dans le corps, où n'importe qui pouvait le
+        // remplacer par celui d'un autre compte. `getSession` rafraîchit un
+        // jeton expiré au passage (autoRefreshToken).
+        const { data } = await supabase.auth.getSession();
+        const session = data?.session;
+        const user = session?.user;
 
         // Connexion obligatoire avant le checkout : on mémorise le point de
         // retour. `encodeURIComponent` est indispensable — le `#` non encodé
         // deviendrait un fragment au lieu d'une valeur de paramètre, et la
         // page de connexion, qui valide cette valeur via `safeRedirect`,
         // retomberait sur le dashboard.
-        if (!user) {
+        if (!user || !session) {
           const back = encodeURIComponent(`/${lang}/#pricing`);
           window.location.href = `/${lang}/inscription/connexion/?redirect=${back}`;
           return;
         }
 
+        // Corps réduit à ce que le serveur ne peut pas deviner : le produit
+        // voulu et la langue. Le prix vient de la table serveur
+        // `product -> lookup_key`, l'identifiant et l'e-mail du jeton vérifié.
         const res = await fetch(`/${lang}/telechargement/api/create-api-checkout/`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.access_token}`,
+          },
           body: JSON.stringify({
-            lookupKey: 'diagnostic_basic',
-            userId: user.id,
-            customerEmail: user.email,
             product: 'diagnostic',
             lang,
           }),
