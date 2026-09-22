@@ -50,7 +50,24 @@ export const POST: APIRoute = async ({ request }) => {
   // À partir d'ici, et seulement à partir d'ici, le contenu est digne de foi.
   // Tout ce qui n'est pas l'événement attendu repart en 200 : Stripe traite
   // un non-200 comme un échec de livraison et rejoue l'événement.
-  if (event.type !== 'checkout.session.completed') {
+  //
+  // Deux événements, pas un seul. Les moyens de paiement à notification
+  // différée actifs sur le compte (klarna, bancontact) envoient d'abord
+  // `checkout.session.completed` avec `payment_status: 'unpaid'` — les fonds
+  // ne sont pas encore confirmés — puis `checkout.session.async_payment_succeeded`
+  // une fois le paiement abouti. N'écouter que le premier revenait à acquitter
+  // en 200 la seule notification jamais reçue pour ces paiements : client
+  // débité, diagnostic fermé, et aucune trace — un 200 sort l'événement de la
+  // file, il n'apparaît même pas dans les livraisons en échec du tableau de
+  // bord.
+  //
+  // Les deux événements portent le même `data.object` — une
+  // `Stripe.Checkout.Session` (types Stripe, `EventTypes.d.ts`) — donc tout ce
+  // qui suit (payment_status, metadata, écriture) s'applique sans changement.
+  // Le cas d'un compte qui recevrait les deux événements pour un même paiement
+  // est couvert par l'idempotence de l'écriture plus bas.
+  const HANDLED = ['checkout.session.completed', 'checkout.session.async_payment_succeeded'];
+  if (!HANDLED.includes(event.type)) {
     return new Response('ignored', { status: 200 });
   }
 
