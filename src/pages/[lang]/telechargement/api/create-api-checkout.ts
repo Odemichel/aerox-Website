@@ -28,12 +28,21 @@ export const POST: APIRoute = async ({ request }) => {
       lang = match?.[1] || 'fr'; // fallback fr
     }
 
-    // --- Prix : résolution par lookup_key en priorité, pour que la
-    // --- bascule sandbox → live se fasse en changeant les clés du .env
-    // --- et rien d'autre. Sans lookup_key fourni, on retombe sur
-    // --- STRIPE_PRICE_ID (comportement historique, inchangé).
+    // --- Prix : résolution par lookup_key uniquement si l'appelant la
+    // --- demande explicitement (body.lookupKey). Volontairement PAS de
+    // --- repli sur une variable d'environnement type STRIPE_LOOKUP_KEY :
+    // --- ce serait un interrupteur global — si elle existait un jour dans
+    // --- l'environnement, tous les appelants (y compris ceux qui n'envoient
+    // --- aucun corps et attendent STRIPE_PRICE_ID) basculeraient d'un coup
+    // --- sur un autre prix, en dépendant en plus d'un stripe.prices.list()
+    // --- réussi là où aucun appel réseau n'était fait avant. Même défaut
+    // --- de forme que le subscription_data retiré plus haut : inoffensif
+    // --- tant que personne ne l'arme, fatal le jour où quelqu'un le fait
+    // --- sans le savoir. Sans lookupKey dans le corps, on retombe
+    // --- directement sur body.priceId ?? STRIPE_PRICE_ID, exactement comme
+    // --- avant ce chantier.
     let priceId = '';
-    const key = body.lookupKey ?? import.meta.env.STRIPE_LOOKUP_KEY;
+    const key = body.lookupKey;
     if (key) {
       const prices = await stripe.prices.list({ lookup_keys: [key], active: true, expand: ['data.product'] });
       if (!prices.data.length) throw new Error(`No active price for lookupKey "${key}"`);
