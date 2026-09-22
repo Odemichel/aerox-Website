@@ -203,16 +203,28 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
       // toggle purement visuel, l'état réellement retenu à la soumission est
       // celui du radio `profile_type:checked` natif.
       const profileCards = form.querySelectorAll<HTMLLabelElement>('.profile-card');
-      profileCards.forEach((card) => {
-        card.addEventListener('click', () => {
-          profileCards.forEach((c) => {
-            c.classList.remove('border-primary', 'bg-primary/10');
-            c.classList.add('border-gray-300', 'dark:border-gray-600');
-          });
-          card.classList.remove('border-gray-300', 'dark:border-gray-600');
-          card.classList.add('border-primary', 'bg-primary/10');
+      const selectProfile = (card: HTMLLabelElement) => {
+        profileCards.forEach((c) => {
+          c.classList.remove('border-primary', 'bg-primary/10');
+          c.classList.add('border-gray-300', 'dark:border-gray-600');
         });
-      });
+        card.classList.remove('border-gray-300', 'dark:border-gray-600');
+        card.classList.add('border-primary', 'bg-primary/10');
+      };
+      profileCards.forEach((card) => card.addEventListener('click', () => selectProfile(card)));
+
+      // Présélection depuis l'URL : /periode-test/?profil=bike-fitter, le lien
+      // posé sur la page bike-fitting. Le radio est coché en plus du style,
+      // car c'est lui — et non la classe — qui est lu à la soumission.
+      const wanted = new URLSearchParams(window.location.search).get('profil');
+      if (wanted) {
+        const card = form.querySelector<HTMLLabelElement>(`.profile-card[data-profile="${CSS.escape(wanted)}"]`);
+        const radio = card?.querySelector<HTMLInputElement>('input[name="profile_type"]');
+        if (card && radio) {
+          radio.checked = true;
+          selectProfile(card);
+        }
+      }
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();

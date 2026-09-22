@@ -2,7 +2,6 @@
 import type { GetStaticPaths } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
 import Features from '~/components/widgets/Features.astro';
-import LeadForm from '~/components/widgets/LeadForm.astro';
 
 import aeroxHero from '~/assets/images/aerox-hero.jpg';
 import bikePower from '~/assets/images/bike-fitter/bikefitting-bike-power.jpg';
@@ -462,7 +461,18 @@ const reviewSchema = reviews.map((r) => ({
         <h2 class="text-3xl md:text-4xl font-bold tracking-tighter mb-4">{t(dict, 'bf.cta.title')}</h2>
         <p class="text-xl text-muted dark:text-slate-400 mb-8">{t(dict, 'bf.cta.subtitle')}</p>
 
-        <LeadForm topic="bike-fitter" />
+        {/*
+          Un seul formulaire de réservation pour tout le site, sur
+          /periode-test/. `profil=bike-fitter` y présélectionne le bon profil :
+          sans ce paramètre, un bike-fitter venu d'ici arriverait sur un
+          formulaire réglé sur « cycliste ».
+        */}
+        <a
+          href={`/${lang}/periode-test/?profil=bike-fitter#reservation`}
+          class="btn-primary px-8 py-3 text-lg font-semibold inline-block"
+        >
+          {t(dict, 'bf.cta.button')}
+        </a>
       </div>
     </div>
   </section>
