@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateLead, LEAD_TOPICS } from '../src/lib/leadValidation';
+import { validateLead, isHoneypotFilled, LEAD_TOPICS } from '../src/lib/leadValidation';
 
 const base = { topic: 'test-period', name: 'Olivier', email: 'o@example.com' };
 
@@ -54,6 +54,26 @@ describe('validateLead', () => {
     const r = validateLead({ ...base, hp: 'rempli par un bot' });
     expect(r.ok).toBe(true);
     if (r.ok) expect(r.honeypot).toBe(true);
+  });
+
+  it.each([1, -1, 3.5, true, ['x'], { a: 1 }, 'x'])('déclenche le honeypot sur la valeur non vide %s', (hp) => {
+    const r = validateLead({ ...base, hp });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.honeypot).toBe(true);
+  });
+
+  it.each([undefined, null, '', '   ', false, 0, [], {}])(
+    'ne déclenche pas le honeypot sur la valeur vide %s',
+    (hp) => {
+      const r = validateLead({ ...base, hp });
+      expect(r.ok).toBe(true);
+      if (r.ok) expect(r.honeypot).toBe(false);
+    }
+  );
+
+  it('ne déclenche pas le honeypot sur un tableau de valeurs vides', () => {
+    const r = validateLead({ ...base, hp: ['', '  ', null] });
+    expect(r.ok && r.honeypot).toBe(false);
   });
 
   it('normalise webcam en oui/non et ignore le reste', () => {
@@ -116,5 +136,17 @@ describe('validateLead', () => {
   it('refuse validateLead(\'x\') sans exception', () => {
     const r = validateLead('x' as any);
     expect(r).toEqual({ ok: false, error: 'invalid_topic' });
+  });
+});
+
+describe('isHoneypotFilled', () => {
+  it('imbrique la détection dans les tableaux', () => {
+    expect(isHoneypotFilled([[''], [0], [false]])).toBe(false);
+    expect(isHoneypotFilled([[''], ['rempli']])).toBe(true);
+  });
+
+  it('traite un objet non vide comme rempli', () => {
+    expect(isHoneypotFilled({})).toBe(false);
+    expect(isHoneypotFilled({ a: undefined })).toBe(true);
   });
 });

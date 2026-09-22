@@ -36,6 +36,23 @@ function asText(value: unknown): string | null {
   return value.trim();
 }
 
+/**
+ * Le champ honeypot est invisible : toute valeur réellement portée par la
+ * requête trahit un remplissage automatique.
+ *
+ * `false` et `0` sont exclus volontairement : ce sont les sérialisations
+ * naturelles d'un champ *non* rempli (case décochée, valeur numérique par
+ * défaut). Les retenir jetterait des leads légitimes, ce que ce contrôle
+ * doit justement éviter — un rejet honeypot est silencieux pour le visiteur.
+ */
+export function isHoneypotFilled(value: unknown): boolean {
+  if (value === undefined || value === null || value === false || value === 0) return false;
+  if (typeof value === 'string') return value.trim().length > 0;
+  if (Array.isArray(value)) return value.some(isHoneypotFilled);
+  if (typeof value === 'object') return Object.keys(value as object).length > 0;
+  return true; // nombre non nul, `true`, bigint, symbole…
+}
+
 export function validateLead(input: LeadInput): LeadResult {
   // Garde contre null, undefined, non-objets (primitives, arrays)
   if (!input || typeof input !== 'object' || Array.isArray(input)) {
@@ -77,7 +94,10 @@ export function validateLead(input: LeadInput): LeadResult {
   const webcamRaw = typeof input.webcam === 'string' ? input.webcam.trim().toLowerCase() : '';
   const webcam: Lead['webcam'] = webcamRaw === 'oui' || webcamRaw === 'non' ? webcamRaw : '';
 
-  const honeypot = typeof input.hp === 'string' && input.hp.trim().length > 0;
+  // Le honeypot se déclenche sur toute valeur non vide, quel que soit son type :
+  // un bot qui poste `hp: 1` ou `hp: ['x']` ne doit pas passer au travers du
+  // filtre simplement parce que ce n'est pas une chaîne.
+  const honeypot = isHoneypotFilled(input.hp);
 
   return {
     ok: true,
