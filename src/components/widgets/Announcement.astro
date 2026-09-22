@@ -1,5 +1,8 @@
 ---
+import { type Locale, getDict, t } from '~/lib/i18n';
 
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
 ---
 
 <div
@@ -9,8 +12,8 @@
     class="dark:bg-slate-700 bg-white/40 dark:text-slate-300 font-semibold px-1 py-0.5 text-xs mr-0.5 rtl:mr-0 rtl:ml-0.5 inline-block"
     >NEW</span
   >
-  <a href="https://aeroxbefaster.com/" class="text-muted hover:underline dark:text-slate-400 font-medium"
-    >AeroX est disponible maintenant! »</a
+  <a href={`/${lang}/#pricing`} class="text-muted hover:underline dark:text-slate-400 font-medium"
+    >{t(dict, 'announcement.text')}</a
   >
 
 </div>

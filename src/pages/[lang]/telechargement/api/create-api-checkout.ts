@@ -33,7 +33,10 @@ const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY as string);
 // aucun `price_…` n'est écrit en dur, le montant reste piloté depuis le
 // tableau de bord Stripe.
 const PRODUCT_PRICE_LOOKUP_KEYS: Record<string, string> = {
-  diagnostic: 'diagnostic_basic',
+  // Pré-réservation à −40 % jusqu'au 31/10/2026, livraison le 01/11.
+  // Le prix plein (`diagnostic_basic`, 79 €) reste actif chez Stripe : il
+  // suffira de revenir dessus le 1er novembre, sans rien créer.
+  diagnostic: 'diagnostic_preorder',
 };
 
 type Body = {

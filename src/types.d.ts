@@ -179,6 +179,10 @@ export interface Price {
   subtitle2?: string;
   description?: string;
   price?: number | string;
+  /** Prix barré affiché à côté du prix courant (offre de lancement). */
+  priceBefore?: number | string;
+  /** Ligne libre sous la période — pas de mise en minuscules, contrairement à `period`. */
+  note?: string;
   priceLabel?: string;
   price1?: number | string;
   price2?: number | string;
