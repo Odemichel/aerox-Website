@@ -95,7 +95,7 @@ async function authenticatedUser(request: Request) {
   return data.user;
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, site }) => {
   try {
     const body = (await request.json().catch(() => ({}))) as Body;
 
@@ -175,9 +175,16 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // --- Base site ---
+    // Base des URL de retour. `reqOrigin` vient de l'en-tête `Host` de la
+    // requête, donc de l'appelant : s'en servir en premier laisserait un
+    // attaquant faire pointer le retour après paiement sur son domaine, sur
+    // une session pourtant légitime. On préfère la configuration — la variable
+    // d'environnement, puis le `site` déclaré dans astro.config.ts — et on ne
+    // retombe sur l'origine de la requête qu'en dernier recours, en local où
+    // aucune des deux n'est définie.
     const reqOrigin = new URL(request.url).origin; // http://localhost:4321
     const envBase = (import.meta.env.PUBLIC_SITE_URL || '').split('#')[0];
-    const base = envBase || reqOrigin;
+    const base = envBase || site?.origin || reqOrigin;
 
     // --- Routes localisées (trailingSlash: 'always') ---
     const successPath = `/${lang}/telechargement/success/`;
