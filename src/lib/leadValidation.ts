@@ -3,6 +3,10 @@ export type LeadTopic = (typeof LEAD_TOPICS)[number];
 
 const MAX_FIELD_LENGTH = 2000;
 
+// Profondeur maximale explorée dans un `hp` imbriqué. Large par rapport à tout
+// remplissage plausible, très en deçà de la pile d'appels.
+const HONEYPOT_MAX_DEPTH = 8;
+
 // Volontairement strict mais simple : un local, un @, un domaine pointé.
 // Le but est d'écarter le bruit, pas de valider la RFC 5322.
 const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
@@ -45,10 +49,20 @@ function asText(value: unknown): string | null {
  * défaut). Les retenir jetterait des leads légitimes, ce que ce contrôle
  * doit justement éviter — un rejet honeypot est silencieux pour le visiteur.
  */
-export function isHoneypotFilled(value: unknown): boolean {
+export function isHoneypotFilled(value: unknown, depth = 0): boolean {
   if (value === undefined || value === null || value === false || value === 0) return false;
   if (typeof value === 'string') return value.trim().length > 0;
-  if (Array.isArray(value)) return value.some(isHoneypotFilled);
+  if (Array.isArray(value)) {
+    // Profondeur bornée : `value` vient entièrement de la requête, et
+    // `validateLead` est appelée avant le limiteur et hors de tout `try`.
+    // Une descente non bornée exposerait un `RangeError` non capté.
+    // Au-delà de la borne on considère le honeypot déclenché : aucun
+    // remplissage légitime n'imbrique un champ caché sur cette profondeur.
+    if (depth >= HONEYPOT_MAX_DEPTH) return true;
+    // Lambda explicite, et non `value.some(isHoneypotFilled)` : `some` passe
+    // l'indice en deuxième argument, qui serait pris pour la profondeur.
+    return value.some((entry) => isHoneypotFilled(entry, depth + 1));
+  }
   if (typeof value === 'object') return Object.keys(value as object).length > 0;
   return true; // nombre non nul, `true`, bigint, symbole…
 }

@@ -150,3 +150,40 @@ describe('isHoneypotFilled', () => {
     expect(isHoneypotFilled({ a: undefined })).toBe(true);
   });
 });
+
+describe('isHoneypotFilled — profondeur bornée', () => {
+  function nest(depth: number, leaf: unknown): unknown {
+    let v: unknown = leaf;
+    for (let i = 0; i < depth; i++) v = [v];
+    return v;
+  }
+
+  it('ne lève pas sur une imbrication très profonde', () => {
+    const deep = nest(50000, 'x');
+    expect(() => isHoneypotFilled(deep)).not.toThrow();
+    expect(isHoneypotFilled(deep)).toBe(true);
+  });
+
+  it('ne lève pas via validateLead sur un hp très profond', () => {
+    const deep = nest(50000, '');
+    expect(() => validateLead({ ...base, hp: deep })).not.toThrow();
+    expect(validateLead({ ...base, hp: deep }).ok).toBe(true);
+  });
+
+  it('considère le honeypot déclenché au-delà de la borne, même vide', () => {
+    expect(isHoneypotFilled(nest(20, ''))).toBe(true);
+  });
+
+  it('explore normalement en deçà de la borne', () => {
+    expect(isHoneypotFilled(nest(3, ''))).toBe(false);
+    expect(isHoneypotFilled(nest(3, 'rempli'))).toBe(true);
+  });
+
+  it('ne confond pas l\'indice de tableau avec la profondeur', () => {
+    // `some(isHoneypotFilled)` passerait l'indice en 2e argument : le 9e
+    // élément serait vu à une profondeur de 8 et déclencherait à tort.
+    const wide = ['', '', '', '', '', '', '', '', '', '', ''];
+    expect(isHoneypotFilled(wide)).toBe(false);
+    expect(wide.length).toBeGreaterThan(8);
+  });
+});
