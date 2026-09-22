@@ -89,6 +89,18 @@ const dict = getDict(lang);
     const lang = cfg?.dataset.lang ?? 'fr';
     const buyError = cfg?.dataset.error ?? '';
 
+    // Deux situations mènent au même endroit : aucune session dans le
+    // navigateur, et une session que le serveur refuse (compte supprimé,
+    // secret tourné, horloge décalée). Dans les deux cas l'acheteur doit
+    // pouvoir se reconnecter et revenir ici — d'où le point de retour.
+    // `encodeURIComponent` est indispensable : le `#` non encodé deviendrait
+    // un fragment au lieu d'une valeur de paramètre, et la page de connexion,
+    // qui valide cette valeur via `safeRedirect`, retomberait sur le dashboard.
+    const goToLogin = () => {
+      const back = encodeURIComponent(`/${lang}/#pricing`);
+      window.location.href = `/${lang}/inscription/connexion/?redirect=${back}`;
+    };
+
     btn.addEventListener('click', async () => {
       const prev = btn.innerHTML;
       btn.disabled = true;
@@ -105,14 +117,9 @@ const dict = getDict(lang);
         const session = data?.session;
         const user = session?.user;
 
-        // Connexion obligatoire avant le checkout : on mémorise le point de
-        // retour. `encodeURIComponent` est indispensable — le `#` non encodé
-        // deviendrait un fragment au lieu d'une valeur de paramètre, et la
-        // page de connexion, qui valide cette valeur via `safeRedirect`,
-        // retomberait sur le dashboard.
+        // Connexion obligatoire avant le checkout.
         if (!user || !session) {
-          const back = encodeURIComponent(`/${lang}/#pricing`);
-          window.location.href = `/${lang}/inscription/connexion/?redirect=${back}`;
+          goToLogin();
           return;
         }
 
@@ -130,6 +137,15 @@ const dict = getDict(lang);
             lang,
           }),
         });
+        // Le serveur a refusé le jeton : c'est un « pas de session », pas une
+        // panne. Sans ce cas, la route renvoyait 401, le `catch` affichait une
+        // alerte et l'acheteur restait coincé sans issue — alors qu'une
+        // reconnexion suffit.
+        if (res.status === 401) {
+          goToLogin();
+          return;
+        }
+
         const payload = await res.json();
         if (!payload?.url) throw new Error(payload?.error || 'no url');
         window.location.href = payload.url;
