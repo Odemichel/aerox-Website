@@ -732,5 +732,19 @@
   "lead.form.submit": "Send my request",
   "lead.form.sending": "Sending…",
   "lead.form.success": "Got it. Olivier will get back to you to book your slot.",
-  "lead.form.error": "Sending failed. Please try again in a moment."
+  "lead.form.error": "Sending failed. Please try again in a moment.",
+  "testPeriod.meta.title": "Guided test session — AeroX",
+  "testPeriod.meta.description": "Book a slot with Olivier to try AeroX on your own trainer and measure your aero live.",
+  "testPeriod.title": "Try AeroX with Olivier",
+  "testPeriod.subtitle": "A guided session, by appointment, on your own gear.",
+  "testPeriod.steps.title": "How it works",
+  "testPeriod.steps.1": "You pick a slot that suits you and tell us what you ride.",
+  "testPeriod.steps.2": "We install AeroX together and set up your camera — about 15 minutes.",
+  "testPeriod.steps.3": "You pedal, we measure your frontal area and CdA position by position.",
+  "testPeriod.steps.4": "We go through your numbers together and you leave with your gains.",
+  "testPeriod.requirements.title": "What you need",
+  "testPeriod.requirements.1": "A trainer, ideally a smart one.",
+  "testPeriod.requirements.2": "A webcam or a USB camera.",
+  "testPeriod.requirements.3": "A Mac or a Windows PC next to the bike.",
+  "testPeriod.form.title": "Book your slot"
 }
