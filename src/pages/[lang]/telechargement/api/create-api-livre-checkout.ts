@@ -1,8 +1,21 @@
 // /src/pages/api/create-livre-checkout.ts
 import type { APIRoute } from 'astro';
 import Stripe from 'stripe';
+import { SUPPORTED_LOCALES } from '~/lib/i18n';
 
 const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY as string);
+
+// Même défaut, même chemin d'argent que `create-api-checkout.ts` : la langue
+// sert à construire les URL de retour, donc `new URL(path, base)` en tire
+// l'hôte. `lang = "//evil.com"` renvoyait l'acheteur sur le domaine de
+// l'attaquant après un paiement bien réel. Le garde-fou est dupliqué plutôt
+// que factorisé : ce correctif se limite aux deux routes, il n'ajoute pas de
+// fichier partagé. (Le reste du contrat de cette route — `priceId`,
+// `lookupKey` et `userId` lus dans le corps — reste inchangé ici, il est
+// traité séparément.)
+const LANG_FALLBACK = 'fr';
+const isSupportedLang = (raw: unknown): raw is string =>
+    typeof raw === 'string' && (SUPPORTED_LOCALES as readonly string[]).includes(raw);
 
 type Body = {
     priceId?: string;
@@ -17,13 +30,10 @@ export const POST: APIRoute = async ({ request }) => {
         const body = (await request.json().catch(() => ({}))) as Body;
 
         // --- Détection de la langue ---
-        let lang = body.lang;
-        if (!lang) {
-            const url = new URL(request.url);
-            // essaie d'extraire la langue du chemin (ex: /fr/telechargement/api/...)
-            const match = url.pathname.match(/^\/([a-z]{2})(\/|$)/);
-            lang = match?.[1] || 'fr'; // fallback fr
-        }
+        // Le corps d'abord, puis le chemin (ex: /fr/telechargement/api/...),
+        // et seulement si la valeur est une langue du site.
+        const pathLang = new URL(request.url).pathname.match(/^\/([a-z]{2})(\/|$)/)?.[1];
+        const lang = [body.lang, pathLang].find(isSupportedLang) ?? LANG_FALLBACK;
 
         // --- Prix ---
         let priceId = (body.priceId ?? import.meta.env.STRIPE_PRICE_LIVRE_ID ?? '').trim();

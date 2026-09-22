@@ -23,6 +23,7 @@ export const prerender = false;
 import { createClient } from '@supabase/supabase-js';
 import type { APIRoute } from 'astro';
 import Stripe from 'stripe';
+import { SUPPORTED_LOCALES } from '~/lib/i18n';
 
 const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY as string);
 
@@ -40,6 +41,18 @@ type Body = {
   product?: string;
   lang?: string;
 };
+
+// La langue ne décore pas une URL de retour : passée à `new URL(path, base)`,
+// elle en choisit l'HÔTE. Non validée, `lang = "//evil.com"` donnait
+// `http://evil.com/telechargement/success/`, et `"/\evil.com"` la même chose.
+// La session Stripe restait parfaitement légitime — vrai compte, vrai montant,
+// vraie page checkout.stripe.com — mais le retour après paiement atterrissait
+// chez l'attaquant : de l'hameçonnage qui emprunte la crédibilité du site et
+// celle de Stripe. Le contrôle `looksHttp` plus bas ne regarde que le schéma,
+// il laissait passer les deux.
+const LANG_FALLBACK = 'fr';
+const isSupportedLang = (raw: unknown): raw is string =>
+  typeof raw === 'string' && (SUPPORTED_LOCALES as readonly string[]).includes(raw);
 
 // Réponses d'erreur volontairement courtes et opaques : elles sortent vers un
 // appelant non authentifié, elles n'ont pas à dire quels produits existent ni
@@ -87,13 +100,12 @@ export const POST: APIRoute = async ({ request }) => {
     const body = (await request.json().catch(() => ({}))) as Body;
 
     // --- Détection de la langue ---
-    let lang = body.lang;
-    if (!lang) {
-      const url = new URL(request.url);
-      // essaie d'extraire la langue du chemin (ex: /fr/telechargement/api/...)
-      const match = url.pathname.match(/^\/([a-z]{2})(\/|$)/);
-      lang = match?.[1] || 'fr'; // fallback fr
-    }
+    // Le corps d'abord, puis le chemin (ex: /fr/telechargement/api/...), et
+    // dans les deux cas seulement si la valeur est une langue du site. Une
+    // langue non reconnue retombe sur le repli au lieu d'être rejetée : le
+    // visiteur n'y est pour rien, et ce chemin acceptait déjà n'importe quoi.
+    const pathLang = new URL(request.url).pathname.match(/^\/([a-z]{2})(\/|$)/)?.[1];
+    const lang = [body.lang, pathLang].find(isSupportedLang) ?? LANG_FALLBACK;
 
     const metadata: Record<string, string> = {};
     let priceId = '';
