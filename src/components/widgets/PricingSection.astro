@@ -98,9 +98,13 @@ const dict = getDict(lang);
     // `encodeURIComponent` est indispensable : le `#` non encodé deviendrait
     // un fragment au lieu d'une valeur de paramètre, et la page de connexion,
     // qui valide cette valeur via `safeRedirect`, retomberait sur le dashboard.
-    const goToLogin = () => {
+    // Quelqu'un qui vient de cliquer « Je pré-réserve » n'a, dans l'immense
+    // majorité des cas, pas encore de compte : lui demander de se connecter est
+    // un mur. On l'envoie créer son compte ; la page d'inscription porte un lien
+    // « déjà inscrit ? » pour le cas inverse, et transmet `redirect` à la suite.
+    const goToSignup = () => {
       const back = encodeURIComponent(`/${lang}/#pricing`);
-      window.location.href = `/${lang}/inscription/connexion/?redirect=${back}`;
+      window.location.href = `/${lang}/inscription/inscription/?redirect=${back}`;
     };
 
     btn.addEventListener('click', async () => {
@@ -121,7 +125,7 @@ const dict = getDict(lang);
 
         // Connexion obligatoire avant le checkout.
         if (!user || !session) {
-          goToLogin();
+          goToSignup();
           return;
         }
 
@@ -144,7 +148,7 @@ const dict = getDict(lang);
         // alerte et l'acheteur restait coincé sans issue — alors qu'une
         // reconnexion suffit.
         if (res.status === 401) {
-          goToLogin();
+          goToSignup();
           return;
         }
 

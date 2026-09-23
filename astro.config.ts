@@ -24,7 +24,13 @@ export default defineConfig({
   site: 'https://aeroxbefaster.com',
   trailingSlash: 'always',
   output: 'server',
-  adapter: vercel({}),
+  // `imageService` était absent : sans lui l'adaptateur ne déclare aucun service
+  // d'images, et l'endpoint `/_image` répond 404 en production. Les pages
+  // prérendues n'en souffrent pas (leurs images sont transformées au build),
+  // mais toutes les pages rendues à la demande — connexion, inscription —
+  // affichaient des images cassées, logo compris. Les listes `domains` et
+  // `remotePatterns` sont reprises automatiquement du bloc `image` ci-dessous.
+  adapter: vercel({ imageService: true }),
 
   // Offre Pionnier retirée (plus commercialisée) : les deux pages sont
   // supprimées, on redirige vers la section tarifs de la home. Motif à

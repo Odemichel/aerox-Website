@@ -9,6 +9,13 @@ const { lang } = Astro.params;
 const dict = getDict(lang);
 
 // ✅ Métadonnées traduites
+// `redirect` vient de la section Tarifs : on le transmet au lien « déjà
+// inscrit ? » pour que celui qui a déjà un compte retombe bien sur #pricing
+// après s'être connecté, au lieu de repartir de la page d'accueil.
+const redirectParam = Astro.url.searchParams.get('redirect') ?? '';
+const loginBase = t(dict, 'signup.connexion.link');
+const loginHref = redirectParam ? `${loginBase}?redirect=${encodeURIComponent(redirectParam)}` : loginBase;
+
 const metadata = {
   title: t(dict, 'signup.meta.title'),
   description: t(dict, 'signup.meta.description'),
@@ -37,14 +44,20 @@ const metadata = {
           <span class="text-lg font-semibold">{t(dict, 'signup.role.rider')}</span>
           <span class="text-sm text-gray-600 dark:text-gray-400 text-center">{t(dict, 'signup.role.rider.desc')}</span>
         </label>
-        <label
-          class="role-card flex flex-col items-center gap-1 p-4 border-2 rounded-lg cursor-pointer transition-all border-gray-300 dark:border-gray-600"
-          data-role="bike-fitter"
+        {/*
+          Un lien, pas un choix : les bike-fitters ont leur propre tunnel
+          (démo puis devis). Les laisser créer un compte ici les déposait dans
+          un `pending_bf` bloqué, sans démo et sans qualification.
+        */}
+        <a
+          href={`/${lang}/bike-fitting/`}
+          class="role-card flex flex-col items-center gap-1 rounded-lg border-2 border-gray-300 p-4 transition-all hover:border-primary dark:border-gray-600"
         >
-          <input type="radio" name="profile_type" value="bike-fitter" class="sr-only" />
           <span class="text-lg font-semibold">{t(dict, 'signup.role.bikefitter')}</span>
-          <span class="text-sm text-gray-600 dark:text-gray-400 text-center">{t(dict, 'signup.role.bikefitter.desc')}</span>
-        </label>
+          <span class="text-center text-sm text-gray-600 dark:text-gray-400">
+            {t(dict, 'signup.role.bikefitter.desc')} →
+          </span>
+        </a>
       </div>
 
       <label for="email" class="font-medium">{t(dict, 'signup.email.label')}</label>
@@ -101,7 +114,7 @@ const metadata = {
       <div class="flex justify-center gap-2">
         <label class="text-sm items-center">
           {t(dict, 'signup.connexion.text')}
-          <a href={t(dict, 'signup.connexion.link')} class="underline text-primary hover:text-primary/80">
+          <a href={loginHref} class="underline text-primary hover:text-primary/80">
             {t(dict, 'signup.connexion.linkText')}
           </a>
         </label>
@@ -224,32 +237,6 @@ const metadata = {
           showMessage('❌ ' + error.message);
         } else {
           attemptCount = 0; // reset si succès
-
-          // Un bike-fitter qui crée un compte n'existait jusqu'ici que dans
-          // Supabase : aucune séquence d'e-mails ne pouvait l'atteindre. On le
-          // pousse donc aussi dans MailerLite, via la route de lead qui porte
-          // déjà validation, limitation de débit et notification admin.
-          //
-          // Volontairement sans `await` et sans traitement d'erreur : cet appel
-          // ne doit jamais retarder ni empêcher la redirection. Le compte est
-          // créé, c'est ce qui compte ; une synchro perdue se rattrape à la main.
-          //
-          // `name` reçoit la partie locale de l'e-mail : le formulaire
-          // d'inscription ne demande pas de nom, et la route l'exige.
-          if (selectedRole === 'bike-fitter') {
-            fetch(`/${lang}/api/lead/`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                topic: 'bike-fitter',
-                intent: 'inscription',
-                name: email.split('@')[0],
-                email,
-                phone,
-              }),
-              keepalive: true,
-            }).catch(() => {});
-          }
 
           window.location.href = `/${lang}/inscription/confirmation/`;
         }
