@@ -214,6 +214,12 @@ export const POST: APIRoute = async ({ request, site }) => {
       customer_email: customerEmail,
       customer_creation: 'if_required',
       metadata,
+      // Carte seule sur la vente d'un produit : sans liste explicite, Stripe
+      // affiche tous les moyens actifs du compte (Link, Amazon Pay, Klarna…)
+      // et la carte n'arrive pas en tête. Apple Pay reste proposé, c'est un
+      // portefeuille de carte. Retirer Klarna et Bancontact supprime aussi
+      // les paiements à confirmation différée : le déblocage est immédiat.
+      ...(metadata.product ? { payment_method_types: ['card' as const] } : {}),
       // Pas de `subscription_data` ici : l'API Stripe le refuse en mode
       // 'payment' (« You can not pass `subscription_data` in `payment`
       // mode. »). L'équivalent légal pour conserver les métadonnées côté
