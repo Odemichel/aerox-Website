@@ -292,9 +292,9 @@
 
   "signup.meta.title": "Inscris-toi et débute ton expérience aéro",
   "signup.meta.description": "Crée ton compte AeroX pour accéder à l'application et aux abonnements.",
-  "signup.title": "Crée ton compte AeroX",
+  "signup.title": "Commence par créer ton compte AeroX",
 
-  "signup.subtitle1": "C'est la première étape pour débuter ton expérience aéro.",
+  "signup.subtitle1": "Il te suffit d'un email et d'un mot de passe.",
   "signup.email.label": "Email",
   "signup.email.placeholder": "ton@email.com",
   "signup.password.label": "Mot de passe",

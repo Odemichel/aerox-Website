@@ -287,8 +287,8 @@
 
   "signup.meta.title": "Sign Up and start your aero journey",
   "signup.meta.description": "Create your AeroX account to access the app and subscriptions.",
-  "signup.title": "Create your AeroX account",
-  "signup.subtitle1": "It's the first step to start your aero experience.",
+  "signup.title": "Start by creating your AeroX account",
+  "signup.subtitle1": "All you need is an email and a password.",
   "signup.email.label": "Email",
   "signup.email.placeholder": "you@email.com",
   "signup.password.label": "Password",
