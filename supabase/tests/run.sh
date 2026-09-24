@@ -12,5 +12,5 @@ sleep 1
 run() { docker exec -i "$NAME" psql -q -v ON_ERROR_STOP=1 -U postgres "$@"; }
 run < tests/stubs.sql
 for f in migrations/*.sql; do run --single-transaction < "$f"; done
-run -o /dev/null < tests/bf_billing.test.sql
+for t in tests/*.test.sql; do run -o /dev/null < "$t"; done
 echo "OK — tous les tests SQL passent"

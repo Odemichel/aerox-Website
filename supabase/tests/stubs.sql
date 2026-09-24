@@ -61,3 +61,15 @@ values ('00000000-0000-0000-0000-00000000a002', 'pending@example.com', 'pending_
 create function public.handle_email_confirmed() returns trigger language plpgsql as $$ begin return new; end $$;
 create trigger on_email_confirmed after update on auth.users
   for each row execute function public.handle_email_confirmed();
+
+-- Séances (colonnes utiles au filet de sécurité) et pg_cron.
+create table public.sessions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users (id),
+  client_id uuid references public.bf_clients (id) on delete set null
+);
+create schema cron;
+create table cron.jobs (name text, schedule text, command text);
+create function cron.schedule(n text, s text, c text) returns bigint language sql as $$
+  insert into cron.jobs values (n, s, c) returning 1::bigint
+$$;
