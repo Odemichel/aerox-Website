@@ -24,11 +24,12 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     pathname.startsWith('/_image') ||
     pathname.startsWith('/favicon') ||
     pathname.startsWith('/assets') ||
-    // Endpoint machine appelé par Stripe : il n'a pas de langue, et Stripe ne
-    // suit pas les redirections — une 301 vers /en/... est comptée comme un
-    // échec de livraison. Sans cette exemption la route est injoignable, même
-    // avec le slash final.
-    pathname.startsWith('/api/stripe-webhook')
+    // Routes API sans langue (/api/stripe-webhook/, /api/billing/*) : Stripe,
+    // pg_net et fetch() en POST ne suivent pas une 301 vers /en/... — Stripe
+    // la compte comme un échec de livraison, le navigateur la rejoue en GET.
+    // Sans cette exemption ces routes sont injoignables, même avec le slash
+    // final. Les routes localisées (/[lang]/api/...) ne sont pas concernées.
+    pathname.startsWith('/api/')
   ) {
     return next();
   }

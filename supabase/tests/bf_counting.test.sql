@@ -62,3 +62,26 @@ alter table bf_analyses add constraint test_force_failure check (origin <> 'sess
 insert into sessions (user_id, client_id) values ('00000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-000000000406');
 select pg_temp.check((select count(*) from sessions where client_id = '00000000-0000-0000-0000-000000000406') = 1, 'séance enregistrée malgré l’échec du comptage');
 alter table bf_analyses drop constraint test_force_failure;
+
+-- Réservation des envois Studio : deux appels concurrents ne se chevauchent pas.
+insert into bf_clients (id, bf_user_id) values
+  ('00000000-0000-0000-0000-000000000501', '00000000-0000-0000-0000-0000000000d1'),
+  ('00000000-0000-0000-0000-000000000502', '00000000-0000-0000-0000-0000000000d1');
+set role authenticated;
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000d1');
+select register_analysis('00000000-0000-0000-0000-000000000501');
+select register_analysis('00000000-0000-0000-0000-000000000502');
+reset role;
+create temp table claim1 as select * from bf_claim_meter_batch(1);
+create temp table claim2 as select * from bf_claim_meter_batch(10);
+select pg_temp.check((select count(*) from claim1) = 1, 'réservation : lot de 1');
+select pg_temp.check(not exists (select 1 from claim1 join claim2 using (id)), 'réservations disjointes');
+select pg_temp.check((select count(*) from bf_claim_meter_batch(10)) = 0, 'rien de libre tant que les lots sont réservés');
+-- Échec : la réservation est levée, la ligne redevient disponible.
+select bf_mark_meter_reported((select id from claim1), 'boom');
+select pg_temp.check((select count(*) from bf_claim_meter_batch(10)) = 1, 'échec : ligne de nouveau disponible');
+-- Succès puis échec tardif : la ligne reste envoyée, sans erreur.
+select bf_mark_meter_reported((select id from claim2 limit 1), null);
+select bf_mark_meter_reported((select id from claim2 limit 1), 'tardif');
+select pg_temp.check((select meter_reported_at is not null and meter_last_error is null from bf_analyses
+  where id = (select id from claim2 limit 1)), 'une ligne envoyée n’est jamais repassée en erreur');

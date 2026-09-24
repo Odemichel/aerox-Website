@@ -8,9 +8,9 @@
 // Authentifiée par l'en-tête `x-billing-hook-secret` (secret Vault
 // `billing_hook_secret` = variable Vercel `BILLING_HOOK_SECRET`).
 //
-// Idempotence : l'`identifier` du meter event est l'id de l'analyse. Deux
-// appels concurrents peuvent envoyer la même analyse ; Stripe dédoublonne sur
-// l'identifier, et la ligne est marquée envoyée dans les deux cas.
+// Idempotence : chaque appel réserve son lot (bf_claim_meter_batch), et
+// l'`identifier` du meter event est l'id de l'analyse : même un envoi rejoué
+// après une réservation expirée est dédoublonné par Stripe.
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
@@ -38,34 +38,19 @@ export const POST: APIRoute = async ({ request }) => {
   if (!expected || !timingSafeEqual(given, expected)) return json({ error: 'E_AUTH' }, 403);
 
   const db = supabaseAdmin();
-  const { data: pending, error } = await db
-    .from('bf_analyses')
-    .select('id, user_id, counted_at')
-    .eq('billing_mode', 'studio')
-    .is('meter_reported_at', null)
-    .order('counted_at')
-    .limit(BATCH);
+  // Lot réservé à cet appel : les appels concurrents se partagent la file au
+  // lieu de la renvoyer chacun en entier (voir bf_claim_meter_batch).
+  const { data: pending, error } = await db.rpc('bf_claim_meter_batch', { p_limit: BATCH });
   if (error) {
-    console.error('report-usage: lecture impossible —', error.message);
+    console.error('report-usage: réservation impossible —', error.message);
     return json({ error: 'E_DB' }, 500);
   }
   if (!pending?.length) return json({ sent: 0 });
 
-  const userIds = [...new Set(pending.map((a) => a.user_id as string))];
-  const { data: billings, error: billingError } = await db
-    .from('bf_billing')
-    .select('user_id, stripe_customer_id')
-    .in('user_id', userIds);
-  if (billingError) {
-    console.error('report-usage: bf_billing illisible —', billingError.message);
-    return json({ error: 'E_DB' }, 500);
-  }
-  const customerOf = new Map(billings?.map((b) => [b.user_id as string, b.stripe_customer_id as string | null]));
-
   let sent = 0;
   let failed = 0;
-  for (const a of pending) {
-    const customer = customerOf.get(a.user_id as string);
+  for (const a of pending as { id: string; counted_at: string; stripe_customer_id: string | null }[]) {
+    const customer = a.stripe_customer_id;
     let reportError: string | null = null;
     if (!customer) {
       reportError = 'aucun client Stripe pour ce bike fitter';

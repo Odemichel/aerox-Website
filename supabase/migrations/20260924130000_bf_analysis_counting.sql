@@ -193,14 +193,17 @@ set search_path = ''
 as $$
 declare
   _secret text;
+  _url text;
 begin
   select decrypted_secret into _secret from vault.decrypted_secrets where name = 'billing_hook_secret' limit 1;
   if _secret is null then
     raise warning 'bf_ping_usage_reporter: secret billing_hook_secret absent du Vault';
     return;
   end if;
+  -- URL surchargeable (base de test, site local) ; production par défaut.
+  select decrypted_secret into _url from vault.decrypted_secrets where name = 'billing_report_url' limit 1;
   perform net.http_post(
-    url := 'https://aeroxbefaster.com/api/billing/report-usage/',
+    url := coalesce(_url, 'https://aeroxbefaster.com/api/billing/report-usage/'),
     body := '{}'::jsonb,
     headers := jsonb_build_object('Content-Type', 'application/json', 'x-billing-hook-secret', _secret)
   );
@@ -235,7 +238,43 @@ create trigger trg_bf_analysis_meter_notify
 -- Rejeu des envois en échec (Stripe indisponible, route en déploiement…).
 select cron.schedule('bf-report-usage', '*/10 * * * *', $$ select public.bf_ping_usage_reporter() $$);
 
--- Marquage des envois, appelé par la route (service_role).
+-- Réservation d'un lot d'analyses Studio à envoyer. Plusieurs appels de la
+-- route peuvent tourner en même temps (une analyse = un ping) : sans
+-- réservation, chacun renverrait toute la file (doublons, limite de débit
+-- Stripe). SKIP LOCKED + bail de 2 minutes : un lot abandonné (route tuée en
+-- cours d'envoi) redevient disponible.
+alter table public.bf_analyses add column meter_claimed_at timestamptz;
+
+create or replace function public.bf_claim_meter_batch(p_limit integer)
+returns table (id uuid, user_id uuid, counted_at timestamptz, stripe_customer_id text)
+language sql
+security definer
+set search_path = ''
+as $$
+  with claimed as (
+    update public.bf_analyses a
+    set meter_claimed_at = now()
+    where a.id in (
+      select p.id from public.bf_analyses p
+      where p.billing_mode = 'studio'
+        and p.meter_reported_at is null
+        and (p.meter_claimed_at is null or p.meter_claimed_at < now() - interval '2 minutes')
+      order by p.counted_at
+      limit p_limit
+      for update skip locked
+    )
+    returning a.id, a.user_id, a.counted_at
+  )
+  select c.id, c.user_id, c.counted_at, b.stripe_customer_id
+  from claimed c left join public.bf_billing b on b.user_id = c.user_id;
+$$;
+
+revoke execute on function public.bf_claim_meter_batch(integer) from public, anon, authenticated;
+grant execute on function public.bf_claim_meter_batch(integer) to service_role;
+
+-- Marquage d'un envoi, appelé par la route (service_role). En échec, la
+-- réservation est levée pour que le prochain passage réessaie ; une ligne
+-- déjà envoyée n'est jamais repassée en erreur.
 create or replace function public.bf_mark_meter_reported(p_id uuid, p_error text)
 returns void
 language sql
@@ -243,9 +282,10 @@ security definer
 set search_path = ''
 as $$
   update public.bf_analyses
-  set meter_reported_at = case when p_error is null then now() else meter_reported_at end,
-      meter_last_error = p_error
-  where id = p_id and billing_mode = 'studio';
+  set meter_reported_at = case when p_error is null then now() else null end,
+      meter_last_error = p_error,
+      meter_claimed_at = null
+  where id = p_id and billing_mode = 'studio' and meter_reported_at is null;
 $$;
 
 revoke execute on function public.bf_mark_meter_reported(uuid, text) from public, anon, authenticated;
