@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { LAUNCH_OFFER, LOOKUP } from '../src/lib/billing/catalog';
 import {
   estimatedNextInvoiceCents,
+  graceAfterPaymentFailureEnd,
   isDowngrade,
   isOffer,
   launchOfferOpen,
@@ -90,6 +91,23 @@ describe('subscriptionOutcome', () => {
     expect(subscriptionOutcome('canceled', null, NOW)).toEqual({ kind: 'ended' });
     expect(subscriptionOutcome('incomplete_expired', null, NOW)).toEqual({ kind: 'ended' });
     expect(subscriptionOutcome('incomplete', null, NOW)).toEqual({ kind: 'ignore' });
+  });
+});
+
+describe('graceAfterPaymentFailureEnd', () => {
+  it('résiliation pour impayé pendant la grâce : accès gardé jusqu’à la fin de la grâce', () => {
+    const grace = '2026-10-05T00:00:00.000Z';
+    expect(graceAfterPaymentFailureEnd('payment_failed', grace, NOW)).toBe(grace);
+  });
+
+  it('pas de grâce enregistrée : 7 jours à partir de maintenant', () => {
+    expect(graceAfterPaymentFailureEnd('payment_failed', null, NOW)).toBe('2026-10-08T12:00:00.000Z');
+  });
+
+  it('grâce déjà écoulée, ou résiliation demandée : fin normale', () => {
+    expect(graceAfterPaymentFailureEnd('payment_failed', '2026-09-30T00:00:00.000Z', NOW)).toBeNull();
+    expect(graceAfterPaymentFailureEnd('cancellation_requested', '2026-10-05T00:00:00.000Z', NOW)).toBeNull();
+    expect(graceAfterPaymentFailureEnd(null, null, NOW)).toBeNull();
   });
 });
 

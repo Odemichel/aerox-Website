@@ -16,7 +16,13 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type Stripe from 'stripe';
 import { LAUNCH_OFFER, LOOKUP } from './catalog';
 import { upsertMailerLiteFields, type BfStatus } from '~/lib/mailerlite';
-import { crmStatus, planAfterSubscriptionEnds, planFromLookupKeys, subscriptionOutcome } from './logic';
+import {
+  crmStatus,
+  graceAfterPaymentFailureEnd,
+  planAfterSubscriptionEnds,
+  planFromLookupKeys,
+  subscriptionOutcome,
+} from './logic';
 import { loadBilling, priceIdForLookup, stripe } from './server';
 
 export const BILLING_EVENTS = new Set<string>([
@@ -139,6 +145,25 @@ async function syncSubscription(db: SupabaseClient, subscriptionId: string, paym
   if (outcome.kind === 'ignore') return;
 
   if (outcome.kind === 'ended') {
+    // Résilié par Stripe pour impayé avant la fin de la grâce : l'offre et
+    // l'accès restent jusqu'à `grace_until`, puis `bf_access_level` passe
+    // le compte en lecture seule. Le bike fitter peut se réabonner.
+    const keepUntil = graceAfterPaymentFailureEnd(
+      sub.cancellation_details?.reason,
+      billing?.grace_until ?? null,
+      Date.now()
+    );
+    if (keepUntil) {
+      await writeBilling(db, {
+        user_id: userId,
+        stripe_customer_id: customer,
+        stripe_subscription_id: null,
+        status: 'past_due',
+        grace_until: keepUntil,
+      });
+      if (billing?.status !== 'past_due') await syncCrm(db, userId, billing?.plan ?? plan, 'past_due');
+      return;
+    }
     const nextPlan = planAfterSubscriptionEnds();
     await writeBilling(db, {
       user_id: userId,

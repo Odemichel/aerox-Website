@@ -118,6 +118,22 @@ export function subscriptionOutcome(
 }
 
 /**
+ * Fin d'abonnement pour impayé : la grâce de 7 jours promise au client est
+ * tenue même si Stripe résilie plus tôt (réglage des relances dans le
+ * tableau de bord). Renvoie la date jusqu'à laquelle garder l'accès, ou
+ * `null` pour une fin normale (résiliation demandée, etc.).
+ */
+export function graceAfterPaymentFailureEnd(
+  cancellationReason: string | null | undefined,
+  existingGraceUntil: string | null,
+  nowMs: number
+): string | null {
+  if (cancellationReason !== 'payment_failed') return null;
+  const grace = existingGraceUntil ?? new Date(nowMs + GRACE_DAYS * DAY_MS).toISOString();
+  return new Date(grace).getTime() > nowMs ? grace : null;
+}
+
+/**
  * Plan après la fin d'un abonnement : retour à l'essai (les crédits d'essai
  * restants, s'il y en a, restent utilisables ; sinon les analyses sont
  * refusées jusqu'à une nouvelle offre).

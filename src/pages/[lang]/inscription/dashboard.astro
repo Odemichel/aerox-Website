@@ -196,6 +196,7 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
         current_period_start: string | null;
         current_period_end: string | null;
         has_stripe_customer: boolean | null;
+        has_subscription: boolean | null;
         analyses_in_period: number;
         credits_remaining: number;
         credits_next_expiry: string | null;
@@ -323,7 +324,13 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
           link(L.seeOffers, `/${lang}/bike-fitting/#tarifs`, 'btn-secondary');
         }
 
-        if (SUBSCRIPTION_PLANS.includes(s.plan)) {
+        // Offre sans abonnement en cours (résilié par Stripe pour impayé) :
+        // on propose de se réabonner plutôt que de modifier.
+        if (SUBSCRIPTION_PLANS.includes(s.plan) && !s.has_subscription) {
+          link(L.seeOffers, `/${lang}/bike-fitting/#tarifs`, 'btn-secondary');
+        }
+
+        if (SUBSCRIPTION_PLANS.includes(s.plan) && s.has_subscription) {
           const current: Offer = annual ? 'unlimited_annual' : (s.plan as Offer);
           const others = (['payg', 'studio', 'unlimited', 'unlimited_annual'] as Offer[]).filter((o) => o !== current);
           for (const offer of others) {

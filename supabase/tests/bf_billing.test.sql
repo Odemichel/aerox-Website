@@ -154,3 +154,10 @@ do $$ begin
   raise exception 'ÉCHEC : appel anonyme accepté';
 exception when invalid_authorization_specification then null; end $$;
 reset role;
+
+-- Résumé : présence d'un abonnement Stripe.
+update bf_billing set stripe_subscription_id = 'sub_test' where user_id = '00000000-0000-0000-0000-0000000000b1';
+set role authenticated;
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000b1');
+select pg_temp.check((bf_usage_summary() ->> 'has_subscription')::boolean, 'résumé : abonnement en cours');
+reset role;

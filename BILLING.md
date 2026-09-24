@@ -93,7 +93,11 @@ Principes :
   `needs_card` (message dédié dans l'app).
 - **Échec de paiement** : `past_due`, accès complet jusqu'à `grace_until`
   (premier échec + 7 jours, calculé en temps réel par `bf_access_level`), puis
-  lecture seule. Paiement régularisé : retour en `active`.
+  lecture seule. Paiement régularisé : retour en `active`. Si Stripe résilie
+  l'abonnement pour impayé (`cancellation_details.reason = payment_failed`)
+  avant la fin de la grâce, l'offre et l'accès sont conservés jusqu'à
+  `grace_until`, sans abonnement : l'espace propose de se réabonner. La
+  promesse des 7 jours ne dépend donc pas du réglage des relances Stripe.
 - **Fin d'abonnement** : retour au plan `trial` (analyses refusées s'il ne reste
   aucun crédit d'essai).
 - **À l'usage et Studio** : chaque analyse comptée part au meter
@@ -154,11 +158,12 @@ chantier « achats du diagnostic » mené en parallèle.
 
 Chaque étape marquée ⚠ touche la production : à faire sur accord explicite.
 
-1. **Stripe live — réglages** (tableau de bord) : Taxes → siège social et
-   immatriculation France (+ OSS si ventes B2C dans d'autres pays de l'UE) ;
-   Facturation → relances : **au moins 7 jours de tentatives** avant de
-   résilier ou marquer impayé (sinon Stripe coupe avant la fin de la grâce) ;
-   e-mails clients : factures et reçus activés.
+1. **Stripe live — réglages** (tableau de bord, pas d'API) : Taxes → siège
+   social et immatriculation France (+ OSS si ventes B2C dans d'autres pays
+   de l'UE) ; Billing → Revenue recovery → Retries : Smart Retries, 8
+   tentatives sur 2 semaines recommandé (la grâce de 7 jours est tenue par le
+   code quel que soit ce réglage) ; e-mails clients : factures et reçus
+   activés.
 2. ⚠ **Catalogue live** : créer `.env.live` avec la clé `sk_live_…`
    (jamais commitée), puis
    `node --env-file=.env.live scripts/stripe-catalog.ts --live --dry-run`,

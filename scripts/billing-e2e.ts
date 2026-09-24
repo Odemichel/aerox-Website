@@ -412,6 +412,44 @@ async function s6PaymentFailure() {
   check(refused.status === 'refused' && refused.reason === 'read_only', 'après 7 jours : lecture seule');
   const { data: summary } = await bf.client.rpc('bf_usage_summary');
   check((summary as { access?: string } | null)?.access === 'read_only', 'espace BF : accès « read_only »');
+
+  // Stripe abandonne les relances (réglage « Retries » du compte) : si
+  // l'abonnement est résilié pendant la grâce, l'accès reste jusqu'au bout.
+  const grace = new Date(Date.now() + 5 * 86400000).toISOString();
+  await admin.from('bf_billing').update({ grace_until: grace }).eq('user_id', bf.id);
+  const start = (await stripe.testHelpers.testClocks.retrieve(clock.id)).frozen_time;
+  let ended: Stripe.Subscription | null = null;
+  for (let day = 7; day <= 63 && !ended; day += 7) {
+    await advance(clock.id, start + day * 86400);
+    const s = await stripe.subscriptions.retrieve(sub.id);
+    if (s.status === 'canceled' || s.status === 'unpaid') ended = s;
+  }
+  if (!ended) {
+    check(false, 'Stripe n’a ni résilié ni marqué impayé après 9 semaines de relances');
+    return;
+  }
+  console.log(
+    `    (réglage du compte : « ${ended.status} » après relances, motif ${ended.cancellation_details?.reason})`
+  );
+  if (ended.status === 'canceled') {
+    check(ended.cancellation_details?.reason === 'payment_failed', 'motif de résiliation : payment_failed');
+    const b2 = await waitFor('grâce conservée', async () => {
+      const row = await billing(bf.id);
+      return row?.stripe_subscription_id === null ? row : null;
+    });
+    check(
+      b2.status === 'past_due' && new Date(b2.grace_until ?? 0).getTime() === new Date(grace).getTime(),
+      'résilié pendant la grâce : accès gardé jusqu’à la fin de la grâce'
+    );
+    check(b2.plan === 'unlimited', 'offre conservée pendant la grâce');
+    const { data: s2 } = await bf.client.rpc('bf_usage_summary');
+    check(
+      (s2 as { has_subscription?: boolean } | null)?.has_subscription === false,
+      'espace BF : plus d’abonnement, réabonnement proposé'
+    );
+  } else {
+    check((await billing(bf.id))?.status === 'past_due', 'marqué impayé : grâce puis lecture seule');
+  }
 }
 
 async function s7ReverseCharge() {
