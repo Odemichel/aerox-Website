@@ -15,9 +15,11 @@ Durch die Nutzung von AeroX stimmen Sie der Erhebung und Nutzung Ihrer Informati
 ## Auslegung und Definitionen
 
 ### Auslegung
+
 Wörter, deren Anfangsbuchstabe großgeschrieben ist, haben die in den folgenden Bestimmungen festgelegte Bedeutung. Diese Definitionen gelten sowohl im Singular als auch im Plural.
 
 ### Definitionen
+
 Im Sinne dieser Datenschutzrichtlinie:
 
 - **Konto**: bezeichnet ein einzigartiges Konto, das für den Zugang zum Dienst erstellt wurde.
@@ -38,17 +40,22 @@ Im Sinne dieser Datenschutzrichtlinie:
 ### Arten der erhobenen Daten
 
 #### Personenbezogene Daten
+
 Bei der Nutzung von AeroX können Sie aufgefordert werden, bestimmte Informationen zu Ihrer Identifikation bereitzustellen (z. B.: E-Mail-Adresse zur Kontoerstellung oder Zahlungsabwicklung).
 
 #### Nutzungsdaten
+
 Diese werden automatisch erhoben und können Folgendes umfassen:
+
 - die IP-Adresse,
 - den Browsertyp und die -version,
 - die besuchten Seiten und die Besuchsdauer,
 - Informationen über das verwendete Gerät.
 
 #### Cookies und ähnliche Technologien
+
 Wir verwenden Cookies, um:
+
 - das ordnungsgemäße Funktionieren des Dienstes zu gewährleisten,
 - Ihre Einstellungen zu speichern (Sprache, Sitzung),
 - die Besucherzahlen zu analysieren und das Nutzererlebnis zu verbessern.
@@ -60,6 +67,7 @@ Sie können Ihren Browser so konfigurieren, dass Cookies abgelehnt werden, dies 
 ## Nutzung Ihrer Daten
 
 AeroX verwendet Ihre Daten, um:
+
 - den Dienst bereitzustellen und zu pflegen,
 - Ihr Konto und Ihre Zugänge zu verwalten,
 - Ihre Zahlungen und Abonnements abzuwickeln,
@@ -73,6 +81,7 @@ AeroX verwendet Ihre Daten, um:
 ## Aufbewahrung Ihrer Daten
 
 Wir bewahren Ihre personenbezogenen Daten nur so lange auf, wie es für die oben beschriebenen Zwecke erforderlich ist:
+
 - Kontobezogene Daten werden nach Kontolöschung gelöscht (es sei denn, eine gesetzliche Aufbewahrungspflicht besteht).
 - Nutzungsdaten (anonymisierte Statistiken) können zu Forschungs- und Verbesserungszwecken länger aufbewahrt werden.
 
@@ -81,6 +90,7 @@ Wir bewahren Ihre personenbezogenen Daten nur so lange auf, wie es für die oben
 ## Weitergabe Ihrer Daten
 
 Ihre Daten können in folgenden Fällen weitergegeben werden:
+
 - **An unsere Dienstleister** (Hosting-Anbieter, Zahlungsdienstleister wie Stripe, Analysetools).
 - **Im Falle einer Fusion oder Geschäftsübertragung** können Ihre Daten zusammen mit AeroX übertragen werden.
 - **Aufgrund gesetzlicher Verpflichtungen**, insbesondere im Rahmen von Anfragen zuständiger Behörden.
@@ -100,6 +110,7 @@ In diesem Fall stellen wir sicher, dass geeignete Garantien (Standardvertragskla
 ## Löschung Ihrer Daten
 
 Sie können jederzeit die Löschung oder Berichtigung Ihrer personenbezogenen Daten verlangen:
+
 - über Ihren Benutzerbereich,
 - oder indem Sie uns direkt kontaktieren (siehe Abschnitt „Kontakt").
 

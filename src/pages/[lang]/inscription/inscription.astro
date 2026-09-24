@@ -44,11 +44,13 @@ const metadata = {
           <span class="text-lg font-semibold">{t(dict, 'signup.role.rider')}</span>
           <span class="text-sm text-gray-600 dark:text-gray-400 text-center">{t(dict, 'signup.role.rider.desc')}</span>
         </label>
-        {/*
+        {
+          /*
           Un lien, pas un choix : les bike-fitters ont leur propre tunnel
           (démo puis devis). Les laisser créer un compte ici les déposait dans
           un `pending_bf` bloqué, sans démo et sans qualification.
-        */}
+        */
+        }
         <a
           href={`/${lang}/bike-fitting/`}
           class="role-card flex flex-col items-center gap-1 rounded-lg border-2 border-gray-300 p-4 transition-all hover:border-primary dark:border-gray-600"
@@ -215,7 +217,8 @@ const metadata = {
         }
 
         // --- Récupération du rôle sélectionné ---
-        const selectedRole = (document.querySelector('input[name="profile_type"]:checked') as HTMLInputElement | null)?.value || 'rider';
+        const selectedRole =
+          (document.querySelector('input[name="profile_type"]:checked') as HTMLInputElement | null)?.value || 'rider';
 
         // --- Création du compte ---
         const { error } = await supabase.auth.signUp({

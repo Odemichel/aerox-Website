@@ -22,7 +22,7 @@ export interface Post {
   excerpt?: string;
   /**  */
   image?: ImageMetadata | string;
-  imageKey?: string ;
+  imageKey?: string;
   /**  */
   category?: Taxonomy;
   /**  */
@@ -42,7 +42,7 @@ export interface Post {
 
   /**  */
   readingTime?: number;
-  lang: "fr" | "en";
+  lang: import('~/lib/i18n').Locale;
 }
 
 export interface Taxonomy {
@@ -111,6 +111,11 @@ export interface HeroVideo {
   bg?: string; // si tu utilises <slot name="bg">
 }
 
+export interface Brands extends Omit<Headline, 'classes'>, Widget {
+  icons?: Array<string>;
+  images?: Array<Image>;
+}
+
 export interface Widget {
   id?: string;
   isDark?: boolean;
@@ -121,7 +126,7 @@ export interface Widget {
 export interface Headline {
   title?: string;
   subtitle?: string;
-  subsubtitle?:string;
+  subsubtitle?: string;
   tagline?: string;
   classes?: Record<string, string>;
 }
@@ -149,7 +154,7 @@ export interface Stat {
 export interface Item {
   title?: string;
   description?: string;
-  education?:string;
+  education?: string;
   objectif?: string;
   icon?: string;
   classes?: {
@@ -158,19 +163,19 @@ export interface Item {
     title?: string;
     description?: string;
     actionClass?: string;
-    more?: string;        // <- style du bloc <details>
-    summary?: string;     // <- style du <summary>
+    more?: string; // <- style du bloc <details>
+    summary?: string; // <- style du <summary>
   };
-  expandable?: boolean;    // <- active “En savoir plus”
-  moreLabel?: string;      // <- texte du bouton (default: "En savoir plus")
-  defaultOpen?: boolean;   // <- ouvert par défaut ?
+  expandable?: boolean; // <- active “En savoir plus”
+  moreLabel?: string; // <- texte du bouton (default: "En savoir plus")
+  defaultOpen?: boolean; // <- ouvert par défaut ?
   callToAction?: CallToAction | CallToAction[];
   image?: MediaImage;
   video?: VideoHTMLAttributes;
 }
 
 export interface Price {
-  hasChoice?: boolean
+  hasChoice?: boolean;
   title?: string;
   title1?: string;
   title2?: string;
@@ -204,10 +209,8 @@ export interface Testimonial {
   testimonial?: string;
   name?: string;
   job?: string;
-image?: { src: string | ImageMetadata; alt?: string };
+  image?: { src: string | ImageMetadata; alt?: string };
   profile?: { src: string | ImageMetadata; alt?: string };
- 
-
 }
 
 export interface Input {
@@ -281,8 +284,6 @@ export interface Hero extends Omit<Headline, 'classes'>, Omit<Widget, 'isDark' |
   paragraph?: string;
 }
 
-
-
 export interface Team extends Omit<Headline, 'classes'>, Widget {
   team?: Array<TeamMember>;
 }
@@ -333,13 +334,13 @@ export interface Faqs extends Omit<Headline, 'classes'>, Widget {
   iconDown?: string;
   items?: Array<Item>;
   columns?: number;
-actions?:  CallToAction | CallToAction[];
+  actions?: CallToAction | CallToAction[];
 }
 
 export interface Steps extends Omit<Headline, 'classes'>, Widget {
   items?: Array<Item>;
   actions?: string | CallToAction[];
-    callToAction?: string | CallToAction;
+  callToAction?: string | CallToAction;
 
   image?: string | Image;
   isReversed?: boolean;
@@ -347,7 +348,7 @@ export interface Steps extends Omit<Headline, 'classes'>, Widget {
 export interface StepsSansImage extends Omit<Headline, 'classes'>, Widget {
   items?: Array<Item>;
   actions?: string | CallToAction[];
-    callToAction?: string | CallToAction;
+  callToAction?: string | CallToAction;
 
   image?: string | Image;
   isReversed?: boolean;

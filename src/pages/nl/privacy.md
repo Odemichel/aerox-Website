@@ -15,9 +15,11 @@ Door AeroX te gebruiken, stemt u in met het verzamelen en gebruiken van uw infor
 ## Interpretatie en Definities
 
 ### Interpretatie
+
 Woorden waarvan de eerste letter een hoofdletter is, hebben de betekenis zoals vastgelegd in de volgende bepalingen. Deze definities gelden zowel in het enkelvoud als in het meervoud.
 
 ### Definities
+
 In het kader van dit Privacybeleid:
 
 - **Account**: verwijst naar een uniek account dat is aangemaakt voor toegang tot de dienst.
@@ -38,17 +40,22 @@ In het kader van dit Privacybeleid:
 ### Types verzamelde gegevens
 
 #### Persoonsgegevens
+
 Wanneer u AeroX gebruikt, kan u worden gevraagd bepaalde identificatiegegevens te verstrekken (bijvoorbeeld: e-mailadres voor het aanmaken van een account of het voltooien van een betaling).
 
 #### Gebruiksgegevens
+
 Deze worden automatisch verzameld en kunnen het volgende omvatten:
+
 - het IP-adres,
 - het type en de versie van de browser,
 - de bezochte pagina's en de bezoekduur,
 - informatie over het gebruikte apparaat.
 
 #### Cookies en vergelijkbare technologieën
+
 Wij gebruiken cookies om:
+
 - de goede werking van de dienst te waarborgen,
 - uw voorkeuren op te slaan (taal, sessie),
 - het bezoekersaantal te analyseren en de gebruikerservaring te verbeteren.
@@ -60,6 +67,7 @@ U kunt uw browser configureren om cookies te weigeren, maar dit kan bepaalde fun
 ## Gebruik van uw Gegevens
 
 AeroX gebruikt uw gegevens om:
+
 - de dienst te verlenen en te onderhouden,
 - uw account en toegangen te beheren,
 - uw betalingen en abonnementen te verwerken,
@@ -73,6 +81,7 @@ AeroX gebruikt uw gegevens om:
 ## Bewaring van uw Gegevens
 
 Wij bewaren uw persoonsgegevens uitsluitend zo lang als nodig is voor de hierboven beschreven doeleinden:
+
 - Accountgerelateerde gegevens worden verwijderd na sluiting van het account (tenzij er een wettelijke bewaarplicht geldt).
 - Gebruiksgegevens (geanonimiseerde statistieken) kunnen langer worden bewaard voor onderzoeks- en verbeteringsdoeleinden.
 
@@ -81,6 +90,7 @@ Wij bewaren uw persoonsgegevens uitsluitend zo lang als nodig is voor de hierbov
 ## Delen van uw Gegevens
 
 Uw gegevens kunnen in de volgende gevallen worden gedeeld:
+
 - **Met onze dienstverleners** (hostingproviders, betalingsdienstverleners zoals Stripe, analysetools).
 - **In geval van een fusie of bedrijfsoverdracht** kunnen uw gegevens samen met AeroX worden overgedragen.
 - **Op grond van wettelijke verplichtingen**, met name in het kader van verzoeken van bevoegde autoriteiten.
@@ -100,6 +110,7 @@ In dat geval zorgen wij ervoor dat passende waarborgen (modelcontractbepalingen,
 ## Verwijdering van uw Gegevens
 
 U kunt op elk moment verzoeken om verwijdering of correctie van uw persoonsgegevens:
+
 - via uw gebruikersruimte,
 - of door rechtstreeks contact met ons op te nemen (zie het gedeelte "Contact").
 

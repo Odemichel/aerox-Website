@@ -156,9 +156,7 @@ const {
                               <span class="text-4xl font-extrabold">{priceLabel}</span>
                             </div>
                           )}
-                          <span class="text-base leading-6 lowercase text-gray-600 dark:text-slate-400">
-                            {period}
-                          </span>
+                          <span class="text-base leading-6 lowercase text-gray-600 dark:text-slate-400">{period}</span>
                           {/* `note` échappe au `lowercase` ci-dessus : une date y perdrait ses
                               majuscules (« 1. November » deviendrait « 1. november » en allemand). */}
                           {note && <span class="mt-1 text-sm font-medium text-primary">{note}</span>}

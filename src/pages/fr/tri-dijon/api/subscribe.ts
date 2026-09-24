@@ -13,11 +13,7 @@ export const POST: APIRoute = async ({ request }) => {
   const GROUP_TRI_DIJON = '188730540069750057';
   const GROUP_BETA = '188730540648564346';
 
-  const groups = [
-    GROUP_GLOBAL_FR,
-    GROUP_TRI_DIJON,
-    ...(betaTester ? [GROUP_BETA] : []),
-  ];
+  const groups = [GROUP_GLOBAL_FR, GROUP_TRI_DIJON, ...(betaTester ? [GROUP_BETA] : [])];
 
   const apiKey = import.meta.env.MAILERLITE_API_KEY;
 

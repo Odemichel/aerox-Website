@@ -42,8 +42,7 @@ import { localizedHref } from '~/utils/localize';
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
 
 export const prerender = true;
-export const getStaticPaths: GetStaticPaths = async () =>
-  SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
+export const getStaticPaths: GetStaticPaths = async () => SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
 
 const lang = (Astro.params.lang as Locale) ?? 'fr';
 const dict = getDict(lang);
@@ -60,6 +59,7 @@ const metadata = {
 const Link_preorder = localizedHref(lang, '/#pricing');
 const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
 ---
+
 <Layout metadata={metadata}>
   <!-- Hero Widget ******************* -->
   <Hero
@@ -86,7 +86,8 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
   >
     <Fragment slot="title">
       <span class="font-bold">
-        {t(dict, 'home.hero.title.l1')} <span class="italic font-normal">{t(dict, 'home.hero.title.verb')}</span><br />
+        {t(dict, 'home.hero.title.l1')}
+        <span class="italic font-normal">{t(dict, 'home.hero.title.verb')}</span><br />
         <span
           id="hero-rotating"
           class="text-5xl md:text-6xl text-primary inline-block relative"
@@ -104,11 +105,11 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
     </Fragment>
 
     <Fragment slot="subtitle">
-      <span class="font-bold" set:html={t(dict, 'home.hero.subtitle')}></span>
+      <span class="font-bold" set:html={t(dict, 'home.hero.subtitle')} />
     </Fragment>
 
     <Fragment slot="paragraph">
-      <span set:html={t(dict, 'home.hero.paragraph')}></span>
+      <span set:html={t(dict, 'home.hero.paragraph')} />
     </Fragment>
   </Hero>
 
@@ -120,98 +121,193 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
     .glitch-active::after {
       content: attr(data-text);
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
       pointer-events: none;
       will-change: clip-path, transform;
     }
     .glitch-active::before {
-      text-shadow: -3px 0 hsl(210,60%,30%);
+      text-shadow: -3px 0 hsl(210, 60%, 30%);
       animation: glitch-top 0.25s step-end forwards;
     }
     .glitch-active::after {
-      text-shadow: 3px 0 hsl(35,95%,58%);
+      text-shadow: 3px 0 hsl(35, 95%, 58%);
       animation: glitch-bottom 0.25s step-end forwards;
     }
 
     @keyframes glitch-base {
-      0%   { transform: translate(0); }
-      10%  { transform: translate(-3px, 1px); }
-      20%  { transform: translate(2px, -1px); }
-      30%  { transform: translate(-1px, 0); }
-      40%  { transform: translate(3px, 1px); }
-      50%  { transform: translate(0); }
-      60%  { transform: translate(-2px, -1px); }
-      70%  { transform: translate(1px, 1px); }
-      80%  { transform: translate(0); }
-      90%  { transform: translate(-1px, 0); }
-      100% { transform: translate(0); }
+      0% {
+        transform: translate(0);
+      }
+      10% {
+        transform: translate(-3px, 1px);
+      }
+      20% {
+        transform: translate(2px, -1px);
+      }
+      30% {
+        transform: translate(-1px, 0);
+      }
+      40% {
+        transform: translate(3px, 1px);
+      }
+      50% {
+        transform: translate(0);
+      }
+      60% {
+        transform: translate(-2px, -1px);
+      }
+      70% {
+        transform: translate(1px, 1px);
+      }
+      80% {
+        transform: translate(0);
+      }
+      90% {
+        transform: translate(-1px, 0);
+      }
+      100% {
+        transform: translate(0);
+      }
     }
     @keyframes glitch-top {
-      0%   { clip-path: inset(10% 0 70% 0); transform: translate(-5px, 0) skewX(-3deg); }
-      10%  { clip-path: inset(50% 0 20% 0); transform: translate(4px, 0) skewX(2deg); }
-      20%  { clip-path: inset(5% 0 80% 0);  transform: translate(-6px, -1px); }
-      30%  { clip-path: inset(35% 0 40% 0); transform: translate(3px, 0) skewX(-4deg); }
-      40%  { clip-path: inset(70% 0 5% 0);  transform: translate(-4px, 1px) skewX(2deg); }
-      50%  { clip-path: inset(15% 0 60% 0); transform: translate(5px, 0); }
-      60%  { clip-path: inset(55% 0 15% 0); transform: translate(-3px, -1px) skewX(-2deg); }
-      70%  { clip-path: inset(25% 0 50% 0); transform: translate(6px, 0) skewX(3deg); }
-      80%  { clip-path: inset(45% 0 30% 0); transform: translate(-2px, 1px); }
-      90%  { clip-path: inset(80% 0 0% 0);  transform: translate(4px, 0) skewX(-1deg); }
-      100% { clip-path: inset(0 0 100% 0);  transform: translate(0); }
+      0% {
+        clip-path: inset(10% 0 70% 0);
+        transform: translate(-5px, 0) skewX(-3deg);
+      }
+      10% {
+        clip-path: inset(50% 0 20% 0);
+        transform: translate(4px, 0) skewX(2deg);
+      }
+      20% {
+        clip-path: inset(5% 0 80% 0);
+        transform: translate(-6px, -1px);
+      }
+      30% {
+        clip-path: inset(35% 0 40% 0);
+        transform: translate(3px, 0) skewX(-4deg);
+      }
+      40% {
+        clip-path: inset(70% 0 5% 0);
+        transform: translate(-4px, 1px) skewX(2deg);
+      }
+      50% {
+        clip-path: inset(15% 0 60% 0);
+        transform: translate(5px, 0);
+      }
+      60% {
+        clip-path: inset(55% 0 15% 0);
+        transform: translate(-3px, -1px) skewX(-2deg);
+      }
+      70% {
+        clip-path: inset(25% 0 50% 0);
+        transform: translate(6px, 0) skewX(3deg);
+      }
+      80% {
+        clip-path: inset(45% 0 30% 0);
+        transform: translate(-2px, 1px);
+      }
+      90% {
+        clip-path: inset(80% 0 0% 0);
+        transform: translate(4px, 0) skewX(-1deg);
+      }
+      100% {
+        clip-path: inset(0 0 100% 0);
+        transform: translate(0);
+      }
     }
     @keyframes glitch-bottom {
-      0%   { clip-path: inset(60% 0 10% 0); transform: translate(4px, 0) skewX(4deg); }
-      10%  { clip-path: inset(20% 0 55% 0); transform: translate(-5px, 1px) skewX(-2deg); }
-      20%  { clip-path: inset(75% 0 0% 0);  transform: translate(6px, 0); }
-      30%  { clip-path: inset(8% 0 65% 0);  transform: translate(-3px, -1px) skewX(3deg); }
-      40%  { clip-path: inset(40% 0 35% 0); transform: translate(5px, 0) skewX(-3deg); }
-      50%  { clip-path: inset(65% 0 10% 0); transform: translate(-6px, 1px); }
-      60%  { clip-path: inset(30% 0 45% 0); transform: translate(3px, 0) skewX(2deg); }
-      70%  { clip-path: inset(85% 0 0% 0);  transform: translate(-4px, -1px) skewX(-4deg); }
-      80%  { clip-path: inset(12% 0 70% 0); transform: translate(5px, 0); }
-      90%  { clip-path: inset(50% 0 25% 0); transform: translate(-3px, 1px) skewX(1deg); }
-      100% { clip-path: inset(0 0 100% 0);  transform: translate(0); }
+      0% {
+        clip-path: inset(60% 0 10% 0);
+        transform: translate(4px, 0) skewX(4deg);
+      }
+      10% {
+        clip-path: inset(20% 0 55% 0);
+        transform: translate(-5px, 1px) skewX(-2deg);
+      }
+      20% {
+        clip-path: inset(75% 0 0% 0);
+        transform: translate(6px, 0);
+      }
+      30% {
+        clip-path: inset(8% 0 65% 0);
+        transform: translate(-3px, -1px) skewX(3deg);
+      }
+      40% {
+        clip-path: inset(40% 0 35% 0);
+        transform: translate(5px, 0) skewX(-3deg);
+      }
+      50% {
+        clip-path: inset(65% 0 10% 0);
+        transform: translate(-6px, 1px);
+      }
+      60% {
+        clip-path: inset(30% 0 45% 0);
+        transform: translate(3px, 0) skewX(2deg);
+      }
+      70% {
+        clip-path: inset(85% 0 0% 0);
+        transform: translate(-4px, -1px) skewX(-4deg);
+      }
+      80% {
+        clip-path: inset(12% 0 70% 0);
+        transform: translate(5px, 0);
+      }
+      90% {
+        clip-path: inset(50% 0 25% 0);
+        transform: translate(-3px, 1px) skewX(1deg);
+      }
+      100% {
+        clip-path: inset(0 0 100% 0);
+        transform: translate(0);
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .glitch-active,
       .glitch-active::before,
-      .glitch-active::after { animation: none !important; }
+      .glitch-active::after {
+        animation: none !important;
+      }
     }
   </style>
 
   <script is:inline>
     function initHeroRotation() {
-      var el = document.getElementById('hero-rotating');
+      const el = document.getElementById('hero-rotating');
       if (!el || el.dataset.init === '1') return;
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+      let texts;
       try {
-        var texts = JSON.parse(el.getAttribute('data-texts') || '[]');
-      } catch(e) { return; }
+        texts = JSON.parse(el.getAttribute('data-texts') || '[]');
+      } catch {
+        return;
+      }
       if (texts.length < 2) return;
 
       el.dataset.init = '1';
-      var idx = 0;
+      let idx = 0;
 
       function glitchSwap(target) {
         el.classList.add('glitch-active');
 
         /* Swap text at midpoint (150ms into 300ms animation) */
-        setTimeout(function() {
+        setTimeout(function () {
           el.textContent = target;
           el.setAttribute('data-text', target);
         }, 125);
 
         /* Clean up after animation ends */
-        setTimeout(function() {
+        setTimeout(function () {
           el.classList.remove('glitch-active');
         }, 270);
       }
 
-      setInterval(function() {
+      setInterval(function () {
         idx = (idx + 1) % texts.length;
         glitchSwap(texts[idx]);
       }, 1600);
@@ -227,7 +323,9 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
   <!-- Bloc définition citable — glassmorphism card, optimisé GEO/AI Overviews -->
   <section class="relative not-prose">
     <div class="mx-auto max-w-4xl px-4 md:px-6 py-8">
-      <div class="bg-white/75 dark:bg-slate-800/75 backdrop-blur-sm border border-gray-200 dark:border-slate-600 rounded-2xl p-8 md:p-10 shadow-2xl">
+      <div
+        class="bg-white/75 dark:bg-slate-800/75 backdrop-blur-sm border border-gray-200 dark:border-slate-600 rounded-2xl p-8 md:p-10 shadow-2xl"
+      >
         <p class="text-sm text-muted leading-relaxed" set:html={t(dict, 'home.definition')} />
         <p class="text-xs text-muted/60 mt-3 italic">{t(dict, 'home.lastUpdated')}</p>
       </div>
@@ -237,7 +335,9 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
   <!-- Lead Magnet — capture email au-dessus du fold -->
   <section class="relative not-prose">
     <div class="mx-auto max-w-4xl px-4 md:px-6 py-8 md:py-10">
-      <div class="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 dark:from-primary/10 dark:via-primary/20 dark:to-primary/10 rounded-2xl px-6 py-8 md:px-10 md:py-10 text-center border border-primary/15">
+      <div
+        class="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 dark:from-primary/10 dark:via-primary/20 dark:to-primary/10 rounded-2xl px-6 py-8 md:px-10 md:py-10 text-center border border-primary/15"
+      >
         <h2 class="text-xl md:text-2xl font-bold mb-2">{t(dict, 'home.leadmagnet.title')}</h2>
         <p class="text-sm text-muted mb-5">{t(dict, 'home.leadmagnet.subtitle')}</p>
         <form
@@ -546,7 +646,7 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
     ]}
   >
     <Fragment slot="ctaDetails">
-      <span set:html={t(dict, 'home.features.ctaDetails')}></span>
+      <span set:html={t(dict, 'home.features.ctaDetails')} />
     </Fragment>
   </Features>
 
@@ -562,33 +662,49 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
         title: t(dict, 'home.steps.items.1.title'),
         description: '',
         icon: 'tabler:download',
-        expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false,
+        expandable: true,
+        moreLabel: t(dict, 'home.common.more'),
+        defaultOpen: false,
         classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
       },
       {
         title: t(dict, 'home.steps.items.2.title'),
         description: t(dict, 'home.steps.items.2.desc'),
         icon: 'tabler:video',
-        expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false,
+        expandable: true,
+        moreLabel: t(dict, 'home.common.more'),
+        defaultOpen: false,
         classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
       },
       {
         title: t(dict, 'home.steps.items.3.title'),
         description: t(dict, 'home.steps.items.3.desc'),
         icon: 'tabler:adjustments',
-        expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false,
+        expandable: true,
+        moreLabel: t(dict, 'home.common.more'),
+        defaultOpen: false,
         classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
       },
       {
         title: t(dict, 'home.steps.items.4.title'),
         description: t(dict, 'home.steps.items.4.desc'),
         icon: 'tabler:bluetooth',
-        expandable: true, moreLabel: t(dict, 'home.common.more'), defaultOpen: false,
+        expandable: true,
+        moreLabel: t(dict, 'home.common.more'),
+        defaultOpen: false,
         classes: { summary: 'text-accent hover:underline', more: 'mt-3' },
       },
       { title: t(dict, 'home.steps.items.5.title'), icon: 'tabler:check' },
     ]}
-    actions={[{ variant: 'primary', text: t(dict, 'cta.preorder.text'), href: Link_preorder, target: '', icon: 'tabler:calendar-event' }]}
+    actions={[
+      {
+        variant: 'primary',
+        text: t(dict, 'cta.preorder.text'),
+        href: Link_preorder,
+        target: '',
+        icon: 'tabler:calendar-event',
+      },
+    ]}
   />
 
   <Note title={t(dict, 'home.note5.title')} description={t(dict, 'home.note5.desc')} />
@@ -599,35 +715,79 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
       <h2 class="text-2xl md:text-3xl font-bold text-center mb-8">{t(dict, 'home.explore.title')}</h2>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Bike Fitting — card mise en avant -->
-        <a href={`/${lang}/bike-fitting/`} class="group flex flex-col p-5 rounded-xl bg-primary/5 dark:bg-primary/10 shadow-lg hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all">
+        <a
+          href={`/${lang}/bike-fitting/`}
+          class="group flex flex-col p-5 rounded-xl bg-primary/5 dark:bg-primary/10 shadow-lg hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all"
+        >
           <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
-            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              ></path></svg
+            >
           </div>
-          <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">{t(dict, 'home.explore.bf.title')}</p>
+          <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">
+            {t(dict, 'home.explore.bf.title')}
+          </p>
           <p class="text-xs text-muted mt-1">{t(dict, 'home.explore.bf.desc')}</p>
         </a>
         <!-- Blog: Zwift -->
-        <a href={`/${lang}/blog/zwift-${lang}/`} class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all">
+        <a
+          href={`/${lang}/blog/zwift-${lang}/`}
+          class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all"
+        >
           <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
-            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+              ></path></svg
+            >
           </div>
-          <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">{t(dict, 'home.explore.blog.zwift.title')}</p>
+          <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">
+            {t(dict, 'home.explore.blog.zwift.title')}
+          </p>
           <p class="text-xs text-muted mt-1">{t(dict, 'home.explore.blog.zwift.desc')}</p>
         </a>
         <!-- Blog: Aero gain -->
-        <a href={`/${lang}/blog/aero-gain-chronometrique-${lang}/`} class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all">
+        <a
+          href={`/${lang}/blog/aero-gain-chronometrique-${lang}/`}
+          class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all"
+        >
           <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
-            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+              ></path></svg
+            >
           </div>
-          <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">{t(dict, 'home.explore.blog.aero.title')}</p>
+          <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">
+            {t(dict, 'home.explore.blog.aero.title')}
+          </p>
           <p class="text-xs text-muted mt-1">{t(dict, 'home.explore.blog.aero.desc')}</p>
         </a>
         <!-- Blog: Feel aero -->
-        <a href={`/${lang}/blog/feel-aero-${lang}/`} class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all">
+        <a
+          href={`/${lang}/blog/feel-aero-${lang}/`}
+          class="group flex flex-col p-5 rounded-xl border border-gray-200 dark:border-slate-700 shadow-lg hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all"
+        >
           <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
-            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+              ></path></svg
+            >
           </div>
-          <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">{t(dict, 'home.explore.blog.feel.title')}</p>
+          <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">
+            {t(dict, 'home.explore.blog.feel.title')}
+          </p>
           <p class="text-xs text-muted mt-1">{t(dict, 'home.explore.blog.feel.desc')}</p>
         </a>
       </div>
@@ -642,14 +802,62 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
     classes={{ container: 'max-w-6xl' }}
     actions={[{ variant: 'primary', text: t(dict, 'cta.preorder.text'), href: Link_preorder, target: '' }]}
     items={[
-      { title: t(dict, 'home.faq.items.1.title'), education: t(dict, 'home.faq.items.1.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.1.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.2.title'), education: t(dict, 'home.faq.items.2.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.2.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.3.title'), education: t(dict, 'home.faq.items.3.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.3.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.4.title'), education: t(dict, 'home.faq.items.4.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.4.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.5.title'), education: t(dict, 'home.faq.items.5.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.5.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.6.title'), education: t(dict, 'home.faq.items.6.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.6.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.7.title'), education: t(dict, 'home.faq.items.7.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.7.more'), defaultOpen: false },
-      { title: t(dict, 'home.faq.items.8.title'), education: t(dict, 'home.faq.items.8.education'), expandable: true, moreLabel: t(dict, 'home.faq.items.8.more'), defaultOpen: false },
+      {
+        title: t(dict, 'home.faq.items.1.title'),
+        education: t(dict, 'home.faq.items.1.education'),
+        expandable: true,
+        moreLabel: t(dict, 'home.faq.items.1.more'),
+        defaultOpen: false,
+      },
+      {
+        title: t(dict, 'home.faq.items.2.title'),
+        education: t(dict, 'home.faq.items.2.education'),
+        expandable: true,
+        moreLabel: t(dict, 'home.faq.items.2.more'),
+        defaultOpen: false,
+      },
+      {
+        title: t(dict, 'home.faq.items.3.title'),
+        education: t(dict, 'home.faq.items.3.education'),
+        expandable: true,
+        moreLabel: t(dict, 'home.faq.items.3.more'),
+        defaultOpen: false,
+      },
+      {
+        title: t(dict, 'home.faq.items.4.title'),
+        education: t(dict, 'home.faq.items.4.education'),
+        expandable: true,
+        moreLabel: t(dict, 'home.faq.items.4.more'),
+        defaultOpen: false,
+      },
+      {
+        title: t(dict, 'home.faq.items.5.title'),
+        education: t(dict, 'home.faq.items.5.education'),
+        expandable: true,
+        moreLabel: t(dict, 'home.faq.items.5.more'),
+        defaultOpen: false,
+      },
+      {
+        title: t(dict, 'home.faq.items.6.title'),
+        education: t(dict, 'home.faq.items.6.education'),
+        expandable: true,
+        moreLabel: t(dict, 'home.faq.items.6.more'),
+        defaultOpen: false,
+      },
+      {
+        title: t(dict, 'home.faq.items.7.title'),
+        education: t(dict, 'home.faq.items.7.education'),
+        expandable: true,
+        moreLabel: t(dict, 'home.faq.items.7.more'),
+        defaultOpen: false,
+      },
+      {
+        title: t(dict, 'home.faq.items.8.title'),
+        education: t(dict, 'home.faq.items.8.education'),
+        expandable: true,
+        moreLabel: t(dict, 'home.faq.items.8.more'),
+        defaultOpen: false,
+      },
     ]}
   />
 
@@ -704,187 +912,205 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
     document.addEventListener('astro:page-load', initLeadMagnetForm);
   </script>
 
-  <script type="application/ld+json" set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: t(dict, 'home.faq.schema.q1'),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: t(dict, 'home.faq.schema.a1'),
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: t(dict, 'home.faq.schema.q1'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t(dict, 'home.faq.schema.a1'),
+          },
         },
-      },
-      {
-        '@type': 'Question',
-        name: t(dict, 'home.faq.schema.q2'),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: t(dict, 'home.faq.schema.a2'),
+        {
+          '@type': 'Question',
+          name: t(dict, 'home.faq.schema.q2'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t(dict, 'home.faq.schema.a2'),
+          },
         },
-      },
-      {
-        '@type': 'Question',
-        name: t(dict, 'home.faq.schema.q3'),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: t(dict, 'home.faq.schema.a3'),
+        {
+          '@type': 'Question',
+          name: t(dict, 'home.faq.schema.q3'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t(dict, 'home.faq.schema.a3'),
+          },
         },
-      },
-      {
-        '@type': 'Question',
-        name: t(dict, 'home.faq.schema.q4'),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: t(dict, 'home.faq.schema.a4'),
+        {
+          '@type': 'Question',
+          name: t(dict, 'home.faq.schema.q4'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t(dict, 'home.faq.schema.a4'),
+          },
         },
-      },
-      {
-        '@type': 'Question',
-        name: t(dict, 'home.faq.schema.q5'),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: t(dict, 'home.faq.schema.a5'),
+        {
+          '@type': 'Question',
+          name: t(dict, 'home.faq.schema.q5'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t(dict, 'home.faq.schema.a5'),
+          },
         },
-      },
-      {
-        '@type': 'Question',
-        name: t(dict, 'home.faq.schema.q6'),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: t(dict, 'home.faq.schema.a6'),
+        {
+          '@type': 'Question',
+          name: t(dict, 'home.faq.schema.q6'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t(dict, 'home.faq.schema.a6'),
+          },
         },
-      },
-      {
-        '@type': 'Question',
-        name: t(dict, 'home.faq.schema.q7'),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: t(dict, 'home.faq.schema.a7'),
+        {
+          '@type': 'Question',
+          name: t(dict, 'home.faq.schema.q7'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t(dict, 'home.faq.schema.a7'),
+          },
         },
-      },
-      {
-        '@type': 'Question',
-        name: t(dict, 'home.faq.schema.q8'),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: t(dict, 'home.faq.schema.a8'),
+        {
+          '@type': 'Question',
+          name: t(dict, 'home.faq.schema.q8'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t(dict, 'home.faq.schema.a8'),
+          },
         },
-      },
-      {
-        '@type': 'Question',
-        name: t(dict, 'home.faq.schema.q9'),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: t(dict, 'home.faq.schema.a9'),
+        {
+          '@type': 'Question',
+          name: t(dict, 'home.faq.schema.q9'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t(dict, 'home.faq.schema.a9'),
+          },
         },
-      },
-      {
-        '@type': 'Question',
-        name: t(dict, 'home.faq.schema.q10'),
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: t(dict, 'home.faq.schema.a10'),
+        {
+          '@type': 'Question',
+          name: t(dict, 'home.faq.schema.q10'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t(dict, 'home.faq.schema.a10'),
+          },
         },
-      },
-    ],
-  })} />
-
-  <script type="application/ld+json" set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'AeroX',
-    url: 'https://aeroxbefaster.com',
-    logo: 'https://aeroxbefaster.com/favicon.svg',
-    description: t(dict, 'home.meta.description'),
-    founder: {
-      '@type': 'Person',
-      name: 'Olivier Demichel',
-      jobTitle: lang === 'fr' ? 'Fondateur & Ingénieur' : 'Founder & Engineer',
-      sameAs: [
-        'https://www.linkedin.com/in/olivier-demichel-b9b824ba/',
-        'https://www.youtube.com/@nolimit-triathlon',
-        'https://www.researchgate.net/profile/Olivier-Demichel',
       ],
-    },
-    sameAs: [
-      'https://www.instagram.com/aerox_be_faster/',
-      'https://www.youtube.com/@AeroXBeFaster',
-      'https://www.youtube.com/@nolimit-triathlon',
-      'https://www.linkedin.com/company/aerox-officiel/',
-    ],
-  })} />
+    })}
+  />
 
-  <script type="application/ld+json" set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'AeroX',
-    url: 'https://aeroxbefaster.com',
-    inLanguage: lang === 'fr' ? 'fr-FR' : 'en-US',
-  })} />
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'AeroX',
+      url: 'https://aeroxbefaster.com',
+      logo: 'https://aeroxbefaster.com/favicon.svg',
+      description: t(dict, 'home.meta.description'),
+      founder: {
+        '@type': 'Person',
+        name: 'Olivier Demichel',
+        jobTitle: lang === 'fr' ? 'Fondateur & Ingénieur' : 'Founder & Engineer',
+        sameAs: [
+          'https://www.linkedin.com/in/olivier-demichel-b9b824ba/',
+          'https://www.youtube.com/@nolimit-triathlon',
+          'https://www.researchgate.net/profile/Olivier-Demichel',
+        ],
+      },
+      sameAs: [
+        'https://www.instagram.com/aerox_be_faster/',
+        'https://www.youtube.com/@AeroXBeFaster',
+        'https://www.youtube.com/@nolimit-triathlon',
+        'https://www.linkedin.com/company/aerox-officiel/',
+      ],
+    })}
+  />
 
-  <script type="application/ld+json" set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'AeroX',
-    applicationCategory: 'SportsApplication',
-    operatingSystem: 'macOS, Windows',
-    description: t(dict, 'home.meta.description'),
-    url: 'https://aeroxbefaster.com',
-    offers: {
-      '@type': 'Offer',
-      price: '20',
-      priceCurrency: 'EUR',
-      availability: 'https://schema.org/PreOrder',
-    },
-  })} />
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'AeroX',
+      url: 'https://aeroxbefaster.com',
+      inLanguage: lang === 'fr' ? 'fr-FR' : 'en-US',
+    })}
+  />
 
-  <script type="application/ld+json" set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'VideoObject',
-    name: t(dict, 'home.herovideo.alt'),
-    description: t(dict, 'home.meta.description'),
-    uploadDate: '2025-01-15',
-    contentUrl: `https://aeroxbefaster.com${heroVideo}`,
-    thumbnailUrl: 'https://aeroxbefaster.com/favicon.svg',
-  })} />
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'AeroX',
+      applicationCategory: 'SportsApplication',
+      operatingSystem: 'macOS, Windows',
+      description: t(dict, 'home.meta.description'),
+      url: 'https://aeroxbefaster.com',
+      offers: {
+        '@type': 'Offer',
+        price: '20',
+        priceCurrency: 'EUR',
+        availability: 'https://schema.org/PreOrder',
+      },
+    })}
+  />
 
-  <script type="application/ld+json" set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'AeroX',
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.8',
-      reviewCount: '4',
-      bestRating: '5',
-    },
-    review: [
-      {
-        '@type': 'Review',
-        author: { '@type': 'Person', name: 'Milan Larivière' },
-        reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-        reviewBody: t(dict, 'home.testimonials.items.milan.text').replace(/"/g, ''),
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'VideoObject',
+      name: t(dict, 'home.herovideo.alt'),
+      description: t(dict, 'home.meta.description'),
+      uploadDate: '2025-01-15',
+      contentUrl: `https://aeroxbefaster.com${heroVideo}`,
+      thumbnailUrl: 'https://aeroxbefaster.com/favicon.svg',
+    })}
+  />
+
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'AeroX',
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.8',
+        reviewCount: '4',
+        bestRating: '5',
       },
-      {
-        '@type': 'Review',
-        author: { '@type': 'Person', name: 'Frédéric Petit' },
-        reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-        reviewBody: t(dict, 'home.testimonials.items.frederic.text').replace(/"/g, ''),
-      },
-      {
-        '@type': 'Review',
-        author: { '@type': 'Person', name: 'Olivier Demichel' },
-        reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-        reviewBody: t(dict, 'home.testimonials.items.olivier.text').replace(/"/g, ''),
-      },
-      {
-        '@type': 'Review',
-        author: { '@type': 'Person', name: 'James Ropert' },
-        reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-        reviewBody: t(dict, 'home.testimonials.items.james.text').replace(/"/g, ''),
-      },
-    ],
-  })} />
+      review: [
+        {
+          '@type': 'Review',
+          author: { '@type': 'Person', name: 'Milan Larivière' },
+          reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+          reviewBody: t(dict, 'home.testimonials.items.milan.text').replace(/"/g, ''),
+        },
+        {
+          '@type': 'Review',
+          author: { '@type': 'Person', name: 'Frédéric Petit' },
+          reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+          reviewBody: t(dict, 'home.testimonials.items.frederic.text').replace(/"/g, ''),
+        },
+        {
+          '@type': 'Review',
+          author: { '@type': 'Person', name: 'Olivier Demichel' },
+          reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+          reviewBody: t(dict, 'home.testimonials.items.olivier.text').replace(/"/g, ''),
+        },
+        {
+          '@type': 'Review',
+          author: { '@type': 'Person', name: 'James Ropert' },
+          reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+          reviewBody: t(dict, 'home.testimonials.items.james.text').replace(/"/g, ''),
+        },
+      ],
+    })}
+  />
 </Layout>

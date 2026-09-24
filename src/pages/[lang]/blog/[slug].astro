@@ -22,7 +22,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const rawEntries = await getCollection('post');
   const bodyBySlug = new Map<string, string>();
   for (const entry of rawEntries) {
-    const slug = cleanSlug((entry.filePath ?? entry.id).split('/').pop()!.replace(/\.mdx?$/i, ''));
+    const slug = cleanSlug(
+      (entry.filePath ?? entry.id)
+        .split('/')
+        .pop()!
+        .replace(/\.mdx?$/i, '')
+    );
     if (entry.body) bodyBySlug.set(slug, entry.body);
   }
 
@@ -47,8 +52,8 @@ const { post, faqItems } = Astro.props as { post: Post; faqItems: Array<{ questi
 
 const url = getCanonical(post.permalink);
 const image = (await findImage(post.image)) as ImageMetadata | string | undefined;
-const ogImage =
-  !image ? undefined
+const ogImage = !image
+  ? undefined
   : typeof image === 'string'
     ? { url: image }
     : { url: image.src, width: image.width, height: image.height };
@@ -79,30 +84,40 @@ const blogPostingSchema = {
     url: 'https://aeroxbefaster.com',
   },
   datePublished: post.publishDate ? new Date(post.publishDate).toISOString() : undefined,
-  dateModified: post.updateDate ? new Date(post.updateDate).toISOString() : (post.publishDate ? new Date(post.publishDate).toISOString() : undefined),
+  dateModified: post.updateDate
+    ? new Date(post.updateDate).toISOString()
+    : post.publishDate
+      ? new Date(post.publishDate).toISOString()
+      : undefined,
   mainEntityOfPage: { '@type': 'WebPage', '@id': String(url) },
   ...(ogImage ? { image: ogImage.url } : {}),
 };
 ---
+
 <Layout metadata={metadata}>
   <SinglePost post={{ ...post, image }} url={url}>
     {post.Content ? <post.Content /> : <Fragment set:html={post.content || ''} />}
   </SinglePost>
   <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
-  {faqItems.length > 0 && (
-    <script type="application/ld+json" set:html={JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: faqItems.map((item) => ({
-        '@type': 'Question',
-        name: item.question,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: item.answer,
-        },
-      })),
-    })} />
-  )}
+  {
+    faqItems.length > 0 && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faqItems.map((item) => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: item.answer,
+            },
+          })),
+        })}
+      />
+    )
+  }
   <ToBlogLink />
   <RelatedPosts post={post} />
 </Layout>

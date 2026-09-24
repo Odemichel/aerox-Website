@@ -11,8 +11,7 @@ import Olivier from '~/assets/images/Olivier_tete2.png';
 import { getDict, SUPPORTED_LOCALES, t, type Locale } from '~/lib/i18n';
 
 export const prerender = true;
-export const getStaticPaths: GetStaticPaths = async () =>
-  SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
+export const getStaticPaths: GetStaticPaths = async () => SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
 
 const lang = (Astro.params.lang as Locale) ?? 'fr';
 const dict = getDict(lang);
@@ -25,6 +24,7 @@ const metadata = {
   description: t(dict, 'ourStory.meta.description'),
 };
 ---
+
 <Layout metadata={metadata}>
   <!-- Hero Section -->
   <HeroText
@@ -38,11 +38,11 @@ const metadata = {
     <h2 class="text-primary text-center">{t(dict, 'ourStory.h2')}</h2>
 
     <!-- On garde EXACTEMENT ton HTML, injecté via JSON -->
-    <p set:html={t(dict, 'ourStory.p1')}></p>
-    <p set:html={t(dict, 'ourStory.p2')}></p>
-    <p set:html={t(dict, 'ourStory.p3')}></p>
-    <p set:html={t(dict, 'ourStory.p4')}></p>
-    <p set:html={t(dict, 'ourStory.p5')}></p>
+    <p set:html={t(dict, 'ourStory.p1')} />
+    <p set:html={t(dict, 'ourStory.p2')} />
+    <p set:html={t(dict, 'ourStory.p3')} />
+    <p set:html={t(dict, 'ourStory.p4')} />
+    <p set:html={t(dict, 'ourStory.p5')} />
   </section>
 
   <!-- Team Section -->
@@ -67,11 +67,7 @@ const metadata = {
 
   <!-- Call To Action -->
   <div class="text-center py-20">
-    <a
-      href={pricingHref}
-      class="btn btn-primary px-8 py-3 text-lg"
-      aria-label={t(dict, 'ourStory.cta.aria')}
-    >
+    <a href={pricingHref} class="btn btn-primary px-8 py-3 text-lg" aria-label={t(dict, 'ourStory.cta.aria')}>
       {t(dict, 'ourStory.cta.label')}
     </a>
     <p class="mt-4 text-muted text-sm">

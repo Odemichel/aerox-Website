@@ -123,22 +123,22 @@ describe('validateLead', () => {
   });
 
   it('refuse validateLead(null) sans exception', () => {
-    const r = validateLead(null as any);
+    const r = validateLead(null as never);
     expect(r).toEqual({ ok: false, error: 'invalid_topic' });
   });
 
   it('refuse validateLead(42) sans exception', () => {
-    const r = validateLead(42 as any);
+    const r = validateLead(42 as never);
     expect(r).toEqual({ ok: false, error: 'invalid_topic' });
   });
 
   it('refuse validateLead([]) sans exception', () => {
-    const r = validateLead([] as any);
+    const r = validateLead([] as never);
     expect(r).toEqual({ ok: false, error: 'invalid_topic' });
   });
 
   it("refuse validateLead('x') sans exception", () => {
-    const r = validateLead('x' as any);
+    const r = validateLead('x' as never);
     expect(r).toEqual({ ok: false, error: 'invalid_topic' });
   });
 });

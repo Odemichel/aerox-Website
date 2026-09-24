@@ -13,7 +13,10 @@ export function extractFaqItems(body: string | undefined): Array<{ question: str
   let match;
   while ((match = detailsRegex.exec(faqSection)) !== null) {
     const question = match[1].trim();
-    const answer = match[2].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    const answer = match[2]
+      .replace(/<[^>]+>/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
     if (question && answer) {
       items.push({ question, answer });
     }

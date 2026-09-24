@@ -1,4 +1,4 @@
-@import "@fontsource/manrope/index.css";
+@import '@fontsource/manrope/index.css';
 /* ou /400.css etc. */
 
 @tailwind base;
@@ -87,9 +87,6 @@
     color: transparent;
   }
 
-
-
-
   /* Hauteur */
   .scrollbar-zwift::-webkit-scrollbar {
     height: 10px;
@@ -105,7 +102,7 @@
     border-left: 10vw solid transparent;
     border-right: 10vw solid transparent;
     opacity: 0;
-    transition: opacity .25s;
+    transition: opacity 0.25s;
   }
 
   /* Thumb “coloré” contraint visuellement à 80% */
@@ -119,7 +116,7 @@
     background-clip: content-box;
     /* important */
     opacity: 0;
-    transition: opacity .25s;
+    transition: opacity 0.25s;
   }
 
   /* Affiché pendant le scroll */
@@ -127,7 +124,6 @@
   .scrollbar-zwift.showing::-webkit-scrollbar-thumb {
     opacity: 1;
   }
-
 
   /* 1) cacher la native partout */
   .hide-native-scroll {
@@ -155,14 +151,18 @@
     opacity: 0;
     /* auto-hide par défaut */
     pointer-events: none;
-    transition: opacity .2s ease;
+    transition: opacity 0.2s ease;
     z-index: 10;
   }
-  h1, h2, h3, a, p{
-  font-family: 'Manrope', sans-serif !important;
-  line-height: 1.4;
-  letter-spacing: 0.008em;
-}
+  h1,
+  h2,
+  h3,
+  a,
+  p {
+    font-family: 'Manrope', sans-serif !important;
+    line-height: 1.4;
+    letter-spacing: 0.008em;
+  }
 
   .fakebar.show {
     opacity: 1;
@@ -181,12 +181,10 @@
     /* arrondi du thumb */
   }
 
-
   /* === Scrollbar custom === */
   .scrollbar-custom::-webkit-scrollbar {
     height: 8px;
     /* largeur si horizontal */
-
   }
 
   /* Vars par défaut (clair) */
@@ -224,10 +222,7 @@
     --sb-thumb: var(--aw-color-primary-light);
     --sb-thumb-hover: var(--aw-color-primary);
   }
-
-
 }
-
 
 @layer components {
   .btn {
@@ -241,12 +236,11 @@
   }
 
   .dark .btn-primary:hover {
-    box-shadow: 0 0 15px rgb(0, 134, 244),
+    box-shadow:
+      0 0 15px rgb(0, 134, 244),
       0 0 10px rgb(255, 255, 255);
     filter: brightness(1.06);
   }
-
-
 
   /* Optionnel: gradient spécifique en dark (sinon garde le même) */
 
@@ -259,13 +253,13 @@
   }
 }
 
-#header.scroll>div:first-child {
+#header.scroll > div:first-child {
   @apply bg-page backdrop-blur-md;
   box-shadow: 0 0.375rem 1.5rem 0 rgb(140 152 164 / 13%);
 }
 
-.dark #header.scroll>div:first-child,
-#header.scroll.dark>div:first-child {
+.dark #header.scroll > div:first-child,
+#header.scroll.dark > div:first-child {
   @apply bg-[#030621e6] border-b border-gray-500/20;
   box-shadow: none;
 }
@@ -289,11 +283,11 @@
   display: block;
 }
 
-[astro-icon].icon-light>* {
+[astro-icon].icon-light > * {
   stroke-width: 1.2;
 }
 
-[astro-icon].icon-bold>* {
+[astro-icon].icon-bold > * {
   stroke-width: 2.4;
 }
 
@@ -301,11 +295,11 @@
   @apply transition;
 }
 
-[data-aw-toggle-menu].expanded g>path:first-child {
+[data-aw-toggle-menu].expanded g > path:first-child {
   @apply -rotate-45 translate-y-[15px] translate-x-[-3px];
 }
 
-[data-aw-toggle-menu].expanded g>path:last-child {
+[data-aw-toggle-menu].expanded g > path:last-child {
   @apply rotate-45 translate-y-[-8px] translate-x-[14px];
 }
 
@@ -355,14 +349,14 @@
 }
 
 .faq-section details summary::after {
-  content: "+";
+  content: '+';
   @apply text-xl font-bold shrink-0;
   color: var(--aw-color-primary);
   transition: transform 0.2s;
 }
 
 .faq-section details[open] summary::after {
-  content: "−";
+  content: '−';
 }
 
 .faq-section details summary::-webkit-details-marker {

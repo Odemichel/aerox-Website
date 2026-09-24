@@ -59,13 +59,7 @@ const dict = getDict(lang);
   ]}
 />
 
-<div
-  id="buy-diagnostic-config"
-  data-lang={lang}
-  data-error={t(dict, 'pricing.diagnostic.error')}
-  class="hidden"
->
-</div>
+<div id="buy-diagnostic-config" data-lang={lang} data-error={t(dict, 'pricing.diagnostic.error')} class="hidden"></div>
 
 <script>
   import { supabase } from '~/config/supabaseClient';

@@ -7,9 +7,8 @@
 
 // Déclare le type pour App.Locals (évite "La propriété 'lang' n'existe pas")
 declare namespace App {
-  type Locale = 'fr' | 'en';
   interface Locals {
-    lang: Locale;
+    lang: import('./lib/i18n').Locale;
   }
 }
 

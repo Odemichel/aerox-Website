@@ -8,8 +8,8 @@ import GainChronoAeroFr from '~/assets/images/blog/gain-chrono-aero-fr.png';
 
 export const blogImages: Record<string, ImageMetadata> = {
   'aerox-vs-zwift': aeroxVsZwift,
-  'Pog_EvenP': PogacatVsEvenPoel,
-  "gain-chrono-aero-en": GainChronoAeroEn,
-  "gain-chrono-aero-fr": GainChronoAeroFr
+  Pog_EvenP: PogacatVsEvenPoel,
+  'gain-chrono-aero-en': GainChronoAeroEn,
+  'gain-chrono-aero-fr': GainChronoAeroFr,
   // etc.
 };

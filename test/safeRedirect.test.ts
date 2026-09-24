@@ -9,8 +9,9 @@ describe('safeRedirect', () => {
   });
 
   it('accepte un chemin avec query', () => {
-    expect(safeRedirect('/fr/telechargement/success/?product=diagnostic', FALLBACK))
-      .toBe('/fr/telechargement/success/?product=diagnostic');
+    expect(safeRedirect('/fr/telechargement/success/?product=diagnostic', FALLBACK)).toBe(
+      '/fr/telechargement/success/?product=diagnostic'
+    );
   });
 
   it('retombe sur le fallback si absent', () => {

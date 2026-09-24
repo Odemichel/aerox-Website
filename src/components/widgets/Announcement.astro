@@ -5,11 +5,13 @@ const lang = (Astro.params.lang as Locale) ?? 'fr';
 const dict = getDict(lang);
 ---
 
-{/*
+{
+  /*
   Bandeau de l'offre de lancement, au-dessus du header, sur toutes les tailles
   d'écran : c'est lui qui porte la réduction, ce qui permet au bouton du
   header de rester court sur mobile.
-*/}
+*/
+}
 <a
   href={`/${lang}/#pricing`}
   class="block bg-primary px-3 py-2 text-center text-sm font-semibold text-black hover:underline"

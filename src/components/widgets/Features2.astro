@@ -7,7 +7,7 @@ import type { Features as Props } from '~/types';
 const {
   title = await Astro.slots.render('title'),
   subtitle = await Astro.slots.render('subtitle'),
-  subsubtitle=await Astro.slots.render('subsubtitle'),
+  subsubtitle = await Astro.slots.render('subsubtitle'),
 
   tagline = await Astro.slots.render('tagline'),
   items = [],
@@ -21,8 +21,14 @@ const {
 ---
 
 <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-20xl mx-auto  ${classes?.container ?? ''}`}>
-  <Headline title={title}  subtitle={subtitle} subsubtitle={subsubtitle} tagline={tagline} classes={classes?.headline as Record<string, string>} />
-    <ItemGrid2
+  <Headline
+    title={title}
+    subtitle={subtitle}
+    subsubtitle={subsubtitle}
+    tagline={tagline}
+    classes={classes?.headline as Record<string, string>}
+  />
+  <ItemGrid2
     items={items}
     columns={columns}
     defaultIcon={defaultIcon}

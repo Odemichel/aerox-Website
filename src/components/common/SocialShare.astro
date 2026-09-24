@@ -4,7 +4,7 @@ import { Icon } from 'astro-icon/components';
 export interface Props {
   text: string;
   url: string | URL;
-  image?: string
+  image?: string;
   class?: string;
 }
 
@@ -12,9 +12,11 @@ const { text, url, image, class: className = 'inline-block' } = Astro.props;
 ---
 
 <div class={className}>
-  {image && (
-    <img src={image} alt={text} width="64" height="64" class="w-16 h-16 object-cover rounded-md inline-block mr-2" />
-  )}
+  {
+    image && (
+      <img src={image} alt={text} width="64" height="64" class="w-16 h-16 object-cover rounded-md inline-block mr-2" />
+    )
+  }
   <span class="align-super font-bold text-slate-500 dark:text-slate-400">Share:</span>
   <button
     class="ml-2 rtl:ml-0 rtl:mr-2"
@@ -28,7 +30,12 @@ const { text, url, image, class: className = 'inline-block' } = Astro.props;
       class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
     />
   </button>
-  <button class="ml-2 rtl:ml-0 rtl:mr-2" title="Facebook Share" aria-label="Partager sur Facebook" data-aw-social-share="facebook" data-aw-url={url}
+  <button
+    class="ml-2 rtl:ml-0 rtl:mr-2"
+    title="Facebook Share"
+    aria-label="Partager sur Facebook"
+    data-aw-social-share="facebook"
+    data-aw-url={url}
     ><Icon
       name="tabler:brand-facebook"
       class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"

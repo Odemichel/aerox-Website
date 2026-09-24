@@ -47,7 +47,6 @@ export const getPermalink = (slug = '', type = 'page'): string => {
     return `${home}${slug}`;
   }
 
-
   if (
     slug.startsWith('https://') ||
     slug.startsWith('http://') ||

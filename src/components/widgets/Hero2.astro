@@ -86,7 +86,7 @@ const {
                   loading="eager"
                   width={600}
                   height={600}
-                  {...image}
+                  {...(image as Record<string, unknown>)}
                 />
               )}
             </div>

@@ -95,7 +95,9 @@ Deno.serve(async (req) => {
       typeof (fields as Record<string, unknown>).name === 'string'
         ? String((fields as Record<string, unknown>).name)
         : ''
-    ).replace(/[\r\n\x00-\x1f\u007f\u0085\u061c\u200b-\u200f\u2028\u2029\u202a-\u202e\u2066-\u2069\ufeff]/g, '');
+    )
+      // eslint-disable-next-line no-control-regex -- on retire justement les caractères de contrôle du sujet
+      .replace(/[\r\n\x00-\x1f\u007f\u0085\u061c\u200b-\u200f\u2028\u2029\u202a-\u202e\u2066-\u2069\ufeff]/g, '');
 
     const htmlBody = `
 <!DOCTYPE html>

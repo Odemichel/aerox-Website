@@ -15,20 +15,22 @@ By using AeroX, you agree to the collection and use of your information in accor
 ## Interpretation and Definitions
 
 ### Interpretation
+
 Words with an initial capital letter have meanings defined under the following conditions. These definitions apply equally to singular and plural forms.
 
 ### Definitions
+
 For the purposes of this Privacy Policy:
 
-- **Account**: means a unique account created to access the service.  
-- **Company** (referred to as "AeroX", "we", "our" or "us"): AeroX, based in France.  
-- **Cookies**: small files placed on your device that help remember your preferences or analyze service usage.  
-- **Country**: France.  
-- **Device**: any device that can access the service (computer, smartphone, tablet).  
-- **Personal Data**: any information that can identify an individual directly or indirectly.  
-- **Service**: the AeroX website and application.  
-- **Service Provider**: any individual or legal entity that processes data on behalf of AeroX (hosting, analytics, payment, etc.).  
-- **Usage Data**: data collected automatically during use of the service (e.g., visit duration, browser type, IP address).  
+- **Account**: means a unique account created to access the service.
+- **Company** (referred to as "AeroX", "we", "our" or "us"): AeroX, based in France.
+- **Cookies**: small files placed on your device that help remember your preferences or analyze service usage.
+- **Country**: France.
+- **Device**: any device that can access the service (computer, smartphone, tablet).
+- **Personal Data**: any information that can identify an individual directly or indirectly.
+- **Service**: the AeroX website and application.
+- **Service Provider**: any individual or legal entity that processes data on behalf of AeroX (hosting, analytics, payment, etc.).
+- **Usage Data**: data collected automatically during use of the service (e.g., visit duration, browser type, IP address).
 - **You**: the person accessing the service, whether acting on their own behalf or on behalf of an organization.
 
 ---
@@ -38,20 +40,25 @@ For the purposes of this Privacy Policy:
 ### Types of Data Collected
 
 #### Personal Data
+
 When using AeroX, you may be asked to provide certain information that can be used to identify you (for example: email address to create an account or complete a payment).
 
 #### Usage Data
-Collected automatically, it may include:  
-- IP address,  
-- browser type and version,  
-- pages visited and duration of visits,  
+
+Collected automatically, it may include:
+
+- IP address,
+- browser type and version,
+- pages visited and duration of visits,
 - device-related information.
 
 #### Cookies and Similar Technologies
-We use cookies to:  
-- ensure the proper functioning of the service,  
-- remember your preferences (language, session),  
-- analyze traffic and improve user experience.  
+
+We use cookies to:
+
+- ensure the proper functioning of the service,
+- remember your preferences (language, session),
+- analyze traffic and improve user experience.
 
 You can configure your browser to refuse cookies, but this may limit some features.
 
@@ -59,31 +66,34 @@ You can configure your browser to refuse cookies, but this may limit some featur
 
 ## Use of Your Data
 
-AeroX uses your data to:  
-- provide and maintain the service,  
-- manage your account and access,  
-- process your payments and subscriptions,  
-- contact you (email, notifications, support),  
-- inform you about news, offers, or updates (unless you opt out),  
-- analyze service usage to improve functionality,  
+AeroX uses your data to:
+
+- provide and maintain the service,
+- manage your account and access,
+- process your payments and subscriptions,
+- contact you (email, notifications, support),
+- inform you about news, offers, or updates (unless you opt out),
+- analyze service usage to improve functionality,
 - comply with our legal obligations.
 
 ---
 
 ## Retention of Your Data
 
-We retain your personal data only as long as necessary for the purposes described above:  
-- Account-related data is deleted upon account closure (unless legal retention is required).  
+We retain your personal data only as long as necessary for the purposes described above:
+
+- Account-related data is deleted upon account closure (unless legal retention is required).
 - Usage data (anonymized statistics) may be kept longer for research and improvement purposes.
 
 ---
 
 ## Sharing of Your Data
 
-Your data may be shared in the following cases:  
-- **With our service providers** (hosting, payment processors such as Stripe, analytics tools).  
-- **In case of merger or business transfer**, your data may be transferred along with AeroX.  
-- **When legally required**, such as in response to requests from competent authorities.  
+Your data may be shared in the following cases:
+
+- **With our service providers** (hosting, payment processors such as Stripe, analytics tools).
+- **In case of merger or business transfer**, your data may be transferred along with AeroX.
+- **When legally required**, such as in response to requests from competent authorities.
 - **With your consent**, for any other specific purpose.
 
 We never sell your personal data.
@@ -99,9 +109,10 @@ In such cases, we ensure appropriate safeguards (standard contractual clauses, G
 
 ## Deletion of Your Data
 
-You can request deletion or correction of your personal data at any time:  
-- from your user account,  
-- or by contacting us directly (see “Contact Us” section).  
+You can request deletion or correction of your personal data at any time:
+
+- from your user account,
+- or by contacting us directly (see “Contact Us” section).
 
 Some data may need to be retained if required by law (billing, accounting obligations).
 
@@ -138,7 +149,7 @@ In the event of significant changes, you will be informed by email or within the
 
 ## Contact Us
 
-If you have any questions about this Privacy Policy, you can contact us:  
+If you have any questions about this Privacy Policy, you can contact us:
 
-- By email: contact@aeroxbefaster.com  
+- By email: contact@aeroxbefaster.com
 - Via our website: [https://aeroxbefaster.com](https://aeroxbefaster.com)

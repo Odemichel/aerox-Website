@@ -42,9 +42,7 @@ const page = props.page;
 
 // ✅ Déterminer la langue depuis params ou URL
 const maybeLang = params.lang ?? Astro.url.pathname.split('/').filter(Boolean)[0];
-const lang: Locale = SUPPORTED_LOCALES.includes(maybeLang as Locale)
-  ? (maybeLang as Locale)
-  : DEFAULT_LOCALE;
+const lang: Locale = SUPPORTED_LOCALES.includes(maybeLang as Locale) ? (maybeLang as Locale) : DEFAULT_LOCALE;
 
 const dict = getDict(lang);
 

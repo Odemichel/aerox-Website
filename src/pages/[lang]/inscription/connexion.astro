@@ -111,7 +111,7 @@ const metadata = {
           showMessage('❌ ' + error.message);
         } else {
           showMessage('✅ login.success', false);
-            await supabase.auth.getSession();
+          await supabase.auth.getSession();
 
           const requested = new URLSearchParams(window.location.search).get('redirect');
           window.location.href = safeRedirect(requested, `/${lang}/inscription/dashboard/`);

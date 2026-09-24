@@ -9,7 +9,7 @@ metadata:
   title:
     default: AeroX — Be Faster
     template: '%s — AeroX'
-  description: "AeroX améliore ton aérodynamisme avec une simple webcam sur home trainer. Gagne 2–3 km/h à watts égaux en triathlon, Ironman ou course vélo. Mieux que Zwift, MyWhoosh, Kinomap."
+  description: 'AeroX améliore ton aérodynamisme avec une simple webcam sur home trainer. Gagne 2–3 km/h à watts égaux en triathlon, Ironman ou course vélo. Mieux que Zwift, MyWhoosh, Kinomap.'
   robots:
     index: true
     follow: true
@@ -27,8 +27,8 @@ metadata:
 
 # ⬇️ Conserve les 2 propriétés requises par le schéma…
 i18n:
-  language: fr            # requis par astrowind
-  textDirection: ltr      # requis par astrowind
+  language: fr # requis par astrowind
+  textDirection: ltr # requis par astrowind
 
   # …et ajoute notre bloc multi-langues (propriétés additionnelles)
   defaultLocale: fr
@@ -48,14 +48,14 @@ metadata_i18n:
     title:
       default: AeroX — Be Faster
       template: '%s — AeroX'
-    description: "AeroX améliore ton aérodynamisme avec une simple webcam sur home trainer. Gagne 2–3 km/h à watts égaux…"
+    description: 'AeroX améliore ton aérodynamisme avec une simple webcam sur home trainer. Gagne 2–3 km/h à watts égaux…'
     openGraph:
       locale: fr_FR
   en:
     title:
       default: AeroX — Be Faster
       template: '%s — AeroX'
-    description: "AeroX turns your smart trainer into a wind tunnel with a simple webcam. Gain 2–3 km/h…"
+    description: 'AeroX turns your smart trainer into a wind tunnel with a simple webcam. Gain 2–3 km/h…'
     openGraph:
       locale: en_GB
 

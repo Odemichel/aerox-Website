@@ -26,30 +26,32 @@ const dict = getDict(currentLang);
   </div>
 
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
-    <div class="intersect-once intersect-no-queue intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade">
-      {video ? (
-        <figure class="relative m-auto mt-12 mb-24 md:max-w-3xl max-w-5xl items-center text-center">
-          <h2 class="sr-only">{t(dict, 'hero.video.title')}</h2>
+    <div
+      class="intersect-once intersect-no-queue intersect-quarter motion-safe:opacity-0 motion-safe:intersect:animate-fade"
+    >
+      {
+        video ? (
+          <figure class="relative m-auto mt-12 mb-24 md:max-w-3xl max-w-5xl items-center text-center">
+            <h2 class="sr-only">{t(dict, 'hero.video.title')}</h2>
 
-          <video
-            id="hero-video"
-            autoplay
-            muted
-            loop
-            playsinline
-            poster={posterPuissance ?? ''}
-            class="mx-auto rounded-md w-full shadow-lg"
-            title={t(dict, 'hero.video.title')}
-            aria-label={t(dict, 'hero.video.aria')}
-          >
-            <source src={video.src} type="video/mp4" />
-          </video>
+            <video
+              id="hero-video"
+              autoplay
+              muted
+              loop
+              playsinline
+              poster={posterPuissance ?? ''}
+              class="mx-auto rounded-md w-full shadow-lg"
+              title={t(dict, 'hero.video.title')}
+              aria-label={t(dict, 'hero.video.aria')}
+            >
+              <source src={video.src} type="video/mp4" />
+            </video>
 
-          <figcaption class="italic text-muted">
-            {t(dict, 'hero.video.caption')}
-          </figcaption>
-        </figure>
-      ) : null}
+            <figcaption class="italic text-muted">{t(dict, 'hero.video.caption')}</figcaption>
+          </figure>
+        ) : null
+      }
     </div>
   </div>
 </section>

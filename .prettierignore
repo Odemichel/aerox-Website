@@ -2,3 +2,10 @@ dist
 node_modules
 .github
 .changeset
+# Sorties locales
+.vercel
+.astro
+
+# Contenu rédactionnel : MDX multilingue que Prettier ne sait pas parser
+src/data/post
+docs

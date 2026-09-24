@@ -24,58 +24,55 @@ const variants = {
 };
 ---
 
-{/*
+{
+  /*
   Si subtext est fourni, on wrappe le bouton/lien pour pouvoir afficher le texte en-dessous.
-*/}
+*/
+}
 {
   subtext ? (
     <div class="inline-flex flex-col items-center">
-      {
-        type === 'button' || type === 'submit' || type === 'reset' ? (
-          <button
-            type={type}
-            class={twMerge(variants[variant] || '', className)}
-            {...(target ? { target, rel: 'noopener noreferrer' } : {})}
-            {...rest}
-          >
-            
-            <Fragment set:html={text} />
-            {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
-          </button>
-        ) : (
-          <a
-            class={twMerge(variants[variant] || '', className)}
-            {...(target ? { target, rel: 'noopener noreferrer' } : {})}
-            {...rest}
-          >
-            <Fragment set:html={text} />
-            {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
-          </a>
-        )
-      }
+      {type === 'button' || type === 'submit' || type === 'reset' ? (
+        <button
+          type={type}
+          class={twMerge(variants[variant] || '', className)}
+          {...(target ? { target, rel: 'noopener noreferrer' } : {})}
+          {...rest}
+        >
+          <Fragment set:html={text} />
+          {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
+        </button>
+      ) : (
+        <a
+          class={twMerge(variants[variant] || '', className)}
+          {...(target ? { target, rel: 'noopener noreferrer' } : {})}
+          {...rest}
+        >
+          <Fragment set:html={text} />
+          {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
+        </a>
+      )}
       <small class={twMerge('mt-1 text-xs md:text-sm text-accent', subtextClass)}>{subtext}</small>
     </div>
+  ) : // Comportement inchangé si pas de subtext
+  type === 'button' || type === 'submit' || type === 'reset' ? (
+    <button
+      type={type}
+      class={twMerge(variants[variant] || '', className)}
+      {...(target ? { target, rel: 'noopener noreferrer' } : {})}
+      {...rest}
+    >
+      <Fragment set:html={text} />
+      {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
+    </button>
   ) : (
-    // Comportement inchangé si pas de subtext
-    (type === 'button' || type === 'submit' || type === 'reset') ? (
-      <button
-        type={type}
-        class={twMerge(variants[variant] || '', className)}
-        {...(target ? { target, rel: 'noopener noreferrer' } : {})}
-        {...rest}
-      >
-        <Fragment set:html={text} />
-        {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
-      </button>
-    ) : (
-      <a
-        class={twMerge(variants[variant] || '', className)}
-        {...(target ? { target, rel: 'noopener noreferrer' } : {})}
-        {...rest}
-      >
-        <Fragment set:html={text} />
-        {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
-      </a>
-    )
+    <a
+      class={twMerge(variants[variant] || '', className)}
+      {...(target ? { target, rel: 'noopener noreferrer' } : {})}
+      {...rest}
+    >
+      <Fragment set:html={text} />
+      {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
+    </a>
   )
 }

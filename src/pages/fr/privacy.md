@@ -15,9 +15,11 @@ En utilisant AeroX, vous acceptez la collecte et l’utilisation de vos informat
 ## Interprétation et Définitions
 
 ### Interprétation
+
 Les mots dont la première lettre est en majuscule ont un sens défini dans les conditions suivantes. Ces définitions s’appliquent au singulier comme au pluriel.
 
 ### Définitions
+
 Pour les besoins de cette Politique de Confidentialité :
 
 - **Compte** : désigne un compte unique créé pour accéder au service.
@@ -38,20 +40,25 @@ Pour les besoins de cette Politique de Confidentialité :
 ### Types de données collectées
 
 #### Données personnelles
+
 Lorsque vous utilisez AeroX, il peut vous être demandé de fournir certaines informations permettant de vous identifier (par exemple : adresse email pour créer un compte ou finaliser un paiement).
 
 #### Données d’utilisation
-Collectées automatiquement, elles peuvent inclure :  
-- l’adresse IP,  
-- le type et la version de navigateur,  
-- les pages visitées et la durée des visites,  
+
+Collectées automatiquement, elles peuvent inclure :
+
+- l’adresse IP,
+- le type et la version de navigateur,
+- les pages visitées et la durée des visites,
 - les informations liées à l’appareil utilisé.
 
 #### Cookies et technologies similaires
-Nous utilisons des cookies pour :  
-- assurer le bon fonctionnement du service,  
-- mémoriser vos préférences (langue, session),  
-- analyser la fréquentation et améliorer l’expérience utilisateur.  
+
+Nous utilisons des cookies pour :
+
+- assurer le bon fonctionnement du service,
+- mémoriser vos préférences (langue, session),
+- analyser la fréquentation et améliorer l’expérience utilisateur.
 
 Vous pouvez configurer votre navigateur pour refuser les cookies, mais cela peut limiter certaines fonctionnalités.
 
@@ -59,31 +66,34 @@ Vous pouvez configurer votre navigateur pour refuser les cookies, mais cela peut
 
 ## Utilisation de vos Données
 
-AeroX utilise vos données pour :  
-- fournir et maintenir le service,  
-- gérer votre compte et vos accès,  
-- traiter vos paiements et abonnements,  
-- vous contacter (email, notifications, support),  
-- vous informer d’actualités, d’offres ou de mises à jour (sauf opposition de votre part),  
-- analyser l’utilisation du service afin d’améliorer nos fonctionnalités,  
+AeroX utilise vos données pour :
+
+- fournir et maintenir le service,
+- gérer votre compte et vos accès,
+- traiter vos paiements et abonnements,
+- vous contacter (email, notifications, support),
+- vous informer d’actualités, d’offres ou de mises à jour (sauf opposition de votre part),
+- analyser l’utilisation du service afin d’améliorer nos fonctionnalités,
 - respecter nos obligations légales.
 
 ---
 
 ## Conservation de vos Données
 
-Nous conservons vos données personnelles uniquement le temps nécessaire aux finalités décrites ci-dessus :  
-- Les données liées au compte sont supprimées dès sa clôture (sauf obligation légale de conservation).  
+Nous conservons vos données personnelles uniquement le temps nécessaire aux finalités décrites ci-dessus :
+
+- Les données liées au compte sont supprimées dès sa clôture (sauf obligation légale de conservation).
 - Les données d’usage (statistiques anonymisées) peuvent être conservées plus longtemps à des fins de recherche et d’amélioration.
 
 ---
 
 ## Partage de vos Données
 
-Vos données peuvent être partagées dans les cas suivants :  
-- **Avec nos prestataires** (hébergeurs, prestataires de paiement comme Stripe, outils d’analyse).  
-- **En cas de fusion ou de transfert d’activité**, vos données peuvent être transférées avec AeroX.  
-- **Sur obligation légale**, notamment dans le cadre de demandes d’autorités compétentes.  
+Vos données peuvent être partagées dans les cas suivants :
+
+- **Avec nos prestataires** (hébergeurs, prestataires de paiement comme Stripe, outils d’analyse).
+- **En cas de fusion ou de transfert d’activité**, vos données peuvent être transférées avec AeroX.
+- **Sur obligation légale**, notamment dans le cadre de demandes d’autorités compétentes.
 - **Avec votre consentement**, pour toute autre finalité spécifique.
 
 Nous ne vendons jamais vos données personnelles.
@@ -99,9 +109,10 @@ Dans ce cas, nous veillons à ce que des garanties appropriées (clauses contrac
 
 ## Suppression de vos Données
 
-Vous pouvez demander à tout moment la suppression ou la rectification de vos données personnelles :  
-- depuis votre espace utilisateur,  
-- ou en nous contactant directement (voir section "Nous contacter").  
+Vous pouvez demander à tout moment la suppression ou la rectification de vos données personnelles :
+
+- depuis votre espace utilisateur,
+- ou en nous contactant directement (voir section "Nous contacter").
 
 Certaines données doivent toutefois être conservées si la loi l’exige (facturation, obligations comptables).
 
@@ -138,7 +149,7 @@ En cas de changement majeur, vous en serez informé par email ou via l’applica
 
 ## Nous Contacter
 
-Pour toute question concernant cette Politique de Confidentialité, vous pouvez nous écrire :  
+Pour toute question concernant cette Politique de Confidentialité, vous pouvez nous écrire :
 
 - Par email : contact@aeroxbefaster.com
 - Via le site : [https://aeroxbefaster.com](https://aeroxbefaster.com)

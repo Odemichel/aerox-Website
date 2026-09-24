@@ -3,6 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import { getCollection, render } from 'astro:content';
 import { APP_BLOG } from 'astrowind:config';
 import type { Post } from '~/types';
+import type { Locale } from '~/lib/i18n';
 import { BLOG_BASE, CATEGORY_BASE, cleanSlug, POST_PERMALINK_PATTERN, trimSlash } from './permalinks';
 // (optionnel, recommandé) : si tu as ajouté le sanitizer
 // import { sanitizeMetaData } from '~/utils/og';
@@ -13,10 +14,13 @@ import { BLOG_BASE, CATEGORY_BASE, cleanSlug, POST_PERMALINK_PATTERN, trimSlash 
 
 // slug robuste depuis le nom de fichier (id ou filePath)
 const fileSlug = (entry: { id: string; filePath?: string }) =>
-  (entry.filePath ?? entry.id).split('/').pop()!.replace(/\.mdx?$/i, '');
+  (entry.filePath ?? entry.id)
+    .split('/')
+    .pop()!
+    .replace(/\.mdx?$/i, '');
 
 // construit "/{lang}/{blogBase}/{pattern...}" proprement
-const withLangPrefix = (lang: 'fr' | 'en', path: string) => {
+const withLangPrefix = (lang: Locale, path: string) => {
   const clean = trimSlash(path); // ex: "blog/zwift" ou "zwift"
   return clean ? `/${lang}/${clean}/` : `/${lang}/`;
 };
@@ -35,7 +39,7 @@ const generatePermalink = ({
   slug: string;
   publishDate: Date;
   category: string | undefined;
-  lang: 'fr' | 'en';
+  lang: Locale;
 }) => {
   const year = String(publishDate.getFullYear()).padStart(4, '0');
   const month = String(publishDate.getMonth() + 1).padStart(2, '0');
@@ -98,9 +102,7 @@ const getNormalizedPost = async (entry: CollectionEntry<'post'>): Promise<Post> 
   const publishDate = new Date(rawPublishDate);
   const updateDate = rawUpdateDate ? new Date(rawUpdateDate) : undefined;
 
-  const category = rawCategory
-    ? { slug: cleanSlug(rawCategory), title: rawCategory }
-    : undefined;
+  const category = rawCategory ? { slug: cleanSlug(rawCategory), title: rawCategory } : undefined;
 
   const tags = rawTags.map((tag: string) => ({
     slug: cleanSlug(tag),
@@ -115,7 +117,7 @@ const getNormalizedPost = async (entry: CollectionEntry<'post'>): Promise<Post> 
       slug,
       publishDate,
       category: category?.slug,
-      lang,                                  // ⬅️ préfix i18n
+      lang, // ⬅️ préfix i18n
     }),
     publishDate,
     updateDate,
@@ -129,10 +131,10 @@ const getNormalizedPost = async (entry: CollectionEntry<'post'>): Promise<Post> 
     draft,
     // ⬇️ si tu utilises un sanitizer, décommente la ligne suivante
     // metadata: sanitizeMetaData(metadata),
-    metadata: metadata as unknown,               // sinon, garde tel quel (si déjà propre)
-    Content,                                 // rendu Astro
+    metadata: metadata as unknown, // sinon, garde tel quel (si déjà propre)
+    Content, // rendu Astro
     readingTime: remarkPluginFrontmatter?.readingTime,
-    lang,                                    // ⬅️ stocké dans le Post
+    lang, // ⬅️ stocké dans le Post
   };
 };
 
@@ -140,7 +142,7 @@ const getNormalizedPost = async (entry: CollectionEntry<'post'>): Promise<Post> 
 /* Chargement & cache                                                 */
 /* ------------------------------------------------------------------ */
 
-const load = async function (lang?: 'fr' | 'en'): Promise<Array<Post>> {
+const load = async function (lang?: Locale): Promise<Array<Post>> {
   // Filtre par langue si fournie
   const entries = await getCollection('post', ({ data }) => (lang ? data.lang === lang : true));
   const normalized = await Promise.all(entries.map(getNormalizedPost));
@@ -153,7 +155,7 @@ const load = async function (lang?: 'fr' | 'en'): Promise<Array<Post>> {
 };
 
 let _postsAll: Array<Post> | undefined;
-const _postsByLang = new Map<'fr' | 'en', Array<Post>>();
+const _postsByLang = new Map<Locale, Array<Post>>();
 
 /** */
 export const isBlogEnabled = APP_BLOG.isEnabled;
@@ -174,7 +176,7 @@ export const blogPostsPerPage = APP_BLOG?.postsPerPage;
 /* API                                                                */
 /* ------------------------------------------------------------------ */
 
-export const fetchPosts = async (lang?: 'fr' | 'en'): Promise<Array<Post>> => {
+export const fetchPosts = async (lang?: Locale): Promise<Array<Post>> => {
   if (lang) {
     if (!_postsByLang.get(lang)) {
       _postsByLang.set(lang, await load(lang));
@@ -186,19 +188,19 @@ export const fetchPosts = async (lang?: 'fr' | 'en'): Promise<Array<Post>> => {
   return _postsAll;
 };
 
-export const findPostsBySlugs = async (slugs: Array<string>, lang?: 'fr' | 'en'): Promise<Array<Post>> => {
+export const findPostsBySlugs = async (slugs: Array<string>, lang?: Locale): Promise<Array<Post>> => {
   if (!Array.isArray(slugs)) return [];
   const posts = await fetchPosts(lang);
   return posts.filter((p) => slugs.includes(p.slug ?? ''));
 };
 
-export const findPostsByIds = async (ids: Array<string>, lang?: 'fr' | 'en'): Promise<Array<Post>> => {
+export const findPostsByIds = async (ids: Array<string>, lang?: Locale): Promise<Array<Post>> => {
   if (!Array.isArray(ids)) return [];
   const posts = await fetchPosts(lang);
   return posts.filter((p) => ids.includes(p.id));
 };
 
-export const findLatestPosts = async ({ count, lang }: { count?: number; lang?: 'fr' | 'en' }): Promise<Array<Post>> => {
+export const findLatestPosts = async ({ count, lang }: { count?: number; lang?: Locale }): Promise<Array<Post>> => {
   const _count = count || 4;
   const posts = await fetchPosts(lang);
   return posts.slice(0, _count);
@@ -208,7 +210,7 @@ export const findLatestPosts = async ({ count, lang }: { count?: number; lang?: 
 /* getStaticPaths helpers pour routes `[lang]/[...blog]`              */
 /* ------------------------------------------------------------------ */
 
-export const getStaticPathsBlogList = (lang: 'fr' | 'en'): GetStaticPaths => {
+export const getStaticPathsBlogList = (lang: Locale): GetStaticPaths => {
   return async ({ paginate }) => {
     if (!isBlogEnabled || !isBlogListRouteEnabled) return [];
     const posts = await fetchPosts(lang);
@@ -219,7 +221,7 @@ export const getStaticPathsBlogList = (lang: 'fr' | 'en'): GetStaticPaths => {
   };
 };
 
-export const getStaticPathsBlogPost = (lang: 'fr' | 'en'): GetStaticPaths => {
+export const getStaticPathsBlogPost = (lang: Locale): GetStaticPaths => {
   return async () => {
     if (!isBlogEnabled || !isBlogPostRouteEnabled) return [];
     const posts = await fetchPosts(lang);
@@ -230,13 +232,7 @@ export const getStaticPathsBlogPost = (lang: 'fr' | 'en'): GetStaticPaths => {
   };
 };
 
-export const getStaticPathsBlogCategory = async ({
-  paginate,
-  lang,
-}: {
-  paginate: PaginateFunction;
-  lang: 'fr' | 'en';
-}) => {
+export const getStaticPathsBlogCategory = async ({ paginate, lang }: { paginate: PaginateFunction; lang: Locale }) => {
   if (!isBlogEnabled || !isBlogCategoryRouteEnabled) return [];
 
   const posts = await fetchPosts(lang);
@@ -257,13 +253,7 @@ export const getStaticPathsBlogCategory = async ({
   );
 };
 
-export const getStaticPathsBlogTag = async ({
-  paginate,
-  lang,
-}: {
-  paginate: PaginateFunction;
-  lang: 'fr' | 'en';
-}) => {
+export const getStaticPathsBlogTag = async ({ paginate, lang }: { paginate: PaginateFunction; lang: Locale }) => {
   if (!isBlogEnabled || !isBlogTagRouteEnabled) return [];
 
   const posts = await fetchPosts(lang);
@@ -297,7 +287,6 @@ export const getStaticPathsBlogTag = async ({
     }));
 };
 
-
 /* ------------------------------------------------------------------ */
 /* Relations                                                          */
 /* ------------------------------------------------------------------ */
@@ -311,7 +300,9 @@ export async function getRelatedPosts(originalPost: Post, maxResults: number = 4
     .map((p) => {
       let score = 0;
       if (p.category?.slug && originalPost.category?.slug && p.category.slug === originalPost.category.slug) score += 5;
-      p.tags?.forEach((t) => { if (originalTagsSet.has(t.slug)) score += 1; });
+      p.tags?.forEach((t) => {
+        if (originalTagsSet.has(t.slug)) score += 1;
+      });
       return { post: p, score };
     })
     .sort((a, b) => b.score - a.score);

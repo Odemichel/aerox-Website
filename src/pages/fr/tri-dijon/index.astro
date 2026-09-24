@@ -7,7 +7,8 @@ const dict = getDict('fr');
 
 const metadata = {
   title: 'AeroX × Tri Dijon — Accès anticipé',
-  description: "Mesure ton aéro chez toi avec une simple webcam. Inscris-toi pour l'accès en avant-première réservé aux participants du Tri Dijon.",
+  description:
+    "Mesure ton aéro chez toi avec une simple webcam. Inscris-toi pour l'accès en avant-première réservé aux participants du Tri Dijon.",
   robots: { index: false, follow: false },
 };
 ---
@@ -29,7 +30,8 @@ const metadata = {
   >
     <Fragment slot="title">
       <span class="font-bold">
-        {t(dict, 'home.hero.title.l1')} <span class="italic font-normal">{t(dict, 'home.hero.title.verb')}</span><br />
+        {t(dict, 'home.hero.title.l1')}
+        <span class="italic font-normal">{t(dict, 'home.hero.title.verb')}</span><br />
         <span
           id="hero-rotating"
           class="text-5xl md:text-6xl text-primary inline-block relative"
@@ -47,96 +49,200 @@ const metadata = {
     </Fragment>
 
     <Fragment slot="subtitle">
-      <span class="font-bold" set:html={t(dict, 'home.hero.subtitle')}></span>
+      <span class="font-bold" set:html={t(dict, 'home.hero.subtitle')} />
     </Fragment>
 
     <Fragment slot="paragraph">
-      <span set:html={t(dict, 'home.hero.paragraph')}></span>
+      <span set:html={t(dict, 'home.hero.paragraph')} />
     </Fragment>
   </Hero>
 
   <!-- CSS glitch (copie de la home) ********************************** -->
   <style is:inline>
-    .glitch-active { animation: glitch-base 0.25s step-end forwards; }
+    .glitch-active {
+      animation: glitch-base 0.25s step-end forwards;
+    }
     .glitch-active::before,
     .glitch-active::after {
       content: attr(data-text);
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
       pointer-events: none;
       will-change: clip-path, transform;
     }
     .glitch-active::before {
-      text-shadow: -3px 0 hsl(210,60%,30%);
+      text-shadow: -3px 0 hsl(210, 60%, 30%);
       animation: glitch-top 0.25s step-end forwards;
     }
     .glitch-active::after {
-      text-shadow: 3px 0 hsl(35,95%,58%);
+      text-shadow: 3px 0 hsl(35, 95%, 58%);
       animation: glitch-bottom 0.25s step-end forwards;
     }
     @keyframes glitch-base {
-      0%   { transform: translate(0); }
-      10%  { transform: translate(-3px, 1px); }
-      20%  { transform: translate(2px, -1px); }
-      30%  { transform: translate(-1px, 0); }
-      40%  { transform: translate(3px, 1px); }
-      50%  { transform: translate(0); }
-      60%  { transform: translate(-2px, -1px); }
-      70%  { transform: translate(1px, 1px); }
-      80%  { transform: translate(0); }
-      90%  { transform: translate(-1px, 0); }
-      100% { transform: translate(0); }
+      0% {
+        transform: translate(0);
+      }
+      10% {
+        transform: translate(-3px, 1px);
+      }
+      20% {
+        transform: translate(2px, -1px);
+      }
+      30% {
+        transform: translate(-1px, 0);
+      }
+      40% {
+        transform: translate(3px, 1px);
+      }
+      50% {
+        transform: translate(0);
+      }
+      60% {
+        transform: translate(-2px, -1px);
+      }
+      70% {
+        transform: translate(1px, 1px);
+      }
+      80% {
+        transform: translate(0);
+      }
+      90% {
+        transform: translate(-1px, 0);
+      }
+      100% {
+        transform: translate(0);
+      }
     }
     @keyframes glitch-top {
-      0%   { clip-path: inset(10% 0 70% 0); transform: translate(-5px, 0) skewX(-3deg); }
-      10%  { clip-path: inset(50% 0 20% 0); transform: translate(4px, 0) skewX(2deg); }
-      20%  { clip-path: inset(5% 0 80% 0);  transform: translate(-6px, -1px); }
-      30%  { clip-path: inset(35% 0 40% 0); transform: translate(3px, 0) skewX(-4deg); }
-      40%  { clip-path: inset(70% 0 5% 0);  transform: translate(-4px, 1px) skewX(2deg); }
-      50%  { clip-path: inset(15% 0 60% 0); transform: translate(5px, 0); }
-      60%  { clip-path: inset(55% 0 15% 0); transform: translate(-3px, -1px) skewX(-2deg); }
-      70%  { clip-path: inset(25% 0 50% 0); transform: translate(6px, 0) skewX(3deg); }
-      80%  { clip-path: inset(45% 0 30% 0); transform: translate(-2px, 1px); }
-      90%  { clip-path: inset(80% 0 0% 0);  transform: translate(4px, 0) skewX(-1deg); }
-      100% { clip-path: inset(0 0 100% 0);  transform: translate(0); }
+      0% {
+        clip-path: inset(10% 0 70% 0);
+        transform: translate(-5px, 0) skewX(-3deg);
+      }
+      10% {
+        clip-path: inset(50% 0 20% 0);
+        transform: translate(4px, 0) skewX(2deg);
+      }
+      20% {
+        clip-path: inset(5% 0 80% 0);
+        transform: translate(-6px, -1px);
+      }
+      30% {
+        clip-path: inset(35% 0 40% 0);
+        transform: translate(3px, 0) skewX(-4deg);
+      }
+      40% {
+        clip-path: inset(70% 0 5% 0);
+        transform: translate(-4px, 1px) skewX(2deg);
+      }
+      50% {
+        clip-path: inset(15% 0 60% 0);
+        transform: translate(5px, 0);
+      }
+      60% {
+        clip-path: inset(55% 0 15% 0);
+        transform: translate(-3px, -1px) skewX(-2deg);
+      }
+      70% {
+        clip-path: inset(25% 0 50% 0);
+        transform: translate(6px, 0) skewX(3deg);
+      }
+      80% {
+        clip-path: inset(45% 0 30% 0);
+        transform: translate(-2px, 1px);
+      }
+      90% {
+        clip-path: inset(80% 0 0% 0);
+        transform: translate(4px, 0) skewX(-1deg);
+      }
+      100% {
+        clip-path: inset(0 0 100% 0);
+        transform: translate(0);
+      }
     }
     @keyframes glitch-bottom {
-      0%   { clip-path: inset(60% 0 10% 0); transform: translate(4px, 0) skewX(4deg); }
-      10%  { clip-path: inset(20% 0 55% 0); transform: translate(-5px, 1px) skewX(-2deg); }
-      20%  { clip-path: inset(75% 0 0% 0);  transform: translate(6px, 0); }
-      30%  { clip-path: inset(8% 0 65% 0);  transform: translate(-3px, -1px) skewX(3deg); }
-      40%  { clip-path: inset(40% 0 35% 0); transform: translate(5px, 0) skewX(-3deg); }
-      50%  { clip-path: inset(65% 0 10% 0); transform: translate(-6px, 1px); }
-      60%  { clip-path: inset(30% 0 45% 0); transform: translate(3px, 0) skewX(2deg); }
-      70%  { clip-path: inset(85% 0 0% 0);  transform: translate(-4px, -1px) skewX(-4deg); }
-      80%  { clip-path: inset(12% 0 70% 0); transform: translate(5px, 0); }
-      90%  { clip-path: inset(50% 0 25% 0); transform: translate(-3px, 1px) skewX(1deg); }
-      100% { clip-path: inset(0 0 100% 0);  transform: translate(0); }
+      0% {
+        clip-path: inset(60% 0 10% 0);
+        transform: translate(4px, 0) skewX(4deg);
+      }
+      10% {
+        clip-path: inset(20% 0 55% 0);
+        transform: translate(-5px, 1px) skewX(-2deg);
+      }
+      20% {
+        clip-path: inset(75% 0 0% 0);
+        transform: translate(6px, 0);
+      }
+      30% {
+        clip-path: inset(8% 0 65% 0);
+        transform: translate(-3px, -1px) skewX(3deg);
+      }
+      40% {
+        clip-path: inset(40% 0 35% 0);
+        transform: translate(5px, 0) skewX(-3deg);
+      }
+      50% {
+        clip-path: inset(65% 0 10% 0);
+        transform: translate(-6px, 1px);
+      }
+      60% {
+        clip-path: inset(30% 0 45% 0);
+        transform: translate(3px, 0) skewX(2deg);
+      }
+      70% {
+        clip-path: inset(85% 0 0% 0);
+        transform: translate(-4px, -1px) skewX(-4deg);
+      }
+      80% {
+        clip-path: inset(12% 0 70% 0);
+        transform: translate(5px, 0);
+      }
+      90% {
+        clip-path: inset(50% 0 25% 0);
+        transform: translate(-3px, 1px) skewX(1deg);
+      }
+      100% {
+        clip-path: inset(0 0 100% 0);
+        transform: translate(0);
+      }
     }
     @media (prefers-reduced-motion: reduce) {
       .glitch-active,
       .glitch-active::before,
-      .glitch-active::after { animation: none !important; }
+      .glitch-active::after {
+        animation: none !important;
+      }
     }
   </style>
 
   <script is:inline>
     function initHeroRotation() {
-      var el = document.getElementById('hero-rotating');
+      const el = document.getElementById('hero-rotating');
       if (!el || el.dataset.init === '1') return;
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      try { var texts = JSON.parse(el.getAttribute('data-texts') || '[]'); } catch(e) { return; }
+      let texts;
+      try {
+        texts = JSON.parse(el.getAttribute('data-texts') || '[]');
+      } catch {
+        return;
+      }
       if (texts.length < 2) return;
       el.dataset.init = '1';
-      var idx = 0;
+      let idx = 0;
       function glitchSwap(target) {
         el.classList.add('glitch-active');
-        setTimeout(function() { el.textContent = target; el.setAttribute('data-text', target); }, 125);
-        setTimeout(function() { el.classList.remove('glitch-active'); }, 270);
+        setTimeout(function () {
+          el.textContent = target;
+          el.setAttribute('data-text', target);
+        }, 125);
+        setTimeout(function () {
+          el.classList.remove('glitch-active');
+        }, 270);
       }
-      setInterval(function() {
+      setInterval(function () {
         idx = (idx + 1) % texts.length;
         glitchSwap(texts[idx]);
       }, 1600);
@@ -150,7 +256,9 @@ const metadata = {
   <section class="relative not-prose -mt-10 md:-mt-20">
     <div class="mx-auto max-w-4xl px-4 md:px-6 text-center">
       <p class="text-xl md:text-2xl text-muted dark:text-slate-400">
-        AeroX c'est : <span class="font-bold text-accent">2 leviers</span> pour aller plus vite,<br class="hidden sm:block" />
+        AeroX c'est : <span class="font-bold text-accent">2 leviers</span> pour aller plus vite,<br
+          class="hidden sm:block"
+        />
         et un <span class="font-bold text-accent">terrain de jeu aéro</span> pour battre tes records et tes amis.
       </p>
     </div>
@@ -160,16 +268,30 @@ const metadata = {
   <section class="relative not-prose pt-10 md:pt-14">
     <div class="mx-auto max-w-6xl px-4 md:px-6">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
         <!-- Carte 1 — Diagnostics aéro (sky) -->
-        <article class="group relative flex flex-col rounded-2xl border-2 border-sky-400 bg-white dark:bg-slate-800 shadow-lg hover:shadow-[0_10px_40px_hsl(200_90%_55%/0.3)] transition-all overflow-hidden">
+        <article
+          class="group relative flex flex-col rounded-2xl border-2 border-sky-400 bg-white dark:bg-slate-800 shadow-lg hover:shadow-[0_10px_40px_hsl(200_90%_55%/0.3)] transition-all overflow-hidden"
+        >
           <div class="absolute top-4 right-4 z-10">
-            <span class="bg-slate-900/80 text-sky-300 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide">Automne 2026</span>
+            <span
+              class="bg-slate-900/80 text-sky-300 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide"
+              >Automne 2026</span
+            >
           </div>
           <div class="bg-sky-50 dark:bg-sky-900/20 px-6 py-5 border-b border-sky-200/60 dark:border-sky-800/40">
             <div class="flex items-center gap-3 mb-2">
               <div class="w-9 h-9 rounded-lg bg-sky-100 dark:bg-sky-900/40 flex items-center justify-center">
-                <svg class="w-5 h-5 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19a3 3 0 11-6 0 3 3 0 016 0zm12-3a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <svg
+                  class="w-5 h-5 text-sky-600 dark:text-sky-400"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 19V6l12-3v13M9 19a3 3 0 11-6 0 3 3 0 016 0zm12-3a3 3 0 11-6 0 3 3 0 016 0z"></path></svg
+                >
               </div>
               <p class="text-xs font-bold uppercase tracking-widest text-sky-600 dark:text-sky-400">Levier n°1</p>
             </div>
@@ -177,26 +299,51 @@ const metadata = {
             <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Découvre ta vraie position optimale.</p>
           </div>
           <div class="px-6 py-5 flex flex-col flex-grow">
-            <p class="text-xs font-semibold uppercase tracking-wider text-sky-600 dark:text-sky-400 mb-3">Tu repars avec :</p>
+            <p class="text-xs font-semibold uppercase tracking-wider text-sky-600 dark:text-sky-400 mb-3">
+              Tu repars avec :
+            </p>
             <ul class="space-y-2.5 text-sm text-slate-600 dark:text-slate-300 flex-grow">
-              <li class="flex items-start gap-2"><span class="text-sky-500 mt-0.5">✓</span> La position qui te fait gagner le plus de watts</li>
-              <li class="flex items-start gap-2"><span class="text-sky-500 mt-0.5">✓</span> Tes km/h gagnés et watts économisés</li>
-              <li class="flex items-start gap-2"><span class="text-sky-500 mt-0.5">✓</span> Ta surface frontale, mesurée en direct</li>
-              <li class="flex items-start gap-2"><span class="text-sky-500 mt-0.5">✓</span> Une analyse de ta stabilité et de ta puissance aéro</li>
+              <li class="flex items-start gap-2">
+                <span class="text-sky-500 mt-0.5">✓</span> La position qui te fait gagner le plus de watts
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-sky-500 mt-0.5">✓</span> Tes km/h gagnés et watts économisés
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-sky-500 mt-0.5">✓</span> Ta surface frontale, mesurée en direct
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-sky-500 mt-0.5">✓</span> Une analyse de ta stabilité et de ta puissance aéro
+              </li>
             </ul>
           </div>
         </article>
 
         <!-- Carte 2 — Entraînements aéro (amber/primary, mise en avant) -->
-        <article class="group relative flex flex-col rounded-2xl border-2 border-amber-400 bg-white dark:bg-slate-800 shadow-xl hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all overflow-hidden md:scale-105 md:-translate-y-2">
+        <article
+          class="group relative flex flex-col rounded-2xl border-2 border-amber-400 bg-white dark:bg-slate-800 shadow-xl hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.4)] transition-all overflow-hidden md:scale-105 md:-translate-y-2"
+        >
           <div class="absolute top-4 right-4 z-10 flex flex-col items-end gap-1.5">
-            <span class="bg-amber-400 text-amber-900 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide">Le cœur d'AeroX</span>
-            <span class="bg-slate-900/80 text-amber-300 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide">Automne 2026</span>
+            <span
+              class="bg-amber-400 text-amber-900 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide"
+              >Le cœur d'AeroX</span
+            >
+            <span
+              class="bg-slate-900/80 text-amber-300 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide"
+              >Automne 2026</span
+            >
           </div>
           <div class="bg-amber-50 dark:bg-amber-900/20 px-6 py-5 border-b border-amber-200/60 dark:border-amber-800/40">
             <div class="flex items-center gap-3 mb-2">
               <div class="w-9 h-9 rounded-lg bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
-                <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                <svg
+                  class="w-5 h-5 text-amber-600 dark:text-amber-400"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  ><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg
+                >
               </div>
               <p class="text-xs font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">Levier n°2</p>
             </div>
@@ -204,41 +351,79 @@ const metadata = {
             <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">L'aéro, ça se travaille — comme la puissance.</p>
           </div>
           <div class="px-6 py-5 flex flex-col flex-grow">
-            <p class="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-3">Tu repars avec :</p>
+            <p class="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-3">
+              Tu repars avec :
+            </p>
             <ul class="space-y-2.5 text-sm text-slate-600 dark:text-slate-300 flex-grow">
-              <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">✓</span> Une position aéro que tu tiens plus longtemps sans souffrir</li>
-              <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">✓</span> Des watts plus élevés même en position aéro</li>
-              <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">✓</span> Un suivi de tes progrès aéro chaque semaine</li>
-              <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">✓</span> L'aéro devient un automatisme</li>
+              <li class="flex items-start gap-2">
+                <span class="text-amber-500 mt-0.5">✓</span> Une position aéro que tu tiens plus longtemps sans souffrir
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-amber-500 mt-0.5">✓</span> Des watts plus élevés même en position aéro
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-amber-500 mt-0.5">✓</span> Un suivi de tes progrès aéro chaque semaine
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-amber-500 mt-0.5">✓</span> L'aéro devient un automatisme
+              </li>
             </ul>
           </div>
         </article>
 
         <!-- Carte 3 — Courses aéro (violet, terrain de jeu) -->
-        <article class="group relative flex flex-col rounded-2xl border-2 border-violet-400 bg-white dark:bg-slate-800 shadow-lg hover:shadow-[0_10px_40px_hsl(265_85%_60%/0.3)] transition-all overflow-hidden">
+        <article
+          class="group relative flex flex-col rounded-2xl border-2 border-violet-400 bg-white dark:bg-slate-800 shadow-lg hover:shadow-[0_10px_40px_hsl(265_85%_60%/0.3)] transition-all overflow-hidden"
+        >
           <div class="absolute top-4 right-4 z-10">
-            <span class="bg-slate-900/80 text-violet-300 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide">Automne 2026</span>
+            <span
+              class="bg-slate-900/80 text-violet-300 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide"
+              >Automne 2026</span
+            >
           </div>
-          <div class="bg-violet-50 dark:bg-violet-900/20 px-6 py-5 border-b border-violet-200/60 dark:border-violet-800/40">
+          <div
+            class="bg-violet-50 dark:bg-violet-900/20 px-6 py-5 border-b border-violet-200/60 dark:border-violet-800/40"
+          >
             <div class="flex items-center gap-3 mb-2">
               <div class="w-9 h-9 rounded-lg bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center">
-                <svg class="w-5 h-5 text-violet-600 dark:text-violet-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                <svg
+                  class="w-5 h-5 text-violet-600 dark:text-violet-400"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                  ></path></svg
+                >
               </div>
-              <p class="text-xs font-bold uppercase tracking-widest text-violet-600 dark:text-violet-400">Terrain de jeu</p>
+              <p class="text-xs font-bold uppercase tracking-widest text-violet-600 dark:text-violet-400">
+                Terrain de jeu
+              </p>
             </div>
             <h2 class="text-xl font-bold text-slate-900 dark:text-white">Les courses aéro</h2>
             <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Défie tes records et tes amis.</p>
           </div>
           <div class="px-6 py-5 flex flex-col flex-grow">
-            <p class="text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400 mb-3">Tu repars avec :</p>
+            <p class="text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400 mb-3">
+              Tu repars avec :
+            </p>
             <ul class="space-y-2.5 text-sm text-slate-600 dark:text-slate-300 flex-grow">
-              <li class="flex items-start gap-2"><span class="text-violet-500 mt-0.5">✓</span> Des vraies CLM où ta position joue autant que ta puissance</li>
-              <li class="flex items-start gap-2"><span class="text-violet-500 mt-0.5">✓</span> Le « dernier homme debout » : la résistance grimpe quand tu casses ta position</li>
-              <li class="flex items-start gap-2"><span class="text-violet-500 mt-0.5">✓</span> Des maillots de saison à défendre</li>
+              <li class="flex items-start gap-2">
+                <span class="text-violet-500 mt-0.5">✓</span> Des vraies CLM où ta position joue autant que ta puissance
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-violet-500 mt-0.5">✓</span> Le « dernier homme debout » : la résistance grimpe quand tu
+                casses ta position
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-violet-500 mt-0.5">✓</span> Des maillots de saison à défendre
+              </li>
             </ul>
           </div>
         </article>
-
       </div>
     </div>
   </section>
@@ -246,11 +431,11 @@ const metadata = {
   <!-- FORMULAIRE INSCRIPTION ****************************************** -->
   <section id="inscription" class="relative not-prose scroll-mt-20">
     <div class="mx-auto max-w-2xl px-4 md:px-6 py-16 md:py-20">
-      <div class="rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent dark:from-primary/15 dark:via-primary/10 dark:to-transparent border border-primary/20 shadow-2xl p-6 md:p-10">
+      <div
+        class="rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent dark:from-primary/15 dark:via-primary/10 dark:to-transparent border border-primary/20 shadow-2xl p-6 md:p-10"
+      >
         <div class="text-center mb-6">
-          <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
-            Sois prévenu en premier
-          </h2>
+          <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">Sois prévenu en premier</h2>
         </div>
 
         <form
@@ -286,7 +471,9 @@ const metadata = {
             class="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-400 dark:placeholder:text-slate-500"
           />
 
-          <label class="flex items-start gap-3 p-4 rounded-xl bg-white/60 dark:bg-slate-800/60 border border-primary/30 cursor-pointer hover:bg-white dark:hover:bg-slate-800 hover:border-primary/60 transition">
+          <label
+            class="flex items-start gap-3 p-4 rounded-xl bg-white/60 dark:bg-slate-800/60 border border-primary/30 cursor-pointer hover:bg-white dark:hover:bg-slate-800 hover:border-primary/60 transition"
+          >
             <input
               type="checkbox"
               id="beta-tester-tri-dijon"
@@ -296,8 +483,8 @@ const metadata = {
             <span class="text-sm text-slate-700 dark:text-slate-200">
               <strong class="block mb-1">Je veux devenir beta-testeur AeroX</strong>
               <span class="text-slate-600 dark:text-slate-400">
-                Tu as essayé AeroX au village du Tri Dijon ? Aide-nous à finaliser les derniers
-                réglages : accès en avant-première et tes retours façonneront la version finale.
+                Tu as essayé AeroX au village du Tri Dijon ? Aide-nous à finaliser les derniers réglages : accès en
+                avant-première et tes retours façonneront la version finale.
               </span>
             </span>
           </label>
@@ -306,15 +493,16 @@ const metadata = {
             Je veux tester en premier
           </button>
 
-          <p class="text-xs text-center text-muted dark:text-slate-400">
-            Pas de spam. Tu te désinscris en un clic.
-          </p>
+          <p class="text-xs text-center text-muted dark:text-slate-400">Pas de spam. Tu te désinscris en un clic.</p>
           <p id="msg-tri-dijon" class="text-sm text-center mt-2 hidden"></p>
         </form>
       </div>
 
       <p class="text-center text-sm text-muted dark:text-slate-400 mt-8">
-        Une question ? Écris-nous à <a href="mailto:contact@aeroxbefaster.com" class="text-primary hover:underline font-semibold">contact@aeroxbefaster.com</a>
+        Une question ? Écris-nous à <a
+          href="mailto:contact@aeroxbefaster.com"
+          class="text-primary hover:underline font-semibold">contact@aeroxbefaster.com</a
+        >
       </p>
     </div>
   </section>
@@ -373,7 +561,7 @@ const metadata = {
             msg?.classList.add('text-red-600');
           }
           msg?.classList.remove('hidden');
-        } catch (_err) {
+        } catch {
           msg!.textContent = form.dataset.error ?? '';
           msg?.classList.add('text-red-600');
           msg?.classList.remove('hidden');

@@ -12,6 +12,7 @@
 **Avant** : 41 lignes, description sommaire du produit et liste de pages.
 
 **Après** : Contenu restructuré et enrichi avec :
+
 - Définition complète du CdA (physique, formule, unités)
 - Section "Key metrics" avec toutes les données chiffrées (répétabilité 3 %, gains, sessions)
 - Spécifications techniques détaillées (plateformes, connectivité, compatibilité)
@@ -24,6 +25,7 @@
 ### 2. `public/llms-full.txt` — CRÉÉ
 
 Nouveau fichier de référence complète (~400 lignes) pour les LLM, structuré en 11 sections :
+
 1. Product Definition
 2. The Physics of CdA (avec formule, tableau de valeurs, impact)
 3. How AeroX Works (processus, stack, répétabilité)
@@ -43,6 +45,7 @@ Nouveau fichier de référence complète (~400 lignes) pour les LLM, structuré 
 ### 4. `src/pages/[lang]/index.astro` — MODIFIÉ
 
 **Ajout** : Bloc de faits citables sous les Stats, consolidant toutes les métriques clés en texte HTML statique :
+
 - "300+ sessions mesurées en 2025-2026"
 - "+2,3 km/h gagnés en moyenne"
 - "35 W économisés à 30 km/h"
@@ -55,6 +58,7 @@ Texte visuellement discret (`text-xs text-muted/40`) mais présent dans le HTML 
 ### 5. `src/pages/[lang]/cda/index.astro` — CRÉÉ
 
 Nouvelle page standalone (~600 mots) accessible en `/fr/cda/` et `/en/cda/` :
+
 - **H1** : "Qu'est-ce que le CdA en cyclisme ?" / "What is CdA in cycling?"
 - **H2** : Définition physique, Pourquoi le CdA est important, Valeurs typiques (tableau), Impact chiffré, Comment mesurer, Facteurs d'influence, Conclusion
 - Tableau de valeurs CdA par catégorie (6 lignes)
@@ -68,6 +72,7 @@ Nouvelle page standalone (~600 mots) accessible en `/fr/cda/` et `/en/cda/` :
 ### 6. `src/locales/fr.json` — MODIFIÉ
 
 **Ajout** de ~50 clés i18n pour :
+
 - `home.citableFacts` : bloc de faits citables consolidé
 - `cda.*` : toutes les clés pour la page CdA (meta, titres, paragraphes, tableau, items)
 
@@ -83,13 +88,13 @@ Nouvelle page standalone (~600 mots) accessible en `/fr/cda/` et `/en/cda/` :
 
 ## Fichiers NON modifiés (et pourquoi)
 
-| Fichier | Raison |
-|---------|--------|
-| FAQ components (`ItemGridFAQ.astro`, `FAQs.astro`) | Déjà en `<details>/<summary>` natif HTML — contenu visible par les crawlers |
-| Schemas JSON-LD homepage | Déjà complets (FAQPage, Organization, WebSite, SoftwareApplication ×2, VideoObject) |
-| `navigation.ts` | Pas de modification de la structure de navigation (contrainte) |
-| CSS / Design | Aucune modification visuelle (contrainte) |
-| `astro.config.ts` | Aucun changement nécessaire |
+| Fichier                                            | Raison                                                                              |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| FAQ components (`ItemGridFAQ.astro`, `FAQs.astro`) | Déjà en `<details>/<summary>` natif HTML — contenu visible par les crawlers         |
+| Schemas JSON-LD homepage                           | Déjà complets (FAQPage, Organization, WebSite, SoftwareApplication ×2, VideoObject) |
+| `navigation.ts`                                    | Pas de modification de la structure de navigation (contrainte)                      |
+| CSS / Design                                       | Aucune modification visuelle (contrainte)                                           |
+| `astro.config.ts`                                  | Aucun changement nécessaire                                                         |
 
 ---
 

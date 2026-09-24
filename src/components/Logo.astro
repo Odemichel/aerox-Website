@@ -3,14 +3,16 @@ import { SITE } from 'astrowind:config';
 import logo from '~/assets/favicons/Aerox.png';
 ---
 
-{/*
+{
+  /*
   `<img>` et non `<Image>` : à 32 px il n'y a rien à optimiser, et `<Image>`
   délègue la transformation à l'endpoint `/_image` au moment du rendu. Sur les
   pages rendues à la demande — connexion, inscription — cet endpoint répondait
   404 en production : le logo du site apparaissait cassé sur les deux pages du
   tunnel d'inscription. Pointer directement l'asset construit supprime la
   dépendance : c'est un fichier statique, servi comme tel.
-*/}
+*/
+}
 
 <span class="flex shrink-0 items-center ml-2 rtl:ml-0 rtl:mr-2">
   <img src={logo.src} alt="AeroX logo" width="32" height="32" class="h-8 w-8 shrink-0 mr-2" />

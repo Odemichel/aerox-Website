@@ -11,13 +11,12 @@ import { blogTagRobots, getStaticPathsBlogTag } from '~/utils/blog';
 
 export const prerender = true;
 
-
 // ✅ Génération pour chaque langue
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
   const all = await Promise.all(
     SUPPORTED_LOCALES.map(async (lang) => {
       const l = lang as Locale;
-return await getStaticPathsBlogTag({ paginate, lang: l });
+      return await getStaticPathsBlogTag({ paginate, lang: l });
     })
   );
   return all.flat();
@@ -42,10 +41,7 @@ const { params, page, tag } = Astro.props as unknown as Props;
 
 // ✅ Langue courante
 const lang: Locale =
-  params?.lang && SUPPORTED_LOCALES.includes(params.lang as Locale)
-    ? (params.lang as Locale)
-    : DEFAULT_LOCALE;
-
+  params?.lang && SUPPORTED_LOCALES.includes(params.lang as Locale) ? (params.lang as Locale) : DEFAULT_LOCALE;
 
 // ✅ Traductions (optionnel)
 const currentPage = page.currentPage ?? 1;

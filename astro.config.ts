@@ -67,12 +67,13 @@ export default defineConfig({
     defaultLocale: 'en',
     locales: ['fr', 'en', 'pt', 'es', 'it', 'de', 'nl', 'ja', 'tr'],
     routing: {
-      prefixDefaultLocale: true,       // URLs avec /en/, /fr/, etc.
-      redirectToDefaultLocale: false,  // Pas de redirection auto, géré par middleware
+      prefixDefaultLocale: true, // URLs avec /en/, /fr/, etc.
+      redirectToDefaultLocale: false, // Pas de redirection auto, géré par middleware
     },
   },
 
-  integrations: [react(),
+  integrations: [
+    react(),
     tailwind({ applyBaseStyles: false }),
     sitemap({
       filter: (page) =>

@@ -7,8 +7,7 @@ const isLocale = (v: unknown): v is Locale =>
   typeof v === 'string' && (SUPPORTED_LOCALES as readonly string[]).includes(v);
 
 // Trailing slash helper (compatible trailingSlash: 'always')
-const ensureTrailingSlash = (p: string) =>
-  !p ? p : (p.endsWith('/') || p.includes('.')) ? p : p + '/';
+const ensureTrailingSlash = (p: string) => (!p ? p : p.endsWith('/') || p.includes('.') ? p : p + '/');
 
 // Préfixe /{lang} et gère correctement les ancres (#...) vers la HOME
 const withLang = (lang: Locale, href: string) => {
@@ -44,26 +43,39 @@ export function makeNavigation(langInput?: string, audience: Audience = 'rider')
         links: [
           // Home
           {
-            text: t('nav.home'), href: withLang(lang, getPermalink('/')), icon: "tabler:home"
+            text: t('nav.home'),
+            href: withLang(lang, getPermalink('/')),
+            icon: 'tabler:home',
           }, // => "/fr/"
           {
-            text: t('nav.pricing'), href: withLang(lang, '#pricing'), icon: "tabler:currency-dollar"
-
-          },        // => "/fr/#pricing"
+            text: t('nav.pricing'),
+            href: withLang(lang, '#pricing'),
+            icon: 'tabler:currency-dollar',
+          }, // => "/fr/#pricing"
           {
-            text: t('nav.book'), href: withLang(lang, '/method/'), icon: "tabler:bolt"
-          },        // => "/fr/#pricing"
+            text: t('nav.book'),
+            href: withLang(lang, '/method/'),
+            icon: 'tabler:bolt',
+          }, // => "/fr/#pricing"
           {
-            text: t('nav.blog'), href: withLang(lang, getPermalink('/blog/')), icon: "tabler:article"
+            text: t('nav.blog'),
+            href: withLang(lang, getPermalink('/blog/')),
+            icon: 'tabler:article',
           },
           {
-            text: t('nav.bikeFitting'), href: withLang(lang, '/bike-fitting/'), icon: "tabler:bike"
+            text: t('nav.bikeFitting'),
+            href: withLang(lang, '/bike-fitting/'),
+            icon: 'tabler:bike',
           },
           {
-            text: t('nav.contact'), href: withLang(lang, getPermalink('/contact/')), icon: "tabler:mail"
+            text: t('nav.contact'),
+            href: withLang(lang, getPermalink('/contact/')),
+            icon: 'tabler:mail',
           },
           {
-            text: t('nav.login'), href: withLang(lang, getPermalink('/inscription/connexion/')), icon: "tabler:user"
+            text: t('nav.login'),
+            href: withLang(lang, getPermalink('/inscription/connexion/')),
+            icon: 'tabler:user',
           },
           /*  { text: t('nav.why'), href: withLang(lang, '#pourquoi') },       // => "/fr/#pourquoi"
                { text: t('nav.faq'), href: withLang(lang, '#FAQs') },           // => "/fr/#FAQs"

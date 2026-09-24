@@ -18,12 +18,7 @@ const {
 
 {
   items && items.length > 0 && (
-    <div
-      class={twMerge(
-        ` mx-auto gap-6 md:gap-8 space-y-4`,
-        containerClass
-      )}
-    >
+    <div class={twMerge(` mx-auto gap-6 md:gap-8 space-y-4`, containerClass)}>
       {items.map(
         ({
           title,
@@ -50,10 +45,7 @@ const {
               <div class="flex justify-center">
                 {(icon || defaultIcon) && (
                   <span class="inline-grid place-items-start rounded-full bg-primary/10 text-primary mr-3">
-                    <Icon
-                      name={icon || defaultIcon}
-                      class={twMerge( defaultIconClass, itemClasses?.icon)}
-                    />
+                    <Icon name={icon || defaultIcon} class={twMerge(defaultIconClass, itemClasses?.icon)} />
                   </span>
                 )}
               </div>

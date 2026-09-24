@@ -112,14 +112,14 @@ Metadata.astro → utilise @astrolib/seo (AstroSeo)
 
 ### Clés i18n importantes pour le SEO
 
-| Page | Clé title | Clé description |
-|------|-----------|-----------------|
-| Homepage | `home.meta.title` | `home.meta.description` |
-| Team | `ourStory.meta.title` | `ourStory.meta.description` |
-| Method/Book | `book.meta.title` | `book.meta.description` |
-| Contact | `contact.title` | `contact.description` |
-| Inscription | `signup.meta.title` | `signup.meta.description` |
-| Blog list | hardcodé dans `[...page].astro` | hardcodé inline |
+| Page        | Clé title                       | Clé description             |
+| ----------- | ------------------------------- | --------------------------- |
+| Homepage    | `home.meta.title`               | `home.meta.description`     |
+| Team        | `ourStory.meta.title`           | `ourStory.meta.description` |
+| Method/Book | `book.meta.title`               | `book.meta.description`     |
+| Contact     | `contact.title`                 | `contact.description`       |
+| Inscription | `signup.meta.title`             | `signup.meta.description`   |
+| Blog list   | hardcodé dans `[...page].astro` | hardcodé inline             |
 
 ---
 
@@ -130,30 +130,30 @@ Metadata.astro → utilise @astrolib/seo (AstroSeo)
 - **Frontmatter** :
   ```yaml
   publishDate: 2026-02-12T00:00:00Z
-  author: "Olivier Demichel"
+  author: 'Olivier Demichel'
   title: "Titre de l'article"
-  excerpt: "Résumé court (utilisé comme description si metadata.description absent)"
-  lang: "fr"                    # Filtre par langue
-  imageKey: "clé-image"         # Résolu via src/data/blogImages.ts
-  tags: ["tag1", "tag2"]
+  excerpt: 'Résumé court (utilisé comme description si metadata.description absent)'
+  lang: 'fr' # Filtre par langue
+  imageKey: 'clé-image' # Résolu via src/data/blogImages.ts
+  tags: ['tag1', 'tag2']
   metadata:
-    canonical: "https://..."    # Optionnel, override auto
-    description: "Meta desc"    # Prioritaire sur excerpt
+    canonical: 'https://...' # Optionnel, override auto
+    description: 'Meta desc' # Prioritaire sur excerpt
   ```
 - **Permalink** : `/{lang}/blog/{slug}/` (slug = nom du fichier sans extension)
 - **Description SEO** : `post.metadata.description` > `post.excerpt` > config.yaml default
 
 ### Paires linguistiques
 
-| Article FR | Article EN | Status |
-|-----------|-----------|--------|
-| zwift-fr | zwift-en | OK |
-| aero-gain-chronometrique-fr | aero-gain-chronometrique-en | OK |
-| amstel-gold-race-2025-fr | amstel-gold-race-2025-en | OK |
-| aero-feedbacks-fr | aero-feedbacks-en | OK |
-| BF-mesurer-fr | BF-mesurer-en | OK |
-| aerox-innovation-fr | — | MANQUANT EN |
-| — | feel-aero-en | MANQUANT FR |
+| Article FR                  | Article EN                  | Status      |
+| --------------------------- | --------------------------- | ----------- |
+| zwift-fr                    | zwift-en                    | OK          |
+| aero-gain-chronometrique-fr | aero-gain-chronometrique-en | OK          |
+| amstel-gold-race-2025-fr    | amstel-gold-race-2025-en    | OK          |
+| aero-feedbacks-fr           | aero-feedbacks-en           | OK          |
+| BF-mesurer-fr               | BF-mesurer-en               | OK          |
+| aerox-innovation-fr         | —                           | MANQUANT EN |
+| —                           | feel-aero-en                | MANQUANT FR |
 
 ---
 
@@ -162,7 +162,9 @@ Metadata.astro → utilise @astrolib/seo (AstroSeo)
 Réf : `SEO-PRIORITIES.md` (fichier d'audit externe)
 
 ### 1. Meta descriptions — RESOLU dans le code
+
 Toutes les pages passent une `description` via le système i18n ou le frontmatter des articles.
+
 - Homepage : `home.meta.description` (FR + EN)
 - Blog list : inline dans `[...page].astro`
 - Articles : `metadata.description` dans chaque MDX
@@ -170,20 +172,24 @@ Toutes les pages passent une `description` via le système i18n ou le frontmatte
 - Fallback global : `config.yaml` → `metadata.description`
 
 ### 2. Hreflang — CORRIGE
+
 `Layout.astro:52-59` : `hrefForLang()` gnre des URLs absolues avec `SITE.site` origin.
 Inclut FR, EN et x-default sur chaque page.
 **Limite** : le mapping hreflang entre articles FR/EN est bas sur l'URL (mme slug), pas sur la paire linguistique relle.
 
 ### 3. Canonical — CORRIGE
+
 `Metadata.astro:20` : auto-gnr via `getCanonical(Astro.url.pathname)`.
 Les overrides hardcods incorrects dans `zwift-fr.mdx` et `zwift-en.mdx` ont t supprims.
 
 ### 4. Sitemap — CORRIGE
+
 - `@astrojs/sitemap` avec filtre dans `astro.config.ts` (exclut `/homes/`, `/landing/`, `/inscription/`, `/telechargement/`, `/paiement/`, `/404`)
 - Accessible en prod : `/sitemap-index.xml` et `/sitemap-0.xml` (HTTP 200)
 - Contient routes FR + EN
 
 ### 5. robots.txt — CORRIGE
+
 ```
 User-agent: *
 Disallow:
@@ -192,6 +198,7 @@ Sitemap: https://aeroxbefaster.com/sitemap-index.xml
 ```
 
 ### 6. FAQ schema — CORRIGE
+
 Retir de `Metadata.astro` (o il apparaissait sur toutes les pages).
 Dplac dans `src/pages/[lang]/index.astro` uniquement (homepage).
 
@@ -200,26 +207,35 @@ Dplac dans `src/pages/[lang]/index.astro` uniquement (homepage).
 ## SEO — Sprint Élevé (#6-#10) : RÉSOLU
 
 ### 6. BlogPosting schema — CORRIGÉ
+
 `src/pages/[lang]/blog/[slug].astro` : JSON-LD `BlogPosting` injecté avec headline, author, publisher, datePublished, dateModified, image.
 
 ### 7. FAQ schema générique — DÉJÀ CORRIGÉ (sprint précédent)
+
 Retiré de `Metadata.astro`, déplacé dans `index.astro` uniquement.
 
 ### 8. Bloc auteur sur les articles — CORRIGÉ
+
 `src/components/blog/SinglePost.astro` : Bloc auteur ajouté en bas d'article avec photo, nom, rôle, bio (i18n) et lien vers `/[lang]/team/`.
 
 ### 9. H1 homepage — REVERT (besoin keyword research)
+
 Wording revert aux originaux. Nécessite une vraie recherche de mots-clés avant optimisation.
+
 - Clés i18n : `home.hero.title.l1` + `home.hero.title.l2`
 
 ### 10. H1 blog index — REVERT (besoin keyword research)
+
 Wording reverté. Idem.
+
 - Clé i18n : `blog.title`
 
 ### 14. Schema Organization + WebSite — CORRIGÉ
+
 `src/pages/[lang]/index.astro` : JSON-LD `Organization` (name, url, logo, founder, sameAs) + `WebSite` (name, url, inLanguage, SearchAction) injectés sur la homepage.
 
 ### 15. Schema BreadcrumbList — CORRIGÉ
+
 `src/layouts/Layout.astro` : JSON-LD `BreadcrumbList` généré dynamiquement depuis le pathname sur toutes les pages.
 Labels traduits pour les segments connus (blog, team, contact, method).
 
@@ -227,11 +243,11 @@ Labels traduits pour les segments connus (blog, team, contact, method).
 
 ## Problèmes SEO encore ouverts
 
-| # | Problème | Fichier | Impact |
-|---|----------|---------|--------|
-| 1 | **Articles mono-langue (voulu)** | `aerox-innovation-fr.mdx`, `feel-aero-en.mdx` | Faible — Hreflang pointe vers 404 mais choix éditorial |
-| 2 | **Mapping hreflang FR↔EN par slug** | `src/layouts/Layout.astro` | Moyen — `zwift-fr` → `/en/blog/zwift-fr/` au lieu de `/en/blog/zwift-en/` |
-| 3 | **H1 homepage + blog index** | `fr.json`, `en.json` | Moyen — Besoin keyword research avant optimisation |
+| #   | Problème                             | Fichier                                       | Impact                                                                    |
+| --- | ------------------------------------ | --------------------------------------------- | ------------------------------------------------------------------------- |
+| 1   | **Articles mono-langue (voulu)**     | `aerox-innovation-fr.mdx`, `feel-aero-en.mdx` | Faible — Hreflang pointe vers 404 mais choix éditorial                    |
+| 2   | **Mapping hreflang FR↔EN par slug** | `src/layouts/Layout.astro`                    | Moyen — `zwift-fr` → `/en/blog/zwift-fr/` au lieu de `/en/blog/zwift-en/` |
+| 3   | **H1 homepage + blog index**         | `fr.json`, `en.json`                          | Moyen — Besoin keyword research avant optimisation                        |
 
 ---
 
@@ -254,17 +270,17 @@ npm run fix              # Auto-fix ESLint + Prettier
 
 ## Stack technique
 
-| Composant | Technologie |
-|-----------|------------|
-| Framework | Astro 5.x |
-| CSS | Tailwind CSS 3 + @tailwindcss/typography |
-| UI | React 19 (composants interactifs) |
-| Icons | astro-icon + Tabler + Flat Color Icons + Emojione + Twemoji |
-| SEO | @astrolib/seo |
-| Blog | Astro Content Collections (glob loader, MDX) |
-| Auth | Supabase |
-| Paiement | Stripe |
-| Analytics | Vercel Analytics + Speed Insights + Cloudflare Web Analytics |
-| Hosting | Vercel (SSR) |
-| Compression | astro-compress |
-| Markdown | MDX + remark (reading-time) + rehype (lazy images, responsive tables) |
+| Composant   | Technologie                                                           |
+| ----------- | --------------------------------------------------------------------- |
+| Framework   | Astro 5.x                                                             |
+| CSS         | Tailwind CSS 3 + @tailwindcss/typography                              |
+| UI          | React 19 (composants interactifs)                                     |
+| Icons       | astro-icon + Tabler + Flat Color Icons + Emojione + Twemoji           |
+| SEO         | @astrolib/seo                                                         |
+| Blog        | Astro Content Collections (glob loader, MDX)                          |
+| Auth        | Supabase                                                              |
+| Paiement    | Stripe                                                                |
+| Analytics   | Vercel Analytics + Speed Insights + Cloudflare Web Analytics          |
+| Hosting     | Vercel (SSR)                                                          |
+| Compression | astro-compress                                                        |
+| Markdown    | MDX + remark (reading-time) + rehype (lazy images, responsive tables) |

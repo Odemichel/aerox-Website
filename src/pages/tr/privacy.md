@@ -15,9 +15,11 @@ AeroX'u kullanarak, bilgilerinizin bu politikaya uygun olarak toplanmasını ve 
 ## Yorum ve Tanımlar
 
 ### Yorum
+
 İlk harfi büyük olan kelimeler, aşağıdaki koşullarda tanımlanan anlamlara sahiptir. Bu tanımlar tekil ve çoğul formlar için geçerlidir.
 
 ### Tanımlar
+
 Bu Gizlilik Politikası kapsamında:
 
 - **Hesap**: hizmete erişim için oluşturulan benzersiz bir hesabı ifade eder.
@@ -38,17 +40,22 @@ Bu Gizlilik Politikası kapsamında:
 ### Toplanan veri türleri
 
 #### Kişisel veriler
+
 AeroX'u kullanırken, kimliğinizi belirlemeye yarayan belirli bilgileri vermeniz istenebilir (örneğin: hesap oluşturmak veya ödeme tamamlamak için e-posta adresi).
 
 #### Kullanım verileri
+
 Otomatik olarak toplanan bu veriler şunları içerebilir:
+
 - IP adresi,
 - tarayıcı türü ve sürümü,
 - ziyaret edilen sayfalar ve ziyaret süresi,
 - kullanılan cihaza ilişkin bilgiler.
 
 #### Çerezler ve benzer teknolojiler
+
 Çerezleri şu amaçlarla kullanmaktayız:
+
 - hizmetin düzgün çalışmasını sağlamak,
 - tercihlerinizi kaydetmek (dil, oturum),
 - ziyaretçi trafiğini analiz etmek ve kullanıcı deneyimini iyileştirmek.
@@ -60,6 +67,7 @@ Tarayıcınızı çerezleri reddedecek şekilde yapılandırabilirsiniz, ancak b
 ## Verilerinizin Kullanılması
 
 AeroX, verilerinizi şu amaçlarla kullanır:
+
 - hizmeti sağlamak ve sürdürmek,
 - hesabınızı ve erişimlerinizi yönetmek,
 - ödemelerinizi ve aboneliklerinizi işlemek,
@@ -73,6 +81,7 @@ AeroX, verilerinizi şu amaçlarla kullanır:
 ## Verilerinizin Saklanması
 
 Kişisel verilerinizi yalnızca yukarıda açıklanan amaçlar için gerekli olan süre boyunca saklarız:
+
 - Hesapla ilgili veriler, hesap kapatıldığında silinir (yasal saklama yükümlülüğü bulunmadığı sürece).
 - Kullanım verileri (anonimleştirilmiş istatistikler) araştırma ve iyileştirme amacıyla daha uzun süre saklanabilir.
 
@@ -81,6 +90,7 @@ Kişisel verilerinizi yalnızca yukarıda açıklanan amaçlar için gerekli ola
 ## Verilerinizin Paylaşılması
 
 Verileriniz aşağıdaki durumlarda paylaşılabilir:
+
 - **Hizmet sağlayıcılarımızla** (barındırma sağlayıcıları, Stripe gibi ödeme hizmet sağlayıcıları, analiz araçları).
 - **Birleşme veya faaliyet devri halinde**, verileriniz AeroX ile birlikte aktarılabilir.
 - **Yasal yükümlülük gereği**, özellikle yetkili makamların talepleri doğrultusunda.
@@ -100,6 +110,7 @@ Bu durumda, uygun güvencelerin (standart sözleşme maddeleri, GDPR uyumluluğu
 ## Verilerinizin Silinmesi
 
 Kişisel verilerinizin silinmesini veya düzeltilmesini istediğiniz zaman talep edebilirsiniz:
+
 - kullanıcı alanınızdan,
 - veya doğrudan bizimle iletişime geçerek (bkz. "İletişim" bölümü).
 

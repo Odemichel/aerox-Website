@@ -27,7 +27,19 @@ const activeBf = t(dict, 'dashboard.activeBf');
     <h1 class="text-3xl font-bold mb-6 text-center">
       {t(dict, 'dashboard.title')}
     </h1>
-    <div id="dashboard-content" data-role={role} data-email={email} data-choosePack={choosePack} data-licence={licence} data-noLicence={noLicence} data-studio={studio} data-noStudio={noStudio} data-pendingActivation={pendingActivation} data-activeBf={activeBf} class="text-center">
+    <div
+      id="dashboard-content"
+      data-role={role}
+      data-email={email}
+      data-choosePack={choosePack}
+      data-licence={licence}
+      data-noLicence={noLicence}
+      data-studio={studio}
+      data-noStudio={noStudio}
+      data-pendingActivation={pendingActivation}
+      data-activeBf={activeBf}
+      class="text-center"
+    >
       <p>{t(dict, 'dashboard.loading')}</p>
     </div>
 
@@ -104,7 +116,7 @@ const activeBf = t(dict, 'dashboard.activeBf');
           // handle_email_confirmed côté Supabase à la validation de l'email.
           // Si le profil n'existe pas encore, la confirmation email est peut-être
           // encore en cours de propagation — on retente après un court délai.
-          await new Promise(r => setTimeout(r, 1500));
+          await new Promise((r) => setTimeout(r, 1500));
           const { data: retry } = await supabase
             .from('users')
             .select('role, is_active, licencetype, studio_name')

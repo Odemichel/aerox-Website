@@ -5,7 +5,6 @@ import plugin from 'tailwindcss/plugin';
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,json,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
-    
     extend: {
       colors: {
         gradientprimary: 'var(--gradient-primary)',
@@ -25,25 +24,22 @@ export default {
         fade: 'fadeInUp 1s both',
         blur: 'blurInUp 3s both',
         fadedelay3s: 'fadeInUp 1s ease-out 6s forwards', // <- délai 3s
-        
-
       },
-      
 
       keyframes: {
         fadeInUp: {
-          '0%': { opacity: 0,  transform: 'translateY(80px)', },
+          '0%': { opacity: 0, transform: 'translateY(80px)' },
           '100%': { opacity: 1, transform: 'translateY(0)' },
         },
         blurInUp: {
-          '0%': { opacity: 0,  transform: 'translateY(0px)', filter: 'blur(8px)'},
+          '0%': { opacity: 0, transform: 'translateY(0px)', filter: 'blur(8px)' },
           '100%': { opacity: 1, transform: 'translateY(0)', filter: 'blur(0)' },
         },
       },
-      
+
       backgroundImage: {
-    'primary-gradient': 'linear-gradient(135deg, var(--aw-color-primary), var(--aw-color-accent))',
-  },
+        'primary-gradient': 'linear-gradient(135deg, var(--aw-color-primary), var(--aw-color-accent))',
+      },
     },
   },
   plugins: [
