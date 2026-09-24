@@ -69,19 +69,6 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
       <p class="mt-3 text-lg text-muted">{t(dict, 'bfp.subtitle')}</p>
     </div>
 
-    <!-- Rythme de facturation : ne change que la carte Illimité -->
-    <div class="mb-6 flex justify-center">
-      <div class="inline-flex rounded-full border border-gray-300 dark:border-slate-600 p-1" role="group">
-        <button type="button" class="bf-billing rounded-full px-4 py-1.5 text-sm font-semibold" data-billing="monthly">
-          {t(dict, 'bfp.billing.monthly')}
-        </button>
-        <button type="button" class="bf-billing rounded-full px-4 py-1.5 text-sm font-semibold" data-billing="yearly">
-          {t(dict, 'bfp.billing.yearly')}
-          <span class="ml-1 text-xs text-primary">{t(dict, 'bfp.billing.save')}</span>
-        </button>
-      </div>
-    </div>
-
     <div class="grid gap-6 md:grid-cols-3">
       {
         plans.map((p) => (
@@ -122,6 +109,20 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
         </span>
         <h3 class="text-xl font-bold uppercase tracking-wider">{t(dict, 'bfp.unlimited.name')}</h3>
         <p class="mt-1 min-h-[3rem] text-sm text-muted">{t(dict, 'bfp.unlimited.desc')}</p>
+
+        <!-- Rythme de facturation, propre à cette carte -->
+        <div
+          class="mt-3 inline-flex self-start rounded-full border border-gray-300 dark:border-slate-600 p-1"
+          role="group"
+        >
+          <button type="button" class="bf-billing rounded-full px-3 py-1 text-sm" data-billing="monthly">
+            {t(dict, 'bfp.billing.monthly')}
+          </button>
+          <button type="button" class="bf-billing rounded-full px-3 py-1 text-sm" data-billing="yearly">
+            {t(dict, 'bfp.billing.yearly')}
+            <span class="bf-save ml-1 text-xs">{t(dict, 'bfp.billing.save')}</span>
+          </button>
+        </div>
 
         <div class="bf-launch-only mt-4">
           <p class="flex flex-wrap items-baseline gap-x-2">
@@ -278,10 +279,13 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
     for (const m of ['launch', 'standard', 'yearly']) {
       card.querySelectorAll<HTMLElement>(`.bf-${m}-only`).forEach((n) => n.classList.toggle('hidden', m !== mode));
     }
+    // Choix actif : fond orange, texte bleu nuit AeroX en gras pour ressortir.
     document.querySelectorAll<HTMLButtonElement>('.bf-billing').forEach((b) => {
       const on = b.dataset.billing === state.billing;
       b.classList.toggle('bg-primary', on);
-      b.classList.toggle('text-white', on);
+      b.classList.toggle('text-[#0b2239]', on);
+      b.classList.toggle('font-bold', on);
+      b.querySelector('.bf-save')?.classList.toggle('text-primary', !on);
       b.setAttribute('aria-pressed', String(on));
     });
   }
