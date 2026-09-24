@@ -741,6 +741,8 @@
   "lead.form.intent.demo.desc": "30 min en visio, sur votre matériel",
   "lead.form.intent.devis": "Demander un devis",
   "lead.form.intent.devis.desc": "Multi-sites, chaînes, fédérations",
+  "lead.form.pricing": "Nos tarifs bike fitter",
+  "lead.form.pricing.desc": "Pack, Studio ou Illimité, sans devis",
   "lead.form.success.devis": "C'est noté ! On revient vers vous avec une proposition.",
   "lead.form.success": "C'est noté ! On revient vers vous rapidement pour caler votre démo.",
   "lead.form.error": "L'envoi a échoué. Réessaie dans un instant.",

@@ -518,6 +518,8 @@
   "lead.form.intent.demo.desc": "オンラインで30分、お手持ちの機材で",
   "lead.form.intent.devis": "見積もりを依頼する",
   "lead.form.intent.devis.desc": "複数拠点、チェーン、連盟",
+  "lead.form.pricing": "バイクフィッター向け料金",
+  "lead.form.pricing.desc": "パック、スタジオ、無制限：見積もり不要",
   "lead.form.success.devis": "受け付けました。ご提案をお送りします。",
   "lead.form.success": "受け付けました。デモの日程調整のため、追ってご連絡します。",
   "bf.metrics.title": "バイクフィッティングセッション中にAeroXは何を測定しますか？",

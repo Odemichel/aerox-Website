@@ -518,6 +518,8 @@
   "lead.form.intent.demo.desc": "Online 30 dk, kendi ekipmanınızla",
   "lead.form.intent.devis": "Teklif isteyin",
   "lead.form.intent.devis.desc": "Çok şubeli, zincirler, federasyonlar",
+  "lead.form.pricing": "Bike fitter fiyatlarımız",
+  "lead.form.pricing.desc": "Paket, Stüdyo veya Sınırsız, teklif gerekmez",
   "lead.form.success.devis": "Alındı! Size bir teklifle döneceğiz.",
   "lead.form.success": "Not aldık! Demonuzu planlamak için kısa süre içinde size dönüş yapacağız.",
   "bf.metrics.title": "AeroX bir bike fitting seansi sirasinda ne olcer?",

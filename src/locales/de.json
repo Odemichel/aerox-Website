@@ -518,6 +518,8 @@
   "lead.form.intent.demo.desc": "30 Min. online, auf Ihrer Ausrüstung",
   "lead.form.intent.devis": "Angebot anfordern",
   "lead.form.intent.devis.desc": "Mehrere Standorte, Ketten, Verbände",
+  "lead.form.pricing": "Unsere Bike-Fitter-Preise",
+  "lead.form.pricing.desc": "Paket, Studio oder Unbegrenzt, ohne Angebot",
   "lead.form.success.devis": "Notiert! Wir melden uns mit einem Angebot.",
   "lead.form.success": "Notiert! Wir melden uns in Kürze, um Ihre Demo zu vereinbaren.",
   "bf.metrics.title": "Was misst AeroX während einer Bike-Fitting-Sitzung?",

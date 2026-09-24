@@ -41,30 +41,31 @@ const inputClass = 'w-full border rounded p-3 text-secondary';
 >
   {
     /*
-        Ce que demande le bike-fitter : une démo, ou seulement un tarif. Remonté
-        tel quel dans MailerLite (`bf_intent`), c'est ce qui sépare un curieux
-        d'un prospect chaud. `demo` est coché par défaut — c'est l'action que
-        la page met en avant.
+        Ce que demande le bike-fitter : une démo, remontée telle quelle dans
+        MailerLite (`bf_intent`). Les tarifs sont publics depuis la grille
+        bike fitter : la seconde carte n'est plus une demande de devis mais un
+        lien vers #tarifs (le devis reste possible, sur la même page, pour
+        les réseaux et multi-sites).
       */
   }
   <fieldset class="border-0 p-0 m-0">
     <legend class="mb-2 font-semibold">{t(dict, 'lead.form.intent.label')}</legend>
     <div class="grid grid-cols-2 gap-3">
-      {
-        [
-          { v: 'demo', checked: true },
-          { v: 'devis', checked: false },
-        ].map(({ v, checked }) => (
-          <label
-            class={`intent-card flex cursor-pointer flex-col items-center gap-1 rounded-lg border-2 p-3 text-center transition-all ${checked ? 'border-primary bg-primary/10' : 'border-gray-300 dark:border-gray-600'}`}
-            data-intent={v}
-          >
-            <input type="radio" name="intent" value={v} checked={checked} class="sr-only" />
-            <span class="text-sm font-semibold">{t(dict, `lead.form.intent.${v}`)}</span>
-            <span class="text-xs text-gray-600 dark:text-gray-400">{t(dict, `lead.form.intent.${v}.desc`)}</span>
-          </label>
-        ))
-      }
+      <label
+        class="intent-card flex cursor-pointer flex-col items-center gap-1 rounded-lg border-2 p-3 text-center transition-all border-primary bg-primary/10"
+        data-intent="demo"
+      >
+        <input type="radio" name="intent" value="demo" checked class="sr-only" />
+        <span class="text-sm font-semibold">{t(dict, 'lead.form.intent.demo')}</span>
+        <span class="text-xs text-gray-600 dark:text-gray-400">{t(dict, 'lead.form.intent.demo.desc')}</span>
+      </label>
+      <a
+        href={`/${lang}/bike-fitting/#tarifs`}
+        class="flex flex-col items-center gap-1 rounded-lg border-2 border-gray-300 p-3 text-center transition-all hover:border-primary dark:border-gray-600"
+      >
+        <span class="text-sm font-semibold">{t(dict, 'lead.form.pricing')} →</span>
+        <span class="text-xs text-gray-600 dark:text-gray-400">{t(dict, 'lead.form.pricing.desc')}</span>
+      </a>
     </div>
   </fieldset>
 
