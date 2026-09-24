@@ -35,6 +35,9 @@ export function makeNavigation(langInput?: string, audience: Audience = 'rider')
   const t = (k: string) => dict[k] ?? k;
 
   const headerData: HeaderProps = {
+    // Les pages bike-fitter existent dans les 9 langues : le visiteur B2B
+    // doit pouvoir changer de langue sans repasser par l'accueil.
+    showLanguageMenu: audience === 'bike-fitter',
     links: [
       {
         text: '',
@@ -73,7 +76,7 @@ export function makeNavigation(langInput?: string, audience: Audience = 'rider')
       audience === 'bike-fitter'
         ? {
             variant: 'primary',
-            text: t('lead.form.intent.demo'),
+            text: `<span class="sm:hidden">${t('cta.bikefitter.short')}</span><span class="hidden sm:inline">${t('lead.form.intent.demo')}</span>`,
             icon: 'tabler:calendar-event',
             href: withLang(lang, '/periode-test/#reservation'),
             target: '',
