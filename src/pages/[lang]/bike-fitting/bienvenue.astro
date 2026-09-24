@@ -1,0 +1,86 @@
+---
+// Onboarding bike fitter : installer l'app, calibrer, analyser, choisir une
+// offre. Page publique (aucune donnée de compte), liée depuis l'espace
+// bike fitter et l'e-mail de bienvenue.
+import type { GetStaticPaths } from 'astro';
+import { Icon } from 'astro-icon/components';
+import Layout from '~/layouts/PageLayout.astro';
+import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
+import { CALIBRATION_VIDEO_URL, DOWNLOADS } from '~/config/downloads';
+
+export const prerender = true;
+
+export const getStaticPaths: GetStaticPaths = async () => SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
+
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
+
+const metadata = {
+  title: t(dict, 'onb.meta.title'),
+  description: t(dict, 'onb.meta.description'),
+  // Page de parcours après inscription, sans intérêt pour la recherche.
+  robots: { index: false, follow: true },
+};
+
+const steps = [1, 2, 3, 4].map((i) => ({ i, title: t(dict, `onb.s${i}.title`), desc: t(dict, `onb.s${i}.desc`) }));
+---
+
+<Layout metadata={metadata} audience="bike-fitter">
+  <section class="not-prose mx-auto max-w-3xl px-4 md:px-6 py-12 md:py-16">
+    <h1 class="text-3xl md:text-4xl font-bold text-center">{t(dict, 'onb.title')}</h1>
+    <p class="mt-3 text-center text-lg text-muted">{t(dict, 'onb.subtitle')}</p>
+
+    <ol class="mt-10 space-y-6">
+      {
+        steps.map((s) => (
+          <li class="flex gap-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary font-bold text-white">
+              {s.i}
+            </span>
+            <div class="flex-1">
+              <h2 class="text-lg font-semibold">{s.title}</h2>
+              <p class="mt-1 text-muted">{s.desc}</p>
+
+              {s.i === 1 && (
+                <div class="mt-4 flex flex-col sm:flex-row gap-3">
+                  <a href={DOWNLOADS.mac} class="btn-primary justify-center" download>
+                    <Icon name="tabler:brand-apple" class="h-5 w-5" />
+                    {t(dict, 'onb.s1.mac')}
+                  </a>
+                  <a href={DOWNLOADS.windows} class="btn-primary justify-center" download>
+                    <Icon name="tabler:brand-windows" class="h-5 w-5" />
+                    {t(dict, 'onb.s1.win')}
+                  </a>
+                </div>
+              )}
+
+              {s.i === 2 && CALIBRATION_VIDEO_URL && (
+                <a
+                  href={CALIBRATION_VIDEO_URL}
+                  target="_blank"
+                  rel="noopener"
+                  class="btn-secondary mt-4 inline-flex justify-center"
+                >
+                  <Icon name="tabler:player-play" class="h-5 w-5" />
+                  {t(dict, 'onb.s2.video')}
+                </a>
+              )}
+
+              {s.i === 4 && (
+                <a href={`/${lang}/bike-fitting/#tarifs`} class="btn-secondary mt-4 inline-flex justify-center">
+                  {t(dict, 'onb.s4.cta')}
+                </a>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <p class="mt-10 text-center">
+      <a href={`/${lang}/inscription/dashboard/`} class="font-semibold text-primary underline hover:no-underline">
+        {t(dict, 'onb.account')}
+      </a>
+    </p>
+  </section>
+</Layout>

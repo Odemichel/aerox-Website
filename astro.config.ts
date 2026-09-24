@@ -82,6 +82,7 @@ export default defineConfig({
         !/\/inscription\/(connexion|confirmation|dashboard)\//.test(page) &&
         !/\/telechargement\/(cancel|success)/.test(page) &&
         !/\/paiement\//.test(page) &&
+        !/\/bike-fitting\/bienvenue\//.test(page) &&
         !/\/404/.test(page) &&
         !/\/tri-dijon\//.test(page),
     }),

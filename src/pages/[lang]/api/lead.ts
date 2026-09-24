@@ -85,11 +85,15 @@ export const POST: APIRoute = async (context) => {
   if (lead.phone) fields.phone = lead.phone;
   // Champs de qualification bike-fitter : `bf_intent` dit ce qu'il demande
   // (démo, devis, ou simple création de compte), `bf_status` et `bf_signup`
-  // alignent la fiche MailerLite sur ce que porte déjà Supabase.
+  // alignent la fiche MailerLite sur ce que porte déjà Supabase. Un compte
+  // créé est actif tout de suite, en essai ; une demande de démo ou de devis
+  // reste un lead. Le webhook Stripe fait ensuite évoluer `bf_status` et
+  // `bf_plan` à chaque changement d'offre.
   if (lead.topic === 'bike-fitter') {
     fields.company = 'bike-fitter';
     fields.bf_intent = lead.intent;
-    fields.bf_status = 'pending_bf';
+    fields.bf_status = lead.intent === 'inscription' ? 'trial' : 'lead';
+    if (lead.intent === 'inscription') fields.bf_plan = 'trial';
     fields.bf_signup = new Date().toISOString().slice(0, 10);
   }
 

@@ -20,6 +20,39 @@ const studio = t(dict, 'dashboard.studio');
 const noStudio = t(dict, 'dashboard.noStudio');
 const pendingActivation = t(dict, 'dashboard.pendingActivation');
 const activeBf = t(dict, 'dashboard.activeBf');
+
+// Libellés du panneau de facturation bike fitter, lus par le script client.
+const bfLabels = Object.fromEntries(
+  [
+    'title',
+    'plan.trial',
+    'plan.pack',
+    'plan.studio',
+    'plan.unlimited',
+    'plan.unlimited_launch',
+    'plan.legacy',
+    'pastDue',
+    'readOnly',
+    'analyses',
+    'credits',
+    'creditsExpiry',
+    'nextInvoice',
+    'nextInvoiceOn',
+    'portal',
+    'buyPack',
+    'seeOffers',
+    'changeTo',
+    'cancel',
+    'cancelConfirm',
+    'cancelDone',
+    'changeConfirm',
+    'changeDone',
+    'success',
+    'error',
+    'onboarding',
+  ].map((k) => [k, t(dict, `dash.bf.${k}`)])
+);
+bfLabels['vat'] = t(dict, 'bfp.vat');
 ---
 
 <Layout metadata={metadata}>
@@ -41,6 +74,15 @@ const activeBf = t(dict, 'dashboard.activeBf');
       class="text-center"
     >
       <p>{t(dict, 'dashboard.loading')}</p>
+    </div>
+
+    <!-- Facturation bike fitter : rempli par le script si le compte est BF -->
+    <div
+      id="bf-billing-panel"
+      class="hidden mt-8 p-6 border rounded-lg bg-gray-50 dark:bg-gray-800 text-left"
+      data-lang={lang}
+      data-labels={JSON.stringify(bfLabels)}
+    >
     </div>
 
     <!-- ✅ Script côté client -->
@@ -132,6 +174,153 @@ const activeBf = t(dict, 'dashboard.activeBf');
       }
 
       loadDashboard();
+    </script>
+
+    <script>
+      import { supabase } from '../../../config/supabaseClient';
+      import { manageSubscription, openPortal, startCheckout } from '~/lib/billing/client';
+      import { estimatedNextInvoiceCents, type Offer, type Plan } from '~/lib/billing/logic';
+
+      type Summary = {
+        plan: Plan | null;
+        status: string | null;
+        access: 'full' | 'read_only' | null;
+        grace_until: string | null;
+        current_period_end: string | null;
+        has_stripe_customer: boolean | null;
+        analyses_in_period: number;
+        credits_remaining: number;
+        credits_next_expiry: string | null;
+      };
+
+      const SUBSCRIPTION_PLANS: Plan[] = ['studio', 'unlimited', 'unlimited_launch'];
+
+      // Construit par nœuds DOM (textContent), jamais par innerHTML : les
+      // libellés sont des traductions, mais la règle reste la même partout.
+      function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', text = ''): HTMLElementTagNameMap[K] {
+        const node = document.createElement(tag);
+        if (cls) node.className = cls;
+        if (text) node.textContent = text;
+        return node;
+      }
+
+      async function loadBfBilling() {
+        const panel = document.getElementById('bf-billing-panel');
+        if (!panel || panel.dataset.bound === '1') return;
+        panel.dataset.bound = '1';
+        const lang = panel.dataset.lang ?? 'fr';
+        const L: Record<string, string> = JSON.parse(panel.dataset.labels ?? '{}');
+
+        const { data: userData } = await supabase.auth.getUser();
+        if (!userData?.user) return;
+        const { data: profile } = await supabase.from('users').select('role').eq('id', userData.user.id).maybeSingle();
+        if (profile?.role !== 'bike-fitter' && profile?.role !== 'admin') return;
+
+        const { data, error } = await supabase.rpc('bf_usage_summary');
+        const s = data as Summary | null;
+        if (error || !s?.plan) return;
+
+        const date = (iso: string | null) =>
+          iso
+            ? new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso))
+            : '';
+        const eur = (cents: number) =>
+          new Intl.NumberFormat(lang, { style: 'currency', currency: 'EUR' }).format(cents / 100);
+
+        const msg = el('p', 'mt-4 hidden font-semibold');
+        const say = (text: string, ok: boolean) => {
+          msg.textContent = text;
+          msg.classList.remove('hidden', 'text-red-600', 'text-green-600');
+          msg.classList.add(ok ? 'text-green-600' : 'text-red-600');
+        };
+
+        panel.replaceChildren();
+        panel.append(el('h2', 'text-xl font-bold mb-2', L.title));
+        panel.append(el('p', 'text-lg font-semibold text-primary', L[`plan.${s.plan}`] ?? s.plan));
+
+        if (s.status === 'past_due' && s.access === 'full') {
+          panel.append(
+            el('p', 'mt-2 text-yellow-700 dark:text-yellow-400', L.pastDue.replace('{date}', date(s.grace_until)))
+          );
+        } else if (s.access === 'read_only') {
+          panel.append(el('p', 'mt-2 text-red-600 font-semibold', L.readOnly));
+        }
+
+        const stats = el('dl', 'mt-4 grid gap-4 sm:grid-cols-2');
+        const stat = (label: string, value: string, sub = '') => {
+          const box = el('div', 'rounded-md bg-white dark:bg-gray-900 p-3');
+          box.append(el('dt', 'text-sm text-gray-500', label), el('dd', 'text-2xl font-bold', value));
+          if (sub) box.append(el('dd', 'text-sm text-gray-500', sub));
+          stats.append(box);
+        };
+        stat(L.analyses, String(s.analyses_in_period));
+        if (s.plan === 'trial' || s.plan === 'pack') {
+          stat(L.credits, String(s.credits_remaining), L.creditsExpiry.replace('{date}', date(s.credits_next_expiry)));
+        }
+        const next = estimatedNextInvoiceCents(s.plan, s.analyses_in_period, Date.now());
+        if (next !== null) {
+          stat(
+            L.nextInvoice,
+            `${eur(next)} ${L.vat}`,
+            s.current_period_end ? L.nextInvoiceOn.replace('{date}', date(s.current_period_end)) : ''
+          );
+        }
+        panel.append(stats);
+
+        const actions = el('div', 'mt-6 flex flex-wrap gap-3');
+        const button = (label: string, cls: string, onClick: () => Promise<string | null>) => {
+          const b = el('button', cls, label);
+          b.type = 'button';
+          b.addEventListener('click', async () => {
+            b.disabled = true;
+            const err = await onClick();
+            b.disabled = false;
+            if (err) say(L.error, false);
+          });
+          actions.append(b);
+        };
+        const link = (label: string, href: string, cls: string) => {
+          const a = el('a', cls, label);
+          a.href = href;
+          actions.append(a);
+        };
+
+        if (s.has_stripe_customer) button(L.portal, 'btn-primary', () => openPortal(lang));
+
+        if (s.plan === 'trial' || s.plan === 'pack') {
+          button(L.buyPack, 'btn-secondary', () => startCheckout('pack', lang));
+          link(L.seeOffers, `/${lang}/bike-fitting/#tarifs`, 'btn-secondary');
+        }
+
+        if (SUBSCRIPTION_PLANS.includes(s.plan)) {
+          const others: Offer[] = (['studio', 'unlimited'] as Offer[]).filter((o) => o !== s.plan);
+          for (const offer of others) {
+            button(L.changeTo.replace('{offer}', L[`plan.${offer}`]), 'btn-secondary', async () => {
+              if (!confirm(L.changeConfirm)) return null;
+              const err = await manageSubscription('change', offer);
+              if (!err) say(L.changeDone, true);
+              return err;
+            });
+          }
+          button(L.cancel, 'btn-tertiary text-red-600', async () => {
+            if (!confirm(L.cancelConfirm)) return null;
+            const err = await manageSubscription('cancel');
+            if (!err) say(L.cancelDone, true);
+            return err;
+          });
+        }
+
+        if (s.plan === 'trial') link(L.onboarding, `/${lang}/bike-fitting/bienvenue/`, 'btn-tertiary underline');
+
+        panel.append(actions, msg);
+        panel.classList.remove('hidden');
+
+        // Retour de Checkout : le webhook peut arriver quelques secondes après.
+        if (new URLSearchParams(window.location.search).get('billing') === 'success') say(L.success, true);
+      }
+
+      loadBfBilling();
+      document.addEventListener('astro:page-load', loadBfBilling);
     </script>
   </section>
 

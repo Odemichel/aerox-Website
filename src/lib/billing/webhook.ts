@@ -15,7 +15,9 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type Stripe from 'stripe';
 import { LAUNCH_OFFER, LOOKUP } from './catalog';
+import { upsertMailerLiteFields, type BfStatus } from '~/lib/mailerlite';
 import {
+  crmStatus,
   PACK_CREDITS,
   packExpiry,
   planAfterPackPurchase,
@@ -57,6 +59,12 @@ async function hasValidCredits(db: SupabaseClient, userId: string): Promise<bool
     .gt('expires_at', new Date().toISOString());
   if (error) throw new Error(`bf_credits: ${error.message}`);
   return (count ?? 0) > 0;
+}
+
+/** Reporte l'offre sur la fiche MailerLite (bf_plan, bf_status). Jamais bloquant. */
+async function syncCrm(db: SupabaseClient, userId: string, plan: string, bfStatus: BfStatus) {
+  const { data } = await db.from('users').select('email').eq('id', userId).maybeSingle();
+  if (data?.email) await upsertMailerLiteFields(data.email as string, { bf_plan: plan, bf_status: bfStatus });
 }
 
 async function writeBilling(db: SupabaseClient, row: Record<string, unknown>) {
@@ -126,16 +134,18 @@ async function syncSubscription(db: SupabaseClient, subscriptionId: string, paym
   if (outcome.kind === 'ignore') return;
 
   if (outcome.kind === 'ended') {
+    const nextPlan = planAfterSubscriptionEnds(await hasValidCredits(db, userId));
     await writeBilling(db, {
       user_id: userId,
       stripe_customer_id: customer,
       stripe_subscription_id: null,
-      plan: planAfterSubscriptionEnds(await hasValidCredits(db, userId)),
+      plan: nextPlan,
       status: 'active',
       grace_until: null,
       current_period_start: null,
       current_period_end: null,
     });
+    await syncCrm(db, userId, nextPlan, nextPlan === 'pack' ? 'active' : 'churned');
     return;
   }
 
@@ -151,6 +161,11 @@ async function syncSubscription(db: SupabaseClient, subscriptionId: string, paym
     current_period_start: toIso(item?.current_period_start),
     current_period_end: toIso(item?.current_period_end),
   });
+  // Seulement si quelque chose change pour le CRM : les renouvellements
+  // mensuels ne réécrivent pas la fiche.
+  if (billing?.plan !== plan || billing?.status !== outcome.status) {
+    await syncCrm(db, userId, plan, crmStatus(plan, outcome.status));
+  }
 
   if (plan === 'unlimited_launch' && outcome.status === 'active') await ensureLaunchSchedule(sub);
 }
@@ -180,11 +195,13 @@ async function handleCheckout(db: SupabaseClient, session: Stripe.Checkout.Sessi
   if (error) throw new Error(`bf_grant_credits: ${error.message}`);
 
   const billing = await loadBilling(db, userId);
+  const plan = planAfterPackPurchase(billing?.plan ?? null);
   await writeBilling(db, {
     user_id: userId,
     stripe_customer_id: idOf(session.customer) ?? billing?.stripe_customer_id ?? null,
-    plan: planAfterPackPurchase(billing?.plan ?? null),
+    plan,
   });
+  if (billing?.plan !== plan) await syncCrm(db, userId, plan, crmStatus(plan, billing?.status ?? 'active'));
 }
 
 /** Traite un événement bike fitter. Lève en cas d'échec (→ 500, rejeu Stripe). */

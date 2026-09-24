@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
 import Features from '~/components/widgets/Features.astro';
+import BfPricing from '~/components/widgets/BfPricing.astro';
 
 import aeroxHero from '~/assets/images/aerox-hero.jpg';
 import bikePower from '~/assets/images/bike-fitter/bikefitting-bike-power.jpg';
@@ -80,13 +81,26 @@ const softwareSchema = {
     '@type': 'BusinessAudience',
     audienceType: 'Bike Fitters',
   },
-  offers: {
+  // Grille publique (HT). Source des montants : src/lib/billing/catalog.ts.
+  offers: [
+    { name: t(dict, 'bfp.pack.name'), price: '150.00', unitCode: undefined },
+    { name: t(dict, 'bfp.studio.name'), price: '69.00', unitCode: 'MON' },
+    { name: t(dict, 'bfp.unlimited.name'), price: '129.00', unitCode: 'MON' },
+  ].map((o) => ({
     '@type': 'Offer',
-    price: '0',
+    name: o.name,
+    price: o.price,
     priceCurrency: 'EUR',
-    availability: 'https://schema.org/PreOrder',
-    description: lang === 'fr' ? 'Contactez-nous pour un devis professionnel' : 'Contact us for a professional quote',
-  },
+    availability: 'https://schema.org/InStock',
+    url: `${siteOrigin}/${lang}/bike-fitting/#tarifs`,
+    priceSpecification: {
+      '@type': 'UnitPriceSpecification',
+      price: o.price,
+      priceCurrency: 'EUR',
+      valueAddedTaxIncluded: false,
+      ...(o.unitCode ? { unitCode: o.unitCode, billingDuration: 1 } : {}),
+    },
+  })),
 };
 
 /* ===== HowTo JSON-LD ===== */
@@ -566,6 +580,9 @@ const reviewSchema = reviews.map((r) => ({
       </div>
     </div>
   </section>
+
+  <!-- 4 bis. TARIFS -->
+  <BfPricing lang={lang} />
 
   <!-- 5. FAQ -->
   <section class="relative not-prose scroll-mt-[72px]">

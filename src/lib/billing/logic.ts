@@ -119,3 +119,9 @@ export function estimatedNextInvoiceCents(plan: Plan | null, analysesInPeriod: n
       return null;
   }
 }
+
+/** Valeur MailerLite `bf_status` correspondant à l'état de facturation. */
+export function crmStatus(plan: Plan, status: BillingStatus): 'trial' | 'active' | 'past_due' | 'read_only' {
+  if (status === 'past_due' || status === 'read_only') return status;
+  return plan === 'trial' ? 'trial' : 'active';
+}

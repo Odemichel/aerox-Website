@@ -20,47 +20,80 @@ const metadata = {
   title: t(dict, 'signup.meta.title'),
   description: t(dict, 'signup.meta.description'),
 };
+
+// `?profil=bike-fitter` : inscription bike fitter. Le compte est actif dès la
+// confirmation de l'e-mail, avec l'essai (3 analyses, 20 jours) ouvert par le
+// trigger `handle_email_confirmed` — plus de validation manuelle.
+const isBikeFitter = Astro.url.searchParams.get('profil') === 'bike-fitter';
+const withRedirect = (href: string) =>
+  redirectParam ? `${href}${href.includes('?') ? '&' : '?'}redirect=${encodeURIComponent(redirectParam)}` : href;
+const bikeFitterHref = withRedirect(`/${lang}/inscription/inscription/?profil=bike-fitter`);
+const riderHref = withRedirect(`/${lang}/inscription/inscription/`);
 ---
 
 <Layout metadata={metadata}>
   <section class="max-w-md mx-auto py-16 px-6 text-center">
     <h1 class="text-3xl font-bold mb-6 text-primary">
-      {t(dict, 'signup.title')}
+      {isBikeFitter ? t(dict, 'signup.bf.title') : t(dict, 'signup.title')}
     </h1>
 
     <p class="mb-8 text-black dark:text-white">
-      {t(dict, 'signup.subtitle1')}
+      {isBikeFitter ? t(dict, 'signup.bf.subtitle') : t(dict, 'signup.subtitle1')}
     </p>
 
     <form id="signup-form" data-lang={lang} class="flex flex-col gap-4 text-left">
-      <!-- Role selector -->
-      <label class="font-medium">{t(dict, 'signup.role.label')}</label>
-      <div class="grid grid-cols-2 gap-3" id="role-selector">
-        <label
-          class="role-card flex flex-col items-center gap-1 p-4 border-2 rounded-lg cursor-pointer transition-all border-primary bg-primary/10"
-          data-role="rider"
-        >
-          <input type="radio" name="profile_type" value="rider" checked class="sr-only" />
-          <span class="text-lg font-semibold">{t(dict, 'signup.role.rider')}</span>
-          <span class="text-sm text-gray-600 dark:text-gray-400 text-center">{t(dict, 'signup.role.rider.desc')}</span>
-        </label>
-        {
-          /*
-          Un lien, pas un choix : les bike-fitters ont leur propre tunnel
-          (démo puis devis). Les laisser créer un compte ici les déposait dans
-          un `pending_bf` bloqué, sans démo et sans qualification.
-        */
-        }
-        <a
-          href={`/${lang}/bike-fitting/`}
-          class="role-card flex flex-col items-center gap-1 rounded-lg border-2 border-gray-300 p-4 transition-all hover:border-primary dark:border-gray-600"
-        >
-          <span class="text-lg font-semibold">{t(dict, 'signup.role.bikefitter')}</span>
-          <span class="text-center text-sm text-gray-600 dark:text-gray-400">
-            {t(dict, 'signup.role.bikefitter.desc')} →
-          </span>
-        </a>
-      </div>
+      {
+        isBikeFitter ? (
+          <>
+            <input type="radio" name="profile_type" value="bike-fitter" checked class="hidden" />
+            <label for="studio_name" class="font-medium">
+              {t(dict, 'signup.bf.studio.label')}
+            </label>
+            <input
+              type="text"
+              id="studio_name"
+              required
+              maxlength="120"
+              placeholder={t(dict, 'signup.bf.studio.placeholder')}
+              class="border rounded p-3 text-secondary"
+            />
+          </>
+        ) : null
+      }
+      {
+        !isBikeFitter && (
+          <>
+            {/* Role selector */}
+            <label class="font-medium">{t(dict, 'signup.role.label')}</label>
+            <div class="grid grid-cols-2 gap-3" id="role-selector">
+              <label
+                class="role-card flex flex-col items-center gap-1 p-4 border-2 rounded-lg cursor-pointer transition-all border-primary bg-primary/10"
+                data-role="rider"
+              >
+                <input type="radio" name="profile_type" value="rider" checked class="sr-only" />
+                <span class="text-lg font-semibold">{t(dict, 'signup.role.rider')}</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400 text-center">
+                  {t(dict, 'signup.role.rider.desc')}
+                </span>
+              </label>
+              {/*
+          Un lien, pas un choix : l'inscription bike fitter a son propre
+          formulaire (nom du studio, essai), sur la même page avec
+          `?profil=bike-fitter`.
+        */}
+              <a
+                href={bikeFitterHref}
+                class="role-card flex flex-col items-center gap-1 rounded-lg border-2 border-gray-300 p-4 transition-all hover:border-primary dark:border-gray-600"
+              >
+                <span class="text-lg font-semibold">{t(dict, 'signup.role.bikefitter')}</span>
+                <span class="text-center text-sm text-gray-600 dark:text-gray-400">
+                  {t(dict, 'signup.role.bikefitter.desc')} →
+                </span>
+              </a>
+            </div>
+          </>
+        )
+      }
 
       <label for="email" class="font-medium">{t(dict, 'signup.email.label')}</label>
       <input
@@ -113,6 +146,13 @@ const metadata = {
       </div>
 
       <Button variant="primary" type="submit" text={t(dict, 'signup.submit')} class="mt-6 w-full justify-center" />
+      {
+        isBikeFitter && (
+          <a href={riderHref} class="text-center text-sm underline text-primary hover:text-primary/80">
+            {t(dict, 'signup.bf.riderLink')}
+          </a>
+        )
+      }
       <div class="flex justify-center gap-2">
         <label class="text-sm items-center">
           {t(dict, 'signup.connexion.text')}
@@ -220,12 +260,17 @@ const metadata = {
         const selectedRole =
           (document.querySelector('input[name="profile_type"]:checked') as HTMLInputElement | null)?.value || 'rider';
 
+        const studioName =
+          (document.getElementById('studio_name') as HTMLInputElement | null)?.value.trim().slice(0, 120) ?? '';
+
         // --- Création du compte ---
+        // `studio_name` n'est lu que pour un bike fitter (trigger
+        // handle_email_confirmed) ; pour un cycliste il reste vide.
         const { error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            data: { phone, rgpd: true, cgv: true, profile_type: selectedRole },
+            data: { phone, rgpd: true, cgv: true, profile_type: selectedRole, studio_name: studioName },
             emailRedirectTo: `https://aeroxbefaster.com/${lang}/inscription/connexion/`,
           },
         });
@@ -240,6 +285,22 @@ const metadata = {
           showMessage('❌ ' + error.message);
         } else {
           attemptCount = 0; // reset si succès
+
+          // Bike fitter : fiche MailerLite (bf_status « trial », bf_plan
+          // « trial »). Jamais bloquant : le compte existe déjà.
+          if (selectedRole === 'bike-fitter') {
+            await fetch(`/${lang}/api/lead/`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                topic: 'bike-fitter',
+                intent: 'inscription',
+                name: studioName || email,
+                email,
+                phone,
+              }),
+            }).catch(() => undefined);
+          }
 
           window.location.href = `/${lang}/inscription/confirmation/`;
         }

@@ -2,6 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/Layout.astro';
 import { getDict, t } from '~/lib/i18n';
+import { DOWNLOADS } from '~/config/downloads';
 
 const { lang } = Astro.params;
 const dict = getDict(lang);
@@ -33,7 +34,7 @@ const metadata = {
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
       <!-- macOS -->
       <a
-        href="https://github.com/Odemichel/AeroX-release/releases/download/MacOs_V1.0.0/AeroX.zip"
+        href={DOWNLOADS.mac}
         class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
         download
       >
@@ -50,7 +51,7 @@ const metadata = {
 
       <!-- Windows -->
       <a
-        href="https://github.com/Odemichel/AeroX-release/releases/download/WindowsV1.0.0/AeroX.zip"
+        href={DOWNLOADS.windows}
         class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
         download
       >
