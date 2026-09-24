@@ -192,6 +192,38 @@ async function syncPrices(products: Map<ProductKey, string>, meterId: string | u
   }
 }
 
+// Portail client : factures, moyen de paiement, coordonnées et n° de TVA,
+// résiliation en fin de période. Pas de changement d'offre ici : le portail
+// ne sait pas modifier un abonnement Studio (usage mesuré) ni un abonnement
+// piloté par un schedule — c'est /api/billing/manage/ qui s'en charge.
+const PORTAL: Stripe.BillingPortal.ConfigurationCreateParams = {
+  business_profile: { headline: 'AeroX — votre abonnement bike fitter' },
+  features: {
+    invoice_history: { enabled: true },
+    payment_method_update: { enabled: true },
+    customer_update: { enabled: true, allowed_updates: ['name', 'email', 'address', 'tax_id'] },
+    subscription_cancel: { enabled: true, mode: 'at_period_end' },
+    subscription_update: { enabled: false },
+  },
+  metadata: { aerox_key: 'bf_portal' },
+};
+
+async function syncPortal() {
+  let existing: Stripe.BillingPortal.Configuration | undefined;
+  for await (const c of stripe.billingPortal.configurations.list({ active: true, limit: 100 })) {
+    if (c.metadata?.aerox_key === 'bf_portal') existing = c;
+  }
+  if (!existing) {
+    log('portail client : création');
+    if (!DRY_RUN) log(`portail client : ${(await stripe.billingPortal.configurations.create(PORTAL)).id}`);
+    return;
+  }
+  // La mise à jour est rejouée à chaque passage : elle est sans effet si rien
+  // n'a changé, et comparer champ par champ n'apporterait rien.
+  log(`portail client (${existing.id}) : réappliqué`);
+  if (!DRY_RUN) await stripe.billingPortal.configurations.update(existing.id, PORTAL);
+}
+
 async function checkTaxSettings() {
   // Lecture seule : Stripe Tax (adresse d'origine, immatriculations) se règle
   // une fois pour toutes, et `automatic_tax` échoue au Checkout tant qu'il
@@ -208,5 +240,6 @@ async function checkTaxSettings() {
 const meterId = await syncMeter();
 const products = await syncProducts();
 await syncPrices(products, meterId);
+await syncPortal();
 await checkTaxSettings();
 log('terminé');

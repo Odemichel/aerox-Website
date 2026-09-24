@@ -12,6 +12,7 @@ export const prerender = false;
 import { createClient } from '@supabase/supabase-js';
 import type { APIRoute } from 'astro';
 import Stripe from 'stripe';
+import { handleBillingEvent, isBillingObject } from '~/lib/billing/webhook';
 import { DIAGNOSTIC_PRODUCT, purchaseFromSession, refundFromCharge } from '~/lib/diagnostic/purchase';
 
 const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY as string);
@@ -46,6 +47,14 @@ export const POST: APIRoute = async ({ request }) => {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('stripe-webhook: signature invalide', message);
     return new Response('Invalid signature', { status: 400 });
+  }
+
+  // Offres bike fitter : traitées à part, avec idempotence par identifiant
+  // d'événement (table `stripe_events`). Le diagnostic cycliste, plus bas,
+  // n'est pas concerné : ses écritures sont idempotentes par nature (une
+  // ligne par session Checkout, remboursement réécrit à l'identique).
+  if (isBillingObject(event)) {
+    return handleBillingWithIdempotence(event);
   }
 
   // À partir d'ici, et seulement à partir d'ici, le contenu est digne de foi.
@@ -172,5 +181,47 @@ async function handleDiagnosticRefund(charge: Stripe.Charge): Promise<Response> 
     '—',
     refund.paymentIntentId
   );
+  return new Response('ok', { status: 200 });
+}
+
+async function handleBillingWithIdempotence(event: Stripe.Event): Promise<Response> {
+  const db = createClient(
+    import.meta.env.SUPABASE_URL as string,
+    import.meta.env.SUPABASE_SERVICE_ROLE_KEY as string, // ⚠️ SERVICE ROLE, jamais exposé au client
+    { auth: { persistSession: false } }
+  );
+
+  const { data: seen, error: readError } = await db
+    .from('stripe_events')
+    .select('processed_at')
+    .eq('id', event.id)
+    .maybeSingle();
+  if (readError) {
+    console.error('stripe-webhook: ERREUR_BASE — stripe_events illisible —', readError.message);
+    return new Response('billing failed', { status: 500 });
+  }
+  if (seen?.processed_at) return new Response('already processed', { status: 200 });
+
+  try {
+    await handleBillingEvent(db, event);
+  } catch (err) {
+    // 500 : Stripe rejoue. L'événement n'est pas marqué traité.
+    console.error(
+      'stripe-webhook: facturation BF —',
+      event.type,
+      event.id,
+      '—',
+      err instanceof Error ? err.message : err
+    );
+    return new Response('billing failed', { status: 500 });
+  }
+
+  // Marqué traité seulement après succès. Si cette écriture échoue, le rejeu
+  // retraite l'événement : sans danger, chaque traitement est idempotent.
+  const { error: writeError } = await db
+    .from('stripe_events')
+    .upsert({ id: event.id, type: event.type, processed_at: new Date().toISOString() });
+  if (writeError) console.error('stripe-webhook: stripe_events non marqué —', event.id, writeError.message);
+
   return new Response('ok', { status: 200 });
 }
