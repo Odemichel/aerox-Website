@@ -3,6 +3,7 @@ import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/Layout.astro';
 import { getDict, t } from '~/lib/i18n';
 import { DOWNLOADS } from '~/config/downloads';
+import { isDiagnosticAvailable } from '~/config/diagnostic';
 
 const { lang } = Astro.params;
 const dict = getDict(lang);
@@ -12,6 +13,10 @@ const dict = getDict(lang);
 // cette page n'est pas prérendue (aucun success/index.html à la construction),
 // donc les paramètres de requête sont déjà lisibles.
 const isDiagnostic = Astro.url.searchParams.get('product') === 'diagnostic';
+// Avant la livraison, un achat du diagnostic est une pré-réservation : pas de
+// téléchargement (la version publiée n'ouvre pas encore le diagnostic).
+const isPreorder = isDiagnostic && !isDiagnosticAvailable();
+const diagKey = isPreorder ? 'success.diagnostic.preorder' : 'success.diagnostic';
 
 const metadata = {
   title: t(dict, 'success.meta.title'),
@@ -22,50 +27,54 @@ const metadata = {
 <Layout metadata={metadata}>
   <section class="max-w-xl mx-auto py-20 text-center">
     <h1 class="text-3xl font-bold mb-4">
-      ✅ {isDiagnostic ? t(dict, 'success.diagnostic.title') : t(dict, 'success.title')}
+      ✅ {isDiagnostic ? t(dict, `${diagKey}.title`) : t(dict, 'success.title')}
     </h1>
 
     <p class="text-lg mb-8">
-      {isDiagnostic ? t(dict, 'success.diagnostic.subtitle1') : t(dict, 'success.subtitle1')}<br />
-      {isDiagnostic ? t(dict, 'success.diagnostic.subtitle2') : t(dict, 'success.subtitle2')}
+      {isDiagnostic ? t(dict, `${diagKey}.subtitle1`) : t(dict, 'success.subtitle1')}<br />
+      {isDiagnostic ? t(dict, `${diagKey}.subtitle2`) : t(dict, 'success.subtitle2')}
     </p>
 
-    <!-- ✅ Boutons Mac + Windows -->
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-      <!-- macOS -->
-      <a
-        href={DOWNLOADS.mac}
-        class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
-        download
-      >
-        <Icon name="tabler:brand-apple-filled" class="w-10 h-10" />
-        <span class="text-left">
-          <span class="block text-xs leading-none pb-1">
-            {t(dict, 'success.download1')}
-            <span class="text-primary font-bold">AeroX</span>
-            {t(dict, 'success.download2mac')}
-          </span>
-          <span class="block text-base font-semibold leading-none">macOS</span>
-        </span>
-      </a>
+    <!-- ✅ Boutons Mac + Windows (absents pendant la pré-réservation) -->
+    {
+      !isPreorder && (
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+          {/* macOS */}
+          <a
+            href={DOWNLOADS.mac}
+            class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
+            download
+          >
+            <Icon name="tabler:brand-apple-filled" class="w-10 h-10" />
+            <span class="text-left">
+              <span class="block text-xs leading-none pb-1">
+                {t(dict, 'success.download1')}
+                <span class="text-primary font-bold">AeroX</span>
+                {t(dict, 'success.download2mac')}
+              </span>
+              <span class="block text-base font-semibold leading-none">macOS</span>
+            </span>
+          </a>
 
-      <!-- Windows -->
-      <a
-        href={DOWNLOADS.windows}
-        class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
-        download
-      >
-        <Icon name="tabler:brand-windows-filled" class="w-10 h-10" />
-        <span class="text-left">
-          <span class="block text-xs leading-none pb-1">
-            {t(dict, 'success.download1')}
-            <span class="text-primary font-bold">AeroX</span>
-            {t(dict, 'success.download2win')}
-          </span>
-          <span class="block text-base font-semibold leading-none">Windows</span>
-        </span>
-      </a>
-    </div>
+          {/* Windows */}
+          <a
+            href={DOWNLOADS.windows}
+            class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
+            download
+          >
+            <Icon name="tabler:brand-windows-filled" class="w-10 h-10" />
+            <span class="text-left">
+              <span class="block text-xs leading-none pb-1">
+                {t(dict, 'success.download1')}
+                <span class="text-primary font-bold">AeroX</span>
+                {t(dict, 'success.download2win')}
+              </span>
+              <span class="block text-base font-semibold leading-none">Windows</span>
+            </span>
+          </a>
+        </div>
+      )
+    }
 
     <!-- What'sApp -->
     <a
