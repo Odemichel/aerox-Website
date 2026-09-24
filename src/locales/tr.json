@@ -483,8 +483,8 @@
   "bf.testimonial.text": "Bu yeni bilgilerle AeroX, musterilerimin performansini kesinlikle etkileyecek!",
   "bf.testimonial.name": "Thomas G.",
   "bf.testimonial.job": "Profesyonel Bike Fitter",
-  "bf.cta.title": "AeroX'u calisirken gormek ister misiniz?",
-  "bf.cta.subtitle": "30 dakikalik kisisellestirilmis bir demo ayirtin. Aero olcumu fitting seanslariniza nasil entegre edecepinizi gosterecegiz.",
+  "bf.cta.title": "AeroX’i stüdyonuzda deneyin",
+  "bf.cta.subtitle": "Hesabınızı oluşturun ve 2 ücretsiz analiz yapın. Önce görmek mi istersiniz? 30 dakikalık görüntülü demo ayırtın.",
   "bf.cta.button": "Demo talep edin",
   "bf.cta.email.subject": "AeroX Bike Fitting Demo",
   "bf.hero.img.alt": "AeroX tarafindan analiz edilen aerodinamik pozisyondaki bisikletci",
@@ -764,9 +764,6 @@
   "bfp.guide.title": "Size hangi plan uygun?",
   "bfp.guide.studio": "Ayda 4 ila 9 analiz",
   "bfp.guide.unlimited": "Ayda 10 ve üzeri analiz",
-  "bfp.included.title": "Her plana dahil",
-  "bfp.included.setup": "Düzeneğinizi sizinle birlikte görüntülü görüşmeyle kuruyoruz",
-  "bfp.included.monthly": "Ayda bir grup görüntülü görüşmesi: yenilikler ve sorularınıza yanıtlar",
   "bfp.faq.q6": "Deneme için neden banka kartı gerekiyor?",
   "bfp.faq.a6": "Denemeyi stüdyolara ayırmak için: bir kart yalnızca bir deneme açabilir. Hiçbir ücret alınmaz ve bir plan seçmediğiniz sürece fatura kesilmez.",
   "dash.bf.trialCard.title": "2 ücretsiz analizinizi açın",
@@ -789,5 +786,9 @@
   "dash.bf.plan.payg": "Kullandıkça öde",
   "dash.bf.plan.unlimited_annual": "Sınırsız (yıllık)",
   "dash.bf.changeLater": "Değişiklik kaydedildi: ödenen dönemin sonunda, {date} tarihinde geçerli olacak.",
-  "bfp.available": "1 Kasım 2026’dan itibaren kullanılabilir"
+  "bfp.available": "1 Kasım 2026’dan itibaren kullanılabilir",
+  "bfp.inc.setup": "Düzeneğinizin bizimle görüntülü görüşmeyle kurulumu",
+  "bfp.inc.monthly": "Aylık grup görüntülü görüşmesi: yenilikler ve sorular",
+  "bf.cta.trial": "Ücretsiz deneme: 2 ücretsiz analiz",
+  "bf.cta.demo": "Demo ayırt"
 }

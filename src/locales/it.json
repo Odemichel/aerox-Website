@@ -483,8 +483,8 @@
   "bf.testimonial.text": "Con queste nuove conoscenze, AeroX impatterà chiaramente le prestazioni dei miei clienti!!",
   "bf.testimonial.name": "Thomas G.",
   "bf.testimonial.job": "Bike Fitter professionista",
-  "bf.cta.title": "Volete vedere AeroX in azione?",
-  "bf.cta.subtitle": "Prenotate una demo personalizzata di 30 minuti. Vi mostriamo come integrare la misura aerodinamica nelle vostre sessioni di fitting.",
+  "bf.cta.title": "Prova AeroX nel tuo studio",
+  "bf.cta.subtitle": "Crea il tuo account e realizza 2 analisi gratuite. Preferisci vederlo prima? Prenota una demo di 30 minuti in videochiamata.",
   "bf.cta.button": "Richiedere una demo",
   "bf.cta.email.subject": "Demo AeroX Bike Fitting",
   "bf.hero.img.alt": "Ciclista in posizione aerodinamica analizzato da AeroX",
@@ -764,9 +764,6 @@
   "bfp.guide.title": "Quale formula fa per te?",
   "bfp.guide.studio": "Da 4 a 9 analisi al mese",
   "bfp.guide.unlimited": "10 analisi al mese e oltre",
-  "bfp.included.title": "Incluso in ogni formula",
-  "bfp.included.setup": "Installiamo il tuo setup insieme a te, in videochiamata",
-  "bfp.included.monthly": "Una videochiamata di gruppo al mese: novità e risposte alle tue domande",
   "bfp.faq.q6": "Perché una carta bancaria per la prova?",
   "bfp.faq.a6": "Per riservare la prova agli studi: una carta può aprire una sola prova. Non viene addebitato nulla e nulla viene fatturato finché non scegli una formula.",
   "dash.bf.trialCard.title": "Sblocca le tue 2 analisi gratuite",
@@ -789,5 +786,9 @@
   "dash.bf.plan.payg": "A consumo",
   "dash.bf.plan.unlimited_annual": "Illimitato annuale",
   "dash.bf.changeLater": "Cambio registrato: avrà effetto il {date}, alla fine del periodo pagato.",
-  "bfp.available": "Disponibile dal 1° novembre 2026"
+  "bfp.available": "Disponibile dal 1° novembre 2026",
+  "bfp.inc.setup": "Installazione del tuo setup con noi in videochiamata",
+  "bfp.inc.monthly": "Videochiamata di gruppo mensile: novità e domande",
+  "bf.cta.trial": "Prova gratuita: 2 analisi gratuite",
+  "bf.cta.demo": "Prenota una demo"
 }

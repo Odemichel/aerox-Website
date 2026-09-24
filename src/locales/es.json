@@ -483,8 +483,8 @@
   "bf.testimonial.text": "Con estos nuevos conocimientos, ¡AeroX claramente impactará en el rendimiento de mis clientes!",
   "bf.testimonial.name": "Thomas G.",
   "bf.testimonial.job": "Bike Fitter profesional",
-  "bf.cta.title": "¿Quieres ver AeroX en acción?",
-  "bf.cta.subtitle": "Reserva una demo personalizada de 30 minutos. Te mostramos cómo integrar la medición aero en tus sesiones de fitting.",
+  "bf.cta.title": "Prueba AeroX en tu estudio",
+  "bf.cta.subtitle": "Crea tu cuenta y realiza 2 análisis gratis. ¿Prefieres verlo antes? Reserva una demo de 30 minutos por videollamada.",
   "bf.cta.button": "Solicitar una demo",
   "bf.cta.email.subject": "Demo AeroX Bike Fitting",
   "bf.hero.img.alt": "Ciclista en posición aerodinámica analizado por AeroX",
@@ -764,9 +764,6 @@
   "bfp.guide.title": "¿Qué fórmula te conviene?",
   "bfp.guide.studio": "De 4 a 9 análisis al mes",
   "bfp.guide.unlimited": "10 análisis al mes o más",
-  "bfp.included.title": "Incluido en todas las fórmulas",
-  "bfp.included.setup": "Instalamos tu setup contigo, por videollamada",
-  "bfp.included.monthly": "Una videollamada grupal al mes: novedades y respuestas a tus preguntas",
   "bfp.faq.q6": "¿Por qué una tarjeta bancaria para la prueba?",
   "bfp.faq.a6": "Para reservar la prueba a los estudios: una tarjeta solo puede abrir una prueba. No se cobra nada y no se factura nada hasta que elijas una fórmula.",
   "dash.bf.trialCard.title": "Desbloquea tus 2 análisis gratis",
@@ -789,5 +786,9 @@
   "dash.bf.plan.payg": "Por uso",
   "dash.bf.plan.unlimited_annual": "Ilimitado anual",
   "dash.bf.changeLater": "Cambio registrado: se aplicará el {date}, al final del periodo pagado.",
-  "bfp.available": "Disponible a partir del 1 de noviembre de 2026"
+  "bfp.available": "Disponible a partir del 1 de noviembre de 2026",
+  "bfp.inc.setup": "Instalación de tu setup con nosotros por videollamada",
+  "bfp.inc.monthly": "Videollamada grupal mensual: novedades y preguntas",
+  "bf.cta.trial": "Prueba gratis: 2 análisis gratis",
+  "bf.cta.demo": "Reservar una demo"
 }

@@ -518,8 +518,8 @@
   "bf.testimonial.text": "With this new knowledge, AeroX will clearly impact my clients' performance!",
   "bf.testimonial.name": "Thomas G.",
   "bf.testimonial.job": "Professional Bike Fitter",
-  "bf.cta.title": "Want to see AeroX in action?",
-  "bf.cta.subtitle": "Book a personalized 30-minute demo. We'll show you how to integrate aero measurement into your fitting sessions.",
+  "bf.cta.title": "Try AeroX in your studio",
+  "bf.cta.subtitle": "Create your account and run 2 free analyses. Prefer to see it first? Book a 30-minute video demo.",
   "bf.cta.button": "Request a demo",
   "bf.cta.email.subject": "AeroX Bike Fitting Demo",
   "bf.hero.img.alt": "Cyclist in aerodynamic position analyzed by AeroX",
@@ -838,9 +838,6 @@
   "bfp.guide.title": "Which plan is right for you?",
   "bfp.guide.studio": "4 to 9 analyses a month",
   "bfp.guide.unlimited": "10 or more analyses a month",
-  "bfp.included.title": "Included with every plan",
-  "bfp.included.setup": "We install your setup with you, over video call",
-  "bfp.included.monthly": "A monthly group video call: new features and answers to your questions",
   "bfp.faq.q6": "Why a bank card for the trial?",
   "bfp.faq.a6": "To keep the trial for studios: one card can only open one trial. Nothing is charged, and nothing is billed until you choose a plan.",
   "dash.bf.trialCard.title": "Unlock your 2 free analyses",
@@ -863,5 +860,9 @@
   "dash.bf.plan.payg": "Pay as you go",
   "dash.bf.plan.unlimited_annual": "Unlimited (yearly)",
   "dash.bf.changeLater": "Change recorded: it will take effect on {date}, at the end of the paid period.",
-  "bfp.available": "Available from 1 November 2026"
+  "bfp.available": "Available from 1 November 2026",
+  "bfp.inc.setup": "We install your setup with you over video call",
+  "bfp.inc.monthly": "Monthly group video call: new features and questions",
+  "bf.cta.trial": "Free trial: 2 free analyses",
+  "bf.cta.demo": "Book a demo"
 }

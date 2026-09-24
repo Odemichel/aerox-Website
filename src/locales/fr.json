@@ -535,8 +535,8 @@
   "bf.testimonial.text": "Avec ces nouvelles connaissances, AeroX va clairement impacter les performances de mes clients !!",
   "bf.testimonial.name": "Thomas G.",
   "bf.testimonial.job": "Bike Fitter professionnel",
-  "bf.cta.title": "Envie de voir AeroX en action ?",
-  "bf.cta.subtitle": "Réservez une démo personnalisée de 30 minutes. On vous montre comment intégrer la mesure aéro à vos séances de fitting.",
+  "bf.cta.title": "Testez AeroX dans votre studio",
+  "bf.cta.subtitle": "Créez votre compte et réalisez 2 analyses offertes. Vous préférez qu'on vous montre d'abord ? Réservez une démo de 30 minutes en visio.",
   "bf.cta.button": "Demander une démo",
   "bf.cta.email.subject": "Démo AeroX Bike Fitting",
   "bf.hero.img.alt": "Cycliste en position aérodynamique analysé par AeroX",
@@ -855,9 +855,6 @@
   "bfp.guide.title": "Quelle offre pour vous ?",
   "bfp.guide.studio": "4 à 9 analyses par mois",
   "bfp.guide.unlimited": "10 analyses par mois et plus",
-  "bfp.included.title": "Inclus avec chaque offre",
-  "bfp.included.setup": "Installation de votre setup avec nous, en visio",
-  "bfp.included.monthly": "Une visio collective par mois : nouveautés et réponses à vos questions",
   "bfp.faq.q6": "Pourquoi une carte bancaire pour l'essai ?",
   "bfp.faq.a6": "Pour réserver l'essai aux studios : une carte ne peut ouvrir qu'un seul essai. Aucun montant n'est débité, et rien n'est facturé tant que vous ne choisissez pas une offre.",
   "dash.bf.trialCard.title": "Débloquez vos 2 analyses offertes",
@@ -880,5 +877,9 @@
   "dash.bf.plan.payg": "À l'usage",
   "dash.bf.plan.unlimited_annual": "Illimité annuel",
   "dash.bf.changeLater": "Changement enregistré : il prendra effet le {date}, à la fin de la période payée.",
-  "bfp.available": "Disponible à partir du 1er novembre 2026"
+  "bfp.available": "Disponible à partir du 1er novembre 2026",
+  "bfp.inc.setup": "Installation de votre setup en visio avec nous",
+  "bfp.inc.monthly": "Visio collective mensuelle : nouveautés et questions",
+  "bf.cta.trial": "Essai gratuit : 2 analyses offertes",
+  "bf.cta.demo": "Réserver une démo"
 }

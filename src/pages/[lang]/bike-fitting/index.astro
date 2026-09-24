@@ -34,6 +34,9 @@ const blogBfHref = `/${lang}/blog/BF-mesurer-${lang}/`;
 // `?profil=` qui servait à présélectionner un profil dans l'ancien
 // formulaire mixte.
 const reservationHref = `/${lang}/periode-test/#reservation`;
+// Action principale : l'essai gratuit (inscription bike fitter, 2 analyses
+// offertes). La démo reste proposée en second.
+const trialHref = `/${lang}/inscription/inscription/?profil=bike-fitter`;
 
 /* ===== FAQPage JSON-LD ===== */
 const faqItems = [1, 2, 3, 4, 5].map((i) => ({
@@ -207,10 +210,16 @@ const reviewSchema = reviews.map((r) => ({
             <span class="text-sm font-semibold text-gray-200">{lang === 'fr' ? '2 min install' : '2 min setup'}</span>
           </span>
         </div>
-        <div class="mt-8">
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a
+            href={trialHref}
+            class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold"
+          >
+            {t(dict, 'bf.cta.trial')}
+          </a>
           <a
             href={reservationHref}
-            class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold"
+            class="btn-secondary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold"
           >
             {t(dict, 'bf.hero.cta')}
           </a>
@@ -388,10 +397,10 @@ const reviewSchema = reviews.map((r) => ({
       <!-- CTA intermédiaire -->
       <div class="mt-10 text-center">
         <a
-          href={reservationHref}
+          href={trialHref}
           class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold"
         >
-          {t(dict, 'bf.metrics.cta')}
+          {t(dict, 'bf.cta.trial')}
         </a>
       </div>
     </div>
@@ -636,9 +645,14 @@ const reviewSchema = reviews.map((r) => ({
           formulaire réglé sur « cycliste ».
         */
         }
-        <a href={reservationHref} class="btn-primary px-8 py-3 text-lg font-semibold inline-block">
-          {t(dict, 'bf.cta.button')}
-        </a>
+        <div class="flex flex-wrap justify-center gap-3">
+          <a href={trialHref} class="btn-primary px-8 py-3 text-lg font-semibold inline-block">
+            {t(dict, 'bf.cta.trial')}
+          </a>
+          <a href={reservationHref} class="btn-secondary px-8 py-3 text-lg font-semibold inline-block">
+            {t(dict, 'bf.cta.demo')}
+          </a>
+        </div>
       </div>
     </div>
   </section>

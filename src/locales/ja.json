@@ -483,8 +483,8 @@
   "bf.testimonial.text": "この新しい知識で、AeroXは間違いなくクライアントのパフォーマンスに影響を与えるでしょう！",
   "bf.testimonial.name": "Thomas G.",
   "bf.testimonial.job": "プロフェッショナルバイクフィッター",
-  "bf.cta.title": "AeroXの実際の動作を見てみませんか？",
-  "bf.cta.subtitle": "30分のパーソナライズデモをご予約ください。フィッティングセッションにエアロ測定を統合する方法をお見せします。",
+  "bf.cta.title": "スタジオでAeroXを試す",
+  "bf.cta.subtitle": "アカウントを作成して、無料の分析を2回お試しください。先に実演をご覧になりたい方は、30分のビデオデモをご予約ください。",
   "bf.cta.button": "デモをリクエスト",
   "bf.cta.email.subject": "AeroXバイクフィッティングデモ",
   "bf.hero.img.alt": "AeroXで分析された空力ポジションのサイクリスト",
@@ -764,9 +764,6 @@
   "bfp.guide.title": "どのプランが最適？",
   "bfp.guide.studio": "月4〜9回の分析",
   "bfp.guide.unlimited": "月10回以上の分析",
-  "bfp.included.title": "すべてのプランに含まれるもの",
-  "bfp.included.setup": "ビデオ通話で一緒にセットアップを行います",
-  "bfp.included.monthly": "月1回のグループビデオ通話：新機能の紹介とご質問への回答",
   "bfp.faq.q6": "トライアルにクレジットカードが必要なのはなぜですか？",
   "bfp.faq.a6": "トライアルをスタジオに限定するためです。1枚のカードで開始できるトライアルは1回のみです。請求は発生せず、プランを選ぶまで課金されることはありません。",
   "dash.bf.trialCard.title": "無料分析2回を利用可能にする",
@@ -789,5 +786,9 @@
   "dash.bf.plan.payg": "従量制",
   "dash.bf.plan.unlimited_annual": "無制限（年払い）",
   "dash.bf.changeLater": "変更を受け付けました。支払い済み期間の終了日（{date}）に有効になります。",
-  "bfp.available": "2026年11月1日から提供開始"
+  "bfp.available": "2026年11月1日から提供開始",
+  "bfp.inc.setup": "ビデオ通話で一緒にセットアップ",
+  "bfp.inc.monthly": "月1回のグループビデオ通話：新機能とご質問",
+  "bf.cta.trial": "無料トライアル：分析2回無料",
+  "bf.cta.demo": "デモを予約"
 }

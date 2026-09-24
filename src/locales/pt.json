@@ -483,8 +483,8 @@
   "bf.testimonial.text": "Com esses novos conhecimentos, AeroX vai claramente impactar a performance dos meus clientes!!",
   "bf.testimonial.name": "Thomas G.",
   "bf.testimonial.job": "Bike Fitter profissional",
-  "bf.cta.title": "Quer ver o AeroX em ação?",
-  "bf.cta.subtitle": "Reserve uma demonstração personalizada de 30 minutos. Mostramos como integrar a medição aero às suas sessões de fitting.",
+  "bf.cta.title": "Experimente o AeroX no seu estúdio",
+  "bf.cta.subtitle": "Crie a sua conta e faça 2 análises gratuitas. Prefere ver primeiro? Reserve uma demo de 30 minutos por videochamada.",
   "bf.cta.button": "Solicitar uma demonstração",
   "bf.cta.email.subject": "Demonstração AeroX Bike Fitting",
   "bf.hero.img.alt": "Ciclista em posição aerodinâmica analisado pelo AeroX",
@@ -764,9 +764,6 @@
   "bfp.guide.title": "Que plano é para si?",
   "bfp.guide.studio": "4 a 9 análises por mês",
   "bfp.guide.unlimited": "10 análises por mês ou mais",
-  "bfp.included.title": "Incluído em todos os planos",
-  "bfp.included.setup": "Instalamos o seu setup consigo, por videochamada",
-  "bfp.included.monthly": "Uma videochamada de grupo por mês: novidades e respostas às suas perguntas",
   "bfp.faq.q6": "Porquê um cartão bancário para o teste?",
   "bfp.faq.a6": "Para reservar o teste aos estúdios: um cartão só pode abrir um teste. Nada é debitado e nada é faturado enquanto não escolher um plano.",
   "dash.bf.trialCard.title": "Desbloqueie as suas 2 análises gratuitas",
@@ -789,5 +786,9 @@
   "dash.bf.plan.payg": "Por utilização",
   "dash.bf.plan.unlimited_annual": "Ilimitado anual",
   "dash.bf.changeLater": "Mudança registada: produz efeito a {date}, no fim do período pago.",
-  "bfp.available": "Disponível a partir de 1 de novembro de 2026"
+  "bfp.available": "Disponível a partir de 1 de novembro de 2026",
+  "bfp.inc.setup": "Instalação do seu setup connosco por videochamada",
+  "bfp.inc.monthly": "Videochamada de grupo mensal: novidades e perguntas",
+  "bf.cta.trial": "Teste gratuito: 2 análises gratuitas",
+  "bf.cta.demo": "Reservar uma demo"
 }

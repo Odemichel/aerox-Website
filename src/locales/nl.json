@@ -483,8 +483,8 @@
   "bf.testimonial.text": "Met deze nieuwe kennis zal AeroX duidelijk impact hebben op de prestaties van mijn klanten!!",
   "bf.testimonial.name": "Thomas G.",
   "bf.testimonial.job": "Professionele Bike Fitter",
-  "bf.cta.title": "Wilt u AeroX in actie zien?",
-  "bf.cta.subtitle": "Boek een gepersonaliseerde demo van 30 minuten. We laten u zien hoe u aerometing integreert in uw fitting sessies.",
+  "bf.cta.title": "Probeer AeroX in je studio",
+  "bf.cta.subtitle": "Maak je account aan en voer 2 gratis analyses uit. Liever eerst zien? Boek een videodemo van 30 minuten.",
   "bf.cta.button": "Demo aanvragen",
   "bf.cta.email.subject": "AeroX Bike Fitting Demo",
   "bf.hero.img.alt": "Wielrenner in aerodynamische positie geanalyseerd door AeroX",
@@ -764,9 +764,6 @@
   "bfp.guide.title": "Welke formule past bij jou?",
   "bfp.guide.studio": "4 tot 9 analyses per maand",
   "bfp.guide.unlimited": "10 analyses per maand of meer",
-  "bfp.included.title": "Inbegrepen bij elke formule",
-  "bfp.included.setup": "We installeren je opstelling samen met jou, via videogesprek",
-  "bfp.included.monthly": "Eén groepsvideogesprek per maand: nieuwe functies en antwoorden op je vragen",
   "bfp.faq.q6": "Waarom een bankkaart voor de proefperiode?",
   "bfp.faq.a6": "Om de proefperiode voor studio’s te houden: één kaart kan maar één proefperiode openen. Er wordt niets afgeschreven en niets gefactureerd zolang je geen formule kiest.",
   "dash.bf.trialCard.title": "Ontgrendel je 2 gratis analyses",
@@ -789,5 +786,9 @@
   "dash.bf.plan.payg": "Per gebruik",
   "dash.bf.plan.unlimited_annual": "Onbeperkt (jaarlijks)",
   "dash.bf.changeLater": "Wijziging geregistreerd: gaat in op {date}, aan het einde van de betaalde periode.",
-  "bfp.available": "Beschikbaar vanaf 1 november 2026"
+  "bfp.available": "Beschikbaar vanaf 1 november 2026",
+  "bfp.inc.setup": "Installatie van je opstelling samen met ons via videogesprek",
+  "bfp.inc.monthly": "Maandelijks groepsvideogesprek: nieuwe functies en vragen",
+  "bf.cta.trial": "Gratis proberen: 2 gratis analyses",
+  "bf.cta.demo": "Demo boeken"
 }

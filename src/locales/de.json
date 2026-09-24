@@ -483,8 +483,8 @@
   "bf.testimonial.text": "Mit diesem neuen Wissen wird AeroX die Leistung meiner Kunden deutlich beeinflussen!!",
   "bf.testimonial.name": "Thomas G.",
   "bf.testimonial.job": "Professioneller Bike Fitter",
-  "bf.cta.title": "Möchten Sie AeroX in Aktion sehen?",
-  "bf.cta.subtitle": "Buchen Sie eine personalisierte 30-Minuten-Demo. Wir zeigen Ihnen, wie Sie die Aero-Messung in Ihre Fitting-Sitzungen integrieren.",
+  "bf.cta.title": "Testen Sie AeroX in Ihrem Studio",
+  "bf.cta.subtitle": "Erstellen Sie Ihr Konto und führen Sie 2 kostenlose Analysen durch. Lieber zuerst sehen? Buchen Sie eine 30-minütige Video-Demo.",
   "bf.cta.button": "Demo anfordern",
   "bf.cta.email.subject": "AeroX Bike Fitting Demo",
   "bf.hero.img.alt": "Radfahrer in aerodynamischer Position, analysiert von AeroX",
@@ -764,9 +764,6 @@
   "bfp.guide.title": "Welcher Tarif passt zu Ihnen?",
   "bfp.guide.studio": "4 bis 9 Analysen pro Monat",
   "bfp.guide.unlimited": "Ab 10 Analysen pro Monat",
-  "bfp.included.title": "In jedem Tarif enthalten",
-  "bfp.included.setup": "Wir richten Ihr Setup gemeinsam mit Ihnen per Videocall ein",
-  "bfp.included.monthly": "Ein monatlicher Gruppen-Videocall: Neuheiten und Antworten auf Ihre Fragen",
   "bfp.faq.q6": "Warum eine Bankkarte für den Test?",
   "bfp.faq.a6": "Damit der Test Studios vorbehalten bleibt: Eine Karte kann nur einen Test freischalten. Es wird nichts abgebucht und nichts berechnet, solange Sie keinen Tarif wählen.",
   "dash.bf.trialCard.title": "Schalten Sie Ihre 2 kostenlosen Analysen frei",
@@ -789,5 +786,9 @@
   "dash.bf.plan.payg": "Nach Nutzung",
   "dash.bf.plan.unlimited_annual": "Unbegrenzt (jährlich)",
   "dash.bf.changeLater": "Wechsel erfasst: Er wird am {date} wirksam, zum Ende des bezahlten Zeitraums.",
-  "bfp.available": "Verfügbar ab dem 1. November 2026"
+  "bfp.available": "Verfügbar ab dem 1. November 2026",
+  "bfp.inc.setup": "Einrichtung Ihres Setups mit uns per Videocall",
+  "bfp.inc.monthly": "Monatlicher Gruppen-Videocall: Neuheiten und Fragen",
+  "bf.cta.trial": "Kostenlos testen: 2 Analysen gratis",
+  "bf.cta.demo": "Demo buchen"
 }
