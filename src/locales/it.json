@@ -359,8 +359,8 @@
   "pricing.diagnostic.error": "Impossibile avviare l'acquisto. Riprova tra un momento.",
   "pricing.b2b.title": "Bike fitter e studi",
   "pricing.b2b.subtitle": "Per chi misura i propri clienti",
-  "pricing.b2b.priceLabel": "Da 20 €",
-  "pricing.b2b.period": "IVA esclusa per analisi, o 79 €/mese",
+  "pricing.b2b.priceLabel": "20 €",
+  "pricing.b2b.period": "+ IVA per analisi, o illimitato a 119 €/mese",
   "pricing.b2b.items.1": "A consumo, Studio o Illimitato",
   "pricing.b2b.items.2": "Monitoraggio multi-cliente",
   "pricing.b2b.items.3": "Affiancamento all'avvio",
@@ -570,7 +570,7 @@
   "bf.table.col3": "Galleria del vento",
   "bf.table.col4": "Fitting classico",
   "bf.table.cost": "Costo",
-  "bf.table.cost.aerox": "Da 20 € + IVA per analisi",
+  "bf.table.cost.aerox": "20 € + IVA per analisi, o illimitato a 119 €/mese",
   "bf.table.cost.tunnel": "1.500–3.000 €/sessione",
   "bf.table.cost.classic": "150–300 €",
   "bf.table.aero": "Misura aerodinamica",
@@ -788,5 +788,6 @@
   "bfp.guide.payg": "Da 1 a 3 analisi al mese",
   "dash.bf.plan.payg": "A consumo",
   "dash.bf.plan.unlimited_annual": "Illimitato annuale",
-  "dash.bf.changeLater": "Cambio registrato: avrà effetto il {date}, alla fine del periodo pagato."
+  "dash.bf.changeLater": "Cambio registrato: avrà effetto il {date}, alla fine del periodo pagato.",
+  "bfp.available": "Disponibile dal 1° novembre 2026"
 }

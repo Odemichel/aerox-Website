@@ -385,8 +385,8 @@
   "pricing.diagnostic.error": "Checkout could not start. Please try again in a moment.",
   "pricing.b2b.title": "Bike fitters & studios",
   "pricing.b2b.subtitle": "For those who measure their clients",
-  "pricing.b2b.priceLabel": "From €20",
-  "pricing.b2b.period": "excl. VAT per analysis, or €79/month",
+  "pricing.b2b.priceLabel": "€20",
+  "pricing.b2b.period": "excl. VAT per analysis, or unlimited at €119/month",
   "pricing.b2b.items.1": "Pay as you go, Studio or Unlimited",
   "pricing.b2b.items.2": "Multi-client tracking",
   "pricing.b2b.items.3": "Hands-on onboarding",
@@ -595,7 +595,7 @@
   "bf.table.col3": "Wind Tunnel",
   "bf.table.col4": "Traditional Fitting",
   "bf.table.cost": "Cost",
-  "bf.table.cost.aerox": "From €20 excl. VAT per analysis",
+  "bf.table.cost.aerox": "€20 excl. VAT per analysis, or unlimited at €119/month",
   "bf.table.cost.tunnel": "$1,500–3,000/session",
   "bf.table.cost.classic": "$150–300",
   "bf.table.aero": "Aero measurement",
@@ -862,5 +862,6 @@
   "bfp.guide.payg": "1 to 3 analyses a month",
   "dash.bf.plan.payg": "Pay as you go",
   "dash.bf.plan.unlimited_annual": "Unlimited (yearly)",
-  "dash.bf.changeLater": "Change recorded: it will take effect on {date}, at the end of the paid period."
+  "dash.bf.changeLater": "Change recorded: it will take effect on {date}, at the end of the paid period.",
+  "bfp.available": "Available from 1 November 2026"
 }

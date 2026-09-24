@@ -359,8 +359,8 @@
   "pricing.diagnostic.error": "Die Bestellung konnte nicht gestartet werden. Bitte versuche es gleich noch einmal.",
   "pricing.b2b.title": "Bike-Fitter & Studios",
   "pricing.b2b.subtitle": "Für alle, die ihre Kunden vermessen",
-  "pricing.b2b.priceLabel": "Ab 20 €",
-  "pricing.b2b.period": "zzgl. MwSt. pro Analyse, oder 79 €/Monat",
+  "pricing.b2b.priceLabel": "20 €",
+  "pricing.b2b.period": "zzgl. MwSt. pro Analyse, oder unbegrenzt für 119 €/Monat",
   "pricing.b2b.items.1": "Nach Nutzung, Studio oder Unbegrenzt",
   "pricing.b2b.items.2": "Multi-Kunden-Tracking",
   "pricing.b2b.items.3": "Persönliche Einführung",
@@ -570,7 +570,7 @@
   "bf.table.col3": "Windkanal",
   "bf.table.col4": "Klassisches Fitting",
   "bf.table.cost": "Kosten",
-  "bf.table.cost.aerox": "Ab 20 € zzgl. MwSt. pro Analyse",
+  "bf.table.cost.aerox": "20 € zzgl. MwSt. pro Analyse, oder unbegrenzt für 119 €/Monat",
   "bf.table.cost.tunnel": "1.500–3.000 €/Sitzung",
   "bf.table.cost.classic": "150–300 €",
   "bf.table.aero": "Aero-Messung",
@@ -788,5 +788,6 @@
   "bfp.guide.payg": "1 bis 3 Analysen pro Monat",
   "dash.bf.plan.payg": "Nach Nutzung",
   "dash.bf.plan.unlimited_annual": "Unbegrenzt (jährlich)",
-  "dash.bf.changeLater": "Wechsel erfasst: Er wird am {date} wirksam, zum Ende des bezahlten Zeitraums."
+  "dash.bf.changeLater": "Wechsel erfasst: Er wird am {date} wirksam, zum Ende des bezahlten Zeitraums.",
+  "bfp.available": "Verfügbar ab dem 1. November 2026"
 }

@@ -359,8 +359,8 @@
   "pricing.diagnostic.error": "Ödeme başlatılamadı. Lütfen birazdan tekrar dene.",
   "pricing.b2b.title": "Bike fitter'lar ve stüdyolar",
   "pricing.b2b.subtitle": "Müşterilerini ölçenler için",
-  "pricing.b2b.priceLabel": "20 €’dan başlayan",
-  "pricing.b2b.period": "KDV hariç analiz başına, veya ayda 79 €",
+  "pricing.b2b.priceLabel": "20 €",
+  "pricing.b2b.period": "KDV hariç analiz başına, veya ayda 119 €’ya sınırsız",
   "pricing.b2b.items.1": "Kullandıkça öde, Stüdyo veya Sınırsız",
   "pricing.b2b.items.2": "Çoklu müşteri takibi",
   "pricing.b2b.items.3": "Başlangıçta birebir destek",
@@ -570,7 +570,7 @@
   "bf.table.col3": "Ruzgar Tuneli",
   "bf.table.col4": "Geleneksel Fitting",
   "bf.table.cost": "Maliyet",
-  "bf.table.cost.aerox": "Analiz başına 20 €’dan (KDV hariç)",
+  "bf.table.cost.aerox": "Analiz başına 20 € (KDV hariç) veya ayda 119 €’ya sınırsız",
   "bf.table.cost.tunnel": "1.500–3.000 €/seans",
   "bf.table.cost.classic": "150–300 €",
   "bf.table.aero": "Aero olcum",
@@ -788,5 +788,6 @@
   "bfp.guide.payg": "Ayda 1 ila 3 analiz",
   "dash.bf.plan.payg": "Kullandıkça öde",
   "dash.bf.plan.unlimited_annual": "Sınırsız (yıllık)",
-  "dash.bf.changeLater": "Değişiklik kaydedildi: ödenen dönemin sonunda, {date} tarihinde geçerli olacak."
+  "dash.bf.changeLater": "Değişiklik kaydedildi: ödenen dönemin sonunda, {date} tarihinde geçerli olacak.",
+  "bfp.available": "1 Kasım 2026’dan itibaren kullanılabilir"
 }

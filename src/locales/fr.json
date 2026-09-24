@@ -391,8 +391,8 @@
   "pricing.diagnostic.error": "La commande n'a pas pu démarrer. Réessaie dans un instant.",
   "pricing.b2b.title": "Bike-Fitters & studios",
   "pricing.b2b.subtitle": "Pour ceux qui mesurent leurs clients",
-  "pricing.b2b.priceLabel": "Dès 20 € HT",
-  "pricing.b2b.period": "l'analyse, ou 79 € HT/mois",
+  "pricing.b2b.priceLabel": "20 € HT",
+  "pricing.b2b.period": "l'analyse, ou illimité à 119 € HT/mois",
   "pricing.b2b.items.1": "À l'usage, Studio ou Illimité",
   "pricing.b2b.items.2": "Suivi multi-clients",
   "pricing.b2b.items.3": "Accompagnement à la prise en main",
@@ -612,7 +612,7 @@
   "bf.table.col3": "Soufflerie",
   "bf.table.col4": "Fitting classique",
   "bf.table.cost": "Coût",
-  "bf.table.cost.aerox": "Dès 20 € HT l'analyse",
+  "bf.table.cost.aerox": "20 € HT l'analyse, ou illimité à 119 € HT/mois",
   "bf.table.cost.tunnel": "1 500–3 000 €/session",
   "bf.table.cost.classic": "150–300 €",
   "bf.table.aero": "Mesure aéro",
@@ -879,5 +879,6 @@
   "bfp.guide.payg": "1 à 3 analyses par mois",
   "dash.bf.plan.payg": "À l'usage",
   "dash.bf.plan.unlimited_annual": "Illimité annuel",
-  "dash.bf.changeLater": "Changement enregistré : il prendra effet le {date}, à la fin de la période payée."
+  "dash.bf.changeLater": "Changement enregistré : il prendra effet le {date}, à la fin de la période payée.",
+  "bfp.available": "Disponible à partir du 1er novembre 2026"
 }

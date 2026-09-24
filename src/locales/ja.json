@@ -359,8 +359,8 @@
   "pricing.diagnostic.error": "お支払い手続きを開始できませんでした。しばらくしてからもう一度お試しください。",
   "pricing.b2b.title": "バイクフィッター・スタジオ向け",
   "pricing.b2b.subtitle": "クライアントを計測するプロの方へ",
-  "pricing.b2b.priceLabel": "20ユーロから",
-  "pricing.b2b.period": "税抜・分析1回、または月79ユーロ",
+  "pricing.b2b.priceLabel": "20ユーロ",
+  "pricing.b2b.period": "税抜・分析1回、または無制限で月119ユーロ",
   "pricing.b2b.items.1": "従量制、スタジオ、無制限",
   "pricing.b2b.items.2": "複数クライアントの管理",
   "pricing.b2b.items.3": "導入サポート",
@@ -570,7 +570,7 @@
   "bf.table.col3": "風洞",
   "bf.table.col4": "従来のフィッティング",
   "bf.table.cost": "費用",
-  "bf.table.cost.aerox": "分析1回20ユーロ（税抜）から",
+  "bf.table.cost.aerox": "分析1回20ユーロ（税抜）、または無制限で月119ユーロ",
   "bf.table.cost.tunnel": "1セッション1,500〜3,000€",
   "bf.table.cost.classic": "150〜300€",
   "bf.table.aero": "エアロ測定",
@@ -788,5 +788,6 @@
   "bfp.guide.payg": "月1〜3回の分析",
   "dash.bf.plan.payg": "従量制",
   "dash.bf.plan.unlimited_annual": "無制限（年払い）",
-  "dash.bf.changeLater": "変更を受け付けました。支払い済み期間の終了日（{date}）に有効になります。"
+  "dash.bf.changeLater": "変更を受け付けました。支払い済み期間の終了日（{date}）に有効になります。",
+  "bfp.available": "2026年11月1日から提供開始"
 }

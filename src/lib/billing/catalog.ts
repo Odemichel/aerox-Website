@@ -182,6 +182,10 @@ export const PRICES: PriceSpec[] = [
   },
 ];
 
+// Mise à disposition des offres bike fitter : avec la version de l'application
+// qui compte les analyses (même date que le Diagnostic AeroX).
+export const BF_AVAILABLE_AT = Date.UTC(2026, 9, 31, 23, 0, 0); // 01/11/2026 00:00, Paris
+
 // Offre de lancement : 20 places, jusqu'au 31/12/2026 inclus (heure de Paris),
 // bascule au 01/01/2027 00:00 heure de Paris = 2026-12-31T23:00:00Z.
 export const LAUNCH_OFFER = {

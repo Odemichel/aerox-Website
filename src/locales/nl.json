@@ -359,8 +359,8 @@
   "pricing.diagnostic.error": "De bestelling kon niet starten. Probeer het zo dadelijk opnieuw.",
   "pricing.b2b.title": "Bike fitters & studio's",
   "pricing.b2b.subtitle": "Voor wie zijn klanten meet",
-  "pricing.b2b.priceLabel": "Vanaf € 20",
-  "pricing.b2b.period": "excl. btw per analyse, of € 79/maand",
+  "pricing.b2b.priceLabel": "€ 20",
+  "pricing.b2b.period": "excl. btw per analyse, of onbeperkt voor € 119/maand",
   "pricing.b2b.items.1": "Per gebruik, Studio of Onbeperkt",
   "pricing.b2b.items.2": "Multi-klant tracking",
   "pricing.b2b.items.3": "Persoonlijke begeleiding bij de start",
@@ -570,7 +570,7 @@
   "bf.table.col3": "Windtunnel",
   "bf.table.col4": "Klassieke Fitting",
   "bf.table.cost": "Kosten",
-  "bf.table.cost.aerox": "Vanaf € 20 excl. btw per analyse",
+  "bf.table.cost.aerox": "€ 20 excl. btw per analyse, of onbeperkt voor € 119/maand",
   "bf.table.cost.tunnel": "€1.500–3.000/sessie",
   "bf.table.cost.classic": "€150–300",
   "bf.table.aero": "Aerometing",
@@ -788,5 +788,6 @@
   "bfp.guide.payg": "1 tot 3 analyses per maand",
   "dash.bf.plan.payg": "Per gebruik",
   "dash.bf.plan.unlimited_annual": "Onbeperkt (jaarlijks)",
-  "dash.bf.changeLater": "Wijziging geregistreerd: gaat in op {date}, aan het einde van de betaalde periode."
+  "dash.bf.changeLater": "Wijziging geregistreerd: gaat in op {date}, aan het einde van de betaalde periode.",
+  "bfp.available": "Beschikbaar vanaf 1 november 2026"
 }
