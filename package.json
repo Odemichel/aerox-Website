@@ -15,6 +15,7 @@
     "astro": "astro",
     "test": "vitest run",
     "test:watch": "vitest",
+    "stripe:catalog": "node --env-file=.env scripts/stripe-catalog.ts",
     "check": "npm run check:astro && npm run check:eslint && npm run check:prettier",
     "check:astro": "astro check",
     "check:eslint": "eslint .",
