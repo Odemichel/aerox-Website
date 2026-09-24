@@ -14,6 +14,21 @@ import type Stripe from 'stripe';
 /** Produit posé en métadonnée par `create-api-checkout` pour le diagnostic. */
 export const DIAGNOSTIC_PRODUCT = 'diagnostic';
 
+/**
+ * Groupes MailerLite des acheteurs en pré-réservation. Rejoindre le groupe
+ * déclenche l'email de confirmation (automatisation) ; la campagne « 7 jours
+ * avant la livraison » part vers ces groupes. Comme pour les autres emails du
+ * compte : français pour les francophones, anglais pour toutes les autres
+ * langues.
+ */
+export const DIAGNOSTIC_PREORDER_GROUPS = {
+  fr: '199518871502194191',
+  en: '199518872625219454',
+} as const;
+
+export const diagnosticPreorderGroup = (lang: string | null | undefined) =>
+  lang === 'fr' ? DIAGNOSTIC_PREORDER_GROUPS.fr : DIAGNOSTIC_PREORDER_GROUPS.en;
+
 export type DiagnosticPurchaseRow = {
   user_id: string;
   stripe_checkout_session_id: string;

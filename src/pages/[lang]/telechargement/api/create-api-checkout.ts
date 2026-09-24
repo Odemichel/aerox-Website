@@ -132,6 +132,9 @@ export const POST: APIRoute = async ({ request, site }) => {
       // Elles viennent de la table serveur et du jeton vérifié, jamais du corps.
       metadata.product = body.product;
       metadata.userId = user.id;
+      // Langue validée plus haut (liste fermée) : le webhook en déduit la
+      // langue des emails de pré-réservation.
+      metadata.lang = lang;
       customerEmail = user.email ?? customerEmail;
     } else {
       // --- Chemin historique sans produit : repli sur `STRIPE_PRICE_ID`,

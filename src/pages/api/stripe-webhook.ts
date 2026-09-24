@@ -13,7 +13,15 @@ import { createClient } from '@supabase/supabase-js';
 import type { APIRoute } from 'astro';
 import Stripe from 'stripe';
 import { handleBillingEvent, isBillingObject } from '~/lib/billing/webhook';
-import { DIAGNOSTIC_PRODUCT, purchaseFromSession, refundFromCharge } from '~/lib/diagnostic/purchase';
+import { isDiagnosticAvailable } from '~/config/diagnostic';
+import {
+  DIAGNOSTIC_PREORDER_GROUPS,
+  DIAGNOSTIC_PRODUCT,
+  diagnosticPreorderGroup,
+  purchaseFromSession,
+  refundFromCharge,
+} from '~/lib/diagnostic/purchase';
+import { addToMailerLiteGroup, removeFromMailerLiteGroups, upsertMailerLiteFields } from '~/lib/mailerlite';
 
 const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY as string);
 
@@ -90,7 +98,8 @@ export const POST: APIRoute = async ({ request }) => {
   // Seules les métadonnées signées par Stripe font foi (voir
   // `purchaseFromSession`) : c'est ce qui empêche n'importe qui de débloquer
   // le compte de son choix, et l'achat du livre de débloquer le diagnostic.
-  const purchase = purchaseFromSession(event.data.object as Stripe.Checkout.Session, new Date());
+  const session = event.data.object as Stripe.Checkout.Session;
+  const purchase = purchaseFromSession(session, new Date());
   if (!purchase) {
     return new Response('nothing to unlock', { status: 200 });
   }
@@ -98,9 +107,10 @@ export const POST: APIRoute = async ({ request }) => {
   // Un achat = une ligne, clé = la session Checkout. Un rejeu ou le second
   // des deux événements ne crée rien de plus : un rider qui paie une fois
   // n'obtient qu'un diagnostic.
-  const { error } = await serviceClient()
+  const { data: inserted, error } = await serviceClient()
     .from('diagnostic_purchases')
-    .upsert(purchase, { onConflict: 'stripe_checkout_session_id', ignoreDuplicates: true });
+    .upsert(purchase, { onConflict: 'stripe_checkout_session_id', ignoreDuplicates: true })
+    .select('id');
 
   // Les deux échecs ci-dessous rendent le même code — 500 — mais se
   // journalisent distinctement : ils appellent des actions opposées et il ne
@@ -122,6 +132,22 @@ export const POST: APIRoute = async ({ request }) => {
     // perdrait définitivement : client débité, produit fermé.
     console.error('stripe-webhook: ERREUR_BASE — achat non enregistré pour', purchase.user_id, '—', error.message);
     return new Response('unlock failed', { status: 500 });
+  }
+
+  // Emails MailerLite, seulement au premier enregistrement (un rejeu ne
+  // renvoie pas la confirmation). Jamais bloquant : l'achat est acquis, un CRM
+  // indisponible ne doit pas faire rejouer le paiement.
+  const email = session.customer_details?.email ?? session.customer_email;
+  if (inserted?.length && email) {
+    if (isDiagnosticAvailable()) {
+      await upsertMailerLiteFields(email, { diag_status: 'purchased' });
+    } else {
+      // Pré-réservation : le groupe déclenche l'email de confirmation et
+      // recevra celui de livraison, 7 jours avant.
+      await addToMailerLiteGroup(email, diagnosticPreorderGroup(session.metadata?.lang), {
+        diag_status: 'preorder',
+      });
+    }
   }
 
   console.log('stripe-webhook: achat du diagnostic enregistré pour', purchase.user_id);
@@ -175,6 +201,9 @@ async function handleDiagnosticRefund(charge: Stripe.Charge): Promise<Response> 
     return new Response('not a diagnostic', { status: 200 });
   }
 
+  // Remboursé : plus d'email de livraison. Jamais bloquant.
+  if (refund.fullyRefunded) await forgetRefundedBuyer(purchaseId as string);
+
   console.log(
     'stripe-webhook: remboursement du diagnostic',
     refund.fullyRefunded ? 'total, accès retiré' : 'partiel',
@@ -182,6 +211,23 @@ async function handleDiagnosticRefund(charge: Stripe.Charge): Promise<Response> 
     refund.paymentIntentId
   );
   return new Response('ok', { status: 200 });
+}
+
+// Sort l'acheteur remboursé des groupes de pré-réservation et le marque
+// `refunded`, à partir de l'e-mail de son compte AeroX.
+async function forgetRefundedBuyer(purchaseId: string): Promise<void> {
+  const db = serviceClient();
+  const { data: purchase } = await db.from('diagnostic_purchases').select('user_id').eq('id', purchaseId).maybeSingle();
+  const { data: user } = purchase
+    ? await db.from('users').select('email').eq('id', purchase.user_id).maybeSingle()
+    : { data: null };
+  const email = user?.email as string | undefined;
+  if (!email) {
+    console.error('stripe-webhook: e-mail introuvable, MailerLite non mis à jour pour l’achat', purchaseId);
+    return;
+  }
+  await removeFromMailerLiteGroups(email, Object.values(DIAGNOSTIC_PREORDER_GROUPS));
+  await upsertMailerLiteFields(email, { diag_status: 'refunded' });
 }
 
 async function handleBillingWithIdempotence(event: Stripe.Event): Promise<Response> {

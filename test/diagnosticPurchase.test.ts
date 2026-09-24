@@ -1,6 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import type Stripe from 'stripe';
-import { purchaseFromSession, refundFromCharge } from '../src/lib/diagnostic/purchase';
+import {
+  DIAGNOSTIC_PREORDER_GROUPS,
+  diagnosticPreorderGroup,
+  purchaseFromSession,
+  refundFromCharge,
+} from '../src/lib/diagnostic/purchase';
 
 const NOW = new Date(Date.UTC(2026, 9, 1, 12));
 
@@ -67,5 +72,14 @@ describe('remboursement', () => {
 
   it('ignore une charge sans PaymentIntent', () => {
     expect(refundFromCharge(charge({ payment_intent: null }))).toBeNull();
+  });
+});
+
+describe('emails de pré-réservation', () => {
+  it('français pour les francophones, anglais pour toutes les autres langues', () => {
+    expect(diagnosticPreorderGroup('fr')).toBe(DIAGNOSTIC_PREORDER_GROUPS.fr);
+    for (const lang of ['en', 'de', 'ja', 'pt', undefined, null]) {
+      expect(diagnosticPreorderGroup(lang)).toBe(DIAGNOSTIC_PREORDER_GROUPS.en);
+    }
   });
 });
