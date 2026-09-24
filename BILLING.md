@@ -87,10 +87,11 @@ Principes :
 - **Fin d'abonnement** : retour au plan `pack` s'il reste des crédits, sinon
   `trial` (sans crédit : analyses refusées).
 - **Offre de lancement** : au premier paiement, le webhook pose un subscription
-  schedule. Phase 1 jusqu'au 01/01/2027 00:00 (Paris), phase 2 à 99 €,
-  `proration_behavior: none`, puis le schedule est relâché. **Effet** : les
-  échéances commencées avant le 01/01 restent à 69 € ; 99 € s'applique à
-  partir de la première échéance qui suit (vérifié par le test S5).
+  schedule. Phase 1 jusqu'au 01/01/2027 00:00 (Paris), phase 2 à 99 €
+  avec `proration_behavior: create_prorations`, puis le schedule est relâché.
+  **Effet** : 99 € dès le 01/01 ; la période à cheval est régularisée au
+  prorata (crédit 69 €, débit 99 € sur les jours restants) sur l'échéance
+  suivante (vérifié par le test S5).
 - **Changement d'offre / résiliation** : `/api/billing/manage/` (le portail
   Stripe ne sait pas modifier un abonnement Studio — usage mesuré — ni un
   abonnement sous schedule). Le portail sert aux factures, à la carte, au

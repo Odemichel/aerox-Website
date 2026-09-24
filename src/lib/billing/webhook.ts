@@ -74,19 +74,39 @@ async function writeBilling(db: SupabaseClient, row: Record<string, unknown>) {
 
 /**
  * Offre de lancement : pose le schedule qui bascule le prix de 69 € à 99 € au
- * 01/01/2027 00:00 (Paris). Idempotent : rien si un schedule existe déjà ou
- * si la date est passée. `proration_behavior: 'none'` : la période en cours,
- * déjà payée à 69 €, n'est pas recalculée ; 99 € s'applique à l'échéance
- * suivante.
+ * 01/01/2027 00:00 (Paris). `proration_behavior: 'create_prorations'` : 99 €
+ * s'applique dès le 01/01 ; le reste de la période en cours, payé à 69 €,
+ * est régularisé au prorata sur l'échéance suivante (crédit 69 €, débit 99 €).
+ *
+ * Convergent plutôt que « une seule fois » : plusieurs événements du même
+ * abonnement arrivent en même temps, et un traitement peut s'interrompre entre
+ * la création du schedule et sa configuration. Chaque passage termine donc le
+ * travail : il crée le schedule s'il manque, et le configure tant que la phase
+ * à 99 € n'y figure pas.
  */
 async function ensureLaunchSchedule(sub: Stripe.Subscription) {
-  if (sub.schedule || Date.now() >= LAUNCH_OFFER.switchAt) return;
+  if (Date.now() >= LAUNCH_OFFER.switchAt) return;
   const onLaunchPrice = sub.items.data.some((i) => i.price.lookup_key === LOOKUP.unlimitedLaunch);
   if (!onLaunchPrice) return;
 
   const s = stripe();
   const afterPrice = await priceIdForLookup(LOOKUP.unlimitedLaunchAfter);
-  const schedule = await s.subscriptionSchedules.create({ from_subscription: sub.id });
+
+  let scheduleId = idOf(sub.schedule);
+  if (!scheduleId) {
+    try {
+      scheduleId = (await s.subscriptionSchedules.create({ from_subscription: sub.id })).id;
+    } catch (err) {
+      // Un traitement concurrent vient de le créer : on reprend le sien.
+      scheduleId = idOf((await s.subscriptions.retrieve(sub.id)).schedule);
+      if (!scheduleId) throw err;
+    }
+  }
+
+  const schedule = await s.subscriptionSchedules.retrieve(scheduleId);
+  const configured = schedule.phases.some((p) => p.items.some((i) => idOf(i.price) === afterPrice));
+  if (configured || schedule.status !== 'active') return;
+
   const current = schedule.phases[0];
   await s.subscriptionSchedules.update(schedule.id, {
     end_behavior: 'release',
@@ -100,7 +120,7 @@ async function ensureLaunchSchedule(sub: Stripe.Subscription) {
       {
         items: [{ price: afterPrice, quantity: 1 }],
         duration: { interval: 'month', interval_count: 1 },
-        proration_behavior: 'none',
+        proration_behavior: 'create_prorations',
         metadata: sub.metadata,
       },
     ],

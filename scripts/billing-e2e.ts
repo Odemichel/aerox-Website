@@ -361,11 +361,13 @@ async function s5LaunchSwitch() {
     billing_mode: { type: 'flexible' },
   });
   await waitFor('offre de lancement', async () => (await billing(bf.id))?.plan === 'unlimited_launch');
-  const withSchedule = await waitFor('schedule posé par le webhook', async () => {
+  // Le webhook crée puis configure le schedule : on attend la phase à 99 €.
+  const schedule = await waitFor('schedule configuré par le webhook', async () => {
     const s = await stripe.subscriptions.retrieve(sub.id);
-    return s.schedule ? s : null;
+    if (!s.schedule) return null;
+    const sch = await stripe.subscriptionSchedules.retrieve(s.schedule as string);
+    return sch.phases.length >= 2 ? sch : null;
   });
-  const schedule = await stripe.subscriptionSchedules.retrieve(withSchedule.schedule as string);
   const switchAt = Math.floor(LAUNCH_OFFER.switchAt / 1000);
   check(schedule.phases[0].end_date === switchAt, 'phase 1 jusqu’au 01/01/2027 00:00 (Paris)');
   const phase2Price = schedule.phases[1]?.items[0]?.price;
@@ -375,19 +377,32 @@ async function s5LaunchSwitch() {
   const after = await stripe.subscriptions.retrieve(sub.id);
   check(after.items.data[0].price.lookup_key === LOOKUP.unlimitedLaunchAfter, 'abonnement passé au prix 99 €');
   const invoices = await stripe.invoices.list({ subscription: sub.id, limit: 10 });
-  // `invoice.period_*` décrit la période précédente : on lit celle des lignes.
-  const post = invoices.data.find(
-    (i) => i.billing_reason === 'subscription_cycle' && i.lines.data.every((l) => l.period.start >= switchAt)
-  );
-  const last69 = invoices.data.find(
-    (i) => i.billing_reason === 'subscription_cycle' && i.lines.data.some((l) => l.period.start < switchAt)
-  );
-  check(last69?.subtotal === 6900, 'échéances avant le 01/01/2027 : 69,00 € HT');
+  // 99 € dès le 01/01 : la période à cheval est régularisée au prorata
+  // (crédit sur le prix à 69 €, débit sur le prix à 99 €, tous deux datés du
+  // 01/01) sur l'échéance suivante, qui facture ensuite 99 € plein.
+  const lines = invoices.data.flatMap((i) => i.lines.data);
+  const prorations = lines.filter((l) => l.period.start === switchAt);
+  const prorated = prorations.reduce((a, l) => a + l.amount, 0);
+  // Bornes de la période à cheval, à l'heure exacte de l'ancre de facturation.
+  const anchor = new Date(sub.billing_cycle_anchor * 1000);
+  const boundary = (monthsAfterAnchor: number) => {
+    const d = new Date(anchor);
+    d.setUTCMonth(d.getUTCMonth() + monthsAfterAnchor);
+    return Math.floor(d.getTime() / 1000);
+  };
+  let k = 0;
+  while (boundary(k + 1) <= switchAt) k++;
+  const periodStart = boundary(k);
+  const periodEnd = boundary(k + 1);
+  const expected = Math.round((3000 * (periodEnd - switchAt)) / (periodEnd - periodStart));
+  check(prorations.length >= 2, 'prorata au 01/01 : crédit 69 € et débit 99 €', `${prorations.length} ligne(s)`);
   check(
-    post?.subtotal === 9900,
-    'première facture après bascule : 99,00 € HT',
-    post ? `${post.subtotal / 100} €` : 'absente'
+    Math.abs(prorated - expected) <= 2,
+    'régularisation = 30 € × jours restants',
+    `${prorated / 100} € (attendu ≈ ${expected / 100} €)`
   );
+  const full99 = lines.some((l) => l.period.start > switchAt && l.amount === 9900);
+  check(full99, 'échéance suivante : 99,00 € HT plein');
   await waitFor('bf_billing après bascule', async () => (await billing(bf.id))?.plan === 'unlimited_launch');
   check((await billing(bf.id))?.status === 'active', 'toujours actif, offre « lancement » conservée');
 }
