@@ -75,6 +75,15 @@ const metadata = {
             class="w-full border rounded p-2 text-secondary"
           />
 
+          {/* Honeypot : invisible pour l'humain, rempli par les bots. Jamais de label. */}
+          <input
+            type="text"
+            name="hp"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+            class="absolute left-[-9999px] w-px h-px opacity-0"
+          />
           <button type="submit" class="btn-primary px-4 py-3 text-xl w-full">
             {t(dict, 'book.form.submit')}
           </button>
@@ -191,6 +200,15 @@ const metadata = {
           class="w-full border rounded p-2 text-secondary"
         />
 
+        {/* Honeypot : invisible pour l'humain, rempli par les bots. Jamais de label. */}
+        <input
+          type="text"
+          name="hp"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+          class="absolute left-[-9999px] w-px h-px opacity-0"
+        />
         <button type="submit" class="btn-primary px-8 py-2 text-xl w-full">
           {t(dict, 'book.form.submit')}
         </button>
@@ -227,12 +245,13 @@ const metadata = {
         const name = (document.getElementById(`name-${suffix}`) as HTMLInputElement).value.trim();
         const email = (document.getElementById(`email-${suffix}`) as HTMLInputElement).value.trim();
         const phone = (document.getElementById(`phone-${suffix}`) as HTMLInputElement).value.trim();
+        const hp = (form.elements.namedItem('hp') as HTMLInputElement | null)?.value ?? '';
 
         const lang = window.location.pathname.split('/')[1] || 'fr';
         const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, phone }),
+          body: JSON.stringify({ name, email, phone, hp }),
         });
 
         const data = await res.json();

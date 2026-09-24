@@ -144,3 +144,35 @@ export function validateLead(input: LeadInput): LeadResult {
     lead: { topic: topic as LeadTopic, name, email, message, availability, trainer, webcam, intent, phone },
   };
 }
+
+export type BookSubscriber = { email: string; name: string; phone: string };
+
+export type BookSubscriberResult =
+  | { ok: true; honeypot: boolean; subscriber: BookSubscriber }
+  | { ok: false; error: string };
+
+/**
+ * Inscription au livre (lead magnet) : seul l'email est obligatoire. Le
+ * formulaire de la homepage n'envoie que lui ; ceux de /method ajoutent un nom
+ * et un téléphone facultatifs.
+ */
+export function validateBookSubscriber(input: LeadInput): BookSubscriberResult {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) {
+    return { ok: false, error: 'invalid_email' };
+  }
+
+  const rawEmail = asText(input.email);
+  if (rawEmail === null) return { ok: false, error: 'invalid_email' };
+  const email = rawEmail.toLowerCase();
+  if (email.length > MAX_FIELD_LENGTH) return { ok: false, error: 'field_too_long' };
+  if (!EMAIL_RE.test(email)) return { ok: false, error: 'invalid_email' };
+
+  const name = asText(input.name);
+  const phone = asText(input.phone);
+  if (name === null || phone === null) return { ok: false, error: 'invalid_field' };
+  if (name.length > MAX_FIELD_LENGTH || phone.length > MAX_FIELD_LENGTH) {
+    return { ok: false, error: 'field_too_long' };
+  }
+
+  return { ok: true, honeypot: isHoneypotFilled(input.hp), subscriber: { email, name, phone } };
+}

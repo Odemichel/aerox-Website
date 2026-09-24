@@ -253,6 +253,15 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
             required
             class="w-full sm:flex-1 border border-gray-300 dark:border-slate-600 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white bg-white dark:bg-slate-800 placeholder:text-gray-500 dark:placeholder:text-slate-400"
           />
+          {/* Honeypot : invisible pour l'humain, rempli par les bots. Jamais de label. */}
+          <input
+            type="text"
+            name="hp"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+            class="absolute left-[-9999px] w-px h-px opacity-0"
+          />
           <button type="submit" class="btn-primary px-6 py-2.5 text-sm font-semibold whitespace-nowrap rounded-lg">
             {t(dict, 'home.leadmagnet.cta')}
           </button>
@@ -667,12 +676,13 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
       formLM.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = (document.getElementById('email-leadmagnet') as HTMLInputElement).value.trim();
+        const hp = (formLM.elements.namedItem('hp') as HTMLInputElement | null)?.value ?? '';
         const lang = window.location.pathname.split('/')[1] || 'fr';
 
         const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, name: '' }),
+          body: JSON.stringify({ email, hp }),
         });
 
         const data = await res.json();
