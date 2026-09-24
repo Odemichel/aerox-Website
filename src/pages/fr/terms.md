@@ -3,7 +3,7 @@ title: 'Conditions Générales d’Utilisation'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Dernière mise à jour : 21 septembre 2025_
+_Dernière mise à jour : 24 septembre 2026_
 
 Merci d’utiliser **AeroX**, la solution qui transforme ton home-trainer en soufflerie virtuelle.  
 Ces Conditions Générales d’Utilisation (CGU) encadrent l’accès et l’usage du service AeroX.  
@@ -44,7 +44,17 @@ Les présentes CGU définissent les droits et obligations d’AeroX et de l’Ut
 
 ---
 
-## 5. Fonctionnement du service
+## 5. Diagnostic AeroX : achat, durée, rétractation et remboursement
+
+- **Contenu** : le Diagnostic AeroX est un service numérique vendu à l’unité. Il comprend des séances réalisées dans l’application AeroX (comparaison de positions, test de stabilité) et un rapport de recommandation.
+- **Durée** : un achat donne droit à un diagnostic, utilisable pendant **30 jours à compter de son démarrage** dans l’application. Il prend fin à l’issue de ce délai ou lorsque l’Utilisateur déclare l’avoir terminé ; ses résultats restent consultables. Recommencer un diagnostic en cours ne prolonge pas ce délai.
+- **Droit de rétractation** : l’Utilisateur consommateur dispose de **14 jours à compter de l’achat** pour se rétracter, sans avoir à se justifier, en écrivant à contact@aeroxbefaster.com. AeroX rembourse alors l’intégralité des sommes versées, par le même moyen de paiement, au plus tard 14 jours après la demande.
+- **Renonciation** : lors du paiement, l’Utilisateur demande expressément l’accès immédiat au diagnostic et reconnaît perdre son droit de rétractation dès la réalisation de sa première séance (article L221-28 13° du Code de la consommation). Une fois une séance réalisée, le diagnostic n’est plus remboursable.
+- **Effet d’un remboursement** : tout remboursement met fin à l’accès au diagnostic correspondant.
+
+---
+
+## 6. Fonctionnement du service
 
 - AeroX fournit une analyse en temps réel de l’aérodynamisme via webcam et home-trainer connecté.
 - AeroX ne garantit pas une disponibilité permanente du service (maintenance, mises à jour, évolutions).
@@ -52,7 +62,7 @@ Les présentes CGU définissent les droits et obligations d’AeroX et de l’Ut
 
 ---
 
-## 6. Obligations de l’utilisateur
+## 7. Obligations de l’utilisateur
 
 L’Utilisateur s’engage à :
 
@@ -63,7 +73,7 @@ L’Utilisateur s’engage à :
 
 ---
 
-## 7. Limitations de responsabilité
+## 8. Limitations de responsabilité
 
 - AeroX met en œuvre tous les moyens raisonnables pour assurer un service fiable, mais ne garantit pas l’absence d’erreurs ou d’interruptions.
 - AeroX n’est pas responsable en cas de blessure, de mauvaise interprétation des données ou d’utilisation inadaptée du service.
@@ -71,28 +81,28 @@ L’Utilisateur s’engage à :
 
 ---
 
-## 8. Résiliation
+## 9. Résiliation
 
 - L’Utilisateur peut résilier son abonnement à tout moment.
 - AeroX peut suspendre ou supprimer un compte en cas de fraude, non-respect des CGU ou usage abusif.
 
 ---
 
-## 9. Données personnelles
+## 10. Données personnelles
 
 - AeroX collecte et traite certaines données (ex. mesures sportives, email) pour fournir le Service.
 - Ces données sont traitées conformément à la [Politique de Confidentialité](/privacy).
 
 ---
 
-## 10. Droit applicable et litiges
+## 11. Droit applicable et litiges
 
 - Les présentes CGU sont soumises au droit français.
 - En cas de litige, une solution amiable sera recherchée avant toute procédure judiciaire.
 
 ---
 
-## 11. Contact
+## 12. Contact
 
 Pour toute question concernant ces CGU, vous pouvez écrire à :  
 📧 **contact@aeroxbefaster.com**

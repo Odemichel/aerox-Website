@@ -3,7 +3,7 @@ title: 'Genel Kullanım Koşulları'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Son güncelleme: 21 Eylül 2025_
+_Son güncelleme: 24 Eylül 2026_
 
 **AeroX**'u kullandığınız için teşekkür ederiz. AeroX, ev bisiklet antrenörünüzü sanal bir rüzgar tüneline dönüştüren çözümdür.
 Bu Genel Kullanım Koşulları (GKK), AeroX hizmetine erişimi ve kullanımını düzenlemektedir.
@@ -44,7 +44,17 @@ Bu GKK, Hizmetin kullanımı kapsamında AeroX ile Kullanıcı arasındaki hak v
 
 ---
 
-## 5. Hizmetin işleyişi
+## 5. AeroX Diagnostiği: satın alma, süre, cayma ve iade
+
+- **İçerik**: AeroX Diagnostiği tek tek satılan dijital bir hizmettir. AeroX uygulamasında yapılan seanslardan (pozisyon karşılaştırması, stabilite testi) ve bir öneri raporundan oluşur.
+- **Süre**: bir satın alma, uygulamada **başlatıldığı andan itibaren 30 gün** kullanılabilen bir diagnostik hakkı verir. Bu süre sona erdiğinde veya Kullanıcı bitirdiğini bildirdiğinde diagnostik sona erer; sonuçları görüntülenebilir kalır. Devam eden bir diagnostiği yeniden başlatmak bu süreyi uzatmaz.
+- **Cayma hakkı**: tüketici sıfatıyla hareket eden Kullanıcı, **satın alma tarihinden itibaren 14 gün** içinde gerekçe göstermeden contact@aeroxbefaster.com adresine yazarak cayabilir. AeroX bu durumda ödenen tüm tutarı, aynı ödeme yöntemiyle, talepten en geç 14 gün sonra iade eder.
+- **Feragat**: Kullanıcı ödeme sırasında diagnostiğe hemen erişim talep eder ve ilk seansını tamamladığı anda cayma hakkını kaybedeceğini kabul eder (Fransız Tüketici Kanunu, madde L221-28 13°). Bir seans tamamlandıktan sonra diagnostik iade edilmez.
+- **İadenin sonucu**: her iade, ilgili diagnostiğe erişimi sona erdirir.
+
+---
+
+## 6. Hizmetin işleyişi
 
 - AeroX, web kamerası ve bağlı bisiklet antrenörü aracılığıyla gerçek zamanlı aerodinamik analiz sağlar.
 - AeroX, hizmetin sürekli kullanılabilirliğini garanti etmez (bakım, güncellemeler, geliştirmeler).
@@ -52,7 +62,7 @@ Bu GKK, Hizmetin kullanımı kapsamında AeroX ile Kullanıcı arasındaki hak v
 
 ---
 
-## 6. Kullanıcının yükümlülükleri
+## 7. Kullanıcının yükümlülükleri
 
 Kullanıcı aşağıdakileri taahhüt eder:
 
@@ -63,7 +73,7 @@ Kullanıcı aşağıdakileri taahhüt eder:
 
 ---
 
-## 7. Sorumluluk sınırlamaları
+## 8. Sorumluluk sınırlamaları
 
 - AeroX, güvenilir bir hizmet sağlamak için tüm makul araçları kullanır, ancak hata veya kesinti olmayacağını garanti etmez.
 - AeroX, yaralanma, verilerin yanlış yorumlanması veya hizmetin uygunsuz kullanımı durumunda sorumlu değildir.
@@ -71,28 +81,28 @@ Kullanıcı aşağıdakileri taahhüt eder:
 
 ---
 
-## 8. Fesih
+## 9. Fesih
 
 - Kullanıcı aboneliğini istediği zaman feshedebilir.
 - AeroX, dolandırıcılık, GKK ihlali veya aşırı kullanım durumunda bir hesabı askıya alabilir veya silebilir.
 
 ---
 
-## 9. Kişisel veriler
+## 10. Kişisel veriler
 
 - AeroX, Hizmeti sağlamak için belirli verileri (ör. spor ölçümleri, e-posta adresi) toplar ve işler.
 - Bu veriler [Gizlilik Politikası](/privacy) uyarınca işlenir.
 
 ---
 
-## 10. Uygulanacak hukuk ve uyuşmazlıklar
+## 11. Uygulanacak hukuk ve uyuşmazlıklar
 
 - Bu GKK, Fransız hukukuna tabidir.
 - Uyuşmazlık halinde, herhangi bir yargı sürecinden önce dostane bir çözüm aranacaktır.
 
 ---
 
-## 11. İletişim
+## 12. İletişim
 
 Bu GKK ile ilgili herhangi bir sorunuz için bize yazabilirsiniz:
 📧 **contact@aeroxbefaster.com**
