@@ -21,7 +21,7 @@
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
-import { LAUNCH_OFFER, LOOKUP } from '../src/lib/billing/catalog.ts';
+import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP } from '../src/lib/billing/catalog.ts';
 
 const env = (k: string) => {
   const v = process.env[k];
@@ -315,18 +315,21 @@ async function s4LaunchFull() {
 }
 
 async function s5LaunchSwitch() {
-  console.log('\nS5 — Offre de lancement : bascule à 99 € au 01/01/2027');
+  console.log('\nS5 — Lancement souscrit avant le 1er novembre : 0 € puis 69 €, bascule à 99 € au 01/01/2027');
   const bf = await createBf('launch');
   const { clock, customer } = await clockCustomer(bf, Math.floor(Date.now() / 1000));
+  const availableAt = Math.floor(BF_AVAILABLE_AT / 1000);
+  // Comme Checkout avant le 1er novembre : période d'essai jusqu'à la mise à disposition.
   const sub = await stripe.subscriptions.create({
     customer: customer.id,
     items: [{ price: await priceId(LOOKUP.unlimitedLaunch), quantity: 1 }],
     metadata: metadata(bf, 'unlimited_launch'),
     automatic_tax: { enabled: true },
     billing_mode: { type: 'flexible' },
+    trial_end: availableAt,
   });
   await waitFor('offre de lancement', async () => (await billing(bf.id))?.plan === 'unlimited_launch');
-  // Le webhook crée puis configure le schedule : on attend la phase à 99 €.
+  check((await billing(bf.id))?.status === 'active', 'souscrit avant le 1er novembre : accès ouvert');
   const schedule = await waitFor('schedule configuré par le webhook', async () => {
     const s = await stripe.subscriptions.retrieve(sub.id);
     if (!s.schedule) return null;
@@ -335,39 +338,40 @@ async function s5LaunchSwitch() {
   });
   const switchAt = Math.floor(LAUNCH_OFFER.switchAt / 1000);
   check(schedule.phases[0].end_date === switchAt, 'phase 1 jusqu’au 01/01/2027 00:00 (Paris)');
-  const phase2Price = schedule.phases[1]?.items[0]?.price;
-  check(phase2Price === (await priceId(LOOKUP.unlimitedLaunchAfter)), 'phase 2 : prix 99 €');
+  check(schedule.phases[0].trial_end === availableAt, 'le schedule conserve l’essai jusqu’au 1er novembre');
+  check(schedule.phases[1]?.items[0]?.price === (await priceId(LOOKUP.unlimitedLaunchAfter)), 'phase 2 : prix 99 €');
+
+  const early = await stripe.invoices.list({ subscription: sub.id, limit: 10 });
+  check(
+    early.data.every((i) => i.total === 0),
+    'aucun prélèvement avant le 1er novembre',
+    early.data.map((i) => i.total).join(', ')
+  );
+
+  await advanceStepwise(clock.id, availableAt + 3 * 3600);
+  const nov = await stripe.invoices.list({ subscription: sub.id, limit: 10 });
+  const first = nov.data.find((i) => i.subtotal > 0);
+  check(first?.subtotal === 6900 && first.created >= availableAt, 'premier prélèvement le 1er novembre : 69,00 € HT');
 
   await advanceStepwise(clock.id, switchAt + 45 * 86400);
   const after = await stripe.subscriptions.retrieve(sub.id);
   check(after.items.data[0].price.lookup_key === LOOKUP.unlimitedLaunchAfter, 'abonnement passé au prix 99 €');
-  const invoices = await stripe.invoices.list({ subscription: sub.id, limit: 10 });
-  // 99 € dès le 01/01 : la période à cheval est régularisée au prorata
-  // (crédit sur le prix à 69 €, débit sur le prix à 99 €, tous deux datés du
-  // 01/01) sur l'échéance suivante, qui facture ensuite 99 € plein.
+  const invoices = await stripe.invoices.list({ subscription: sub.id, limit: 20 });
   const lines = invoices.data.flatMap((i) => i.lines.data);
-  const prorations = lines.filter((l) => l.period.start === switchAt);
-  const prorated = prorations.reduce((a, l) => a + l.amount, 0);
-  // Bornes de la période à cheval, à l'heure exacte de l'ancre de facturation.
-  const anchor = new Date(sub.billing_cycle_anchor * 1000);
-  const boundary = (monthsAfterAnchor: number) => {
-    const d = new Date(anchor);
-    d.setUTCMonth(d.getUTCMonth() + monthsAfterAnchor);
-    return Math.floor(d.getTime() / 1000);
-  };
-  let k = 0;
-  while (boundary(k + 1) <= switchAt) k++;
-  const periodStart = boundary(k);
-  const periodEnd = boundary(k + 1);
-  const expected = Math.round((3000 * (periodEnd - switchAt)) / (periodEnd - periodStart));
-  check(prorations.length >= 2, 'prorata au 01/01 : crédit 69 € et débit 99 €', `${prorations.length} ligne(s)`);
+  // Avec un premier prélèvement le 1er novembre, les échéances tombent le 1er
+  // du mois : la bascule coïncide avec une échéance, sans prorata.
   check(
-    Math.abs(prorated - expected) <= 2,
-    'régularisation = 30 € × jours restants',
-    `${prorated / 100} € (attendu ≈ ${expected / 100} €)`
+    !lines.some((l) => l.period.start === switchAt && l.amount < 0),
+    'pas de prorata : la bascule tombe sur une échéance'
   );
-  const full99 = lines.some((l) => l.period.start > switchAt && l.amount === 9900);
-  check(full99, 'échéance suivante : 99,00 € HT plein');
+  check(
+    lines.some((l) => l.period.start >= switchAt && l.amount === 9900),
+    'échéance de janvier : 99,00 € HT'
+  );
+  check(
+    lines.some((l) => l.period.start < switchAt && l.amount === 6900),
+    'échéances 2026 : 69,00 € HT'
+  );
   await waitFor('bf_billing après bascule', async () => (await billing(bf.id))?.plan === 'unlimited_launch');
   check((await billing(bf.id))?.status === 'active', 'toujours actif, offre « lancement » conservée');
 }

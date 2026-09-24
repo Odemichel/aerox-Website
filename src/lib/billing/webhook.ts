@@ -106,6 +106,9 @@ async function ensureLaunchSchedule(sub: Stripe.Subscription) {
         start_date: current.start_date,
         end_date: Math.floor(LAUNCH_OFFER.switchAt / 1000),
         items: current.items.map((i) => ({ price: idOf(i.price)!, quantity: i.quantity ?? 1 })),
+        // Sans elle, la mise à jour effacerait la période d'essai (premier
+        // prélèvement le 1er novembre) et Stripe facturerait tout de suite.
+        trial_end: current.trial_end ?? undefined,
         metadata: sub.metadata,
       },
       {

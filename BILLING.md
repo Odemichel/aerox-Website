@@ -102,6 +102,14 @@ Principes :
   aucun crédit d'essai).
 - **À l'usage et Studio** : chaque analyse comptée part au meter
   `aerox_analysis` ; Stripe facture en fin de période.
+- **Démarrage au 1er novembre 2026** (`BF_AVAILABLE_AT`) : un abonnement
+  souscrit avant cette date démarre en période d'essai Stripe jusqu'au 1er
+  novembre (carte enregistrée, rien de débité, place de lancement réservée).
+  Les schedules (lancement, descente) conservent ce `trial_end`. À moins de
+  3 jours de la date, facturation immédiate (Stripe exige 48 h minimum).
+- **Factures** : PDF créée par Stripe à chaque paiement, téléchargeable dans
+  « Gérer ma facturation » (portail). Aucun e-mail de reçu n'est promis
+  (choix produit : éviter de rappeler le prélèvement chaque mois).
 - **Offre de lancement** : au premier paiement, le webhook pose un subscription
   schedule. Phase 1 jusqu'au 01/01/2027 00:00 (Paris), phase 2 à 99 €
   avec `proration_behavior: create_prorations`, puis le schedule est relâché.

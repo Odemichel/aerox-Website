@@ -99,6 +99,8 @@ export const POST: APIRoute = async ({ request }) => {
           {
             start_date: phase.start_date,
             end_date: sub.items.data[0].current_period_end,
+            // Conserve une éventuelle période d'essai (démarrage au 1er novembre).
+            trial_end: phase.trial_end ?? undefined,
             items: sub.items.data.map((i) =>
               METERED_LOOKUP_KEYS.includes(i.price.lookup_key ?? '')
                 ? { price: i.price.id }

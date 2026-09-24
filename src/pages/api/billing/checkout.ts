@@ -11,7 +11,13 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import type Stripe from 'stripe';
 import { authenticatedUser } from '~/lib/serverAuth';
-import { isOffer, launchOfferOpen, METERED_LOOKUP_KEYS, OFFER_LOOKUP_KEYS } from '~/lib/billing/logic';
+import {
+  isOffer,
+  launchOfferOpen,
+  METERED_LOOKUP_KEYS,
+  OFFER_LOOKUP_KEYS,
+  subscriptionStartTrialEnd,
+} from '~/lib/billing/logic';
 import {
   accountUrl,
   ensureCustomer,
@@ -90,6 +96,9 @@ export const POST: APIRoute = async ({ request, site }) => {
       ),
       subscription_data: {
         metadata,
+        // Souscrit avant le 1er novembre 2026 : carte enregistrée, premier
+        // prélèvement à la mise à disposition (période d'essai Stripe).
+        trial_end: subscriptionStartTrialEnd(Date.now()),
         // Mode flexible : l'usage non facturé est facturé si l'on retire une
         // ligne mesurée (passage de Studio à Illimité en cours de mois).
         billing_mode: { type: 'flexible' },

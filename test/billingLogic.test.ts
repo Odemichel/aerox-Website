@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { LAUNCH_OFFER, LOOKUP } from '../src/lib/billing/catalog';
+import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP } from '../src/lib/billing/catalog';
 import {
   estimatedNextInvoiceCents,
   graceAfterPaymentFailureEnd,
@@ -10,6 +10,7 @@ import {
   planAfterSubscriptionEnds,
   planFromLookupKeys,
   subscriptionOutcome,
+  subscriptionStartTrialEnd,
 } from '../src/lib/billing/logic';
 
 const NOW = Date.UTC(2026, 9, 1, 12);
@@ -108,6 +109,18 @@ describe('graceAfterPaymentFailureEnd', () => {
     expect(graceAfterPaymentFailureEnd('payment_failed', '2026-09-30T00:00:00.000Z', NOW)).toBeNull();
     expect(graceAfterPaymentFailureEnd('cancellation_requested', '2026-10-05T00:00:00.000Z', NOW)).toBeNull();
     expect(graceAfterPaymentFailureEnd(null, null, NOW)).toBeNull();
+  });
+});
+
+describe('subscriptionStartTrialEnd', () => {
+  it('avant le 1er novembre : premier prélèvement le 01/11/2026 00:00 (Paris)', () => {
+    expect(new Date(BF_AVAILABLE_AT).toISOString()).toBe('2026-10-31T23:00:00.000Z');
+    expect(subscriptionStartTrialEnd(NOW)).toBe(BF_AVAILABLE_AT / 1000);
+  });
+
+  it('à moins de 3 jours, ou après : facturation immédiate', () => {
+    expect(subscriptionStartTrialEnd(BF_AVAILABLE_AT - 2 * 86400000)).toBeUndefined();
+    expect(subscriptionStartTrialEnd(BF_AVAILABLE_AT + 1)).toBeUndefined();
   });
 });
 

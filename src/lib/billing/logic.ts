@@ -5,7 +5,7 @@
 // selon son statut. Les routes et le webhook n'y ajoutent que les appels
 // réseau ; tout ce qui décide est ici, et testé (test/billingLogic.test.ts).
 
-import { LAUNCH_OFFER, LOOKUP } from './catalog';
+import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP } from './catalog';
 
 // `pack` : plan historique (crédits prépayés), plus vendu ; conservé pour les
 // comptes et les crédits existants.
@@ -48,6 +48,17 @@ export const isDowngrade = (from: Offer, to: Offer) => OFFER_RANK[to] < OFFER_RA
 
 export const GRACE_DAYS = 7;
 const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Premier prélèvement au plus tôt à la mise à disposition (1er novembre
+ * 2026) : un abonnement souscrit avant démarre en période d'essai Stripe
+ * jusqu'à cette date (carte enregistrée, rien de débité). Stripe exige une
+ * fin d'essai à au moins 48 h : à moins de 3 jours de la date, on facture
+ * normalement. Renvoie des secondes (format Stripe) ou `undefined`.
+ */
+export function subscriptionStartTrialEnd(nowMs: number): number | undefined {
+  return BF_AVAILABLE_AT - nowMs > 3 * DAY_MS ? Math.floor(BF_AVAILABLE_AT / 1000) : undefined;
+}
 
 /** L'offre de lancement est-elle encore ouverte à la souscription ? */
 export function launchOfferOpen(nowMs: number, seatsRemaining: number): boolean {
