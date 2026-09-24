@@ -239,11 +239,11 @@ const currentLangObj = LANGS.find((l) => l.code === currentLang) ?? LANGS[0];
       <div class="items-center flex justify-between w-auto z-60">
         {
           actions?.length ? (
-            <span class="ml-4 rtl:ml-0 rtl:mr-4">
+            <span class="sm:ml-4 rtl:ml-0 rtl:sm:mr-4">
               {actions.map((btnProps) => (
                 <Button
                   {...btnProps}
-                  class="ml-2 py-1 px-3 sm:px-6 sm:py-2 font-semibold shadow-none text-sm md:text-base w-auto"
+                  class="sm:ml-2 py-1 px-3 sm:px-6 sm:py-2 font-semibold shadow-none text-sm md:text-base w-auto whitespace-nowrap"
                 />
               ))}
             </span>

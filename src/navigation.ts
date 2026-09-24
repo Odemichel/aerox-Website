@@ -25,7 +25,10 @@ const withLang = (lang: Locale, href: string) => {
   return ensureTrailingSlash(prefixed);
 };
 
-export function makeNavigation(langInput?: string) {
+/** Public visé par la page : il choisit le bouton d'action du header. */
+export type Audience = 'rider' | 'bike-fitter';
+
+export function makeNavigation(langInput?: string, audience: Audience = 'rider') {
   const lang: Locale = isLocale(langInput) ? langInput : DEFAULT_LOCALE;
 
   const dict = getDict(lang);
@@ -67,14 +70,25 @@ export function makeNavigation(langInput?: string) {
       },
     ],
     actions: [
-      {
-        variant: 'primary',
-        text: t('cta.preorder.text'),
-        icon: 'tabler:discount-2',
-        href: withLang(lang, '#pricing'),
-        target: '',
-        subtext: t('cta.preorder.subtext'),
-      },
+      audience === 'bike-fitter'
+        ? {
+            variant: 'primary',
+            text: t('lead.form.intent.demo'),
+            icon: 'tabler:calendar-event',
+            href: withLang(lang, '/periode-test/#reservation'),
+            target: '',
+          }
+        : {
+            variant: 'primary',
+            // Libellé court sur mobile : la réduction est portée par le
+            // bandeau au-dessus, le bouton complet débordait de l'écran.
+            text: `<span class="sm:hidden">${t('cta.preorder.short')}</span><span class="hidden sm:inline">${t('cta.preorder.text')}</span>`,
+            icon: 'tabler:discount-2',
+            href: withLang(lang, '#pricing'),
+            target: '',
+            subtext: t('cta.preorder.subtext'),
+            subtextClass: 'hidden sm:block',
+          },
     ],
   };
 

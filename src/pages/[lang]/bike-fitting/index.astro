@@ -123,7 +123,7 @@ const reviewSchema = reviews.map((r) => ({
 }));
 ---
 
-<Layout metadata={metadata}>
+<Layout metadata={metadata} audience="bike-fitter">
   <!-- JSON-LD schemas -->
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />

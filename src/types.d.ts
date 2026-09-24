@@ -234,6 +234,8 @@ export interface CallToAction extends Omit<HTMLAttributes<'a'>, 'slot'> {
   variant?: 'primary' | 'secondary' | 'tertiary' | 'link';
   text?: string;
   subtext?: string;
+  /** Classes du sous-texte, p. ex. pour le masquer sur mobile. */
+  subtextClass?: string;
   seo?: string;
   icon?: string;
   classes?: Record<string, string>;

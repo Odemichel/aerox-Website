@@ -8,13 +8,15 @@ import type { MetaData } from '~/types';
 
 // ⬇️ on utilise la fabrique i18n
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from '~/lib/i18n';
-import { makeNavigation } from '~/navigation';
+import { makeNavigation, type Audience } from '~/navigation';
 
 export interface Props {
   metadata?: MetaData;
+  /** Page bike-fitter : bouton « Réserver une démo », pas de bandeau cycliste. */
+  audience?: Audience;
 }
 
-const { metadata } = Astro.props;
+const { metadata, audience = 'rider' } = Astro.props;
 
 // Déduire la langue: params.lang si route [lang]/..., sinon 1er segment d’URL
 const seg = Astro.url.pathname.split('/').filter(Boolean)[0] ?? '';
@@ -27,12 +29,12 @@ const lang: Locale =
   : DEFAULT_LOCALE;
 
 // Construire header/footer localisés
-const { headerData, footerData } = makeNavigation(lang);
+const { headerData, footerData } = makeNavigation(lang, audience);
 ---
 
 <Layout metadata={metadata}>
   <slot name="announcement">
-    <Announcement />
+    {audience === 'rider' && <Announcement />}
   </slot>
 
   <slot name="header">

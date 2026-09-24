@@ -12,6 +12,7 @@ const {
   class: className = '',
   type,
   subtext = '', // 👈 NEW
+  subtextClass = '',
   ...rest
 } = Astro.props;
 
@@ -52,7 +53,7 @@ const variants = {
           </a>
         )
       }
-      <small class="mt-1 text-xs md:text-sm text-accent">{(subtext)}</small>
+      <small class={twMerge('mt-1 text-xs md:text-sm text-accent', subtextClass)}>{subtext}</small>
     </div>
   ) : (
     // Comportement inchangé si pas de subtext
