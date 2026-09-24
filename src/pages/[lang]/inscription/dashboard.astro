@@ -26,7 +26,8 @@ const bfLabels = Object.fromEntries(
   [
     'title',
     'plan.trial',
-    'plan.pack',
+    'plan.payg',
+    'plan.unlimited_annual',
     'plan.studio',
     'plan.unlimited',
     'plan.unlimited_launch',
@@ -39,9 +40,9 @@ const bfLabels = Object.fromEntries(
     'nextInvoice',
     'nextInvoiceOn',
     'portal',
-    'buyPack',
     'seeOffers',
     'changeTo',
+    'changeLater',
     'cancel',
     'cancelConfirm',
     'cancelDone',
@@ -50,6 +51,11 @@ const bfLabels = Object.fromEntries(
     'success',
     'error',
     'onboarding',
+    'trialCard.title',
+    'trialCard.text',
+    'trialCard.cta',
+    'trialCard.used',
+    'trialCard.done',
   ].map((k) => [k, t(dict, `dash.bf.${k}`)])
 );
 bfLabels['vat'] = t(dict, 'bfp.vat');
@@ -178,14 +184,16 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
 
     <script>
       import { supabase } from '../../../config/supabaseClient';
-      import { manageSubscription, openPortal, startCheckout } from '~/lib/billing/client';
+      import { manageSubscription, openPortal, startTrialCard } from '~/lib/billing/client';
       import { estimatedNextInvoiceCents, type Offer, type Plan } from '~/lib/billing/logic';
 
       type Summary = {
         plan: Plan | null;
+        trial_state: 'needs_card' | 'granted' | 'card_already_used' | null;
         status: string | null;
         access: 'full' | 'read_only' | null;
         grace_until: string | null;
+        current_period_start: string | null;
         current_period_end: string | null;
         has_stripe_customer: boolean | null;
         analyses_in_period: number;
@@ -193,7 +201,7 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
         credits_next_expiry: string | null;
       };
 
-      const SUBSCRIPTION_PLANS: Plan[] = ['studio', 'unlimited', 'unlimited_launch'];
+      const SUBSCRIPTION_PLANS: Plan[] = ['payg', 'studio', 'unlimited', 'unlimited_launch'];
 
       // Construit par nœuds DOM (textContent), jamais par innerHTML : les
       // libellés sont des traductions, mais la règle reste la même partout.
@@ -246,6 +254,24 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
           panel.append(el('p', 'mt-2 text-red-600 font-semibold', L.readOnly));
         }
 
+        // Essai : les 2 analyses offertes se débloquent avec une carte (0 €).
+        if (s.plan === 'trial' && s.trial_state === 'needs_card') {
+          const box = el('div', 'mt-4 rounded-md border-2 border-primary bg-white dark:bg-gray-900 p-4');
+          box.append(el('p', 'font-bold', L['trialCard.title']), el('p', 'mt-1 text-sm', L['trialCard.text']));
+          const cta = el('button', 'btn-primary mt-3', L['trialCard.cta']);
+          cta.type = 'button';
+          cta.addEventListener('click', async () => {
+            cta.disabled = true;
+            const err = await startTrialCard(lang);
+            cta.disabled = false;
+            if (err) say(L.error, false);
+          });
+          box.append(cta);
+          panel.append(box);
+        } else if (s.plan === 'trial' && s.trial_state === 'card_already_used') {
+          panel.append(el('p', 'mt-2 text-red-600 font-semibold', L['trialCard.used']));
+        }
+
         const stats = el('dl', 'mt-4 grid gap-4 sm:grid-cols-2');
         const stat = (label: string, value: string, sub = '') => {
           const box = el('div', 'rounded-md bg-white dark:bg-gray-900 p-3');
@@ -257,7 +283,13 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
         if (s.plan === 'trial' || s.plan === 'pack') {
           stat(L.credits, String(s.credits_remaining), L.creditsExpiry.replace('{date}', date(s.credits_next_expiry)));
         }
-        const next = estimatedNextInvoiceCents(s.plan, s.analyses_in_period, Date.now());
+        // Illimité annuel : période de plus de 40 jours.
+        const periodDays =
+          s.current_period_start && s.current_period_end
+            ? (new Date(s.current_period_end).getTime() - new Date(s.current_period_start).getTime()) / 86400000
+            : 30;
+        const annual = s.plan === 'unlimited' && periodDays > 40;
+        const next = estimatedNextInvoiceCents(s.plan, s.analyses_in_period, Date.now(), periodDays);
         if (next !== null) {
           stat(
             L.nextInvoice,
@@ -288,25 +320,32 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
         if (s.has_stripe_customer) button(L.portal, 'btn-primary', () => openPortal(lang));
 
         if (s.plan === 'trial' || s.plan === 'pack') {
-          button(L.buyPack, 'btn-secondary', () => startCheckout('pack', lang));
           link(L.seeOffers, `/${lang}/bike-fitting/#tarifs`, 'btn-secondary');
         }
 
         if (SUBSCRIPTION_PLANS.includes(s.plan)) {
-          const others: Offer[] = (['studio', 'unlimited'] as Offer[]).filter((o) => o !== s.plan);
+          const current: Offer = annual ? 'unlimited_annual' : (s.plan as Offer);
+          const others = (['payg', 'studio', 'unlimited', 'unlimited_annual'] as Offer[]).filter((o) => o !== current);
           for (const offer of others) {
             button(L.changeTo.replace('{offer}', L[`plan.${offer}`]), 'btn-secondary', async () => {
               if (!confirm(L.changeConfirm)) return null;
-              const err = await manageSubscription('change', offer);
-              if (!err) say(L.changeDone, true);
-              return err;
+              const r = await manageSubscription('change', offer);
+              if (!r.error) {
+                say(
+                  r.effectiveAt
+                    ? L.changeLater.replace('{date}', date(new Date(r.effectiveAt * 1000).toISOString()))
+                    : L.changeDone,
+                  true
+                );
+              }
+              return r.error;
             });
           }
           button(L.cancel, 'btn-tertiary text-red-600', async () => {
             if (!confirm(L.cancelConfirm)) return null;
-            const err = await manageSubscription('cancel');
-            if (!err) say(L.cancelDone, true);
-            return err;
+            const r = await manageSubscription('cancel');
+            if (!r.error) say(L.cancelDone, true);
+            return r.error;
           });
         }
 
@@ -316,7 +355,9 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
         panel.classList.remove('hidden');
 
         // Retour de Checkout : le webhook peut arriver quelques secondes après.
-        if (new URLSearchParams(window.location.search).get('billing') === 'success') say(L.success, true);
+        const billingState = new URLSearchParams(window.location.search).get('billing');
+        if (billingState === 'success') say(L.success, true);
+        if (billingState === 'card' && s.trial_state === 'needs_card') say(L['trialCard.done'], true);
       }
 
       loadBfBilling();

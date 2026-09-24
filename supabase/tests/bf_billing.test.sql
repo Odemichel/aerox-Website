@@ -24,8 +24,8 @@ select pg_temp.check((select role from users where id = '00000000-0000-0000-0000
 select pg_temp.check((select is_active from users where id = '00000000-0000-0000-0000-0000000000b1'), 'BF is_active');
 select pg_temp.check((select studio_name from users where id = '00000000-0000-0000-0000-0000000000b1') = 'Studio 1', 'studio_name repris');
 select pg_temp.check((select plan from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1') = 'trial', 'plan trial');
-select pg_temp.check((select remaining = 3 and expires_at between now() + interval '19 days 23 hours' and now() + interval '20 days 1 hour'
-  from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b1' and source = 'trial'), '3 crédits sur 20 jours');
+select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b1'), 'essai : aucun crédit avant la carte');
+select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1') = 'needs_card', 'essai : en attente de carte');
 select pg_temp.check((select count(*) from net.calls) = 0, 'pas de notification sans secret');
 
 -- Avec secret : notification « nouveau BF ».
@@ -46,15 +46,32 @@ insert into bf_clients (id, bf_user_id) values ('00000000-0000-0000-0000-0000000
 
 set role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000b1');
+select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'reason' = 'needs_card', 'essai sans carte : refus needs_card');
+reset role;
 
--- Essai : 3 clients comptés, re-test gratuit, 4e refusé.
+-- Carte enregistrée : 2 analyses sur 20 jours. Une carte = un essai.
+select pg_temp.check(bf_grant_trial('00000000-0000-0000-0000-0000000000b1', 'fp_card_1') = 'granted', 'carte : essai ouvert');
+select pg_temp.check((select remaining = 2 and expires_at between now() + interval '19 days 23 hours' and now() + interval '20 days 1 hour'
+  from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b1' and source = 'trial'), '2 crédits sur 20 jours');
+select pg_temp.check(bf_grant_trial('00000000-0000-0000-0000-0000000000b1', 'fp_card_1') = 'already_granted', 'rejeu : pas de second essai');
+select pg_temp.check(bf_grant_trial('00000000-0000-0000-0000-0000000000b2', 'fp_card_1') = 'card_already_used', 'même carte, autre compte : refusé');
+select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2') = 'card_already_used', 'état card_already_used');
+select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b2'), 'aucun crédit pour la carte réutilisée');
+
+set role authenticated;
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000b1');
+
+-- Essai : 2 clients comptés, re-tests gratuits, 3e refusé.
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'status' = 'counted', 'essai 1');
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'status' = 'already_counted', 're-test 1');
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'status' = 'already_counted', 're-test 2');
-select pg_temp.check((register_analysis('00000000-0000-0000-0000-000000000102') ->> 'credits_remaining')::int = 1, 'essai 2, 1 crédit restant');
-select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000103') ->> 'status' = 'counted', 'essai 3');
-select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000104') ->> 'reason' = 'no_credits', '4e refusé');
-select pg_temp.check((select count(*) from bf_analyses) = 3, '3 analyses visibles, re-tests non comptés');
+select pg_temp.check((register_analysis('00000000-0000-0000-0000-000000000102') ->> 'credits_remaining')::int = 0, 'essai 2, plus de crédit');
+select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000103') ->> 'reason' = 'no_credits', '3e refusé');
+select pg_temp.check((select count(*) from bf_analyses) = 2, '2 analyses visibles, re-tests non comptés');
+do $$ begin
+  perform bf_grant_trial('00000000-0000-0000-0000-0000000000b1', 'x');
+  raise exception 'ÉCHEC : bf_grant_trial appelable par authenticated';
+exception when insufficient_privilege then null; end $$;
 
 -- Client d'un autre bike fitter.
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000299') ->> 'reason' = 'client_not_found', 'client étranger refusé');
@@ -83,7 +100,7 @@ select pg_temp.check(not bf_grant_credits('00000000-0000-0000-0000-0000000000b1'
 update bf_billing set plan = 'pack' where user_id = '00000000-0000-0000-0000-0000000000b1';
 set role authenticated;
 select pg_temp.check(count(*) = 10, 'pack : 10 analyses') from (
-  select register_analysis(('00000000-0000-0000-0000-0000000001' || lpad(i::text, 2, '0'))::uuid) r from generate_series(4, 13) i
+  select register_analysis(('00000000-0000-0000-0000-0000000001' || lpad(i::text, 2, '0'))::uuid) r from generate_series(3, 12) i
 ) t where r ->> 'status' = 'counted';
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000114') ->> 'reason' = 'no_credits', 'pack : 11e refusée');
 reset role;

@@ -21,7 +21,16 @@
 //    gardent leur ancien prix, seules les nouvelles souscriptions changent.
 
 import Stripe from 'stripe';
-import { METER, PRICES, PRODUCTS, PRODUCT_TAX_CODE, priceDiffs } from '../src/lib/billing/catalog.ts';
+import {
+  METER,
+  PRICES,
+  PRODUCTS,
+  PRODUCT_IMAGE,
+  PRODUCT_TAX_CODE,
+  RETIRED_LOOKUP_KEYS,
+  RETIRED_PRODUCT_KEYS,
+  priceDiffs,
+} from '../src/lib/billing/catalog.ts';
 import type { PriceSpec, ProductKey } from '../src/lib/billing/catalog.ts';
 
 const args = new Set(process.argv.slice(2));
@@ -99,6 +108,7 @@ async function syncProducts(): Promise<Map<ProductKey, string>> {
         name: spec.name,
         description: spec.description,
         tax_code: PRODUCT_TAX_CODE,
+        images: [PRODUCT_IMAGE],
         metadata: { aerox_key: spec.key },
       });
       ids.set(spec.key, created.id);
@@ -111,6 +121,7 @@ async function syncProducts(): Promise<Map<ProductKey, string>> {
       existing.name !== spec.name ||
       existing.description !== spec.description ||
       taxCode !== PRODUCT_TAX_CODE ||
+      existing.images?.[0] !== PRODUCT_IMAGE ||
       !existing.active;
     if (stale) {
       log(`produit ${spec.key} (${existing.id}) : mise à jour`);
@@ -119,6 +130,7 @@ async function syncProducts(): Promise<Map<ProductKey, string>> {
           name: spec.name,
           description: spec.description,
           tax_code: PRODUCT_TAX_CODE,
+          images: [PRODUCT_IMAGE],
           active: true,
         });
       }
@@ -224,6 +236,21 @@ async function syncPortal() {
   if (!DRY_RUN) await stripe.billingPortal.configurations.update(existing.id, PORTAL);
 }
 
+async function archiveRetiredPrices() {
+  for (const key of RETIRED_LOOKUP_KEYS) {
+    const found = await stripe.prices.list({ lookup_keys: [key], active: true, limit: 10 });
+    for (const p of found.data) {
+      log(`prix retiré ${key} (${p.id}) : archivage`);
+      if (!DRY_RUN) await stripe.prices.update(p.id, { active: false });
+    }
+  }
+  for await (const product of stripe.products.list({ active: true, limit: 100 })) {
+    if (!RETIRED_PRODUCT_KEYS.includes(product.metadata?.aerox_key ?? '')) continue;
+    log(`produit retiré ${product.metadata.aerox_key} (${product.id}) : archivage`);
+    if (!DRY_RUN) await stripe.products.update(product.id, { active: false });
+  }
+}
+
 async function checkTaxSettings() {
   // Lecture seule : Stripe Tax (adresse d'origine, immatriculations) se règle
   // une fois pour toutes, et `automatic_tax` échoue au Checkout tant qu'il
@@ -240,6 +267,7 @@ async function checkTaxSettings() {
 const meterId = await syncMeter();
 const products = await syncProducts();
 await syncPrices(products, meterId);
+await archiveRetiredPrices();
 await syncPortal();
 await checkTaxSettings();
 log('terminé');

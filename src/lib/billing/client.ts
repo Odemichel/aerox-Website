@@ -7,7 +7,13 @@
 import { supabase } from '~/config/supabaseClient';
 import type { Offer } from './logic';
 
-export type BillingError = 'E_AUTH' | 'E_HAS_SUBSCRIPTION' | 'E_LAUNCH_CLOSED' | 'E_ROLE' | 'E_SERVER';
+export type BillingError =
+  | 'E_AUTH'
+  | 'E_HAS_SUBSCRIPTION'
+  | 'E_LAUNCH_CLOSED'
+  | 'E_ROLE'
+  | 'E_TRIAL_UNAVAILABLE'
+  | 'E_SERVER';
 
 /**
  * Inscription bike fitter avec retour prévu. `encodeURIComponent` : un `#`
@@ -26,7 +32,7 @@ async function accessToken(): Promise<string | null> {
 async function post(
   path: string,
   body: unknown
-): Promise<{ ok: true; data: { url?: string } } | { ok: false; error: BillingError }> {
+): Promise<{ ok: true; data: { url?: string; effective?: string; at?: number } } | { ok: false; error: BillingError }> {
   const token = await accessToken();
   if (!token) return { ok: false, error: 'E_AUTH' };
   try {
@@ -53,6 +59,15 @@ export async function startCheckout(offer: Offer, lang: string): Promise<Billing
   return null;
 }
 
+/** Enregistrement de la carte qui débloque l'essai (Checkout « setup »). */
+export async function startTrialCard(lang: string): Promise<BillingError | null> {
+  const r = await post('/api/billing/trial-card/', { lang });
+  if (r.ok === false) return r.error;
+  if (!r.data?.url) return 'E_SERVER';
+  window.location.href = r.data.url;
+  return null;
+}
+
 export async function openPortal(lang: string): Promise<BillingError | null> {
   const r = await post('/api/billing/portal/', { lang });
   if (r.ok === false) return r.error;
@@ -61,10 +76,15 @@ export async function openPortal(lang: string): Promise<BillingError | null> {
   return null;
 }
 
+/**
+ * Change d'offre ou résilie. `effectiveAt` (secondes) est posé quand le
+ * changement est une descente, appliquée à la fin de la période payée.
+ */
 export async function manageSubscription(
   action: 'change' | 'cancel' | 'resume',
   offer?: Offer
-): Promise<BillingError | null> {
+): Promise<{ error: BillingError | null; effectiveAt?: number }> {
   const r = await post('/api/billing/manage/', { action, offer });
-  return r.ok === false ? r.error : null;
+  if (r.ok === false) return { error: r.error };
+  return { error: null, effectiveAt: r.data.effective === 'period_end' ? r.data.at : undefined };
 }

@@ -1,9 +1,10 @@
 ---
-// Tarifs bike fitter : Pack, Studio, Illimité, bandeau de l'offre de
-// lancement (places restantes lues en direct dans Supabase) et FAQ tarifs.
+// Tarifs bike fitter : Pack, Studio, Illimité (avec l'offre de lancement
+// intégrée à sa carte), prix par analyse, guide de choix, accompagnement
+// inclus et FAQ tarifs.
 //
-// La page est pré-rendue : tout ce qui change dans le temps (places, date de
-// fin de l'offre) est lu côté navigateur, jamais figé au build.
+// La page est pré-rendue : tout ce qui change dans le temps (places restantes,
+// fin de l'offre de lancement) est lu côté navigateur, jamais figé au build.
 import { Icon } from 'astro-icon/components';
 import { getDict, t, type Locale } from '~/lib/i18n';
 import { LAUNCH_OFFER } from '~/lib/billing/catalog';
@@ -14,47 +15,50 @@ interface Props {
 const { lang } = Astro.props;
 const dict = getDict(lang);
 
-// Montants HT, formatés selon la langue (« 150 € », « €150 », « 150 € »…).
-const eur = (amount: number) =>
-  new Intl.NumberFormat(lang, { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(amount);
+// Montants HT, formatés selon la langue (« 300 € », « €300 »…).
+const eur = (amount: number, decimals = 0) =>
+  new Intl.NumberFormat(lang, {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(amount);
+const per = (key: string, amount: number) => t(dict, key).replace('{price}', eur(amount, 2));
 
 // « HT/mois » mais « HT paiement unique » : pas d'espace devant une barre.
 const priceSuffix = (period: string) => `${t(dict, 'bfp.vat')}${period.startsWith('/') ? '' : ' '}${period}`;
 
 const plans = [
   {
-    offer: 'pack',
-    name: t(dict, 'bfp.pack.name'),
-    desc: t(dict, 'bfp.pack.desc'),
-    price: eur(150),
-    period: t(dict, 'bfp.oneOff'),
-    features: [t(dict, 'bfp.pack.f1'), t(dict, 'bfp.pack.f2'), t(dict, 'bfp.pack.f3')],
-    cta: t(dict, 'bfp.pack.cta'),
-    highlight: false,
+    offer: 'payg',
+    name: t(dict, 'bfp.payg.name'),
+    desc: t(dict, 'bfp.payg.desc'),
+    price: eur(20),
+    suffix: t(dict, 'bfp.payg.unit'),
+    perAnalysis: '',
+    features: [t(dict, 'bfp.payg.f1'), t(dict, 'bfp.payg.f2'), t(dict, 'bfp.payg.f3')],
+    cta: t(dict, 'bfp.payg.cta'),
   },
   {
     offer: 'studio',
     name: t(dict, 'bfp.studio.name'),
     desc: t(dict, 'bfp.studio.desc'),
-    price: eur(69),
-    period: t(dict, 'bfp.perMonth'),
+    price: eur(79),
+    suffix: priceSuffix(t(dict, 'bfp.perMonth')),
+    perAnalysis: per('bfp.per.included', 15.8),
     features: [t(dict, 'bfp.studio.f1'), t(dict, 'bfp.studio.f2'), t(dict, 'bfp.studio.f3')],
     cta: t(dict, 'bfp.studio.cta'),
-    highlight: true,
-  },
-  {
-    offer: 'unlimited',
-    name: t(dict, 'bfp.unlimited.name'),
-    desc: t(dict, 'bfp.unlimited.desc'),
-    price: eur(129),
-    period: t(dict, 'bfp.perMonth'),
-    features: [t(dict, 'bfp.unlimited.f1'), t(dict, 'bfp.unlimited.f2'), t(dict, 'bfp.unlimited.f3')],
-    cta: t(dict, 'bfp.unlimited.cta'),
-    highlight: false,
   },
 ];
 
-const faq = [1, 2, 3, 4, 5].map((i) => ({ q: t(dict, `bfp.faq.q${i}`), a: t(dict, `bfp.faq.a${i}`) }));
+const unlimitedFeatures = [t(dict, 'bfp.unlimited.f1'), t(dict, 'bfp.unlimited.f2'), t(dict, 'bfp.unlimited.f3')];
+const guide = [
+  { offer: t(dict, 'bfp.payg.name'), when: t(dict, 'bfp.guide.payg') },
+  { offer: t(dict, 'bfp.studio.name'), when: t(dict, 'bfp.guide.studio') },
+  { offer: t(dict, 'bfp.unlimited.name'), when: t(dict, 'bfp.guide.unlimited') },
+];
+const faq = [1, 2, 3, 4, 5, 6].map((i) => ({ q: t(dict, `bfp.faq.q${i}`), a: t(dict, `bfp.faq.a${i}`) }));
+const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shadow';
 ---
 
 <section id="tarifs" class="not-prose scroll-mt-[72px] bg-gray-50 dark:bg-slate-900/40">
@@ -65,46 +69,30 @@ const faq = [1, 2, 3, 4, 5].map((i) => ({ q: t(dict, `bfp.faq.q${i}`), a: t(dict
       <p class="mt-3 text-lg text-muted">{t(dict, 'bfp.subtitle')}</p>
     </div>
 
-    <!-- Offre de lancement : masquée par le script si fermée ou complète -->
-    <div
-      id="bf-launch"
-      class="mb-8 rounded-xl border-2 border-primary bg-white dark:bg-slate-900 p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4"
-      data-switch-at={LAUNCH_OFFER.switchAt}
-      data-seats-template={t(dict, 'bfp.launch.seats')}
-      data-closed={t(dict, 'bfp.launch.closed')}
-    >
-      <div class="flex-1">
-        <span
-          class="inline-block rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wide text-white"
-        >
-          {t(dict, 'bfp.launch.badge')}
-        </span>
-        <h3 class="mt-2 text-xl font-bold">{t(dict, 'bfp.launch.title')}</h3>
-        <p class="mt-1 text-muted">{t(dict, 'bfp.launch.text')}</p>
-        <p id="bf-launch-seats" class="mt-2 font-semibold text-primary" aria-live="polite"></p>
+    <!-- Rythme de facturation : ne change que la carte Illimité -->
+    <div class="mb-6 flex justify-center">
+      <div class="inline-flex rounded-full border border-gray-300 dark:border-slate-600 p-1" role="group">
+        <button type="button" class="bf-billing rounded-full px-4 py-1.5 text-sm font-semibold" data-billing="monthly">
+          {t(dict, 'bfp.billing.monthly')}
+        </button>
+        <button type="button" class="bf-billing rounded-full px-4 py-1.5 text-sm font-semibold" data-billing="yearly">
+          {t(dict, 'bfp.billing.yearly')}
+          <span class="ml-1 text-xs text-primary">{t(dict, 'bfp.billing.save')}</span>
+        </button>
       </div>
-      <button
-        type="button"
-        class="bf-buy btn-primary shrink-0 justify-center"
-        data-offer="unlimited_launch"
-        id="bf-launch-cta"
-      >
-        {t(dict, 'bfp.launch.cta')}
-      </button>
     </div>
 
     <div class="grid gap-6 md:grid-cols-3">
       {
         plans.map((p) => (
-          <div
-            class={`flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shadow ${p.highlight ? 'border-2 border-primary' : 'border border-gray-200 dark:border-slate-700'}`}
-          >
+          <div class={`${cardClass} border border-gray-200 dark:border-slate-700`}>
             <h3 class="text-xl font-bold uppercase tracking-wider">{p.name}</h3>
             <p class="mt-1 min-h-[3rem] text-sm text-muted">{p.desc}</p>
-            <p class="mt-4 flex items-baseline gap-2">
+            <p class="mt-4 flex flex-wrap items-baseline gap-x-2">
               <span class="text-4xl font-bold">{p.price}</span>
-              <span class="text-sm text-muted">{priceSuffix(p.period)}</span>
+              <span class="text-sm text-muted">{p.suffix}</span>
             </p>
+            {p.perAnalysis && <p class="mt-1 text-sm font-semibold text-primary">{p.perAnalysis}</p>}
             <ul class="mt-5 mb-6 flex-1 space-y-2 text-left">
               {p.features.map((f) => (
                 <li class="flex items-start gap-2">
@@ -113,16 +101,120 @@ const faq = [1, 2, 3, 4, 5].map((i) => ({ q: t(dict, `bfp.faq.q${i}`), a: t(dict
                 </li>
               ))}
             </ul>
-            <button
-              type="button"
-              class={`bf-buy w-full justify-center ${p.highlight ? 'btn-primary' : 'btn-secondary'}`}
-              data-offer={p.offer}
-            >
+            <button type="button" class="bf-buy btn-secondary w-full justify-center" data-offer={p.offer}>
               {p.cta}
             </button>
           </div>
         ))
       }
+
+      <!-- Illimité : offre de lancement tant qu'elle est ouverte, sinon tarif normal -->
+      <div
+        id="bf-unlimited"
+        class={`${cardClass} relative border-2 border-primary`}
+        data-switch-at={LAUNCH_OFFER.switchAt}
+        data-seats-template={t(dict, 'bfp.launch.seats')}
+      >
+        <span
+          class="bf-launch-only absolute -top-3 left-6 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wide text-white"
+        >
+          {t(dict, 'bfp.launch.badge')}
+        </span>
+        <h3 class="text-xl font-bold uppercase tracking-wider">{t(dict, 'bfp.unlimited.name')}</h3>
+        <p class="mt-1 min-h-[3rem] text-sm text-muted">{t(dict, 'bfp.unlimited.desc')}</p>
+
+        <div class="bf-launch-only mt-4">
+          <p class="flex flex-wrap items-baseline gap-x-2">
+            <span class="text-2xl font-semibold text-muted line-through">{eur(119)}</span>
+            <span class="text-4xl font-bold">{eur(69)}</span>
+          </p>
+          <p class="text-sm text-muted">{t(dict, 'bfp.launch.until')}</p>
+          <p class="mt-1 text-sm font-semibold text-primary">{per('bfp.per.at20', 3.45)}</p>
+          <p class="mt-2 text-sm">
+            {t(dict, 'bfp.launch.text')}
+            <span id="bf-launch-seats" class="font-semibold text-primary" aria-live="polite"></span>
+          </p>
+        </div>
+
+        <div class="bf-standard-only mt-4 hidden">
+          <p class="flex flex-wrap items-baseline gap-x-2">
+            <span class="text-4xl font-bold">{eur(119)}</span>
+            <span class="text-sm text-muted">{priceSuffix(t(dict, 'bfp.perMonth'))}</span>
+          </p>
+          <p class="mt-1 text-sm font-semibold text-primary">{per('bfp.per.at20', 5.95)}</p>
+        </div>
+
+        <div class="bf-yearly-only mt-4 hidden">
+          <p class="flex flex-wrap items-baseline gap-x-2">
+            <span class="text-2xl font-semibold text-muted line-through">{eur(1428)}</span>
+            <span class="text-4xl font-bold">{eur(1190)}</span>
+            <span class="text-sm text-muted">{priceSuffix(t(dict, 'bfp.perYear'))}</span>
+          </p>
+          <p class="mt-1 text-sm font-semibold text-primary">{t(dict, 'bfp.billing.save')}</p>
+        </div>
+
+        <ul class="mt-5 mb-6 flex-1 space-y-2 text-left">
+          {
+            unlimitedFeatures.map((f) => (
+              <li class="flex items-start gap-2">
+                <Icon name="tabler:check" class="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                <span>{f}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <button
+          type="button"
+          class="bf-buy bf-launch-only btn-primary w-full justify-center"
+          data-offer="unlimited_launch"
+        >
+          {t(dict, 'bfp.launch.cta')}
+        </button>
+        <button
+          type="button"
+          class="bf-buy bf-standard-only hidden btn-primary w-full justify-center"
+          data-offer="unlimited"
+        >
+          {t(dict, 'bfp.unlimited.cta')}
+        </button>
+        <button
+          type="button"
+          class="bf-buy bf-yearly-only hidden btn-primary w-full justify-center"
+          data-offer="unlimited_annual"
+        >
+          {t(dict, 'bfp.unlimited.cta')}
+        </button>
+      </div>
+    </div>
+
+    <!-- Guide de choix -->
+    <div class="mt-8 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">
+      <p class="font-semibold text-center">{t(dict, 'bfp.guide.title')}</p>
+      <dl class="mt-3 grid gap-3 sm:grid-cols-3 text-center">
+        {
+          guide.map((g) => (
+            <div>
+              <dt class="text-sm text-muted">{g.when}</dt>
+              <dd class="font-bold uppercase tracking-wider text-primary">{g.offer}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+
+    <!-- Accompagnement inclus -->
+    <div class="mt-6 rounded-xl bg-primary/10 p-5">
+      <p class="font-semibold text-center">{t(dict, 'bfp.included.title')}</p>
+      <ul class="mt-3 grid gap-3 sm:grid-cols-2">
+        <li class="flex items-start gap-2">
+          <Icon name="tabler:video" class="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+          <span>{t(dict, 'bfp.included.setup')}</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <Icon name="tabler:users-group" class="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+          <span>{t(dict, 'bfp.included.monthly')}</span>
+        </li>
+      </ul>
     </div>
 
     <p class="mt-6 text-center text-muted">
@@ -136,9 +228,9 @@ const faq = [1, 2, 3, 4, 5].map((i) => ({ q: t(dict, `bfp.faq.q${i}`), a: t(dict
     </p>
     <p class="mt-2 text-center text-sm text-muted">
       {t(dict, 'bfp.quote.text')}
-      <a href="#contact-bf" class="ml-1 font-semibold text-primary underline hover:no-underline"
-        >{t(dict, 'bfp.quote.link')}</a
-      >
+      <a href="#contact-bf" class="ml-1 font-semibold text-primary underline hover:no-underline">
+        {t(dict, 'bfp.quote.link')}
+      </a>
     </p>
     <p id="bf-buy-message" class="mt-4 hidden text-center font-semibold" role="status"></p>
 
@@ -175,25 +267,41 @@ const faq = [1, 2, 3, 4, 5].map((i) => ({ q: t(dict, `bfp.faq.q${i}`), a: t(dict
   import { bikeFitterSignupUrl, startCheckout, type BillingError } from '~/lib/billing/client';
   import type { Offer } from '~/lib/billing/logic';
 
+  // État de la carte Illimité : offre de lancement ouverte ? rythme choisi ?
+  const state = { launchOpen: true, billing: 'monthly' as 'monthly' | 'yearly' };
+
+  /** Affiche le bloc de prix et le bouton qui correspondent à l'état. */
+  function render() {
+    const card = document.getElementById('bf-unlimited');
+    if (!card) return;
+    const mode = state.billing === 'yearly' ? 'yearly' : state.launchOpen ? 'launch' : 'standard';
+    for (const m of ['launch', 'standard', 'yearly']) {
+      card.querySelectorAll<HTMLElement>(`.bf-${m}-only`).forEach((n) => n.classList.toggle('hidden', m !== mode));
+    }
+    document.querySelectorAll<HTMLButtonElement>('.bf-billing').forEach((b) => {
+      const on = b.dataset.billing === state.billing;
+      b.classList.toggle('bg-primary', on);
+      b.classList.toggle('text-white', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+
   // Offre de lancement : date limite et places restantes, lues en direct.
   async function refreshLaunch() {
-    const box = document.getElementById('bf-launch');
+    const card = document.getElementById('bf-unlimited');
     const seatsEl = document.getElementById('bf-launch-seats');
-    const cta = document.getElementById('bf-launch-cta') as HTMLButtonElement | null;
-    if (!box || !seatsEl || !cta) return;
+    if (!card || !seatsEl) return;
 
-    if (Date.now() >= Number(box.dataset.switchAt)) {
-      box.remove();
+    if (Date.now() >= Number(card.dataset.switchAt)) {
+      state.launchOpen = false;
+      render();
       return;
     }
     const { data, error } = await supabase.rpc('bf_launch_seats_remaining');
-    if (error || typeof data !== 'number') return; // on n'affiche rien plutôt qu'un chiffre faux
-    if (data <= 0) {
-      seatsEl.textContent = box.dataset.closed ?? '';
-      cta.remove();
-      return;
-    }
-    seatsEl.textContent = (box.dataset.seatsTemplate ?? '').replace('{n}', String(data));
+    if (error || typeof data !== 'number') return; // rien plutôt qu'un chiffre faux
+    if (data <= 0) state.launchOpen = false;
+    else seatsEl.textContent = (card.dataset.seatsTemplate ?? '').replace('{n}', String(data));
+    render();
   }
 
   // Même schéma d'attache que PricingSection.astro : appel immédiat +
@@ -205,8 +313,7 @@ const faq = [1, 2, 3, 4, 5].map((i) => ({ q: t(dict, `bfp.faq.q${i}`), a: t(dict
     const lang = cfg.dataset.lang ?? 'fr';
     const msg = document.getElementById('bf-buy-message');
 
-    const errors: Record<BillingError, string | undefined> = {
-      E_AUTH: undefined,
+    const errors: Partial<Record<BillingError, string | undefined>> = {
       E_HAS_SUBSCRIPTION: cfg.dataset.errSub,
       E_LAUNCH_CLOSED: cfg.dataset.errLaunch,
       E_ROLE: cfg.dataset.errRole,
@@ -223,14 +330,12 @@ const faq = [1, 2, 3, 4, 5].map((i) => ({ q: t(dict, `bfp.faq.q${i}`), a: t(dict
     document.querySelectorAll<HTMLButtonElement>('.bf-buy').forEach((btn) => {
       btn.addEventListener('click', async () => {
         const offer = btn.dataset.offer as Offer;
-        const label = btn.textContent;
         btn.disabled = true;
         show(cfg.dataset.redirecting, true);
 
         const error = await startCheckout(offer, lang);
         if (!error) return; // Checkout ouvert
         btn.disabled = false;
-        btn.textContent = label;
         if (error === 'E_AUTH') {
           window.location.href = bikeFitterSignupUrl(lang, `/${lang}/bike-fitting/#tarifs`);
           return;
@@ -244,6 +349,14 @@ const faq = [1, 2, 3, 4, 5].map((i) => ({ q: t(dict, `bfp.faq.q${i}`), a: t(dict
       });
     });
 
+    document.querySelectorAll<HTMLButtonElement>('.bf-billing').forEach((b) =>
+      b.addEventListener('click', () => {
+        state.billing = b.dataset.billing === 'yearly' ? 'yearly' : 'monthly';
+        render();
+      })
+    );
+
+    render();
     refreshLaunch();
   }
 

@@ -7,35 +7,47 @@
 
 import { LAUNCH_OFFER, LOOKUP } from './catalog';
 
-export type Plan = 'trial' | 'pack' | 'studio' | 'unlimited' | 'unlimited_launch' | 'legacy';
-export type Offer = 'pack' | 'studio' | 'unlimited' | 'unlimited_launch';
+// `pack` : plan historique (crédits prépayés), plus vendu ; conservé pour les
+// comptes et les crédits existants.
+export type Plan = 'trial' | 'pack' | 'payg' | 'studio' | 'unlimited' | 'unlimited_launch' | 'legacy';
+export type Offer = 'payg' | 'studio' | 'unlimited' | 'unlimited_annual' | 'unlimited_launch';
 export type BillingStatus = 'active' | 'past_due' | 'read_only';
 
-export const OFFERS: readonly Offer[] = ['pack', 'studio', 'unlimited', 'unlimited_launch'];
-export const SUBSCRIPTION_OFFERS: readonly Offer[] = ['studio', 'unlimited', 'unlimited_launch'];
+export const OFFERS: readonly Offer[] = ['payg', 'studio', 'unlimited', 'unlimited_annual', 'unlimited_launch'];
 
 export const isOffer = (raw: unknown): raw is Offer => typeof raw === 'string' && OFFERS.includes(raw as Offer);
 
 /** Prix Stripe (lookup_key) de chaque offre, dans l'ordre des lignes Checkout. */
 export const OFFER_LOOKUP_KEYS: Record<Offer, string[]> = {
-  pack: [LOOKUP.pack10],
-  // Deux lignes : le forfait et le prix mesuré (10 analyses à 0 €, puis 8 €).
+  // Prix mesuré seul : 0 € fixe, 20 € par analyse, facturé en fin de mois.
+  payg: [LOOKUP.payg],
+  // Deux lignes : le forfait et le prix mesuré (5 analyses à 0 €, puis 10 €).
   studio: [LOOKUP.studioBase, LOOKUP.studioUsage],
   unlimited: [LOOKUP.unlimited],
+  unlimited_annual: [LOOKUP.unlimitedYear],
   unlimited_launch: [LOOKUP.unlimitedLaunch],
 };
 
-export const PACK_CREDITS = 10;
-export const PACK_VALIDITY_MONTHS = 12;
+/** Prix mesurés : pas de quantité dans Checkout ni dans un changement d'offre. */
+export const METERED_LOOKUP_KEYS: readonly string[] = [LOOKUP.payg, LOOKUP.studioUsage];
+
+/**
+ * Rang d'une offre, du moins au plus engageant. Monter est immédiat (au
+ * prorata) ; descendre prend effet à la fin de la période déjà payée, pour
+ * qu'un passage en Illimité le temps d'un mois chargé ne se rembourse pas.
+ */
+export const OFFER_RANK: Record<Offer, number> = {
+  payg: 0,
+  studio: 1,
+  unlimited_launch: 2,
+  unlimited: 3,
+  unlimited_annual: 4,
+};
+
+export const isDowngrade = (from: Offer, to: Offer) => OFFER_RANK[to] < OFFER_RANK[from];
+
 export const GRACE_DAYS = 7;
 const DAY_MS = 24 * 60 * 60 * 1000;
-
-/** Date d'expiration d'un pack acheté à `fromMs`. */
-export function packExpiry(fromMs: number): Date {
-  const d = new Date(fromMs);
-  d.setUTCMonth(d.getUTCMonth() + PACK_VALIDITY_MONTHS);
-  return d;
-}
 
 /** L'offre de lancement est-elle encore ouverte à la souscription ? */
 export function launchOfferOpen(nowMs: number, seatsRemaining: number): boolean {
@@ -52,7 +64,19 @@ export function planFromLookupKeys(keys: (string | null | undefined)[]): Plan | 
   const set = new Set(keys.filter(Boolean));
   if (set.has(LOOKUP.studioBase)) return 'studio';
   if (set.has(LOOKUP.unlimitedLaunch) || set.has(LOOKUP.unlimitedLaunchAfter)) return 'unlimited_launch';
+  if (set.has(LOOKUP.unlimited) || set.has(LOOKUP.unlimitedYear)) return 'unlimited';
+  if (set.has(LOOKUP.payg)) return 'payg';
+  return null;
+}
+
+/** Offre correspondant aux prix d'un abonnement (pour comparer les rangs). */
+export function offerFromLookupKeys(keys: (string | null | undefined)[]): Offer | null {
+  const set = new Set(keys.filter(Boolean));
+  if (set.has(LOOKUP.unlimitedYear)) return 'unlimited_annual';
+  if (set.has(LOOKUP.unlimitedLaunch) || set.has(LOOKUP.unlimitedLaunchAfter)) return 'unlimited_launch';
   if (set.has(LOOKUP.unlimited)) return 'unlimited';
+  if (set.has(LOOKUP.studioBase)) return 'studio';
+  if (set.has(LOOKUP.payg)) return 'payg';
   return null;
 }
 
@@ -93,26 +117,32 @@ export function subscriptionOutcome(
   }
 }
 
-/** Plan après la fin d'un abonnement : les crédits de pack restants reprennent la main. */
-export function planAfterSubscriptionEnds(hasValidCredits: boolean): Plan {
-  return hasValidCredits ? 'pack' : 'trial';
-}
-
-/** Plan après l'achat d'un pack : un abonné garde son abonnement. */
-export function planAfterPackPurchase(current: Plan | null): Plan {
-  return current === null || current === 'trial' || current === 'pack' ? 'pack' : current;
+/**
+ * Plan après la fin d'un abonnement : retour à l'essai (les crédits d'essai
+ * restants, s'il y en a, restent utilisables ; sinon les analyses sont
+ * refusées jusqu'à une nouvelle offre).
+ */
+export function planAfterSubscriptionEnds(): Plan {
+  return 'trial';
 }
 
 /**
  * Montant HT estimé (centimes) de la prochaine facture, pour l'espace bike
- * fitter. Studio : forfait + analyses au-delà de 10.
+ * fitter. `periodDays` distingue l'Illimité annuel du mensuel.
  */
-export function estimatedNextInvoiceCents(plan: Plan | null, analysesInPeriod: number, nowMs: number): number | null {
+export function estimatedNextInvoiceCents(
+  plan: Plan | null,
+  analysesInPeriod: number,
+  nowMs: number,
+  periodDays = 30
+): number | null {
   switch (plan) {
+    case 'payg':
+      return analysesInPeriod * 2000;
     case 'studio':
-      return 6900 + Math.max(0, analysesInPeriod - 10) * 800;
+      return 7900 + Math.max(0, analysesInPeriod - 5) * 1000;
     case 'unlimited':
-      return 12900;
+      return periodDays > 40 ? 119000 : 11900;
     case 'unlimited_launch':
       return nowMs < LAUNCH_OFFER.switchAt ? 6900 : 9900;
     default:

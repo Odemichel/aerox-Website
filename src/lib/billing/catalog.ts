@@ -36,7 +36,12 @@ export const METER: MeterSpec = {
 // les produits.
 export const PRODUCT_TAX_CODE = 'txcd_10103101';
 
-export type ProductKey = 'bf_pack' | 'bf_studio' | 'bf_studio_usage' | 'bf_unlimited' | 'bf_unlimited_launch';
+// Icône AeroX affichée sur Checkout, les factures et le portail : la même que
+// celle des autres produits du compte (Diagnostic, Early BikeFitter Program).
+export const PRODUCT_IMAGE =
+  'https://files.stripe.com/links/MDB8YWNjdF8xUmpIcFdBbXpvS3NCaUNOfGZsX2xpdmVfcXZTaGdVVW5iZ0tIZ0NScG9YcjJpY1Zi00JyhHhjAR';
+
+export type ProductKey = 'bf_payg' | 'bf_studio' | 'bf_studio_usage' | 'bf_unlimited' | 'bf_unlimited_launch';
 
 export type ProductSpec = {
   key: ProductKey;
@@ -46,24 +51,24 @@ export type ProductSpec = {
 
 export const PRODUCTS: ProductSpec[] = [
   {
-    key: 'bf_pack',
-    name: 'AeroX Bike Fit — Pack 10 analyses',
-    description: '10 analyses aérodynamiques, valables 12 mois, sans abonnement.',
+    key: 'bf_payg',
+    name: 'AeroX Bike Fit — À l’usage',
+    description: 'Sans abonnement fixe : 20 € HT par analyse, facturé en fin de mois.',
   },
   {
     key: 'bf_studio',
     name: 'AeroX Bike Fit — Studio',
-    description: 'Abonnement mensuel, 10 analyses incluses chaque mois.',
+    description: 'Abonnement mensuel, 5 analyses incluses chaque mois.',
   },
   {
     key: 'bf_studio_usage',
     name: 'AeroX Bike Fit — Studio, analyses',
-    description: 'Analyses du mois : les 10 premières sont incluses, puis 8 € HT l’analyse.',
+    description: 'Analyses du mois : les 5 premières sont incluses, puis 10 € HT l’analyse.',
   },
   {
     key: 'bf_unlimited',
     name: 'AeroX Bike Fit — Illimité',
-    description: 'Abonnement mensuel, analyses illimitées.',
+    description: 'Analyses illimitées, au mois ou à l’année.',
   },
   {
     key: 'bf_unlimited_launch',
@@ -82,62 +87,80 @@ export type PriceSpec = {
   tax_behavior: 'exclusive';
   // Montant en centimes pour un prix à l'unité ; absent pour un prix à paliers.
   unit_amount?: number;
-  recurring?: { interval: 'month'; usage_type: 'licensed' | 'metered' };
-  // Prix mesuré : rattaché au meter `METER_EVENT_NAME`, paliers progressifs.
+  recurring?: { interval: 'month' | 'year'; usage_type: 'licensed' | 'metered' };
+  // Prix mesuré : rattaché au meter `METER_EVENT_NAME`.
   metered?: boolean;
   tiers?: Tier[];
 };
 
 export const LOOKUP = {
-  pack10: 'aerox_bf_pack10',
+  payg: 'aerox_bf_payg',
   studioBase: 'aerox_bf_studio_base',
   studioUsage: 'aerox_bf_studio_usage',
   unlimited: 'aerox_bf_unlimited',
+  unlimitedYear: 'aerox_bf_unlimited_year',
   unlimitedLaunch: 'aerox_bf_unlimited_launch',
   // Prix vers lequel bascule l'offre de lancement au 01/01/2027, via le
   // subscription schedule posé par le webhook. Jamais vendu directement.
   unlimitedLaunchAfter: 'aerox_bf_unlimited_launch_after',
 } as const;
 
+// Clés d'anciens prix retirés de la grille (Pack) : le script archive les
+// prix qui les portent encore. Aucun n'a été vendu.
+export const RETIRED_LOOKUP_KEYS = ['aerox_bf_pack10', 'aerox_bf_pack15'];
+// Produits retirés, archivés par le script.
+export const RETIRED_PRODUCT_KEYS = ['bf_pack'];
+
 export const PRICES: PriceSpec[] = [
   {
-    lookup_key: LOOKUP.pack10,
-    product: 'bf_pack',
-    nickname: 'Pack 10 analyses — 150 € HT',
+    lookup_key: LOOKUP.payg,
+    product: 'bf_payg',
+    nickname: 'À l’usage — 20 € HT par analyse',
     currency: 'eur',
     tax_behavior: 'exclusive',
-    unit_amount: 15000,
+    unit_amount: 2000,
+    recurring: { interval: 'month', usage_type: 'metered' },
+    metered: true,
   },
   {
     lookup_key: LOOKUP.studioBase,
     product: 'bf_studio',
-    nickname: 'Studio — 69 € HT / mois',
+    nickname: 'Studio — 79 € HT / mois',
     currency: 'eur',
     tax_behavior: 'exclusive',
-    unit_amount: 6900,
+    unit_amount: 7900,
     recurring: { interval: 'month', usage_type: 'licensed' },
   },
   {
     lookup_key: LOOKUP.studioUsage,
     product: 'bf_studio_usage',
-    nickname: 'Studio — analyses (10 incluses, puis 8 € HT)',
+    nickname: 'Studio — analyses (5 incluses, puis 10 € HT)',
     currency: 'eur',
     tax_behavior: 'exclusive',
     recurring: { interval: 'month', usage_type: 'metered' },
     metered: true,
     tiers: [
-      { up_to: 10, unit_amount: 0 },
-      { up_to: 'inf', unit_amount: 800 },
+      { up_to: 5, unit_amount: 0 },
+      { up_to: 'inf', unit_amount: 1000 },
     ],
   },
   {
     lookup_key: LOOKUP.unlimited,
     product: 'bf_unlimited',
-    nickname: 'Illimité — 129 € HT / mois',
+    nickname: 'Illimité — 119 € HT / mois',
     currency: 'eur',
     tax_behavior: 'exclusive',
-    unit_amount: 12900,
+    unit_amount: 11900,
     recurring: { interval: 'month', usage_type: 'licensed' },
+  },
+  {
+    lookup_key: LOOKUP.unlimitedYear,
+    product: 'bf_unlimited',
+    nickname: 'Illimité — 1 190 € HT / an (2 mois offerts)',
+    currency: 'eur',
+    tax_behavior: 'exclusive',
+    unit_amount: 119000,
+    recurring: { interval: 'year', usage_type: 'licensed' },
   },
   {
     lookup_key: LOOKUP.unlimitedLaunch,

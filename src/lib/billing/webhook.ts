@@ -16,15 +16,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type Stripe from 'stripe';
 import { LAUNCH_OFFER, LOOKUP } from './catalog';
 import { upsertMailerLiteFields, type BfStatus } from '~/lib/mailerlite';
-import {
-  crmStatus,
-  PACK_CREDITS,
-  packExpiry,
-  planAfterPackPurchase,
-  planAfterSubscriptionEnds,
-  planFromLookupKeys,
-  subscriptionOutcome,
-} from './logic';
+import { crmStatus, planAfterSubscriptionEnds, planFromLookupKeys, subscriptionOutcome } from './logic';
 import { loadBilling, priceIdForLookup, stripe } from './server';
 
 export const BILLING_EVENTS = new Set<string>([
@@ -48,17 +40,6 @@ export function isBillingObject(event: Stripe.Event): boolean {
     return Boolean(obj.parent?.subscription_details?.metadata?.aerox_offer);
   }
   return Boolean(obj.metadata?.aerox_offer);
-}
-
-async function hasValidCredits(db: SupabaseClient, userId: string): Promise<boolean> {
-  const { count, error } = await db
-    .from('bf_credits')
-    .select('id', { count: 'exact', head: true })
-    .eq('user_id', userId)
-    .gt('remaining', 0)
-    .gt('expires_at', new Date().toISOString());
-  if (error) throw new Error(`bf_credits: ${error.message}`);
-  return (count ?? 0) > 0;
 }
 
 /** Reporte l'offre sur la fiche MailerLite (bf_plan, bf_status). Jamais bloquant. */
@@ -104,12 +85,16 @@ async function ensureLaunchSchedule(sub: Stripe.Subscription) {
   }
 
   const schedule = await s.subscriptionSchedules.retrieve(scheduleId);
+  // Une descente d'offre programmée (fin de période) a priorité : on n'y
+  // réécrit pas la bascule de lancement.
+  if (schedule.metadata?.aerox_schedule === 'downgrade') return;
   const configured = schedule.phases.some((p) => p.items.some((i) => idOf(i.price) === afterPrice));
   if (configured || schedule.status !== 'active') return;
 
   const current = schedule.phases[0];
   await s.subscriptionSchedules.update(schedule.id, {
     end_behavior: 'release',
+    metadata: { aerox_schedule: 'launch' },
     phases: [
       {
         start_date: current.start_date,
@@ -154,7 +139,7 @@ async function syncSubscription(db: SupabaseClient, subscriptionId: string, paym
   if (outcome.kind === 'ignore') return;
 
   if (outcome.kind === 'ended') {
-    const nextPlan = planAfterSubscriptionEnds(await hasValidCredits(db, userId));
+    const nextPlan = planAfterSubscriptionEnds();
     await writeBilling(db, {
       user_id: userId,
       stripe_customer_id: customer,
@@ -165,7 +150,7 @@ async function syncSubscription(db: SupabaseClient, subscriptionId: string, paym
       current_period_start: null,
       current_period_end: null,
     });
-    await syncCrm(db, userId, nextPlan, nextPlan === 'pack' ? 'active' : 'churned');
+    await syncCrm(db, userId, nextPlan, 'churned');
     return;
   }
 
@@ -190,38 +175,41 @@ async function syncSubscription(db: SupabaseClient, subscriptionId: string, paym
   if (plan === 'unlimited_launch' && outcome.status === 'active') await ensureLaunchSchedule(sub);
 }
 
+/**
+ * Essai : la carte enregistrée (Checkout « setup », 0 € débité) débloque les
+ * 2 analyses offertes, une seule fois par carte. L'empreinte de la carte est
+ * lue chez Stripe, jamais reçue du navigateur.
+ */
+async function handleTrialCard(db: SupabaseClient, userId: string, session: Stripe.Checkout.Session) {
+  const setupIntentId = idOf(session.setup_intent);
+  if (!setupIntentId) return;
+  const intent = await stripe().setupIntents.retrieve(setupIntentId, { expand: ['payment_method'] });
+  if (intent.status !== 'succeeded') return;
+  const method = intent.payment_method as Stripe.PaymentMethod | null;
+  const fingerprint = method?.card?.fingerprint;
+  if (!fingerprint) {
+    console.error('stripe-webhook: carte d’essai sans empreinte —', setupIntentId);
+    return;
+  }
+  const { data, error } = await db.rpc('bf_grant_trial', { p_user: userId, p_fingerprint: fingerprint });
+  if (error) throw new Error(`bf_grant_trial: ${error.message}`);
+  if (data === 'card_already_used') console.warn('stripe-webhook: carte déjà utilisée pour un essai —', userId);
+}
+
 async function handleCheckout(db: SupabaseClient, session: Stripe.Checkout.Session) {
   const userId = session.metadata?.userId;
   if (!userId) return;
+
+  if (session.mode === 'setup') {
+    if (session.metadata?.aerox_offer === 'trial_card') await handleTrialCard(db, userId, session);
+    return;
+  }
 
   if (session.mode === 'subscription') {
     const subId = idOf(session.subscription);
     if (subId) await syncSubscription(db, subId);
     return;
   }
-
-  if (session.metadata?.aerox_offer !== 'pack') return;
-  // Moyens de paiement différés : `completed` arrive « unpaid », le crédit
-  // attend `async_payment_succeeded`.
-  if (session.payment_status !== 'paid') return;
-
-  const { error } = await db.rpc('bf_grant_credits', {
-    p_user: userId,
-    p_amount: PACK_CREDITS,
-    p_expires_at: packExpiry(Date.now()).toISOString(),
-    // Identifiant de session : un rejeu ne crédite jamais deux fois.
-    p_source: session.id,
-  });
-  if (error) throw new Error(`bf_grant_credits: ${error.message}`);
-
-  const billing = await loadBilling(db, userId);
-  const plan = planAfterPackPurchase(billing?.plan ?? null);
-  await writeBilling(db, {
-    user_id: userId,
-    stripe_customer_id: idOf(session.customer) ?? billing?.stripe_customer_id ?? null,
-    plan,
-  });
-  if (billing?.plan !== plan) await syncCrm(db, userId, plan, crmStatus(plan, billing?.status ?? 'active'));
 }
 
 /** Traite un événement bike fitter. Lève en cas d'échec (→ 500, rejeu Stripe). */

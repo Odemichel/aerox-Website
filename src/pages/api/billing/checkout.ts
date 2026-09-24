@@ -11,7 +11,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import type Stripe from 'stripe';
 import { authenticatedUser } from '~/lib/serverAuth';
-import { isOffer, launchOfferOpen, SUBSCRIPTION_OFFERS } from '~/lib/billing/logic';
+import { isOffer, launchOfferOpen, METERED_LOOKUP_KEYS, OFFER_LOOKUP_KEYS } from '~/lib/billing/logic';
 import {
   accountUrl,
   ensureCustomer,
@@ -54,14 +54,11 @@ export const POST: APIRoute = async ({ request, site }) => {
     if (role !== 'bike-fitter' && role !== 'admin') return json({ error: 'E_ROLE' }, 403);
 
     const billing = await loadBilling(db, user.id);
-    const isSubscription = SUBSCRIPTION_OFFERS.includes(offer);
 
     // Un seul abonnement par bike fitter : changer d'offre passe par
     // /api/billing/manage/, qui modifie l'abonnement existant au lieu d'en
     // empiler un second (double prélèvement).
-    if (isSubscription && billing?.stripe_subscription_id) {
-      return json({ error: 'E_HAS_SUBSCRIPTION' }, 409);
-    }
+    if (billing?.stripe_subscription_id) return json({ error: 'E_HAS_SUBSCRIPTION' }, 409);
 
     if (offer === 'unlimited_launch' && !launchOfferOpen(Date.now(), await launchSeatsRemaining(db))) {
       return json({ error: 'E_LAUNCH_CLOSED', fallback: 'unlimited' }, 409);
@@ -71,7 +68,8 @@ export const POST: APIRoute = async ({ request, site }) => {
     const metadata = { userId: user.id, aerox_offer: offer };
     const base = siteBase(request, site);
 
-    const common: Stripe.Checkout.SessionCreateParams = {
+    const params: Stripe.Checkout.SessionCreateParams = {
+      mode: 'subscription',
       customer,
       // Adresse et raison sociale saisies au paiement enregistrées sur le
       // client : Stripe Tax en a besoin pour les factures suivantes, et le
@@ -85,29 +83,18 @@ export const POST: APIRoute = async ({ request, site }) => {
       success_url: accountUrl(base, lang, 'success'),
       cancel_url: accountUrl(base, lang, 'cancel'),
       metadata,
+      // Les prix mesurés (À l'usage, Studio) n'ont pas de quantité : elle
+      // vient du meter.
+      line_items: OFFER_LOOKUP_KEYS[offer].map((key, i) =>
+        METERED_LOOKUP_KEYS.includes(key) ? { price: priceIds[i] } : { price: priceIds[i], quantity: 1 }
+      ),
+      subscription_data: {
+        metadata,
+        // Mode flexible : l'usage non facturé est facturé si l'on retire une
+        // ligne mesurée (passage de Studio à Illimité en cours de mois).
+        billing_mode: { type: 'flexible' },
+      },
     };
-
-    const params: Stripe.Checkout.SessionCreateParams = isSubscription
-      ? {
-          ...common,
-          mode: 'subscription',
-          // Le prix mesuré (Studio) n'a pas de quantité : elle vient du meter.
-          line_items: priceIds.map((price, i) => (offer === 'studio' && i === 1 ? { price } : { price, quantity: 1 })),
-          subscription_data: {
-            metadata,
-            // Mode flexible : l'usage non facturé est facturé si l'on retire
-            // la ligne mesurée (passage de Studio à Illimité en cours de mois).
-            billing_mode: { type: 'flexible' },
-          },
-        }
-      : {
-          ...common,
-          mode: 'payment',
-          line_items: [{ price: priceIds[0], quantity: 1 }],
-          // Facture PDF pour un paiement unique : Stripe ne l'émet que sur demande.
-          invoice_creation: { enabled: true, invoice_data: { metadata } },
-          payment_intent_data: { metadata },
-        };
 
     const session = await stripe().checkout.sessions.create(params);
     return json({ url: session.url });

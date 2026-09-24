@@ -19,7 +19,6 @@
 // locale (127.0.0.1 / localhost). Les objets Stripe créés portent la
 // métadonnée `aerox_e2e=1` et sont rattachés à des test clocks.
 
-import { execFileSync } from 'node:child_process';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 import { LAUNCH_OFFER, LOOKUP } from '../src/lib/billing/catalog.ts';
@@ -176,116 +175,36 @@ const metadata = (bf: Bf, offer: string) => ({ userId: bf.id, aerox_offer: offer
 // Scénarios
 // ---------------------------------------------------------------------------
 
-async function s1Pack() {
-  console.log('\nS1 — Pack : facture PDF, 10 crédits, 11e analyse refusée');
-  const bf = await createBf('pack');
-  const b0 = await billing(bf.id);
-  check(b0?.plan === 'trial', 'inscription : compte actif en essai');
-
-  // La route du site crée une session valide (paiement unique + facture).
-  const r = await api('/api/billing/checkout/', bf, { offer: 'pack', lang: 'fr' });
-  check(r.status === 200 && typeof r.body.url === 'string', 'checkout Pack créé par la route', `HTTP ${r.status}`);
-  const sessionId = new URL(r.body.url).pathname.split('/').pop()?.split('#')[0] ?? '';
-  if (sessionId.startsWith('cs_')) {
-    const cs = await stripe.checkout.sessions.retrieve(sessionId);
-    check(cs.mode === 'payment' && cs.invoice_creation?.enabled === true, 'session : mode payment + invoice_creation');
-    check(
-      cs.automatic_tax.enabled === true && cs.tax_id_collection?.enabled === true,
-      'session : Stripe Tax + n° de TVA'
-    );
-  }
-
-  // Paiement simulé par le Stripe CLI (session réelle, carte de test), avec
-  // les métadonnées que poserait notre route.
-  await admin.from('bf_credits').update({ remaining: 0 }).eq('user_id', bf.id).eq('source', 'trial');
-  execFileSync(
-    'stripe',
-    [
-      'trigger',
-      'checkout.session.completed',
-      '--add',
-      `checkout_session:metadata.userId=${bf.id}`,
-      '--add',
-      'checkout_session:metadata.aerox_offer=pack',
-      '--add',
-      'checkout_session:invoice_creation.enabled=true',
-    ],
-    { stdio: 'ignore', env: { ...process.env, STRIPE_API_KEY: STRIPE_KEY } }
-  );
-
-  const credit = await waitFor('crédits du pack', async () => {
-    const { data } = await admin
-      .from('bf_credits')
-      .select('*')
-      .eq('user_id', bf.id)
-      .neq('source', 'trial')
-      .maybeSingle();
-    return data;
-  });
-  check(credit.granted === 10 && credit.remaining === 10, '10 crédits crédités par le webhook');
-  const months = (new Date(credit.expires_at).getTime() - Date.now()) / (30.4 * 86400 * 1000);
-  check(months > 11.8 && months < 12.2, 'crédits valables 12 mois');
-  check((await billing(bf.id))?.plan === 'pack', 'offre : pack');
-
-  const cs = await stripe.checkout.sessions.retrieve(credit.source, { expand: ['invoice'] });
-  const invoice = cs.invoice as Stripe.Invoice | null;
-  check(Boolean(invoice?.invoice_pdf), 'facture PDF générée', invoice?.invoice_pdf ? 'invoice_pdf présent' : 'absente');
-
-  const clients = await createClients(bf, 11);
-  let counted = 0;
-  for (const c of clients.slice(0, 10)) if ((await register(bf, c)).status === 'counted') counted++;
-  check(counted === 10, '10 analyses comptées');
-  const eleventh = await register(bf, clients[10]);
-  check(eleventh.status === 'refused' && eleventh.reason === 'no_credits', '11e analyse refusée (no_credits)');
-
-  // Idempotence : un rejeu de l'événement ne crédite pas deux fois.
-  const events = await stripe.events.list({ type: 'checkout.session.completed', limit: 5 });
-  const evt = events.data.find((e) => (e.data.object as Stripe.Checkout.Session).id === credit.source);
-  if (evt) {
-    execFileSync('stripe', ['events', 'resend', evt.id], {
-      stdio: 'ignore',
-      env: { ...process.env, STRIPE_API_KEY: STRIPE_KEY },
-    });
-    await sleep(5000);
-    const { count } = await admin
-      .from('bf_credits')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', bf.id)
-      .neq('source', 'trial');
-    check(count === 1, 'rejeu du webhook : pas de double crédit');
-  }
-}
-
-async function s2Studio() {
-  console.log('\nS2 + S3 — Studio : 14 analyses (+ re-tests) → 69 € + 4 × 8 € = 101 € HT');
-  const bf = await createBf('studio');
-  const start = Math.floor(Date.now() / 1000) - 3600;
+/** Abonnement de test (test clock), comme Checkout le créerait. */
+async function clockSubscription(
+  bf: Bf,
+  offer: string,
+  lookups: string[],
+  start = Math.floor(Date.now() / 1000) - 3600
+) {
   const { clock, customer } = await clockCustomer(bf, start);
+  const metered = [LOOKUP.payg, LOOKUP.studioUsage] as string[];
+  const items = [];
+  for (const key of lookups)
+    items.push(metered.includes(key) ? { price: await priceId(key) } : { price: await priceId(key), quantity: 1 });
   const sub = await stripe.subscriptions.create({
     customer: customer.id,
-    items: [{ price: await priceId(LOOKUP.studioBase), quantity: 1 }, { price: await priceId(LOOKUP.studioUsage) }],
-    metadata: metadata(bf, 'studio'),
+    items,
+    metadata: metadata(bf, offer),
     automatic_tax: { enabled: true },
     billing_mode: { type: 'flexible' },
   });
-  await waitFor('offre studio', async () => (await billing(bf.id))?.plan === 'studio');
-  check(true, 'webhook : offre Studio active');
+  return { clock, customer, sub };
+}
 
-  const clients = await createClients(bf, 14);
+/** Enregistre des analyses, envoie l'usage, puis clôt la période et renvoie la facture. */
+async function usageInvoice(bf: Bf, clockId: string, sub: Stripe.Subscription, analyses: number) {
+  const clients = await createClients(bf, analyses);
   for (const c of clients) await register(bf, c);
-  // S3 : le même client re-testé 3 fois dans les 30 jours → 1 seule analyse.
-  const retests = [await register(bf, clients[0]), await register(bf, clients[0]), await register(bf, clients[0])];
-  check(
-    retests.every((r) => r.status === 'already_counted'),
-    'S3 : 3 re-tests du même client non comptés'
-  );
-  const { count } = await admin.from('bf_analyses').select('id', { count: 'exact', head: true }).eq('user_id', bf.id);
-  check(count === 14, '14 analyses en base');
-
   // Stripe refuse un meter event daté après l'heure du test clock du client :
   // on amène l'horloge à l'heure réelle, puis on relance l'envoi (ce que fait
   // le job pg_cron toutes les 10 minutes en production).
-  await advance(clock.id, Math.floor(Date.now() / 1000) + 120);
+  await advance(clockId, Math.floor(Date.now() / 1000) + 120);
   await reportUsage();
   await waitFor(
     'meter events envoyés',
@@ -299,29 +218,75 @@ async function s2Studio() {
     },
     90_000
   );
-  check(true, '14 meter events envoyés (trigger → route report-usage)');
-
   const { data: errors } = await admin
     .from('bf_analyses')
     .select('meter_last_error')
     .eq('user_id', bf.id)
     .not('meter_last_error', 'is', null);
-  check(!errors?.length, 'aucune erreur de meter event', errors?.[0]?.meter_last_error ?? '');
-
-  // Stripe agrège les meter events de façon asynchrone.
-  await sleep(20_000);
-  const periodEnd = sub.items.data[0].current_period_end;
-  await advance(clock.id, periodEnd + 2 * 3600);
-  const invoice = await waitFor('facture de fin de période', async () => {
+  check(!errors?.length, `${analyses} meter events envoyés sans erreur`, errors?.[0]?.meter_last_error ?? '');
+  await sleep(20_000); // agrégation asynchrone des meter events chez Stripe
+  await advance(clockId, sub.items.data[0].current_period_end + 2 * 3600);
+  return waitFor('facture de fin de période', async () => {
     const list = await stripe.invoices.list({ subscription: sub.id, limit: 5 });
     return list.data.find((i) => i.billing_reason === 'subscription_cycle');
   });
-  const usagePrice = await priceId(LOOKUP.studioUsage);
-  const usageLine = invoice.lines.data.filter((l) => l.pricing?.price_details?.price === usagePrice);
-  check(invoice.subtotal === 10100, 'facture HT : 101,00 €', `${invoice.subtotal / 100} € HT`);
+}
+
+async function s1Payg() {
+  console.log('\nS1 — À l’usage : 3 analyses → 3 × 20 € = 60 € HT, sans forfait');
+  const bf = await createBf('payg');
+  const b0 = await billing(bf.id);
+  check(
+    b0?.plan === 'trial' && b0?.trial_state === 'needs_card',
+    'inscription : compte actif, essai en attente de carte'
+  );
+
+  const r = await api('/api/billing/checkout/', bf, { offer: 'payg', lang: 'fr' });
+  check(r.status === 200 && typeof r.body.url === 'string', 'checkout À l’usage créé par la route', `HTTP ${r.status}`);
+  const sessionId = new URL(r.body.url ?? 'http://x/').pathname.split('/').pop()?.split('#')[0] ?? '';
+  if (sessionId.startsWith('cs_')) {
+    const cs = await stripe.checkout.sessions.retrieve(sessionId, { expand: ['line_items'] });
+    check(
+      cs.mode === 'subscription' && cs.line_items?.data.length === 1,
+      'session : abonnement, une seule ligne mesurée'
+    );
+    check(
+      cs.automatic_tax.enabled === true && cs.tax_id_collection?.enabled === true,
+      'session : Stripe Tax + n° de TVA'
+    );
+  }
+
+  const { clock, sub } = await clockSubscription(bf, 'payg', [LOOKUP.payg]);
+  await waitFor('offre à l’usage', async () => (await billing(bf.id))?.plan === 'payg');
+  check(true, 'webhook : offre À l’usage active');
+  const invoice = await usageInvoice(bf, clock.id, sub, 3);
+  check(invoice.subtotal === 6000, 'facture HT : 60,00 €', `${invoice.subtotal / 100} € HT`);
   const tax = (invoice.total_taxes ?? []).reduce((a, t) => a + t.amount, 0);
-  check(tax === 2020, 'TVA FR 20 % : 20,20 €', `${tax / 100} €`);
-  check(usageLine.length > 0, 'ligne d’usage présente sur la facture');
+  check(tax === 1200, 'TVA FR 20 % : 12,00 €', `${tax / 100} €`);
+}
+
+async function s2Studio() {
+  console.log('\nS2 + S3 — Studio : 14 analyses (+ re-tests) → 79 € + 9 × 10 € = 169 € HT');
+  const bf = await createBf('studio');
+  const { clock, sub } = await clockSubscription(bf, 'studio', [LOOKUP.studioBase, LOOKUP.studioUsage]);
+  await waitFor('offre studio', async () => (await billing(bf.id))?.plan === 'studio');
+  check(true, 'webhook : offre Studio active');
+
+  // S3 : le même client re-testé 3 fois dans les 30 jours → 1 seule analyse.
+  const [first] = await createClients(bf, 1);
+  await register(bf, first);
+  const retests = [await register(bf, first), await register(bf, first), await register(bf, first)];
+  check(
+    retests.every((r) => r.status === 'already_counted'),
+    'S3 : 3 re-tests du même client non comptés'
+  );
+
+  const invoice = await usageInvoice(bf, clock.id, sub, 13);
+  const { count } = await admin.from('bf_analyses').select('id', { count: 'exact', head: true }).eq('user_id', bf.id);
+  check(count === 14, '14 analyses en base');
+  check(invoice.subtotal === 16900, 'facture HT : 169,00 €', `${invoice.subtotal / 100} € HT`);
+  const tax = (invoice.total_taxes ?? []).reduce((a, t) => a + t.amount, 0);
+  check(tax === 3380, 'TVA FR 20 % : 33,80 €', `${tax / 100} €`);
 }
 
 async function s4LaunchFull() {
@@ -341,7 +306,7 @@ async function s4LaunchFull() {
   const bf = await createBf('launch21');
   const r = await api('/api/billing/checkout/', bf, { offer: 'unlimited_launch', lang: 'fr' });
   check(r.status === 409 && r.body.error === 'E_LAUNCH_CLOSED', '21e : refus E_LAUNCH_CLOSED', `HTTP ${r.status}`);
-  check(r.body.fallback === 'unlimited', 'offre proposée à la place : Illimité (129 €)');
+  check(r.body.fallback === 'unlimited', 'offre proposée à la place : Illimité (119 €)');
   const r2 = await api('/api/billing/checkout/', bf, { offer: 'unlimited', lang: 'fr' });
   check(r2.status === 200, 'Illimité reste souscriptible', `HTTP ${r2.status}`);
 
@@ -458,7 +423,11 @@ async function s7ReverseCharge() {
     tax_id_data: [{ type: 'eu_vat', value: 'DE123456789' }],
     metadata: { aerox_e2e: '1' },
   });
-  await stripe.invoiceItems.create({ customer: customer.id, pricing: { price: await priceId(LOOKUP.pack10) } });
+  const product = (await stripe.prices.retrieve(await priceId(LOOKUP.unlimited))).product as string;
+  await stripe.invoiceItems.create({
+    customer: customer.id,
+    price_data: { currency: 'eur', product, unit_amount: 11900, tax_behavior: 'exclusive' },
+  });
   const draft = await stripe.invoices.create({
     customer: customer.id,
     automatic_tax: { enabled: true },
@@ -469,7 +438,7 @@ async function s7ReverseCharge() {
   const invoice = await stripe.invoices.finalizeInvoice(draft.id);
   const taxes = invoice.total_taxes ?? [];
   const tax = taxes.reduce((a, t) => a + t.amount, 0);
-  check(invoice.subtotal === 15000 && tax === 0, 'facture 150 € HT, TVA 0 €', `taxe ${tax / 100} €`);
+  check(invoice.subtotal === 11900 && tax === 0, 'facture 119 € HT, TVA 0 €', `taxe ${tax / 100} €`);
   check(
     taxes.some((t) => t.taxability_reason === 'reverse_charge'),
     'motif : autoliquidation (reverse_charge)',
@@ -481,13 +450,160 @@ async function s7ReverseCharge() {
   );
 }
 
+/** Webhook signé avec le vrai secret, pour un événement que Stripe ne peut pas produire sans navigateur. */
+async function postSignedEvent(type: string, object: Record<string, unknown>) {
+  const payload = JSON.stringify({
+    id: `evt_e2e_${RUN}_${Math.random().toString(36).slice(2)}`,
+    object: 'event',
+    type,
+    created: Math.floor(Date.now() / 1000),
+    data: { object },
+  });
+  const header = stripe.webhooks.generateTestHeaderString({ payload, secret: env('E2E_WEBHOOK_SECRET') });
+  const res = await fetch(`${SITE}/api/stripe-webhook/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'stripe-signature': header },
+    body: payload,
+  });
+  if (!res.ok) throw new Error(`webhook: HTTP ${res.status}`);
+}
+
+/** Carte d'essai réelle (SetupIntent confirmé) pour un bike fitter, puis Checkout « setup » simulé. */
+async function registerTrialCard(bf: Bf) {
+  const customer = await stripe.customers.create({ email: bf.email, metadata: { userId: bf.id, aerox_e2e: '1' } });
+  await admin.from('bf_billing').update({ stripe_customer_id: customer.id }).eq('user_id', bf.id);
+  const intent = await stripe.setupIntents.create({
+    customer: customer.id,
+    payment_method: 'pm_card_visa',
+    payment_method_types: ['card'],
+    usage: 'off_session',
+    confirm: true,
+  });
+  await postSignedEvent('checkout.session.completed', {
+    id: `cs_e2e_${RUN}_${bf.id.slice(0, 8)}`,
+    object: 'checkout.session',
+    mode: 'setup',
+    status: 'complete',
+    customer: customer.id,
+    setup_intent: intent.id,
+    metadata: { userId: bf.id, aerox_offer: 'trial_card' },
+  });
+}
+
+async function s8TrialCard() {
+  console.log('\nS8 — Essai : 2 analyses débloquées par une carte, une carte = un essai');
+  // Les cartes de test ont une empreinte fixe : on repart d'une table vide
+  // (base locale uniquement, voir le garde-fou en tête de script).
+  await admin.from('bf_trial_cards').delete().neq('fingerprint', '');
+  const bf = await createBf('trial');
+  const [c1, c2, c3] = await createClients(bf, 3);
+  const before = await register(bf, c1);
+  check(before.status === 'refused' && before.reason === 'needs_card', 'sans carte : analyse refusée (needs_card)');
+
+  const r = await api('/api/billing/trial-card/', bf, { lang: 'fr' });
+  check(r.status === 200 && typeof r.body.url === 'string', 'route trial-card : Checkout créé', `HTTP ${r.status}`);
+  const sessionId = new URL(r.body.url ?? 'http://x/').pathname.split('/').pop()?.split('#')[0] ?? '';
+  if (sessionId.startsWith('cs_')) {
+    const cs = await stripe.checkout.sessions.retrieve(sessionId);
+    check(cs.mode === 'setup' && cs.metadata?.aerox_offer === 'trial_card', 'session en mode setup (0 € débité)');
+  }
+
+  await registerTrialCard(bf);
+  const b = await waitFor('essai débloqué', async () => {
+    const row = await billing(bf.id);
+    return row?.trial_state === 'granted' ? row : null;
+  });
+  check(Boolean(b), 'carte enregistrée : essai débloqué');
+  check((await register(bf, c1)).status === 'counted', 'analyse 1 comptée');
+  check((await register(bf, c2)).status === 'counted', 'analyse 2 comptée');
+  check((await register(bf, c3)).reason === 'no_credits', '3e analyse refusée : essai épuisé');
+
+  // Même carte (même empreinte) sur un second compte : pas de second essai.
+  const other = await createBf('trial-bis');
+  await registerTrialCard(other);
+  const o = await waitFor('carte déjà utilisée', async () => {
+    const row = await billing(other.id);
+    return row?.trial_state === 'card_already_used' ? row : null;
+  });
+  check(Boolean(o), 'même carte, autre compte : essai refusé');
+  const { count } = await admin.from('bf_credits').select('id', { count: 'exact', head: true }).eq('user_id', other.id);
+  check(count === 0, 'aucun crédit pour le second compte');
+  const r2 = await api('/api/billing/trial-card/', other, { lang: 'fr' });
+  check(r2.status === 409, 'route trial-card refusée une fois la carte utilisée', `HTTP ${r2.status}`);
+}
+
+async function s9Downgrade() {
+  console.log('\nS9 — Descente Illimité → Studio : effective à la fin de la période payée');
+  const bf = await createBf('downgrade');
+  const { clock, sub } = await clockSubscription(bf, 'unlimited', [LOOKUP.unlimited], Math.floor(Date.now() / 1000));
+  await waitFor('offre illimitée', async () => (await billing(bf.id))?.plan === 'unlimited');
+  const r = await api('/api/billing/manage/', bf, { action: 'change', offer: 'studio' });
+  check(
+    r.status === 200 && r.body.effective === 'period_end',
+    'descente programmée en fin de période',
+    `HTTP ${r.status}`
+  );
+  await sleep(5000);
+  check((await billing(bf.id))?.plan === 'unlimited', 'toujours Illimité jusqu’à la fin de la période');
+  const invoices = await stripe.invoices.list({ subscription: sub.id, limit: 5 });
+  check(
+    !invoices.data.some((i) => i.total < 0 || i.billing_reason === 'subscription_update'),
+    'aucun avoir au prorata'
+  );
+
+  await advance(clock.id, sub.items.data[0].current_period_end + 3600);
+  await waitFor('passage en Studio', async () => (await billing(bf.id))?.plan === 'studio', 120_000);
+  check(true, 'après l’échéance : offre Studio');
+  const after = await stripe.subscriptions.retrieve(sub.id);
+  check(
+    after.items.data
+      .map((i) => i.price.lookup_key)
+      .sort()
+      .join() === [LOOKUP.studioBase, LOOKUP.studioUsage].sort().join(),
+    'abonnement : forfait Studio + ligne mesurée'
+  );
+
+  // Remontée : immédiate.
+  const up = await api('/api/billing/manage/', bf, { action: 'change', offer: 'unlimited' });
+  check(up.status === 200 && up.body.effective === 'now', 'remontée en Illimité immédiate');
+  await waitFor('retour en Illimité', async () => (await billing(bf.id))?.plan === 'unlimited');
+  check(true, 'webhook : Illimité de nouveau actif');
+}
+
+async function s10Annual() {
+  console.log('\nS10 — Illimité annuel : 1 190 € HT / an');
+  const bf = await createBf('annual');
+  const r = await api('/api/billing/checkout/', bf, { offer: 'unlimited_annual', lang: 'fr' });
+  check(r.status === 200, 'checkout annuel créé par la route', `HTTP ${r.status}`);
+  const { sub } = await clockSubscription(
+    bf,
+    'unlimited_annual',
+    [LOOKUP.unlimitedYear],
+    Math.floor(Date.now() / 1000)
+  );
+  await waitFor('offre illimitée annuelle', async () => (await billing(bf.id))?.plan === 'unlimited');
+  const invoices = await stripe.invoices.list({ subscription: sub.id, limit: 1 });
+  check(
+    invoices.data[0]?.subtotal === 119000,
+    'première facture : 1 190,00 € HT',
+    `${(invoices.data[0]?.subtotal ?? 0) / 100} €`
+  );
+  const b = await billing(bf.id);
+  const days =
+    (new Date(b?.current_period_end ?? 0).getTime() - new Date(b?.current_period_start ?? 0).getTime()) / 86400000;
+  check(days > 360, 'période d’un an enregistrée', `${Math.round(days)} j`);
+}
+
 const ALL: Record<string, () => Promise<void>> = {
-  s1: s1Pack,
+  s1: s1Payg,
   s2: s2Studio,
   s4: s4LaunchFull,
   s5: s5LaunchSwitch,
   s6: s6PaymentFailure,
   s7: s7ReverseCharge,
+  s8: s8TrialCard,
+  s9: s9Downgrade,
+  s10: s10Annual,
 };
 
 const wanted = process.argv.slice(2).filter((a) => a in ALL);

@@ -3,14 +3,19 @@
 Grille publique en 3 offres, facturée par Stripe, activation automatique du
 compte, comptage des analyses côté serveur.
 
-| Offre              | Prix HT                                  | Stripe (`lookup_key`)                                                      |
-| ------------------ | ---------------------------------------- | -------------------------------------------------------------------------- |
-| Pack               | 150 € — 10 analyses, 12 mois             | `aerox_bf_pack10` (paiement unique + facture PDF)                          |
-| Studio             | 69 €/mois, 10 incluses, puis 8 €         | `aerox_bf_studio_base` + `aerox_bf_studio_usage` (meter)                   |
-| Illimité           | 129 €/mois                               | `aerox_bf_unlimited`                                                       |
-| Illimité lancement | 69 €/mois jusqu'au 31/12/2026, puis 99 € | `aerox_bf_unlimited_launch` → `aerox_bf_unlimited_launch_after` (schedule) |
-| Essai              | 3 analyses, valables 20 jours            | — (base uniquement)                                                        |
-| Founding Partner   | inchangé (69 $/mois, lien de paiement)   | plan `legacy`, abonnement Stripe jamais touché                             |
+| Offre              | Prix HT                                              | Stripe (`lookup_key`)                                                      |
+| ------------------ | ---------------------------------------------------- | -------------------------------------------------------------------------- |
+| Essai              | 2 analyses, 20 jours, débloquées par une carte (0 €) | Checkout « setup », une carte = un essai (`bf_trial_cards`)                |
+| À l'usage          | 20 € par analyse, facturé en fin de mois             | `aerox_bf_payg` (meter, sans forfait)                                      |
+| Studio             | 79 €/mois, 5 incluses, puis 10 €                     | `aerox_bf_studio_base` + `aerox_bf_studio_usage` (meter)                   |
+| Illimité           | 119 €/mois ou 1 190 €/an (2 mois offerts)            | `aerox_bf_unlimited`, `aerox_bf_unlimited_year`                            |
+| Illimité lancement | 69 €/mois jusqu'au 31/12/2026, puis 99 € au prorata  | `aerox_bf_unlimited_launch` → `aerox_bf_unlimited_launch_after` (schedule) |
+| Founding Partner   | inchangé (69 $/mois, lien de paiement)               | plan `legacy`, abonnement Stripe jamais touché                             |
+
+Paliers : 1 à 3 analyses par mois → à l'usage ; 4 à 9 → Studio ; 10 et plus →
+Illimité. Toutes les offres incluent l'installation du setup en visio et une
+visio collective par mois. Le Pack (crédits prépayés) a été retiré avant toute
+vente ; le plan `pack` reste valide en base pour l'historique.
 
 **Analyse** = un client (`bf_clients`) analysé, décompté une fois par période
 glissante de 30 jours. Les re-tests dans la fenêtre sont gratuits.
@@ -79,13 +84,20 @@ Principes :
 ### Cycle de vie
 
 - **Inscription** (`/inscription/inscription/?profil=bike-fitter`) :
-  `handle_email_confirmed` crée l'utilisateur en `bike-fitter` actif et ouvre
-  l'essai. Notification admin par `notify-admin-new-bf`.
+  `handle_email_confirmed` crée l'utilisateur en `bike-fitter` actif, en essai
+  `needs_card`. Notification admin par `notify-admin-new-bf`.
+- **Essai** : `/api/billing/trial-card/` ouvre un Checkout « setup » (0 €). Le
+  webhook lit l'empreinte de la carte chez Stripe et appelle `bf_grant_trial` :
+  2 analyses sur 20 jours si la carte n'a jamais servi, sinon
+  `card_already_used`. Sans carte, `register_analysis` refuse avec
+  `needs_card` (message dédié dans l'app).
 - **Échec de paiement** : `past_due`, accès complet jusqu'à `grace_until`
   (premier échec + 7 jours, calculé en temps réel par `bf_access_level`), puis
   lecture seule. Paiement régularisé : retour en `active`.
-- **Fin d'abonnement** : retour au plan `pack` s'il reste des crédits, sinon
-  `trial` (sans crédit : analyses refusées).
+- **Fin d'abonnement** : retour au plan `trial` (analyses refusées s'il ne reste
+  aucun crédit d'essai).
+- **À l'usage et Studio** : chaque analyse comptée part au meter
+  `aerox_analysis` ; Stripe facture en fin de période.
 - **Offre de lancement** : au premier paiement, le webhook pose un subscription
   schedule. Phase 1 jusqu'au 01/01/2027 00:00 (Paris), phase 2 à 99 €
   avec `proration_behavior: create_prorations`, puis le schedule est relâché.
@@ -93,8 +105,11 @@ Principes :
   prorata (crédit 69 €, débit 99 € sur les jours restants) sur l'échéance
   suivante (vérifié par le test S5).
 - **Changement d'offre / résiliation** : `/api/billing/manage/` (le portail
-  Stripe ne sait pas modifier un abonnement Studio — usage mesuré — ni un
-  abonnement sous schedule). Le portail sert aux factures, à la carte, au
+  Stripe ne sait pas modifier un abonnement à usage mesuré ni un abonnement
+  sous schedule). **Monter** (usage → Studio → lancement → Illimité → annuel)
+  est immédiat, au prorata. **Descendre** prend effet à la fin de la période
+  payée, via un schedule `aerox_schedule=downgrade` : un passage en Illimité
+  le temps d'un mois chargé ne se rembourse pas. Le portail sert aux factures, à la carte, au
   n° de TVA et à la résiliation.
 - **MailerLite** : `bf_status` (`lead|trial|active|past_due|read_only|churned`)
   et `bf_plan`, mis à jour à l'inscription et par le webhook.
@@ -159,10 +174,10 @@ Chaque étape marquée ⚠ touche la production : à faire sur accord explicite.
 6. ⚠ **App desktop** : fusionner `feat-bf-billing`, publier. Les anciennes
    versions restent comptées par le filet de sécurité (sans possibilité de
    refus au démarrage).
-7. **Test réel** : sur son propre compte bike fitter, acheter le Pack avec une
-   vraie carte, vérifier crédits, facture PDF, `bf_status`/`bf_plan` dans
-   MailerLite, puis rembourser depuis le tableau de bord (les frais Stripe du
-   paiement ne sont pas rendus). Vérifier aussi le bandeau de places.
+7. **Test réel** : sur son propre compte bike fitter, ajouter une carte
+   (essai débloqué), souscrire « À l'usage », faire une analyse, vérifier
+   la facture de fin de mois, puis résilier. Vérifier aussi `bf_status` /
+   `bf_plan` dans MailerLite et le bandeau de places.
 
 ---
 
@@ -172,7 +187,7 @@ Chaque étape marquée ⚠ touche la production : à faire sur accord explicite.
 | ------------ | --------------------------------------------- | ---------------------------------------------- |
 | Unitaires    | `npm test`                                    | catalogue, règles de plan / grâce / factures   |
 | SQL          | `bash supabase/tests/run.sh` (Docker)         | migrations, RLS, comptage, filet, réservations |
-| Bout en bout | `node --env-file=.env scripts/billing-e2e.ts` | 7 scénarios Stripe (test clocks)               |
+| Bout en bout | `node --env-file=.env scripts/billing-e2e.ts` | 10 scénarios Stripe (test clocks)              |
 
 ### Bout en bout (mode test)
 
@@ -200,9 +215,8 @@ du client ; le scénario Studio avance l'horloge à l'heure réelle avant l'envo
 - **Places de lancement** : deux paiements simultanés à 19/20 peuvent donner
   21 abonnés (contrôle au Checkout, pas de réservation). Le webhook honore le
   paiement.
-- **Essai** : rien n'empêche de créer plusieurs comptes pour cumuler les essais.
-- **Pack acheté pendant un abonnement** : les crédits attendent la fin de
-  l'abonnement.
+- **Essai** : une carte = un essai ; une personne avec plusieurs cartes peut
+  encore cumuler quelques essais (2 analyses chacun).
 - **Code taxe produit** `txcd_10103101` (SaaS, téléchargement, usage pro) :
   à valider par le comptable.
 - **Liens de téléchargement** (`src/config/downloads.ts`) : ils pointent sur

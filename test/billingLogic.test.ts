@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { LAUNCH_OFFER, LOOKUP } from '../src/lib/billing/catalog';
 import {
   estimatedNextInvoiceCents,
+  isDowngrade,
   isOffer,
   launchOfferOpen,
-  packExpiry,
-  planAfterPackPurchase,
+  offerFromLookupKeys,
   planAfterSubscriptionEnds,
   planFromLookupKeys,
   subscriptionOutcome,
@@ -16,13 +16,20 @@ const NOW = Date.UTC(2026, 9, 1, 12);
 describe('offres', () => {
   it('reconnaît les offres, rien d’autre', () => {
     expect(isOffer('studio')).toBe(true);
+    expect(isOffer('payg')).toBe(true);
+    expect(isOffer('unlimited_annual')).toBe(true);
+    expect(isOffer('pack')).toBe(false);
     expect(isOffer('legacy')).toBe(false);
     expect(isOffer('__proto__')).toBe(false);
     expect(isOffer(undefined)).toBe(false);
   });
 
-  it('pack valable 12 mois', () => {
-    expect(packExpiry(NOW).toISOString()).toBe('2027-10-01T12:00:00.000Z');
+  it('monter est immédiat, descendre attend la fin de période', () => {
+    expect(isDowngrade('unlimited', 'studio')).toBe(true);
+    expect(isDowngrade('unlimited_annual', 'unlimited')).toBe(true);
+    expect(isDowngrade('studio', 'payg')).toBe(true);
+    expect(isDowngrade('payg', 'studio')).toBe(false);
+    expect(isDowngrade('studio', 'unlimited_launch')).toBe(false);
   });
 });
 
@@ -45,6 +52,10 @@ describe('planFromLookupKeys', () => {
     expect(planFromLookupKeys([LOOKUP.unlimited])).toBe('unlimited');
     expect(planFromLookupKeys([LOOKUP.unlimitedLaunch])).toBe('unlimited_launch');
     expect(planFromLookupKeys([LOOKUP.unlimitedLaunchAfter])).toBe('unlimited_launch');
+    expect(planFromLookupKeys([LOOKUP.unlimitedYear])).toBe('unlimited');
+    expect(planFromLookupKeys([LOOKUP.payg])).toBe('payg');
+    expect(offerFromLookupKeys([LOOKUP.unlimitedYear])).toBe('unlimited_annual');
+    expect(offerFromLookupKeys([LOOKUP.studioBase, LOOKUP.studioUsage])).toBe('studio');
   });
 
   it('ignore un abonnement étranger (Founding Partner)', () => {
@@ -83,23 +94,30 @@ describe('subscriptionOutcome', () => {
 });
 
 describe('transitions de plan', () => {
-  it('fin d’abonnement : retour au pack s’il reste des crédits', () => {
-    expect(planAfterSubscriptionEnds(true)).toBe('pack');
-    expect(planAfterSubscriptionEnds(false)).toBe('trial');
-  });
-
-  it('achat d’un pack : un abonné garde son offre', () => {
-    expect(planAfterPackPurchase('trial')).toBe('pack');
-    expect(planAfterPackPurchase(null)).toBe('pack');
-    expect(planAfterPackPurchase('studio')).toBe('studio');
-    expect(planAfterPackPurchase('legacy')).toBe('legacy');
+  it('fin d’abonnement : retour à l’essai', () => {
+    expect(planAfterSubscriptionEnds()).toBe('trial');
   });
 });
 
 describe('estimatedNextInvoiceCents', () => {
-  it('Studio : 69 € + 8 € par analyse au-delà de 10 (14 analyses → 101 €)', () => {
-    expect(estimatedNextInvoiceCents('studio', 14, NOW)).toBe(10100);
-    expect(estimatedNextInvoiceCents('studio', 3, NOW)).toBe(6900);
+  it('À l’usage : 20 € par analyse', () => {
+    expect(estimatedNextInvoiceCents('payg', 3, NOW)).toBe(6000);
+  });
+
+  it('Studio : 79 € + 10 € par analyse au-delà de 5 (14 analyses → 169 €)', () => {
+    expect(estimatedNextInvoiceCents('studio', 14, NOW)).toBe(16900);
+    expect(estimatedNextInvoiceCents('studio', 3, NOW)).toBe(7900);
+  });
+
+  it('paliers : usage < 4, Studio de 4 à 9, Illimité dès 10', () => {
+    expect(estimatedNextInvoiceCents('payg', 3, NOW)!).toBeLessThan(estimatedNextInvoiceCents('studio', 3, NOW)!);
+    expect(estimatedNextInvoiceCents('studio', 4, NOW)!).toBeLessThan(estimatedNextInvoiceCents('payg', 4, NOW)!);
+    expect(estimatedNextInvoiceCents('studio', 10, NOW)!).toBeGreaterThan(11900);
+  });
+
+  it('Illimité : 119 €/mois ou 1 190 €/an', () => {
+    expect(estimatedNextInvoiceCents('unlimited', 0, NOW)).toBe(11900);
+    expect(estimatedNextInvoiceCents('unlimited', 0, NOW, 365)).toBe(119000);
   });
 
   it('lancement : 69 € puis 99 €', () => {
@@ -107,8 +125,8 @@ describe('estimatedNextInvoiceCents', () => {
     expect(estimatedNextInvoiceCents('unlimited_launch', 0, LAUNCH_OFFER.switchAt)).toBe(9900);
   });
 
-  it('pas de facture pour l’essai, le pack ou legacy', () => {
-    expect(estimatedNextInvoiceCents('pack', 5, NOW)).toBeNull();
+  it('pas de facture pour l’essai ou legacy', () => {
+    expect(estimatedNextInvoiceCents('trial', 5, NOW)).toBeNull();
     expect(estimatedNextInvoiceCents('legacy', 5, NOW)).toBeNull();
   });
 });

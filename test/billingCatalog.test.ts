@@ -6,7 +6,7 @@ const spec = (lookup: string) => PRICES.find((p) => p.lookup_key === lookup)!;
 const unitPrice = (over: Partial<ExistingPrice> = {}): ExistingPrice => ({
   product: 'prod_studio',
   currency: 'eur',
-  unit_amount: 6900,
+  unit_amount: 7900,
   tax_behavior: 'exclusive',
   billing_scheme: 'per_unit',
   tiers_mode: null,
@@ -23,8 +23,8 @@ const usagePrice = (over: Partial<ExistingPrice> = {}): ExistingPrice => ({
   billing_scheme: 'tiered',
   tiers_mode: 'graduated',
   tiers: [
-    { up_to: 10, unit_amount: 0, flat_amount: null },
-    { up_to: null, unit_amount: 800, flat_amount: null },
+    { up_to: 5, unit_amount: 0, flat_amount: null },
+    { up_to: null, unit_amount: 1000, flat_amount: null },
   ],
   recurring: { interval: 'month', interval_count: 1, usage_type: 'metered', meter: 'mtr_1' },
   ...over,
@@ -38,17 +38,23 @@ describe('catalogue bike fitter', () => {
   });
 
   it('respecte la grille tarifaire (HT, EUR)', () => {
-    expect(spec(LOOKUP.pack10)).toMatchObject({ unit_amount: 15000 });
-    expect(spec(LOOKUP.pack10).recurring).toBeUndefined();
-    expect(spec(LOOKUP.studioBase)).toMatchObject({ unit_amount: 6900 });
-    expect(spec(LOOKUP.unlimited)).toMatchObject({ unit_amount: 12900 });
+    expect(spec(LOOKUP.payg)).toMatchObject({ unit_amount: 2000, metered: true });
+    expect(spec(LOOKUP.payg).recurring).toEqual({ interval: 'month', usage_type: 'metered' });
+    expect(spec(LOOKUP.studioBase)).toMatchObject({ unit_amount: 7900 });
+    expect(spec(LOOKUP.unlimited)).toMatchObject({ unit_amount: 11900 });
+    expect(spec(LOOKUP.unlimitedYear)).toMatchObject({ unit_amount: 119000 });
+    expect(spec(LOOKUP.unlimitedYear).recurring?.interval).toBe('year');
     expect(spec(LOOKUP.unlimitedLaunch)).toMatchObject({ unit_amount: 6900 });
     expect(spec(LOOKUP.unlimitedLaunchAfter)).toMatchObject({ unit_amount: 9900 });
     expect(spec(LOOKUP.studioUsage).tiers).toEqual([
-      { up_to: 10, unit_amount: 0 },
-      { up_to: 'inf', unit_amount: 800 },
+      { up_to: 5, unit_amount: 0 },
+      { up_to: 'inf', unit_amount: 1000 },
     ]);
     for (const p of PRICES) expect(p).toMatchObject({ currency: 'eur', tax_behavior: 'exclusive' });
+  });
+
+  it('le Pack est retiré de la grille', () => {
+    expect(PRICES.some((p) => p.lookup_key.startsWith('aerox_bf_pack'))).toBe(false);
   });
 });
 
@@ -65,7 +71,7 @@ describe('priceDiffs', () => {
   });
 
   it('détecte un changement de montant ou de TVA', () => {
-    expect(priceDiffs(unitPrice({ unit_amount: 7900 }), spec(LOOKUP.studioBase), 'prod_studio')).toEqual([
+    expect(priceDiffs(unitPrice({ unit_amount: 6900 }), spec(LOOKUP.studioBase), 'prod_studio')).toEqual([
       'unit_amount',
     ]);
     expect(priceDiffs(unitPrice({ tax_behavior: 'inclusive' }), spec(LOOKUP.studioBase), 'prod_studio')).toEqual([
@@ -73,14 +79,16 @@ describe('priceDiffs', () => {
     ]);
   });
 
-  it('détecte un prix récurrent là où un paiement unique est attendu', () => {
-    expect(priceDiffs(unitPrice({ unit_amount: 15000 }), spec(LOOKUP.pack10), 'prod_studio')).toEqual(['recurring']);
+  it('détecte un changement de rythme (mois → an)', () => {
+    expect(priceDiffs(unitPrice({ unit_amount: 119000 }), spec(LOOKUP.unlimitedYear), 'prod_studio')).toEqual([
+      'recurring.interval',
+    ]);
   });
 
   it('détecte des paliers modifiés ou un meter différent', () => {
     const tiers = [
-      { up_to: 10, unit_amount: 0, flat_amount: null },
-      { up_to: null, unit_amount: 900, flat_amount: null },
+      { up_to: 5, unit_amount: 0, flat_amount: null },
+      { up_to: null, unit_amount: 800, flat_amount: null },
     ];
     expect(priceDiffs(usagePrice({ tiers }), spec(LOOKUP.studioUsage), 'prod_usage', 'mtr_1')).toEqual(['tiers']);
     expect(priceDiffs(usagePrice(), spec(LOOKUP.studioUsage), 'prod_usage', 'mtr_2')).toEqual(['recurring.meter']);
