@@ -12,6 +12,7 @@ export const prerender = false;
 import { createClient } from '@supabase/supabase-js';
 import type { APIRoute } from 'astro';
 import Stripe from 'stripe';
+import { DIAGNOSTIC_PRODUCT, purchaseFromSession, refundFromCharge } from '~/lib/diagnostic/purchase';
 
 const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY as string);
 
@@ -50,7 +51,13 @@ export const POST: APIRoute = async ({ request }) => {
   // À partir d'ici, et seulement à partir d'ici, le contenu est digne de foi.
   // Tout ce qui n'est pas l'événement attendu repart en 200 : Stripe traite
   // un non-200 comme un échec de livraison et rejoue l'événement.
-  //
+
+  // Remboursement : fait dans le tableau de bord Stripe, il retire l'accès et
+  // laisse une trace (`diagnostic_purchases.refunded_at`).
+  if (event.type === 'charge.refunded') {
+    return handleDiagnosticRefund(event.data.object as Stripe.Charge);
+  }
+
   // Deux événements, pas un seul. Les moyens de paiement à notification
   // différée actifs sur le compte (klarna, bancontact) envoient d'abord
   // `checkout.session.completed` avec `payment_status: 'unpaid'` — les fonds
@@ -63,74 +70,107 @@ export const POST: APIRoute = async ({ request }) => {
   //
   // Les deux événements portent le même `data.object` — une
   // `Stripe.Checkout.Session` (types Stripe, `EventTypes.d.ts`) — donc tout ce
-  // qui suit (payment_status, metadata, écriture) s'applique sans changement.
-  // Le cas d'un compte qui recevrait les deux événements pour un même paiement
-  // est couvert par l'idempotence de l'écriture plus bas.
+  // qui suit s'applique sans changement. Le cas d'un compte qui recevrait les
+  // deux événements pour un même paiement est couvert par l'idempotence de
+  // l'écriture plus bas.
   const HANDLED = ['checkout.session.completed', 'checkout.session.async_payment_succeeded'];
   if (!HANDLED.includes(event.type)) {
     return new Response('ignored', { status: 200 });
   }
 
-  const session = event.data.object as Stripe.Checkout.Session;
-
-  if (session.payment_status !== 'paid') {
-    return new Response('not paid', { status: 200 });
-  }
-
-  // Seules les métadonnées signées par Stripe font foi. Rien n'est lu d'un
-  // en-tête, d'un paramètre d'URL ni du corps déserialisé séparément : c'est
-  // ce qui empêche n'importe qui de débloquer le compte de son choix.
-  const userId = session.metadata?.userId;
-  const product = session.metadata?.product;
-
-  // `product` est vérifié, et pas seulement `userId` : la route du livre
-  // (`create-api-livre-checkout.ts`) pose `metadata.userId` sans jamais poser
-  // `metadata.product`. Sans ce filtre, l'achat du livre débloquerait le
-  // diagnostic. Le filtre est donc une condition de sécurité commerciale, pas
-  // une précaution cosmétique.
-  if (!userId || product !== 'diagnostic') {
+  // Seules les métadonnées signées par Stripe font foi (voir
+  // `purchaseFromSession`) : c'est ce qui empêche n'importe qui de débloquer
+  // le compte de son choix, et l'achat du livre de débloquer le diagnostic.
+  const purchase = purchaseFromSession(event.data.object as Stripe.Checkout.Session, new Date());
+  if (!purchase) {
     return new Response('nothing to unlock', { status: 200 });
   }
 
-  const supabase = createClient(
-    import.meta.env.SUPABASE_URL as string,
-    import.meta.env.SUPABASE_SERVICE_ROLE_KEY as string, // ⚠️ SERVICE ROLE, jamais exposé au client
-    { auth: { persistSession: false } }
-  );
-
-  // Écriture idempotente : un rejeu réécrit les mêmes valeurs, seul
-  // `diagnostic_basic_paid_at` est rafraîchi. Rien ne casse.
-  const { data, error } = await supabase
-    .from('users')
-    .update({ diagnostic_basic_paid: true, diagnostic_basic_paid_at: new Date().toISOString() })
-    .eq('id', userId)
-    .select('id');
+  // Un achat = une ligne, clé = la session Checkout. Un rejeu ou le second
+  // des deux événements ne crée rien de plus : un rider qui paie une fois
+  // n'obtient qu'un diagnostic.
+  const { error } = await serviceClient()
+    .from('diagnostic_purchases')
+    .upsert(purchase, { onConflict: 'stripe_checkout_session_id', ignoreDuplicates: true });
 
   // Les deux échecs ci-dessous rendent le même code — 500 — mais se
   // journalisent distinctement : ils appellent des actions opposées et il ne
   // faut pas les confondre en lisant les journaux. Le corps rendu à Stripe
   // reste court et sans détail technique : leur interface l'affiche, ce n'est
   // pas un canal de diagnostic.
-
-  // Cas 1 — la base a refusé l'écriture. Panne passagère ou déploiement en
-  // cours : le rejeu de Stripe (intervalle croissant, ~3 jours) l'absorbe sans
-  // intervention. Un 200 ici sortirait l'événement de la file et le perdrait
-  // définitivement : client débité, produit fermé, plus rien à rejouer.
   if (error) {
-    console.error('stripe-webhook: ERREUR_BASE — écriture refusée pour', userId, '—', error.message);
+    // Cas 1 — l'identifiant signé ne correspond à aucun compte (clé
+    // étrangère). Échec permanent : le rejeu ne réparera rien. On rend quand
+    // même 500, parce que les livraisons en échec sont visibles dans le
+    // tableau de bord Stripe et que c'est la seule alerte disponible.
+    if (error.code === '23503') {
+      console.error('stripe-webhook: UTILISATEUR_INCONNU — achat non rattachable pour', purchase.user_id);
+      return new Response('unlock failed', { status: 500 });
+    }
+    // Cas 2 — la base a refusé l'écriture. Panne passagère ou déploiement en
+    // cours : le rejeu de Stripe (intervalle croissant, ~3 jours) l'absorbe
+    // sans intervention. Un 200 ici sortirait l'événement de la file et le
+    // perdrait définitivement : client débité, produit fermé.
+    console.error('stripe-webhook: ERREUR_BASE — achat non enregistré pour', purchase.user_id, '—', error.message);
     return new Response('unlock failed', { status: 500 });
   }
 
-  // Cas 2 — aucune ligne touchée : l'identifiant signé ne correspond à aucun
-  // utilisateur. PostgREST ne le signale pas comme une erreur, mais le dégât
-  // est le même. Échec permanent : le rejeu ne réparera jamais rien. On rend
-  // quand même 500, parce que les livraisons en échec sont visibles dans le
-  // tableau de bord Stripe et que c'est la seule alerte disponible.
-  if (!data || data.length === 0) {
-    console.error('stripe-webhook: UTILISATEUR_INCONNU — aucune ligne mise à jour pour', userId);
-    return new Response('unlock failed', { status: 500 });
-  }
-
-  console.log('stripe-webhook: diagnostic débloqué pour', userId);
+  console.log('stripe-webhook: achat du diagnostic enregistré pour', purchase.user_id);
   return new Response('ok', { status: 200 });
 };
+
+// Client service_role, créé à la demande : il contourne la RLS, il ne sort
+// jamais de ce fichier.
+function serviceClient() {
+  return createClient(
+    import.meta.env.SUPABASE_URL as string,
+    import.meta.env.SUPABASE_SERVICE_ROLE_KEY as string, // ⚠️ SERVICE ROLE, jamais exposé au client
+    { auth: { persistSession: false } }
+  );
+}
+
+async function handleDiagnosticRefund(charge: Stripe.Charge): Promise<Response> {
+  const refund = refundFromCharge(charge);
+  if (!refund) return new Response('ignored', { status: 200 });
+
+  // La base décide si la charge est un achat de diagnostic (PaymentIntent
+  // connu) et, au remboursement total, révoque le diagnostic en cours.
+  // Idempotent : un rejeu réécrit les mêmes valeurs.
+  const { data: purchaseId, error } = await serviceClient().rpc('record_diagnostic_refund', {
+    p_payment_intent_id: refund.paymentIntentId,
+    p_amount_refunded: refund.amountRefunded,
+    p_fully_refunded: refund.fullyRefunded,
+  });
+  if (error) {
+    // 500 : Stripe rejoue. Un 200 laisserait l'accès ouvert après remboursement.
+    console.error(
+      'stripe-webhook: ERREUR_BASE — remboursement non tracé pour',
+      refund.paymentIntentId,
+      '—',
+      error.message
+    );
+    return new Response('refund failed', { status: 500 });
+  }
+  if (!purchaseId) {
+    // PaymentIntent inconnu de la table. Soit la charge n'est pas un
+    // diagnostic (livre, offre bike fitter) : rien à faire. Soit l'achat
+    // n'est pas encore enregistré (son webhook a échoué et attend un rejeu) :
+    // acquitter ici perdrait le remboursement, et l'achat enregistré plus
+    // tard ouvrirait l'accès à un rider remboursé. Stripe tranche : le
+    // PaymentIntent porte le produit posé au checkout.
+    const intent = await stripe.paymentIntents.retrieve(refund.paymentIntentId);
+    if (intent.metadata?.product === DIAGNOSTIC_PRODUCT) {
+      console.error('stripe-webhook: ACHAT_ABSENT — remboursement reçu avant l’achat pour', refund.paymentIntentId);
+      return new Response('refund failed', { status: 500 });
+    }
+    return new Response('not a diagnostic', { status: 200 });
+  }
+
+  console.log(
+    'stripe-webhook: remboursement du diagnostic',
+    refund.fullyRefunded ? 'total, accès retiré' : 'partiel',
+    '—',
+    refund.paymentIntentId
+  );
+  return new Response('ok', { status: 200 });
+}

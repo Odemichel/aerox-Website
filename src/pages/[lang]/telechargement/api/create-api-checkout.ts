@@ -98,6 +98,16 @@ async function authenticatedUser(request: Request) {
   return data.user;
 }
 
+// Texte de la case de renonciation, affiché par Stripe au-dessus du bouton de
+// paiement. Markdown : le lien mène aux conditions du site dans la langue du
+// rider. Anglais par défaut pour les autres langues.
+const WITHDRAWAL_WAIVER: Record<string, string> = {
+  fr: "J'accepte les [conditions générales](%URL%) et je demande l'accès immédiat au diagnostic. Je reconnais perdre mon droit de rétractation dès ma première séance.",
+  en: 'I accept the [terms and conditions](%URL%) and request immediate access to the diagnostic. I acknowledge that I lose my right of withdrawal as soon as I complete my first session.',
+};
+const withdrawalWaiverMessage = (lang: string, base: string) =>
+  (WITHDRAWAL_WAIVER[lang] ?? WITHDRAWAL_WAIVER.en).replace('%URL%', new URL(`/${lang}/terms/`, base).toString());
+
 export const POST: APIRoute = async ({ request, site }) => {
   try {
     const body = (await request.json().catch(() => ({}))) as Body;
@@ -220,6 +230,21 @@ export const POST: APIRoute = async ({ request, site }) => {
       // portefeuille de carte. Retirer Klarna et Bancontact supprime aussi
       // les paiements à confirmation différée : le déblocage est immédiat.
       ...(metadata.product ? { payment_method_types: ['card' as const] } : {}),
+      // Diagnostic : case obligatoire par laquelle le rider accepte les CGV,
+      // demande l'accès immédiat et renonce à son droit de rétractation dès
+      // sa première séance (Code de la consommation, art. L221-28 13°). Sans
+      // elle, les 14 jours de rétractation restent dus même après usage. Le
+      // webhook trace l'acceptation (`session.consent.terms_of_service`) dans
+      // `diagnostic_purchases.withdrawal_waiver_at`.
+      // Prérequis Stripe : une URL de conditions générales doit être
+      // renseignée dans les réglages publics du compte, sinon la création de
+      // session échoue.
+      ...(metadata.product === 'diagnostic'
+        ? {
+            consent_collection: { terms_of_service: 'required' as const },
+            custom_text: { terms_of_service_acceptance: { message: withdrawalWaiverMessage(lang, base) } },
+          }
+        : {}),
       // Pas de `subscription_data` ici : l'API Stripe le refuse en mode
       // 'payment' (« You can not pass `subscription_data` in `payment`
       // mode. »). L'équivalent légal pour conserver les métadonnées côté
