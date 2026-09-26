@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { LOOKUP, PRICES, PRODUCTS, priceDiffs, type ExistingPrice } from '../src/lib/billing/catalog';
+import {
+  LOOKUP,
+  PRICES,
+  PRODUCTS,
+  RETIRED_LOOKUP_KEYS,
+  priceDiffs,
+  type ExistingPrice,
+} from '../src/lib/billing/catalog';
 
 const spec = (lookup: string) => PRICES.find((p) => p.lookup_key === lookup)!;
 
@@ -45,7 +52,11 @@ describe('catalogue bike fitter', () => {
     expect(spec(LOOKUP.unlimitedYear)).toMatchObject({ unit_amount: 119000 });
     expect(spec(LOOKUP.unlimitedYear).recurring?.interval).toBe('year');
     expect(spec(LOOKUP.unlimitedLaunch)).toMatchObject({ unit_amount: 6900 });
-    expect(spec(LOOKUP.unlimitedLaunchAfter)).toMatchObject({ unit_amount: 9900 });
+    expect(spec(LOOKUP.unlimitedLaunchYear)).toMatchObject({ unit_amount: 69000 });
+    expect(spec(LOOKUP.unlimitedLaunchYear).recurring?.interval).toBe('year');
+    // Après le lancement : tarif normal, plus de palier intermédiaire.
+    expect(PRICES.some((p) => p.lookup_key === LOOKUP.unlimitedLaunchAfter)).toBe(false);
+    expect(RETIRED_LOOKUP_KEYS).toContain(LOOKUP.unlimitedLaunchAfter);
     expect(spec(LOOKUP.studioUsage).tiers).toEqual([
       { up_to: 5, unit_amount: 0 },
       { up_to: 'inf', unit_amount: 1000 },

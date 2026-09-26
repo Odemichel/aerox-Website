@@ -9,8 +9,8 @@ compte, comptage des analyses côté serveur.
 | À l'usage          | 20 € par analyse, facturé en fin de mois                                                                     | `aerox_bf_payg` (meter, sans forfait)                                                    |
 | Studio             | 79 €/mois, 5 incluses, puis 10 €                                                                             | `aerox_bf_studio_base` + `aerox_bf_studio_usage` (meter)                                 |
 | Illimité           | 119 €/mois ou 1 190 €/an (2 mois offerts)                                                                    | `aerox_bf_unlimited`, `aerox_bf_unlimited_year`                                          |
-| Illimité lancement | 69 €/mois jusqu'au 31/12/2026, puis 99 € au prorata                                                          | `aerox_bf_unlimited_launch` → `aerox_bf_unlimited_launch_after` (schedule)               |
-| Lancement annuel   | 690 € la 1re année, puis 990 €/an (souscription jusqu'au 31/12/2026)                                         | `aerox_bf_unlimited_launch_year` → `aerox_bf_unlimited_launch_year_after` (schedule)     |
+| Illimité lancement | 69 €/mois jusqu'au 31/12/2026, puis le tarif normal (119 €/mois, au prorata)                                 | `aerox_bf_unlimited_launch` → `aerox_bf_unlimited` (schedule)                            |
+| Lancement annuel   | 690 € la 1re année, puis le tarif normal (1 190 €/an) ; souscription jusqu'au 31/12/2026                     | `aerox_bf_unlimited_launch_year` → `aerox_bf_unlimited_year` (schedule)                  |
 | Founding Partner   | inchangé (69 $/mois, lien de paiement)                                                                       | plan `legacy`, abonnement Stripe jamais touché                                           |
 
 Les deux offres de lancement partagent les 20 places (plan `unlimited_launch`,
@@ -144,11 +144,17 @@ Principes :
 - **Factures** : PDF créée par Stripe à chaque paiement, téléchargeable dans
   « Gérer ma facturation » (portail). Aucun e-mail de reçu n'est promis
   (choix produit : éviter de rappeler le prélèvement chaque mois).
+- **Fin du lancement** (décision du 2026-09-26) : les deux offres de lancement
+  reviennent au **tarif normal** (prix `aerox_bf_unlimited` /
+  `aerox_bf_unlimited_year`) : l'abonnement devient Illimité (`plan =
+unlimited`) et la place de lancement se libère. Les anciens paliers
+  99 € / 990 € (`…_launch_after`, `…_launch_year_after`) sont retirés
+  (`RETIRED_LOOKUP_KEYS`), jamais facturés.
 - **Offre de lancement** : au premier paiement, le webhook pose un subscription
-  schedule. Phase 1 jusqu'au 01/01/2027 00:00 (Paris), phase 2 à 99 €
+  schedule. Phase 1 jusqu'au 01/01/2027 00:00 (Paris), phase 2 au tarif normal (119 €)
   avec `proration_behavior: create_prorations`, puis le schedule est relâché.
-  **Effet** : 99 € dès le 01/01 ; la période à cheval est régularisée au
-  prorata (crédit 69 €, débit 99 € sur les jours restants) sur l'échéance
+  **Effet** : 119 € dès le 01/01 ; la période à cheval est régularisée au
+  prorata (crédit 69 €, débit 119 € sur les jours restants) sur l'échéance
   suivante (vérifié par le test S5).
 - **Changement d'offre / résiliation** : `/api/billing/manage/` (le portail
   Stripe ne sait pas modifier un abonnement à usage mesuré ni un abonnement
@@ -160,7 +166,7 @@ Principes :
   résiliation est programmée lève la résiliation. Le portail sert aux
   factures, à la carte et au n° de TVA.
 - **Offre de lancement résiliée** : le webhook ne repose pas la bascule à
-  99 € sur un abonnement dont la résiliation est programmée. Si un webhook
+  119 € sur un abonnement dont la résiliation est programmée. Si un webhook
   concurrent crée malgré tout un schedule (il porte alors `end_behavior:
 cancel`), il est détaché en gardant la date de fin (test S11).
 - **Créance après une fin d'abonnement impayée** : la facture ouverte reste
@@ -172,7 +178,7 @@ cancel`), il est détaché en gardant la date de fin (test S11).
   et J+21. `invoice.paid` efface la créance.
 - **Lancement annuel** : au premier paiement (ou dès la souscription pendant
   l'essai Stripe), le webhook pose un schedule : 690 € jusqu'au premier
-  anniversaire (`billing_cycle_anchor` + 1 an), puis 990 €/an, sans prorata
+  anniversaire (`billing_cycle_anchor` + 1 an), puis 1 190 €/an, sans prorata
   (la bascule tombe sur l'échéance), puis relâché (test S21).
 - **Rôles** : un bike fitter n'achète pas le Diagnostic (`create-api-checkout`
   → 403), un cycliste ne souscrit pas d'offre BF (`/api/billing/checkout/`,
@@ -295,7 +301,7 @@ essai intact, pas de « churned » dans le CRM), S18 3D Secure exigé au
 renouvellement puis régularisation, S19 échec du premier prélèvement du
 1er novembre (lancement : place et bascule conservées), S20 résiliation
 pendant un impayé, créance conservée puis réglée, réabonnement. S21 lancement
-annuel (690 € puis 990 €), S22 lancement annuel refusé quand les places sont
+annuel (690 € puis 1 190 €), S22 lancement annuel refusé quand les places sont
 prises. S23 souscription ancrée au 1er novembre (usage d'octobre facturé le
 1er novembre).
 

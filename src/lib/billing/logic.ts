@@ -230,12 +230,11 @@ export function nextInvoiceCentsForOffer(
     case 'unlimited_annual':
       return 119000;
     case 'unlimited_launch':
-      return nowMs < LAUNCH_OFFER.switchAt ? 6900 : 9900;
+      return nowMs < LAUNCH_OFFER.switchAt ? 6900 : 11900;
     case 'unlimited_launch_annual':
-      // Encore en période d'essai Stripe (avant le 1er novembre) : la
-      // prochaine facture est la première année, à 690 €. Sinon c'est le
-      // renouvellement, à 990 €.
-      return periodEndMs !== null && periodEndMs <= BF_AVAILABLE_AT + DAY_MS ? 69000 : 99000;
+      // Avant le 1er novembre, la prochaine facture est la première année, à
+      // 690 €. Sinon c'est le renouvellement, au tarif normal (1 190 €).
+      return periodEndMs !== null && periodEndMs <= BF_AVAILABLE_AT + DAY_MS ? 69000 : 119000;
   }
 }
 

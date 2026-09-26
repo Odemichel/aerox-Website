@@ -100,19 +100,27 @@ export const LOOKUP = {
   unlimited: 'aerox_bf_unlimited',
   unlimitedYear: 'aerox_bf_unlimited_year',
   unlimitedLaunch: 'aerox_bf_unlimited_launch',
-  // Prix vers lequel bascule l'offre de lancement au 01/01/2027, via le
-  // subscription schedule posé par le webhook. Jamais vendu directement.
-  unlimitedLaunchAfter: 'aerox_bf_unlimited_launch_after',
   // Illimité annuel de lancement : 690 € la première année (souscription
-  // jusqu'au 31/12/2026, mêmes 20 places), puis 990 € par an via le schedule
-  // posé par le webhook. Le second prix n'est jamais vendu directement.
+  // jusqu'au 31/12/2026, mêmes 20 places). Après le lancement, le schedule
+  // posé par le webhook ramène les deux offres au tarif normal
+  // (`unlimited`, `unlimitedYear`).
   unlimitedLaunchYear: 'aerox_bf_unlimited_launch_year',
+  // Anciens paliers d'après-lancement (99 €, 990 €), retirés avant toute
+  // vente : gardés pour reconnaître un abonnement qui les porterait.
+  unlimitedLaunchAfter: 'aerox_bf_unlimited_launch_after',
   unlimitedLaunchYearAfter: 'aerox_bf_unlimited_launch_year_after',
 } as const;
 
-// Clés d'anciens prix retirés de la grille (Pack) : le script archive les
-// prix qui les portent encore. Aucun n'a été vendu.
-export const RETIRED_LOOKUP_KEYS = ['aerox_bf_pack10', 'aerox_bf_pack15'];
+// Clés d'anciens prix retirés de la grille : le script archive les prix qui
+// les portent encore. Aucun n'a été vendu.
+export const RETIRED_LOOKUP_KEYS = [
+  'aerox_bf_pack10',
+  'aerox_bf_pack15',
+  // Paliers d'après-lancement (99 €/mois, 990 €/an) remplacés par le tarif
+  // normal le 2026-09-26, jamais facturés.
+  'aerox_bf_unlimited_launch_after',
+  'aerox_bf_unlimited_launch_year_after',
+];
 // Produits retirés, archivés par le script.
 export const RETIRED_PRODUCT_KEYS = ['bf_pack'];
 
@@ -177,30 +185,12 @@ export const PRICES: PriceSpec[] = [
     recurring: { interval: 'month', usage_type: 'licensed' },
   },
   {
-    lookup_key: LOOKUP.unlimitedLaunchAfter,
-    product: 'bf_unlimited_launch',
-    nickname: 'Illimité lancement — 99 € HT / mois à partir du 01/01/2027',
-    currency: 'eur',
-    tax_behavior: 'exclusive',
-    unit_amount: 9900,
-    recurring: { interval: 'month', usage_type: 'licensed' },
-  },
-  {
     lookup_key: LOOKUP.unlimitedLaunchYear,
     product: 'bf_unlimited_launch',
     nickname: 'Illimité lancement annuel — 690 € HT la première année',
     currency: 'eur',
     tax_behavior: 'exclusive',
     unit_amount: 69000,
-    recurring: { interval: 'year', usage_type: 'licensed' },
-  },
-  {
-    lookup_key: LOOKUP.unlimitedLaunchYearAfter,
-    product: 'bf_unlimited_launch',
-    nickname: 'Illimité lancement annuel — 990 € HT / an après la première année',
-    currency: 'eur',
-    tax_behavior: 'exclusive',
-    unit_amount: 99000,
     recurring: { interval: 'year', usage_type: 'licensed' },
   },
 ];

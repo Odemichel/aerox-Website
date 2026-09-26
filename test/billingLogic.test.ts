@@ -165,14 +165,14 @@ describe('nextInvoiceCentsForOffer', () => {
     expect(est('unlimited_annual')).toBe(119000);
   });
 
-  it('lancement mensuel : 69 € puis 99 €', () => {
+  it('lancement mensuel : 69 € puis le tarif normal, 119 €', () => {
     expect(est('unlimited_launch')).toBe(6900);
-    expect(est('unlimited_launch', 0, LAUNCH_OFFER.switchAt)).toBe(9900);
+    expect(est('unlimited_launch', 0, LAUNCH_OFFER.switchAt)).toBe(11900);
   });
 
-  it('lancement annuel : 690 € la 1re année (essai jusqu’au 1er novembre), puis 990 €', () => {
+  it('lancement annuel : 690 € la 1re année, puis le tarif normal, 1 190 €', () => {
     expect(est('unlimited_launch_annual', 0, NOW, BF_AVAILABLE_AT)).toBe(69000);
-    expect(est('unlimited_launch_annual', 0, NOW, BF_AVAILABLE_AT + 365 * 86400000)).toBe(99000);
+    expect(est('unlimited_launch_annual', 0, NOW, BF_AVAILABLE_AT + 365 * 86400000)).toBe(119000);
   });
 });
 

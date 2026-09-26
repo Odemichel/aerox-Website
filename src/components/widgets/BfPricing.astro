@@ -147,11 +147,12 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
         </div>
 
         <div class="bf-launch-only mt-4">
+          <!-- Prix de lancement, puis tarif normal : dit en toutes lettres, sans prix barré. -->
           <p class="flex flex-wrap items-baseline gap-x-2">
-            <span class="text-2xl font-semibold text-muted line-through">{eur(119)}</span>
             <span class="text-4xl font-bold">{eur(69)}</span>
+            <span class="text-sm text-muted">{priceSuffix(t(dict, 'bfp.perMonth'))}</span>
           </p>
-          <p class="text-sm text-muted">{t(dict, 'bfp.launch.until')}</p>
+          <p class="mt-1 text-sm">{t(dict, 'bfp.launch.until')}</p>
           <p class="mt-1 text-sm font-semibold text-primary">{per('bfp.per.at20', 3.45)}</p>
           <p class="mt-2 text-sm">
             {t(dict, 'bfp.launch.text')}
@@ -161,11 +162,10 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
 
         <div class="bf-launchyearly-only mt-4 hidden">
           <p class="flex flex-wrap items-baseline gap-x-2">
-            <span class="text-2xl font-semibold text-muted line-through">{eur(1190)}</span>
             <span class="text-4xl font-bold">{eur(690)}</span>
             <span class="text-sm text-muted">{priceSuffix(t(dict, 'bfp.perYear'))}</span>
           </p>
-          <p class="text-sm text-muted">{t(dict, 'bfp.launch.yearUntil')}</p>
+          <p class="mt-1 text-sm">{t(dict, 'bfp.launch.yearUntil')}</p>
           <p class="mt-2 text-sm">
             {t(dict, 'bfp.launch.text')}
             <span class="bf-launch-seats font-semibold text-primary" aria-live="polite"></span>
@@ -182,7 +182,6 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
 
         <div class="bf-yearly-only mt-4 hidden">
           <p class="flex flex-wrap items-baseline gap-x-2">
-            <span class="text-2xl font-semibold text-muted line-through">{eur(1428)}</span>
             <span class="text-4xl font-bold">{eur(1190)}</span>
             <span class="text-sm text-muted">{priceSuffix(t(dict, 'bfp.perYear'))}</span>
           </p>

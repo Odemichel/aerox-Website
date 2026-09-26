@@ -336,7 +336,7 @@ async function s4LaunchFull() {
 
 async function s5LaunchSwitch() {
   console.log(
-    '\nS5 — Lancement souscrit plus d’un mois avant (essai Stripe) : 0 € puis 69 €, bascule à 99 € au 01/01/2027'
+    '\nS5 — Lancement souscrit plus d’un mois avant (essai Stripe) : 0 € puis 69 €, passage à 119 € (tarif normal) au 01/01/2027'
   );
   const bf = await createBf('launch');
   const { clock, customer } = await clockCustomer(bf, Math.floor(Date.now() / 1000));
@@ -357,14 +357,14 @@ async function s5LaunchSwitch() {
     if (!s.schedule) return null;
     const sch = await stripe.subscriptionSchedules.retrieve(s.schedule as string);
     // Stripe crée d'abord deux phases (essai, puis prix courant) : on attend
-    // celle à 99 € posée par le webhook.
-    const after = await priceId(LOOKUP.unlimitedLaunchAfter);
+    // celle au tarif normal (119 €) posée par le webhook.
+    const after = await priceId(LOOKUP.unlimited);
     return sch.phases.some((p) => p.items.some((i) => i.price === after)) ? sch : null;
   });
   const switchAt = Math.floor(LAUNCH_OFFER.switchAt / 1000);
   check(schedule.phases[0].end_date === switchAt, 'phase 1 jusqu’au 01/01/2027 00:00 (Paris)');
   check(schedule.phases[0].trial_end === availableAt, 'le schedule conserve l’essai jusqu’au 1er novembre');
-  check(schedule.phases[1]?.items[0]?.price === (await priceId(LOOKUP.unlimitedLaunchAfter)), 'phase 2 : prix 99 €');
+  check(schedule.phases[1]?.items[0]?.price === (await priceId(LOOKUP.unlimited)), 'phase 2 : tarif normal, 119 €');
 
   const early = await stripe.invoices.list({ subscription: sub.id, limit: 10 });
   check(
@@ -380,7 +380,7 @@ async function s5LaunchSwitch() {
 
   await advanceStepwise(clock.id, switchAt + 45 * 86400);
   const after = await stripe.subscriptions.retrieve(sub.id);
-  check(after.items.data[0].price.lookup_key === LOOKUP.unlimitedLaunchAfter, 'abonnement passé au prix 99 €');
+  check(after.items.data[0].price.lookup_key === LOOKUP.unlimited, 'abonnement passé au tarif normal, 119 €');
   const invoices = await stripe.invoices.list({ subscription: sub.id, limit: 20 });
   const lines = invoices.data.flatMap((i) => i.lines.data);
   // Avec un premier prélèvement le 1er novembre, les échéances tombent le 1er
@@ -390,15 +390,19 @@ async function s5LaunchSwitch() {
     'pas de prorata : la bascule tombe sur une échéance'
   );
   check(
-    lines.some((l) => l.period.start >= switchAt && l.amount === 9900),
-    'échéance de janvier : 99,00 € HT'
+    lines.some((l) => l.period.start >= switchAt && l.amount === 11900),
+    'échéance de janvier : 119,00 € HT'
   );
   check(
     lines.some((l) => l.period.start < switchAt && l.amount === 6900),
     'échéances 2026 : 69,00 € HT'
   );
-  await waitFor('bf_billing après bascule', async () => (await billing(bf.id))?.plan === 'unlimited_launch');
-  check((await billing(bf.id))?.status === 'active', 'toujours actif, offre « lancement » conservée');
+  await waitFor('bf_billing après bascule', async () => (await billing(bf.id))?.plan === 'unlimited');
+  const b5 = await billing(bf.id);
+  check(
+    b5?.status === 'active' && b5?.offer === 'unlimited',
+    'toujours actif, passé en Illimité (place de lancement libérée)'
+  );
 }
 
 async function s6PaymentFailure() {
@@ -734,7 +738,7 @@ async function nothingChargedBeforeLaunch(subId: string) {
 }
 
 async function s11LaunchCancel() {
-  console.log('\nS11 — Résilier l’offre de lancement : la bascule à 99 € ne revient pas');
+  console.log('\nS11 — Résilier l’offre de lancement : la bascule au tarif normal ne revient pas');
   const bf = await createBf('launch-cancel');
   const { clock, sub } = await preLaunchSubscription(bf, 'unlimited_launch', LOOKUP.unlimitedLaunch);
   await waitFor('schedule de lancement', async () => (await stripe.subscriptions.retrieve(sub.id)).schedule);
@@ -749,12 +753,12 @@ async function s11LaunchCancel() {
     after.cancel_at_period_end === true || after.cancel_at === Math.floor(BF_AVAILABLE_AT / 1000),
     'Stripe : résiliation toujours programmée après les webhooks'
   );
-  check(!after.schedule, 'aucun schedule recréé (pas de phase à 99 €)');
+  check(!after.schedule, 'aucun schedule recréé (pas de bascule au tarif normal)');
   check(Boolean((await summary(bf)).cancel_at), 'espace BF : « résiliation programmée »');
 
   const resume = await api('/api/billing/manage/', bf, { action: 'resume' });
   check(resume.status === 200 && !(await billing(bf.id))?.cancel_at, 'reprise : résiliation levée');
-  const sch = await waitFor('bascule 99 € reposée', async () => {
+  const sch = await waitFor('bascule reposée', async () => {
     const s2 = await stripe.subscriptions.retrieve(sub.id);
     return s2.schedule ? stripe.subscriptionSchedules.retrieve(s2.schedule as string) : null;
   });
@@ -1003,7 +1007,7 @@ async function s18AuthRequiredThenRecovery() {
 
 async function s19PreLaunchFirstChargeFails() {
   console.log('\nS19 — Offre de lancement : le premier prélèvement du 1er novembre échoue');
-  afterPriceCache = await priceId(LOOKUP.unlimitedLaunchAfter);
+  afterPriceCache = await priceId(LOOKUP.unlimited);
   const bf = await createBf('launch-fail');
   const { clock, customer, sub } = await preLaunchSubscription(bf, 'unlimited_launch', LOOKUP.unlimitedLaunch);
   await waitFor('schedule de lancement', async () => (await stripe.subscriptions.retrieve(sub.id)).schedule);
@@ -1032,7 +1036,7 @@ async function s19PreLaunchFirstChargeFails() {
   const sch = s2.schedule ? await stripe.subscriptionSchedules.retrieve(s2.schedule as string) : null;
   check(
     Boolean(sch?.phases.some((p) => p.items.some((i) => i.price === afterPriceCache))),
-    'bascule à 99 € toujours programmée'
+    'bascule au tarif normal toujours programmée'
   );
 }
 let afterPriceCache = '';
@@ -1540,7 +1544,7 @@ async function p7BfMultiple() {
 }
 
 async function s21LaunchAnnual() {
-  console.log('\nS21 — Illimité annuel de lancement : 690 € la 1re année, puis 990 €/an');
+  console.log('\nS21 — Illimité annuel de lancement : 690 € la 1re année, puis 1 190 €/an');
   const bf = await createBf('launch-year');
   const r = await api('/api/billing/checkout/', bf, { offer: 'unlimited_launch_annual', lang: 'fr' });
   const id = new URL(r.body.url ?? 'http://x/').pathname.split('/').pop()?.split('#')[0] ?? '';
@@ -1569,8 +1573,8 @@ async function s21LaunchAnnual() {
     `${seatsBefore} → ${seatsAfter}`
   );
 
-  const after = await priceId(LOOKUP.unlimitedLaunchYearAfter);
-  const sch = await waitFor('schedule 690 → 990', async () => {
+  const after = await priceId(LOOKUP.unlimitedYear);
+  const sch = await waitFor('schedule 690 → 1 190', async () => {
     const s2 = await stripe.subscriptions.retrieve(sub.id);
     if (!s2.schedule) return null;
     const x = await stripe.subscriptionSchedules.retrieve(s2.schedule as string);
@@ -1599,14 +1603,14 @@ async function s21LaunchAnnual() {
     (i) => i.subtotal > 0 && i.created >= Math.floor(anniversary.getTime() / 1000)
   );
   check(
-    renewal?.subtotal === 99000,
-    'renouvellement du 1er novembre 2027 : 990,00 € HT',
+    renewal?.subtotal === 119000,
+    'renouvellement du 1er novembre 2027 : 1 190,00 € HT',
     `${(renewal?.subtotal ?? 0) / 100} €`
   );
   const s3 = await stripe.subscriptions.retrieve(sub.id);
-  check(s3.items.data[0].price.lookup_key === LOOKUP.unlimitedLaunchYearAfter, 'abonnement passé à 990 €/an');
-  await waitFor('bf_billing après bascule', async () => (await billing(bf.id))?.offer === 'unlimited_launch_annual');
-  check((await billing(bf.id))?.status === 'active', 'toujours actif, offre de lancement annuelle conservée');
+  check(s3.items.data[0].price.lookup_key === LOOKUP.unlimitedYear, 'abonnement passé au tarif normal, 1 190 €/an');
+  await waitFor('bf_billing après bascule', async () => (await billing(bf.id))?.offer === 'unlimited_annual');
+  check((await billing(bf.id))?.status === 'active', 'toujours actif, passé en Illimité annuel');
 }
 
 async function s22LaunchAnnualFull() {

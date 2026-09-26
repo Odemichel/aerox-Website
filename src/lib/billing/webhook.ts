@@ -69,13 +69,15 @@ function firstYearEnd(sub: Stripe.Subscription): number {
 }
 
 /**
- * Offres de lancement : pose le schedule qui bascule le prix.
- *  - Mensuel : 69 € → 99 € au 01/01/2027 00:00 (Paris), avec
- *    `proration_behavior: 'create_prorations'` : 99 € s'applique dès le 01/01 ;
- *    le reste de la période en cours, payé à 69 €, est régularisé au prorata
- *    sur l'échéance suivante (crédit 69 €, débit 99 €).
- *  - Annuel : 690 € la première année, 990 € par an ensuite, à la date
+ * Offres de lancement : pose le schedule qui ramène au tarif normal.
+ *  - Mensuel : 69 € → 119 € au 01/01/2027 00:00 (Paris), avec
+ *    `proration_behavior: 'create_prorations'` : 119 € s'applique dès le
+ *    01/01 ; le reste de la période en cours, payé à 69 €, est régularisé au
+ *    prorata sur l'échéance suivante.
+ *  - Annuel : 690 € la première année, 1 190 € par an ensuite, à la date
  *    anniversaire (échéance : pas de prorata).
+ * L'abonnement passe alors sur le prix Illimité standard : offre `unlimited`
+ * (ou `unlimited_annual`), et la place de lancement se libère.
  *
  * Convergent plutôt que « une seule fois » : plusieurs événements du même
  * abonnement arrivent en même temps, et un traitement peut s'interrompre entre
@@ -95,7 +97,8 @@ async function ensureLaunchSchedule(sub: Stripe.Subscription) {
   if (monthly && Date.now() >= LAUNCH_OFFER.switchAt) return;
 
   const s = stripe();
-  const afterPrice = await priceIdForLookup(yearly ? LOOKUP.unlimitedLaunchYearAfter : LOOKUP.unlimitedLaunchAfter);
+  // Après le lancement : le tarif normal (119 €/mois, 1 190 €/an).
+  const afterPrice = await priceIdForLookup(yearly ? LOOKUP.unlimitedYear : LOOKUP.unlimited);
 
   let scheduleId = idOf(sub.schedule);
   if (!scheduleId) {
