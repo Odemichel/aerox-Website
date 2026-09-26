@@ -36,7 +36,7 @@ export const POST: APIRoute = async ({ request, site }) => {
       return json({ error: 'E_TRIAL_UNAVAILABLE' }, 409);
     }
 
-    const customer = await ensureCustomer(db, user, billing);
+    const customer = await ensureCustomer(db, user, billing, lang);
     const metadata = { userId: user.id, aerox_offer: 'trial_card' };
     const base = siteBase(request, site);
     const session = await stripe().checkout.sessions.create({

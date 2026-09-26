@@ -21,6 +21,7 @@ import {
   purchaseFromSession,
   refundFromCharge,
 } from '~/lib/diagnostic/purchase';
+import { hasActiveDiagnostic } from '~/lib/diagnostic/entitlement';
 import { addToMailerLiteGroup, removeFromMailerLiteGroups, upsertMailerLiteFields } from '~/lib/mailerlite';
 
 const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY as string);
@@ -104,12 +105,52 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response('nothing to unlock', { status: 200 });
   }
 
+  const db = serviceClient();
+
+  // Un diagnostic à la fois (voir create-api-checkout) : un second paiement
+  // arrivé malgré le blocage — deux pages de paiement ouvertes puis payées —
+  // est remboursé et enregistré comme tel, jamais utilisable. Contrôlé pour
+  // une session encore inconnue seulement : un rejeu ne se rembourse pas
+  // lui-même. Remboursement avant l'écriture, clé d'idempotence par
+  // paiement : un échec suivi d'un rejeu ne rembourse jamais deux fois.
+  let duplicate = false;
+  let row: typeof purchase & { refunded_at?: string; amount_refunded?: number } = purchase;
+  try {
+    const { data: known, error: knownError } = await db
+      .from('diagnostic_purchases')
+      .select('id')
+      .eq('stripe_checkout_session_id', purchase.stripe_checkout_session_id)
+      .maybeSingle();
+    if (knownError) throw new Error(knownError.message);
+    if (!known && (await hasActiveDiagnostic(db, purchase.user_id))) {
+      duplicate = true;
+      if (purchase.stripe_payment_intent_id) {
+        await stripe.refunds.create(
+          {
+            payment_intent: purchase.stripe_payment_intent_id,
+            metadata: { aerox_reason: 'duplicate_diagnostic', user_id: purchase.user_id },
+          },
+          { idempotencyKey: `aerox-diag-dup-${purchase.stripe_payment_intent_id}` }
+        );
+      }
+      row = { ...purchase, refunded_at: new Date().toISOString(), amount_refunded: purchase.amount_total };
+    }
+  } catch (err) {
+    console.error(
+      'stripe-webhook: ERREUR_DOUBLON — contrôle du diagnostic en double impossible pour',
+      purchase.user_id,
+      '—',
+      err instanceof Error ? err.message : err
+    );
+    return new Response('unlock failed', { status: 500 });
+  }
+
   // Un achat = une ligne, clé = la session Checkout. Un rejeu ou le second
   // des deux événements ne crée rien de plus : un rider qui paie une fois
   // n'obtient qu'un diagnostic.
-  const { data: inserted, error } = await serviceClient()
+  const { data: inserted, error } = await db
     .from('diagnostic_purchases')
-    .upsert(purchase, { onConflict: 'stripe_checkout_session_id', ignoreDuplicates: true })
+    .upsert(row, { onConflict: 'stripe_checkout_session_id', ignoreDuplicates: true })
     .select('id');
 
   // Les deux échecs ci-dessous rendent le même code — 500 — mais se
@@ -132,6 +173,11 @@ export const POST: APIRoute = async ({ request }) => {
     // perdrait définitivement : client débité, produit fermé.
     console.error('stripe-webhook: ERREUR_BASE — achat non enregistré pour', purchase.user_id, '—', error.message);
     return new Response('unlock failed', { status: 500 });
+  }
+
+  if (duplicate) {
+    console.warn('stripe-webhook: diagnostic en double remboursé pour', purchase.user_id, '—', session.id);
+    return new Response('duplicate refunded', { status: 200 });
   }
 
   // Emails MailerLite, seulement au premier enregistrement (un rejeu ne

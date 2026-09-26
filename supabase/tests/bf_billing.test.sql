@@ -141,6 +141,16 @@ reset role;
 -- Places de lancement décomptées.
 update bf_billing set plan = 'unlimited_launch' where user_id = '00000000-0000-0000-0000-0000000000b1';
 select pg_temp.check(bf_launch_seats_remaining() = 19, '19 places');
+-- Impayé : la place reste prise pendant les relances et la grâce, puis se libère.
+update bf_billing set status = 'past_due', stripe_subscription_id = null, grace_until = now() + interval '1 day'
+where user_id = '00000000-0000-0000-0000-0000000000b1';
+select pg_temp.check(bf_launch_seats_remaining() = 19, 'impayé, grâce en cours : place prise');
+update bf_billing set grace_until = now() - interval '1 day' where user_id = '00000000-0000-0000-0000-0000000000b1';
+select pg_temp.check(bf_launch_seats_remaining() = 20, 'impayé, grâce passée, sans abonnement : place libérée');
+update bf_billing set stripe_subscription_id = 'sub_relance' where user_id = '00000000-0000-0000-0000-0000000000b1';
+select pg_temp.check(bf_launch_seats_remaining() = 19, 'impayé, Stripe relance encore : place prise');
+update bf_billing set status = 'active', stripe_subscription_id = null, grace_until = null
+where user_id = '00000000-0000-0000-0000-0000000000b1';
 
 -- BF activé à la main sans ligne de facturation : essai ouvert à la volée.
 update users set role = 'bike-fitter' where id = '00000000-0000-0000-0000-00000000a002';
@@ -160,4 +170,32 @@ update bf_billing set stripe_subscription_id = 'sub_test' where user_id = '00000
 set role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000b1');
 select pg_temp.check((bf_usage_summary() ->> 'has_subscription')::boolean, 'résumé : abonnement en cours');
+reset role;
+
+-- Créance : relances à J+0, J+7, J+21, puis plus rien ; remise à zéro à la
+-- facture suivante, arrêt dès que la facture est réglée.
+insert into vault.decrypted_secrets select 'bf_notify_secret', 'notify-secret'
+where not exists (select 1 from vault.decrypted_secrets where name = 'bf_notify_secret');
+delete from net.calls;
+update bf_billing set unpaid_invoice_id = 'in_1', unpaid_amount = 9480, unpaid_invoice_url = 'https://invoice.stripe.com/i/x'
+where user_id = '00000000-0000-0000-0000-0000000000b1';
+select pg_temp.check((select unpaid_since is not null and unpaid_reminders = 0 from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1'), 'créance ouverte');
+select pg_temp.check(bf_send_unpaid_reminders() = 1, 'relance J+0');
+select pg_temp.check(bf_send_unpaid_reminders() = 0, 'pas de doublon dans l''heure');
+select pg_temp.check((select count(*) = 1 and bool_and(url like '%/notify-bf-unpaid' and body ->> 'amount' = '9480' and headers ->> 'x-hook-secret' = (select decrypted_secret from vault.decrypted_secrets where name = 'bf_notify_secret' limit 1)) from net.calls), 'appel de la fonction Edge');
+update bf_billing set unpaid_since = now() - interval '8 days' where user_id = '00000000-0000-0000-0000-0000000000b1';
+select pg_temp.check(bf_send_unpaid_reminders() = 1, 'relance J+7');
+update bf_billing set unpaid_since = now() - interval '22 days' where user_id = '00000000-0000-0000-0000-0000000000b1';
+select pg_temp.check(bf_send_unpaid_reminders() = 1, 'relance J+21');
+update bf_billing set unpaid_since = now() - interval '90 days' where user_id = '00000000-0000-0000-0000-0000000000b1';
+select pg_temp.check(bf_send_unpaid_reminders() = 0, 'trois relances au plus');
+update bf_billing set unpaid_invoice_id = 'in_2' where user_id = '00000000-0000-0000-0000-0000000000b1';
+select pg_temp.check((select unpaid_reminders = 0 and unpaid_since > now() - interval '1 minute' from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1'), 'nouvelle facture : compteur remis à zéro');
+update bf_billing set unpaid_invoice_id = null, unpaid_amount = null, unpaid_invoice_url = null where user_id = '00000000-0000-0000-0000-0000000000b1';
+select pg_temp.check(bf_send_unpaid_reminders() = 0, 'facture réglée : plus de relance');
+set role authenticated;
+do $$ begin
+  perform bf_send_unpaid_reminders();
+  raise exception 'ÉCHEC : relances appelables par un client';
+exception when insufficient_privilege then null; end $$;
 reset role;

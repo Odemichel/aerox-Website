@@ -11,8 +11,11 @@ import { BF_AVAILABLE_AT, LAUNCH_OFFER } from '~/lib/billing/catalog';
 
 interface Props {
   lang: Locale;
+  // Affiché dans l'espace bike fitter : le compte existe déjà, l'appel à
+  // l'essai gratuit (inscription) n'a plus de sens, seuls les achats restent.
+  inAccount?: boolean;
 }
-const { lang } = Astro.props;
+const { lang, inAccount = false } = Astro.props;
 const dict = getDict(lang);
 
 // Montants HT, formatés selon la langue (« 300 € », « €300 »…).
@@ -122,7 +125,7 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
         data-seats-template={t(dict, 'bfp.launch.seats')}
       >
         <span
-          class="bf-launch-only absolute -top-3 left-6 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wide text-white"
+          class="bf-launch-badge absolute -top-3 left-6 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wide text-white"
         >
           {t(dict, 'bfp.launch.badge')}
         </span>
@@ -152,7 +155,20 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
           <p class="mt-1 text-sm font-semibold text-primary">{per('bfp.per.at20', 3.45)}</p>
           <p class="mt-2 text-sm">
             {t(dict, 'bfp.launch.text')}
-            <span id="bf-launch-seats" class="font-semibold text-primary" aria-live="polite"></span>
+            <span class="bf-launch-seats font-semibold text-primary" aria-live="polite"></span>
+          </p>
+        </div>
+
+        <div class="bf-launchyearly-only mt-4 hidden">
+          <p class="flex flex-wrap items-baseline gap-x-2">
+            <span class="text-2xl font-semibold text-muted line-through">{eur(1190)}</span>
+            <span class="text-4xl font-bold">{eur(690)}</span>
+            <span class="text-sm text-muted">{priceSuffix(t(dict, 'bfp.perYear'))}</span>
+          </p>
+          <p class="text-sm text-muted">{t(dict, 'bfp.launch.yearUntil')}</p>
+          <p class="mt-2 text-sm">
+            {t(dict, 'bfp.launch.text')}
+            <span class="bf-launch-seats font-semibold text-primary" aria-live="polite"></span>
           </p>
         </div>
 
@@ -192,6 +208,13 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
         </button>
         <button
           type="button"
+          class="bf-buy bf-launchyearly-only hidden btn-primary w-full justify-center"
+          data-offer="unlimited_launch_annual"
+        >
+          {t(dict, 'bfp.launch.cta')}
+        </button>
+        <button
+          type="button"
           class="bf-buy bf-standard-only hidden btn-primary w-full justify-center"
           data-offer="unlimited"
         >
@@ -222,8 +245,8 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
       </dl>
     </div>
 
-    <!-- Essai gratuit : l'action principale pour découvrir AeroX -->
-    <div class="mt-8 flex flex-col items-center gap-2 text-center">
+    <!-- Essai gratuit : l'action principale pour découvrir AeroX (hors espace BF) -->
+    <div class={`mt-8 flex flex-col items-center gap-2 text-center ${inAccount ? 'hidden' : ''}`}>
       <a href={trialHref} class="btn-primary px-8 py-3 text-lg font-semibold">{t(dict, 'bf.cta.trial')}</a>
       <p class="text-sm text-muted">{t(dict, 'bfp.trial')}</p>
       <p class="text-sm text-muted">
@@ -275,8 +298,19 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
   function render() {
     const card = document.getElementById('bf-unlimited');
     if (!card) return;
-    const mode = state.billing === 'yearly' ? 'yearly' : state.launchOpen ? 'launch' : 'standard';
-    for (const m of ['launch', 'standard', 'yearly']) {
+    const mode =
+      state.billing === 'yearly'
+        ? state.launchOpen
+          ? 'launchyearly'
+          : 'yearly'
+        : state.launchOpen
+          ? 'launch'
+          : 'standard';
+    // Le badge « offre de lancement » vaut pour le mensuel et l'annuel.
+    card
+      .querySelectorAll<HTMLElement>('.bf-launch-badge')
+      .forEach((n) => n.classList.toggle('hidden', !state.launchOpen));
+    for (const m of ['launch', 'standard', 'launchyearly', 'yearly']) {
       card.querySelectorAll<HTMLElement>(`.bf-${m}-only`).forEach((n) => n.classList.toggle('hidden', m !== mode));
     }
     // Choix actif : fond orange, texte bleu nuit AeroX en gras pour ressortir.
@@ -293,8 +327,8 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
   // Offre de lancement : date limite et places restantes, lues en direct.
   async function refreshLaunch() {
     const card = document.getElementById('bf-unlimited');
-    const seatsEl = document.getElementById('bf-launch-seats');
-    if (!card || !seatsEl) return;
+    const seatsEls = document.querySelectorAll<HTMLElement>('.bf-launch-seats');
+    if (!card || !seatsEls.length) return;
 
     if (Date.now() >= Number(card.dataset.switchAt)) {
       state.launchOpen = false;
@@ -304,7 +338,7 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
     const { data, error } = await supabase.rpc('bf_launch_seats_remaining');
     if (error || typeof data !== 'number') return; // rien plutôt qu'un chiffre faux
     if (data <= 0) state.launchOpen = false;
-    else seatsEl.textContent = (card.dataset.seatsTemplate ?? '').replace('{n}', String(data));
+    else seatsEls.forEach((el) => (el.textContent = (card.dataset.seatsTemplate ?? '').replace('{n}', String(data))));
     render();
   }
 

@@ -10,10 +10,29 @@ import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP } from './catalog';
 // `pack` : plan historique (crédits prépayés), plus vendu ; conservé pour les
 // comptes et les crédits existants.
 export type Plan = 'trial' | 'pack' | 'payg' | 'studio' | 'unlimited' | 'unlimited_launch' | 'legacy';
-export type Offer = 'payg' | 'studio' | 'unlimited' | 'unlimited_annual' | 'unlimited_launch';
+export type Offer =
+  | 'payg'
+  | 'studio'
+  | 'unlimited'
+  | 'unlimited_annual'
+  | 'unlimited_launch'
+  | 'unlimited_launch_annual';
 export type BillingStatus = 'active' | 'past_due' | 'read_only';
 
-export const OFFERS: readonly Offer[] = ['payg', 'studio', 'unlimited', 'unlimited_annual', 'unlimited_launch'];
+export const OFFERS: readonly Offer[] = [
+  'payg',
+  'studio',
+  'unlimited',
+  'unlimited_annual',
+  'unlimited_launch',
+  'unlimited_launch_annual',
+];
+
+/** Offres de lancement : 20 places partagées, souscription jusqu'au 31/12/2026. */
+export const LAUNCH_OFFERS: readonly Offer[] = ['unlimited_launch', 'unlimited_launch_annual'];
+
+/** Offres facturées à l'année. */
+export const ANNUAL_OFFERS: readonly Offer[] = ['unlimited_annual', 'unlimited_launch_annual'];
 
 export const isOffer = (raw: unknown): raw is Offer => typeof raw === 'string' && OFFERS.includes(raw as Offer);
 
@@ -26,6 +45,7 @@ export const OFFER_LOOKUP_KEYS: Record<Offer, string[]> = {
   unlimited: [LOOKUP.unlimited],
   unlimited_annual: [LOOKUP.unlimitedYear],
   unlimited_launch: [LOOKUP.unlimitedLaunch],
+  unlimited_launch_annual: [LOOKUP.unlimitedLaunchYear],
 };
 
 /** Prix mesurés : pas de quantité dans Checkout ni dans un changement d'offre. */
@@ -41,7 +61,10 @@ export const OFFER_RANK: Record<Offer, number> = {
   studio: 1,
   unlimited_launch: 2,
   unlimited: 3,
-  unlimited_annual: 4,
+  // Annuel : engagement le plus long. Le quitter pour un mensuel prend
+  // effet à la fin de l'année déjà payée.
+  unlimited_launch_annual: 4,
+  unlimited_annual: 5,
 };
 
 export const isDowngrade = (from: Offer, to: Offer) => OFFER_RANK[to] < OFFER_RANK[from];
@@ -74,7 +97,14 @@ export function launchOfferOpen(nowMs: number, seatsRemaining: number): boolean 
 export function planFromLookupKeys(keys: (string | null | undefined)[]): Plan | null {
   const set = new Set(keys.filter(Boolean));
   if (set.has(LOOKUP.studioBase)) return 'studio';
-  if (set.has(LOOKUP.unlimitedLaunch) || set.has(LOOKUP.unlimitedLaunchAfter)) return 'unlimited_launch';
+  if (
+    set.has(LOOKUP.unlimitedLaunch) ||
+    set.has(LOOKUP.unlimitedLaunchAfter) ||
+    set.has(LOOKUP.unlimitedLaunchYear) ||
+    set.has(LOOKUP.unlimitedLaunchYearAfter)
+  ) {
+    return 'unlimited_launch';
+  }
   if (set.has(LOOKUP.unlimited) || set.has(LOOKUP.unlimitedYear)) return 'unlimited';
   if (set.has(LOOKUP.payg)) return 'payg';
   return null;
@@ -83,6 +113,7 @@ export function planFromLookupKeys(keys: (string | null | undefined)[]): Plan | 
 /** Offre correspondant aux prix d'un abonnement (pour comparer les rangs). */
 export function offerFromLookupKeys(keys: (string | null | undefined)[]): Offer | null {
   const set = new Set(keys.filter(Boolean));
+  if (set.has(LOOKUP.unlimitedLaunchYear) || set.has(LOOKUP.unlimitedLaunchYearAfter)) return 'unlimited_launch_annual';
   if (set.has(LOOKUP.unlimitedYear)) return 'unlimited_annual';
   if (set.has(LOOKUP.unlimitedLaunch) || set.has(LOOKUP.unlimitedLaunchAfter)) return 'unlimited_launch';
   if (set.has(LOOKUP.unlimited)) return 'unlimited';
@@ -154,26 +185,32 @@ export function planAfterSubscriptionEnds(): Plan {
 }
 
 /**
- * Montant HT estimé (centimes) de la prochaine facture, pour l'espace bike
- * fitter. `periodDays` distingue l'Illimité annuel du mensuel.
+ * Montant HT estimé (centimes) de la prochaine facture d'une offre, pour
+ * l'espace bike fitter. `periodEndMs` : fin de la période en cours (date de
+ * la prochaine facture).
  */
-export function estimatedNextInvoiceCents(
-  plan: Plan | null,
+export function nextInvoiceCentsForOffer(
+  offer: Offer,
   analysesInPeriod: number,
   nowMs: number,
-  periodDays = 30
-): number | null {
-  switch (plan) {
+  periodEndMs: number | null
+): number {
+  switch (offer) {
     case 'payg':
       return analysesInPeriod * 2000;
     case 'studio':
       return 7900 + Math.max(0, analysesInPeriod - 5) * 1000;
     case 'unlimited':
-      return periodDays > 40 ? 119000 : 11900;
+      return 11900;
+    case 'unlimited_annual':
+      return 119000;
     case 'unlimited_launch':
       return nowMs < LAUNCH_OFFER.switchAt ? 6900 : 9900;
-    default:
-      return null;
+    case 'unlimited_launch_annual':
+      // Encore en période d'essai Stripe (avant le 1er novembre) : la
+      // prochaine facture est la première année, à 690 €. Sinon c'est le
+      // renouvellement, à 990 €.
+      return periodEndMs !== null && periodEndMs <= BF_AVAILABLE_AT + DAY_MS ? 69000 : 99000;
   }
 }
 

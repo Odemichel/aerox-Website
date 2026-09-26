@@ -77,11 +77,12 @@ export async function openPortal(lang: string): Promise<BillingError | null> {
 }
 
 /**
- * Change d'offre ou résilie. `effectiveAt` (secondes) est posé quand le
+ * Change d'offre, résilie, reprend un abonnement résilié ou annule une
+ * descente programmée (`keep`). `effectiveAt` (secondes) est posé quand le
  * changement est une descente, appliquée à la fin de la période payée.
  */
 export async function manageSubscription(
-  action: 'change' | 'cancel' | 'resume',
+  action: 'change' | 'cancel' | 'resume' | 'keep',
   offer?: Offer
 ): Promise<{ error: BillingError | null; effectiveAt?: number }> {
   const r = await post('/api/billing/manage/', { action, offer });

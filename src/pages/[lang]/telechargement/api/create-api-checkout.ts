@@ -24,6 +24,8 @@ import type { APIRoute } from 'astro';
 import Stripe from 'stripe';
 import { SUPPORTED_LOCALES } from '~/lib/i18n';
 import { authenticatedUser } from '~/lib/serverAuth';
+import { supabaseAdmin } from '~/lib/billing/server';
+import { hasActiveDiagnostic } from '~/lib/diagnostic/entitlement';
 
 const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY as string);
 
@@ -120,6 +122,19 @@ export const POST: APIRoute = async ({ request, site }) => {
 
       const user = await authenticatedUser(request, 'create-api-checkout');
       if (!user) return fail(401, 'E_AUTH');
+
+      // Le Diagnostic est un produit cycliste : un compte bike fitter ne
+      // l'achète pas (et un cycliste n'achète pas d'offre BF, voir
+      // /api/billing/checkout/).
+      const { data: profile } = await supabaseAdmin().from('users').select('role').eq('id', user.id).maybeSingle();
+      if (profile?.role === 'bike-fitter' || profile?.role === 'pending_bf') return fail(403, 'E_ROLE');
+
+      // Un diagnostic à la fois : un achat payé non utilisé, ou un diagnostic
+      // en cours, bloque un second paiement (double clic, deux onglets, rachat
+      // par erreur). Le webhook rembourse le cas restant (voir stripe-webhook).
+      if (body.product === 'diagnostic' && (await hasActiveDiagnostic(supabaseAdmin(), user.id))) {
+        return fail(409, 'E_ALREADY_OWNED');
+      }
 
       const prices = await stripe.prices.list({ lookup_keys: [lookupKey], active: true });
       if (!prices.data.length) {

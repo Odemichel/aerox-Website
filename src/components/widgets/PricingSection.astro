@@ -59,7 +59,15 @@ const dict = getDict(lang);
   ]}
 />
 
-<div id="buy-diagnostic-config" data-lang={lang} data-error={t(dict, 'pricing.diagnostic.error')} class="hidden"></div>
+<div
+  id="buy-diagnostic-config"
+  data-lang={lang}
+  data-error={t(dict, 'pricing.diagnostic.error')}
+  data-owned={t(dict, 'pricing.diagnostic.alreadyOwned')}
+  data-bf={t(dict, 'pricing.diagnostic.bfAccount')}
+  class="hidden"
+>
+</div>
 
 <script>
   import { supabase } from '~/config/supabaseClient';
@@ -84,6 +92,8 @@ const dict = getDict(lang);
     const cfg = document.getElementById('buy-diagnostic-config');
     const lang = cfg?.dataset.lang ?? 'fr';
     const buyError = cfg?.dataset.error ?? '';
+    const alreadyOwned = cfg?.dataset.owned ?? '';
+    const bfAccount = cfg?.dataset.bf ?? '';
 
     // Deux situations mènent au même endroit : aucune session dans le
     // navigateur, et une session que le serveur refuse (compte supprimé,
@@ -143,6 +153,23 @@ const dict = getDict(lang);
         // reconnexion suffit.
         if (res.status === 401) {
           goToSignup();
+          return;
+        }
+
+        // Un diagnostic payé et non utilisé (ou en cours) existe déjà : pas de
+        // second paiement, on renvoie vers l'espace où il apparaît.
+        // Compte bike fitter : le Diagnostic est réservé aux cyclistes.
+        if (res.status === 403) {
+          alert(bfAccount);
+          btn.disabled = false;
+          btn.innerHTML = prev;
+          return;
+        }
+
+        if (res.status === 409) {
+          if (confirm(alreadyOwned)) window.location.href = `/${lang}/inscription/dashboard/`;
+          btn.disabled = false;
+          btn.innerHTML = prev;
           return;
         }
 

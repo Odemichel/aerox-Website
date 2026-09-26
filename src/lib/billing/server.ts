@@ -32,6 +32,7 @@ export type BillingRow = {
   current_period_start: string | null;
   current_period_end: string | null;
   trial_state: 'needs_card' | 'granted' | 'card_already_used';
+  unpaid_invoice_id?: string | null;
 };
 
 export const json = (body: unknown, status = 200) =>
@@ -73,11 +74,21 @@ export async function priceIdForLookup(lookupKey: string): Promise<string> {
  * d'idempotence évite deux clients si deux onglets lancent un paiement en
  * même temps.
  */
-export async function ensureCustomer(db: SupabaseClient, user: User, billing: BillingRow | null): Promise<string> {
+export async function ensureCustomer(
+  db: SupabaseClient,
+  user: User,
+  billing: BillingRow | null,
+  lang?: string
+): Promise<string> {
   if (billing?.stripe_customer_id) return billing.stripe_customer_id;
 
   const customer = await stripe().customers.create(
-    { email: user.email ?? undefined, metadata: { userId: user.id } },
+    {
+      email: user.email ?? undefined,
+      metadata: { userId: user.id },
+      // Langue des e-mails Stripe (relance d'une facture impayée, reçus).
+      preferred_locales: lang ? [lang] : undefined,
+    },
     { idempotencyKey: `aerox-bf-customer-${user.id}` }
   );
   // Upsert sur la seule colonne client : une ligne manquante naît avec les

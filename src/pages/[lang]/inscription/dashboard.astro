@@ -1,8 +1,9 @@
 ---
 import PricingSection from '~/components/widgets/PricingSection.astro';
+import BfPricing from '~/components/widgets/BfPricing.astro';
 
 import Layout from '../../../layouts/PageLayout.astro';
-import { getDict, t } from '~/lib/i18n';
+import { getDict, t, type Locale } from '~/lib/i18n';
 
 const { lang } = Astro.params;
 const dict = getDict(lang);
@@ -31,6 +32,7 @@ const bfLabels = Object.fromEntries(
     'plan.studio',
     'plan.unlimited',
     'plan.unlimited_launch',
+    'plan.unlimited_launch_annual',
     'plan.legacy',
     'pastDue',
     'readOnly',
@@ -46,8 +48,19 @@ const bfLabels = Object.fromEntries(
     'cancel',
     'cancelConfirm',
     'cancelDone',
-    'changeConfirm',
+    'cancelScheduled',
+    'resume',
+    'resumeDone',
+    'changeScheduled',
+    'keep',
+    'keepDone',
+    'changeConfirmUp',
+    'changeConfirmDown',
+    'leaveLaunch',
     'changeDone',
+    'updating',
+    'debt',
+    'payDebt',
     'success',
     'error',
     'onboarding',
@@ -59,6 +72,11 @@ const bfLabels = Object.fromEntries(
   ].map((k) => [k, t(dict, `dash.bf.${k}`)])
 );
 bfLabels['vat'] = t(dict, 'bfp.vat');
+
+// Achats du Diagnostic AeroX (cycliste), lus par le script client.
+const diagLabels = Object.fromEntries(
+  ['title', 'purchased', 'preorder', 'available', 'consumed', 'refunded'].map((k) => [k, t(dict, `dash.diag.${k}`)])
+);
 ---
 
 <Layout metadata={metadata}>
@@ -77,6 +95,8 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
       data-noStudio={noStudio}
       data-pendingActivation={pendingActivation}
       data-activeBf={activeBf}
+      data-notLogged={t(dict, 'dashboard.notLogged')}
+      data-profileNotFound={t(dict, 'dashboard.profileNotFound')}
       class="text-center"
     >
       <p>{t(dict, 'dashboard.loading')}</p>
@@ -88,6 +108,15 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
       class="hidden mt-8 p-6 border rounded-lg bg-gray-50 dark:bg-gray-800 text-left"
       data-lang={lang}
       data-labels={JSON.stringify(bfLabels)}
+    >
+    </div>
+
+    <!-- Diagnostic AeroX : rempli par le script si le compte a des achats -->
+    <div
+      id="diag-panel"
+      class="hidden mt-8 p-6 border rounded-lg bg-gray-50 dark:bg-gray-800 text-left"
+      data-lang={lang}
+      data-labels={JSON.stringify(diagLabels)}
     >
     </div>
 
@@ -112,7 +141,7 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
         // Vérifie si l'utilisateur est connecté
         const { data: userData, error } = await supabase.auth.getUser();
         if (error || !userData?.user) {
-          content.innerHTML = `<p class="text-red-600">Tu n'es pas connect\u00e9.</p>`;
+          content.innerHTML = `<p class="text-red-600">${content.dataset.notlogged ?? ''}</p>`;
           return;
         }
 
@@ -153,6 +182,17 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
             }
           }
 
+          // Packs cyclistes : pour les cyclistes (et l'admin) seulement.
+          const isBf = profile.role === 'bike-fitter' || profile.role === 'pending_bf';
+          document.getElementById('rider-offers')?.classList.toggle('hidden', isBf);
+          // Compte bike fitter : ni bandeau ni bouton « Pré-réserve ton
+          // Diagnostic » (promotions cyclistes) dans son espace.
+          if (isBf) {
+            document
+              .querySelectorAll<HTMLElement>('[data-rider-promo], [data-header-actions]')
+              .forEach((n) => n.classList.add('hidden'));
+          }
+
           content.innerHTML = `
         <div class="mt-6 p-6 border rounded-lg bg-gray-50 dark:bg-gray-800 text-left inline-block">
           <p><strong>${labelEmail} :</strong> ${user.email}</p>
@@ -175,7 +215,7 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
             loadDashboard();
             return;
           }
-          content.innerHTML = `<p class="text-red-600">Profil non trouvé. Vérifie que ton email est bien confirmé.</p>`;
+          content.innerHTML = `<p class="text-red-600">${content.dataset.profilenotfound ?? ''}</p>`;
         }
       }
 
@@ -185,16 +225,23 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
     <script>
       import { supabase } from '../../../config/supabaseClient';
       import { manageSubscription, openPortal, startTrialCard } from '~/lib/billing/client';
-      import { estimatedNextInvoiceCents, type Offer, type Plan } from '~/lib/billing/logic';
+      import { isDowngrade, nextInvoiceCentsForOffer, type Offer, type Plan } from '~/lib/billing/logic';
+      import { isDiagnosticAvailable } from '~/config/diagnostic';
 
       type Summary = {
         plan: Plan | null;
+        offer: Offer | null;
         trial_state: 'needs_card' | 'granted' | 'card_already_used' | null;
         status: string | null;
         access: 'full' | 'read_only' | null;
         grace_until: string | null;
         current_period_start: string | null;
         current_period_end: string | null;
+        cancel_at: string | null;
+        scheduled_offer: Offer | null;
+        scheduled_at: string | null;
+        unpaid_amount: number | null;
+        unpaid_invoice_url: string | null;
         has_stripe_customer: boolean | null;
         has_subscription: boolean | null;
         analyses_in_period: number;
@@ -213,39 +260,40 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
         return node;
       }
 
-      async function loadBfBilling() {
-        const panel = document.getElementById('bf-billing-panel');
-        if (!panel || panel.dataset.bound === '1') return;
-        panel.dataset.bound = '1';
-        const lang = panel.dataset.lang ?? 'fr';
-        const L: Record<string, string> = JSON.parse(panel.dataset.labels ?? '{}');
+      const dateFmt = (lang: string) => (iso: string | null) =>
+        iso
+          ? new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso))
+          : '';
 
-        const { data: userData } = await supabase.auth.getUser();
-        if (!userData?.user) return;
-        const { data: profile } = await supabase.from('users').select('role').eq('id', userData.user.id).maybeSingle();
-        if (profile?.role !== 'bike-fitter' && profile?.role !== 'admin') return;
-
+      async function fetchSummary(): Promise<Summary | null> {
         const { data, error } = await supabase.rpc('bf_usage_summary');
         const s = data as Summary | null;
-        if (error || !s?.plan) return;
+        return error || !s?.plan ? null : s;
+      }
 
-        const date = (iso: string | null) =>
-          iso
-            ? new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso))
-            : '';
+      /** Rend le panneau de facturation. `flash` : message à afficher après le rendu. */
+      function render(panel: HTMLElement, s: Summary, flash?: { text: string; ok: boolean }) {
+        const lang = panel.dataset.lang ?? 'fr';
+        const L: Record<string, string> = JSON.parse(panel.dataset.labels ?? '{}');
+        const date = dateFmt(lang);
         const eur = (cents: number) =>
           new Intl.NumberFormat(lang, { style: 'currency', currency: 'EUR' }).format(cents / 100);
 
         const msg = el('p', 'mt-4 hidden font-semibold');
+        msg.setAttribute('aria-live', 'polite');
         const say = (text: string, ok: boolean) => {
           msg.textContent = text;
           msg.classList.remove('hidden', 'text-red-600', 'text-green-600');
           msg.classList.add(ok ? 'text-green-600' : 'text-red-600');
         };
 
+        // Offre exacte (Illimité mensuel ou annuel) : écrite par le webhook.
+        const current: Offer | null = s.offer ?? (SUBSCRIPTION_PLANS.includes(s.plan!) ? (s.plan as Offer) : null);
+        const offerLabel = (o: string) => L[`plan.${o}`] ?? o;
+
         panel.replaceChildren();
         panel.append(el('h2', 'text-xl font-bold mb-2', L.title));
-        panel.append(el('p', 'text-lg font-semibold text-primary', L[`plan.${s.plan}`] ?? s.plan));
+        panel.append(el('p', 'text-lg font-semibold text-primary', offerLabel(current ?? s.plan!)));
 
         if (s.status === 'past_due' && s.access === 'full') {
           panel.append(
@@ -253,6 +301,39 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
           );
         } else if (s.access === 'read_only') {
           panel.append(el('p', 'mt-2 text-red-600 font-semibold', L.readOnly));
+        }
+        if (s.has_subscription && s.cancel_at) {
+          panel.append(
+            el(
+              'p',
+              'mt-2 text-yellow-700 dark:text-yellow-400 font-semibold',
+              L.cancelScheduled.replace('{date}', date(s.cancel_at))
+            )
+          );
+        } else if (s.has_subscription && s.scheduled_offer) {
+          panel.append(
+            el(
+              'p',
+              'mt-2 text-yellow-700 dark:text-yellow-400',
+              L.changeScheduled
+                .replace('{offer}', offerLabel(s.scheduled_offer))
+                .replace('{date}', date(s.scheduled_at))
+            )
+          );
+        }
+
+        // Créance : facture restée impayée à la fin d'un abonnement.
+        if (s.unpaid_amount) {
+          const box = el('div', 'mt-4 rounded-md border-2 border-red-600 bg-white dark:bg-gray-900 p-4');
+          box.append(el('p', 'font-bold text-red-600', L.debt.replace('{amount}', eur(s.unpaid_amount))));
+          if (s.unpaid_invoice_url) {
+            const pay = el('a', 'btn-primary mt-3 inline-flex', L.payDebt);
+            pay.href = s.unpaid_invoice_url;
+            pay.target = '_blank';
+            pay.rel = 'noopener';
+            box.append(pay);
+          }
+          panel.append(box);
         }
 
         // Essai : les 2 analyses offertes se débloquent avec une carte (0 €).
@@ -282,15 +363,25 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
         };
         stat(L.analyses, String(s.analyses_in_period));
         if (s.plan === 'trial' || s.plan === 'pack') {
-          stat(L.credits, String(s.credits_remaining), L.creditsExpiry.replace('{date}', date(s.credits_next_expiry)));
+          stat(
+            L.credits,
+            String(s.credits_remaining),
+            s.credits_next_expiry ? L.creditsExpiry.replace('{date}', date(s.credits_next_expiry)) : ''
+          );
         }
-        // Illimité annuel : période de plus de 40 jours.
-        const periodDays =
-          s.current_period_start && s.current_period_end
-            ? (new Date(s.current_period_end).getTime() - new Date(s.current_period_start).getTime()) / 86400000
-            : 30;
-        const annual = s.plan === 'unlimited' && periodDays > 40;
-        const next = estimatedNextInvoiceCents(s.plan, s.analyses_in_period, Date.now(), periodDays);
+        // Pas de prochaine facture quand l'abonnement s'arrête à l'échéance.
+        // Descente programmée à l'échéance : la facture est celle de la
+        // nouvelle offre.
+        const billed = s.scheduled_offer ?? current;
+        const next =
+          s.has_subscription && !s.cancel_at && billed
+            ? nextInvoiceCentsForOffer(
+                billed,
+                s.scheduled_offer ? 0 : s.analyses_in_period,
+                Date.now(),
+                s.current_period_end ? new Date(s.current_period_end).getTime() : null
+              )
+            : null;
         if (next !== null) {
           stat(
             L.nextInvoice,
@@ -317,60 +408,168 @@ bfLabels['vat'] = t(dict, 'bfp.vat');
           a.href = href;
           actions.append(a);
         };
+        // Action sur l'abonnement : la route réaligne la base avant de
+        // répondre, le panneau est redessiné avec l'état à jour.
+        const act = async (action: 'change' | 'cancel' | 'resume' | 'keep', done: string, offer?: Offer) => {
+          say(L.updating, true);
+          const r = await manageSubscription(action, offer);
+          if (r.error) return r.error;
+          const fresh = await fetchSummary();
+          if (fresh) render(panel, fresh, { text: done, ok: true });
+          else say(done, true);
+          return null;
+        };
 
         if (s.has_stripe_customer) button(L.portal, 'btn-primary', () => openPortal(lang));
 
-        if (s.plan === 'trial' || s.plan === 'pack') {
-          link(L.seeOffers, `/${lang}/bike-fitting/#tarifs`, 'btn-secondary');
+        const ownsOffer = SUBSCRIPTION_PLANS.includes(s.plan!);
+        if (s.plan === 'trial' || s.plan === 'pack' || (ownsOffer && !s.has_subscription)) {
+          // Sans abonnement (essai, ou résilié par Stripe pour impayé) : on
+          // propose de souscrire plutôt que de modifier.
+          link(L.seeOffers, '#tarifs', 'btn-secondary');
         }
 
-        // Offre sans abonnement en cours (résilié par Stripe pour impayé) :
-        // on propose de se réabonner plutôt que de modifier.
-        if (SUBSCRIPTION_PLANS.includes(s.plan) && !s.has_subscription) {
-          link(L.seeOffers, `/${lang}/bike-fitting/#tarifs`, 'btn-secondary');
-        }
-
-        if (SUBSCRIPTION_PLANS.includes(s.plan) && s.has_subscription) {
-          const current: Offer = annual ? 'unlimited_annual' : (s.plan as Offer);
-          const others = (['payg', 'studio', 'unlimited', 'unlimited_annual'] as Offer[]).filter((o) => o !== current);
-          for (const offer of others) {
-            button(L.changeTo.replace('{offer}', L[`plan.${offer}`]), 'btn-secondary', async () => {
-              if (!confirm(L.changeConfirm)) return null;
-              const r = await manageSubscription('change', offer);
-              if (!r.error) {
-                say(
-                  r.effectiveAt
-                    ? L.changeLater.replace('{date}', date(new Date(r.effectiveAt * 1000).toISOString()))
-                    : L.changeDone,
-                  true
+        if (ownsOffer && s.has_subscription && current) {
+          if (s.cancel_at) {
+            button(L.resume, 'btn-secondary', () => act('resume', L.resumeDone));
+          } else {
+            if (s.scheduled_offer) button(L.keep, 'btn-secondary', () => act('keep', L.keepDone));
+            const others = (['payg', 'studio', 'unlimited', 'unlimited_annual'] as Offer[]).filter(
+              (o) => o !== current && o !== s.scheduled_offer
+            );
+            for (const offer of others) {
+              const down = isDowngrade(current, offer);
+              button(L.changeTo.replace('{offer}', offerLabel(offer)), 'btn-secondary', async () => {
+                let question = (down ? L.changeConfirmDown : L.changeConfirmUp).replace('{offer}', offerLabel(offer));
+                if (current === 'unlimited_launch') question += `\n\n${L.leaveLaunch}`;
+                if (!confirm(question)) return null;
+                return act(
+                  'change',
+                  down ? L.changeLater.replace('{date}', date(s.current_period_end)) : L.changeDone,
+                  offer
                 );
-              }
-              return r.error;
+              });
+            }
+            button(L.cancel, 'btn-tertiary text-red-600', async () => {
+              if (!confirm(L.cancelConfirm)) return null;
+              return act('cancel', L.cancelDone);
             });
           }
-          button(L.cancel, 'btn-tertiary text-red-600', async () => {
-            if (!confirm(L.cancelConfirm)) return null;
-            const r = await manageSubscription('cancel');
-            if (!r.error) say(L.cancelDone, true);
-            return r.error;
-          });
         }
 
-        if (s.plan === 'trial') link(L.onboarding, `/${lang}/bike-fitting/bienvenue/`, 'btn-tertiary underline');
+        // Démarrage : seulement tant que l'essai est à ouvrir ou à utiliser
+        // (un abonnement terminé repasse en « essai » sans crédit).
+        if (s.plan === 'trial' && (s.trial_state === 'needs_card' || s.credits_remaining > 0)) {
+          link(L.onboarding, `/${lang}/bike-fitting/bienvenue/`, 'btn-tertiary underline');
+        }
 
         panel.append(actions, msg);
         panel.classList.remove('hidden');
+        // Offres BF payables depuis l'espace, tant qu'aucun abonnement n'est en cours.
+        document.getElementById('bf-offers')?.classList.toggle('hidden', Boolean(s.has_subscription));
+        if (flash) say(flash.text, flash.ok);
+      }
 
-        // Retour de Checkout : le webhook peut arriver quelques secondes après.
+      async function loadBfBilling() {
+        const panel = document.getElementById('bf-billing-panel');
+        if (!panel || panel.dataset.bound === '1') return;
+        panel.dataset.bound = '1';
+        const L: Record<string, string> = JSON.parse(panel.dataset.labels ?? '{}');
+
+        const { data: userData } = await supabase.auth.getUser();
+        if (!userData?.user) return;
+        const { data: profile } = await supabase.from('users').select('role').eq('id', userData.user.id).maybeSingle();
+        if (profile?.role !== 'bike-fitter' && profile?.role !== 'admin') return;
+
+        let s = await fetchSummary();
+        if (!s) return;
+
+        // Retour de Checkout : le webhook arrive en général quelques secondes
+        // après. Le message s'affiche tout de suite, le panneau se met à jour
+        // dès que l'offre (ou l'essai) est enregistrée.
         const billingState = new URLSearchParams(window.location.search).get('billing');
-        if (billingState === 'success') say(L.success, true);
-        if (billingState === 'card' && s.trial_state === 'needs_card') say(L['trialCard.done'], true);
+        const waiting =
+          (billingState === 'success' && !s.has_subscription) ||
+          (billingState === 'card' && s.trial_state === 'needs_card');
+        const flash =
+          billingState === 'success'
+            ? { text: L.success, ok: true }
+            : billingState === 'card' && s.trial_state === 'needs_card'
+              ? { text: L['trialCard.done'], ok: true }
+              : undefined;
+        render(panel, s, flash);
+
+        for (let i = 0; waiting && i < 15; i++) {
+          await new Promise((r) => setTimeout(r, 2000));
+          const fresh = await fetchSummary();
+          if (!fresh) break;
+          const arrived = billingState === 'success' ? fresh.has_subscription : fresh.trial_state !== 'needs_card';
+          if (arrived) {
+            s = fresh;
+            render(panel, s, flash);
+            break;
+          }
+        }
+      }
+
+      /** Achats du Diagnostic AeroX : statut de chaque achat (cycliste). */
+      async function loadDiagnostics() {
+        const panel = document.getElementById('diag-panel');
+        if (!panel || panel.dataset.bound === '1') return;
+        panel.dataset.bound = '1';
+        const lang = panel.dataset.lang ?? 'fr';
+        const L: Record<string, string> = JSON.parse(panel.dataset.labels ?? '{}');
+        const date = dateFmt(lang);
+
+        const { data: userData } = await supabase.auth.getUser();
+        if (!userData?.user) return;
+        const { data } = await supabase
+          .from('diagnostic_purchases')
+          .select('paid_at, consumed_at, refunded_at')
+          .eq('user_id', userData.user.id)
+          .order('paid_at', { ascending: false });
+        const rows = (data ?? []) as { paid_at: string; consumed_at: string | null; refunded_at: string | null }[];
+        if (!rows.length) return;
+
+        panel.replaceChildren(el('h2', 'text-xl font-bold mb-2', L.title));
+        const list = el('ul', 'space-y-2');
+        for (const r of rows) {
+          const status = r.refunded_at
+            ? L.refunded.replace('{date}', date(r.refunded_at))
+            : r.consumed_at
+              ? L.consumed.replace('{date}', date(r.consumed_at))
+              : isDiagnosticAvailable()
+                ? L.available
+                : L.preorder;
+          const li = el('li', 'rounded-md bg-white dark:bg-gray-900 p-3');
+          li.append(
+            el('p', 'font-semibold', L.purchased.replace('{date}', date(r.paid_at))),
+            el('p', r.refunded_at ? 'text-sm text-gray-500' : 'text-sm text-primary', status)
+          );
+          list.append(li);
+        }
+        panel.append(list);
+        panel.classList.remove('hidden');
       }
 
       loadBfBilling();
-      document.addEventListener('astro:page-load', loadBfBilling);
+      loadDiagnostics();
+      document.addEventListener('astro:page-load', () => {
+        loadBfBilling();
+        loadDiagnostics();
+      });
     </script>
   </section>
 
-  <PricingSection />
+  <!--
+    Offres, selon le compte (affichées par le script) : bike fitter sans
+    abonnement → offres BF payables d'ici ; cycliste → Diagnostic. Jamais
+    l'une chez l'autre (les routes de paiement refusent aussi le mauvais rôle).
+  -->
+  <div id="bf-offers" class="hidden mt-8">
+    <BfPricing lang={lang as Locale} inAccount />
+  </div>
+  <div id="rider-offers" class="hidden">
+    <PricingSection />
+  </div>
 </Layout>

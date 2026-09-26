@@ -103,6 +103,11 @@ export const LOOKUP = {
   // Prix vers lequel bascule l'offre de lancement au 01/01/2027, via le
   // subscription schedule posé par le webhook. Jamais vendu directement.
   unlimitedLaunchAfter: 'aerox_bf_unlimited_launch_after',
+  // Illimité annuel de lancement : 690 € la première année (souscription
+  // jusqu'au 31/12/2026, mêmes 20 places), puis 990 € par an via le schedule
+  // posé par le webhook. Le second prix n'est jamais vendu directement.
+  unlimitedLaunchYear: 'aerox_bf_unlimited_launch_year',
+  unlimitedLaunchYearAfter: 'aerox_bf_unlimited_launch_year_after',
 } as const;
 
 // Clés d'anciens prix retirés de la grille (Pack) : le script archive les
@@ -179,6 +184,24 @@ export const PRICES: PriceSpec[] = [
     tax_behavior: 'exclusive',
     unit_amount: 9900,
     recurring: { interval: 'month', usage_type: 'licensed' },
+  },
+  {
+    lookup_key: LOOKUP.unlimitedLaunchYear,
+    product: 'bf_unlimited_launch',
+    nickname: 'Illimité lancement annuel — 690 € HT la première année',
+    currency: 'eur',
+    tax_behavior: 'exclusive',
+    unit_amount: 69000,
+    recurring: { interval: 'year', usage_type: 'licensed' },
+  },
+  {
+    lookup_key: LOOKUP.unlimitedLaunchYearAfter,
+    product: 'bf_unlimited_launch',
+    nickname: 'Illimité lancement annuel — 990 € HT / an après la première année',
+    currency: 'eur',
+    tax_behavior: 'exclusive',
+    unit_amount: 99000,
+    recurring: { interval: 'year', usage_type: 'licensed' },
   },
 ];
 

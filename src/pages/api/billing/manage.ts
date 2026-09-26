@@ -12,15 +12,19 @@
 // de la période déjà payée, par un schedule : un passage en Illimité le temps
 // d'un mois chargé ne se rembourse pas.
 //
-// La base n'est pas écrite ici : le webhook `customer.subscription.updated`
-// qui suit la modification met `bf_billing` à jour, comme pour tout le reste.
+// Après chaque action, `bf_billing` est réaligné sur Stripe par la même
+// fonction que le webhook (`syncSubscription`) : l'espace BF affiche tout de
+// suite la résiliation ou le changement programmé. Le webhook qui suit
+// réécrit les mêmes valeurs.
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import type Stripe from 'stripe';
 import { authenticatedUser } from '~/lib/serverAuth';
 import {
+  ANNUAL_OFFERS,
   isDowngrade,
+  LAUNCH_OFFERS,
   isOffer,
   launchOfferOpen,
   METERED_LOOKUP_KEYS,
@@ -28,6 +32,7 @@ import {
   OFFER_LOOKUP_KEYS,
 } from '~/lib/billing/logic';
 import { json, launchSeatsRemaining, loadBilling, priceIdsFor, stripe, supabaseAdmin } from '~/lib/billing/server';
+import { syncSubscription } from '~/lib/billing/webhook';
 
 const idOf = (v: string | { id: string } | null | undefined) => (typeof v === 'string' ? v : (v?.id ?? null));
 
@@ -63,24 +68,53 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ error: 'E_NO_SUBSCRIPTION' }, 404);
     }
 
+    const done = async (extra: Record<string, unknown> = {}) => {
+      await syncSubscription(db, sub.id);
+      return json({ ok: true, ...extra });
+    };
+
     if (body.action === 'cancel') {
       // Fin de période : l'accès reste ouvert jusqu'à l'échéance déjà payée.
+      // Le schedule (lancement, descente) est détaché : il piloterait sinon
+      // la fin de l'abonnement à la place de la résiliation.
       await releaseSchedule(sub);
       await s.subscriptions.update(sub.id, { cancel_at_period_end: true });
-      return json({ ok: true });
+      return done();
     }
 
     if (body.action === 'resume') {
-      await s.subscriptions.update(sub.id, { cancel_at_period_end: false });
-      return json({ ok: true });
+      // Une résiliation peut aussi être portée par un schedule : il est
+      // détaché sans garder la date de fin. Le webhook repose ensuite la
+      // bascule à 99 € d'une offre de lancement.
+      const scheduleId = idOf(sub.schedule);
+      if (scheduleId) await s.subscriptionSchedules.release(scheduleId, { preserve_cancel_date: false });
+      const fresh = scheduleId ? await s.subscriptions.retrieve(sub.id) : sub;
+      // Date de fin explicite (`cancel_at`) ou fin de période : Stripe
+      // n'accepte qu'un des deux paramètres à la fois.
+      if (fresh.cancel_at_period_end) await s.subscriptions.update(sub.id, { cancel_at_period_end: false });
+      else if (fresh.cancel_at) await s.subscriptions.update(sub.id, { cancel_at: '' });
+      return done();
+    }
+
+    if (body.action === 'keep') {
+      // Annule une descente programmée : l'offre actuelle continue.
+      const scheduleId = idOf(sub.schedule);
+      if (scheduleId) {
+        const schedule = await s.subscriptionSchedules.retrieve(scheduleId);
+        if (schedule.metadata?.aerox_schedule === 'downgrade') await s.subscriptionSchedules.release(scheduleId);
+      }
+      return done();
     }
 
     if (body.action !== 'change' || !isOffer(body.offer)) return json({ error: 'E_ACTION' }, 400);
     const offer = body.offer;
     const current = offerFromLookupKeys(sub.items.data.map((i) => i.price.lookup_key));
     if (current === offer) return json({ error: 'E_SAME_OFFER' }, 400);
-    if (offer === 'unlimited_launch' && !launchOfferOpen(Date.now(), await launchSeatsRemaining(db))) {
-      return json({ error: 'E_LAUNCH_CLOSED', fallback: 'unlimited' }, 409);
+    if (LAUNCH_OFFERS.includes(offer) && !launchOfferOpen(Date.now(), await launchSeatsRemaining(db))) {
+      return json(
+        { error: 'E_LAUNCH_CLOSED', fallback: offer === 'unlimited_launch_annual' ? 'unlimited_annual' : 'unlimited' },
+        409
+      );
     }
 
     const priceIds = await priceIdsFor(offer);
@@ -89,9 +123,16 @@ export const POST: APIRoute = async ({ request }) => {
     if (current && isDowngrade(current, offer)) {
       // Descente : phase actuelle jusqu'à la fin de la période payée, puis la
       // nouvelle offre. Le schedule est ensuite relâché.
+      // Changer d'offre, c'est continuer : une résiliation programmée est
+      // levée d'abord (un schedule ne se crée pas proprement dessus).
+      if (sub.cancel_at_period_end || sub.cancel_at) {
+        await s.subscriptions.update(sub.id, { cancel_at_period_end: false });
+      }
       const scheduleId = idOf(sub.schedule) ?? (await s.subscriptionSchedules.create({ from_subscription: sub.id })).id;
       const schedule = await s.subscriptionSchedules.retrieve(scheduleId);
-      const phase = schedule.phases[0];
+      // Phase en cours (un schedule garde ses phases passées dans la liste).
+      const phase =
+        schedule.phases.find((p) => p.start_date === schedule.current_phase?.start_date) ?? schedule.phases[0];
       await s.subscriptionSchedules.update(scheduleId, {
         end_behavior: 'release',
         metadata: { aerox_schedule: 'downgrade', aerox_offer: offer },
@@ -110,13 +151,13 @@ export const POST: APIRoute = async ({ request }) => {
           },
           {
             items: itemsFor(offer, priceIds),
-            duration: { interval: offer === 'unlimited_annual' ? 'year' : 'month', interval_count: 1 },
+            duration: { interval: ANNUAL_OFFERS.includes(offer) ? 'year' : 'month', interval_count: 1 },
             proration_behavior: 'none',
             metadata,
           },
         ],
       });
-      return json({ ok: true, effective: 'period_end', at: sub.items.data[0].current_period_end });
+      return done({ effective: 'period_end', at: sub.items.data[0].current_period_end });
     }
 
     // Montée : immédiate, au prorata.
@@ -129,7 +170,7 @@ export const POST: APIRoute = async ({ request }) => {
       cancel_at_period_end: false,
       metadata,
     });
-    return json({ ok: true, effective: 'now' });
+    return done({ effective: 'now' });
   } catch (err) {
     console.error('billing/manage', err instanceof Error ? err.message : err);
     return json({ error: 'E_SERVER' }, 500);

@@ -19,6 +19,8 @@ import { upsertMailerLiteFields, type BfStatus } from '~/lib/mailerlite';
 import {
   crmStatus,
   graceAfterPaymentFailureEnd,
+  isOffer,
+  offerFromLookupKeys,
   planAfterSubscriptionEnds,
   planFromLookupKeys,
   subscriptionOutcome,
@@ -59,25 +61,41 @@ async function writeBilling(db: SupabaseClient, row: Record<string, unknown>) {
   if (error) throw new Error(`bf_billing: ${error.message}`);
 }
 
+/** Premier anniversaire de facturation (fin de la première année payée). */
+function firstYearEnd(sub: Stripe.Subscription): number {
+  const d = new Date(sub.billing_cycle_anchor * 1000);
+  d.setUTCFullYear(d.getUTCFullYear() + 1);
+  return Math.floor(d.getTime() / 1000);
+}
+
 /**
- * Offre de lancement : pose le schedule qui bascule le prix de 69 € à 99 € au
- * 01/01/2027 00:00 (Paris). `proration_behavior: 'create_prorations'` : 99 €
- * s'applique dès le 01/01 ; le reste de la période en cours, payé à 69 €,
- * est régularisé au prorata sur l'échéance suivante (crédit 69 €, débit 99 €).
+ * Offres de lancement : pose le schedule qui bascule le prix.
+ *  - Mensuel : 69 € → 99 € au 01/01/2027 00:00 (Paris), avec
+ *    `proration_behavior: 'create_prorations'` : 99 € s'applique dès le 01/01 ;
+ *    le reste de la période en cours, payé à 69 €, est régularisé au prorata
+ *    sur l'échéance suivante (crédit 69 €, débit 99 €).
+ *  - Annuel : 690 € la première année, 990 € par an ensuite, à la date
+ *    anniversaire (échéance : pas de prorata).
  *
  * Convergent plutôt que « une seule fois » : plusieurs événements du même
  * abonnement arrivent en même temps, et un traitement peut s'interrompre entre
  * la création du schedule et sa configuration. Chaque passage termine donc le
  * travail : il crée le schedule s'il manque, et le configure tant que la phase
- * à 99 € n'y figure pas.
+ * au prix suivant n'y figure pas.
  */
 async function ensureLaunchSchedule(sub: Stripe.Subscription) {
-  if (Date.now() >= LAUNCH_OFFER.switchAt) return;
-  const onLaunchPrice = sub.items.data.some((i) => i.price.lookup_key === LOOKUP.unlimitedLaunch);
-  if (!onLaunchPrice) return;
+  // Résiliation programmée : ne rien reposer. Un schedule gère lui-même la
+  // date de fin de l'abonnement, et y ajouter la phase suivante effacerait la
+  // résiliation demandée par le bike fitter.
+  if (sub.cancel_at_period_end || sub.cancel_at) return;
+  const keys = sub.items.data.map((i) => i.price.lookup_key);
+  const yearly = keys.includes(LOOKUP.unlimitedLaunchYear);
+  const monthly = keys.includes(LOOKUP.unlimitedLaunch);
+  if (!yearly && !monthly) return;
+  if (monthly && Date.now() >= LAUNCH_OFFER.switchAt) return;
 
   const s = stripe();
-  const afterPrice = await priceIdForLookup(LOOKUP.unlimitedLaunchAfter);
+  const afterPrice = await priceIdForLookup(yearly ? LOOKUP.unlimitedLaunchYearAfter : LOOKUP.unlimitedLaunchAfter);
 
   let scheduleId = idOf(sub.schedule);
   if (!scheduleId) {
@@ -91,6 +109,15 @@ async function ensureLaunchSchedule(sub: Stripe.Subscription) {
   }
 
   const schedule = await s.subscriptionSchedules.retrieve(scheduleId);
+  // Course avec une résiliation : l'abonnement a été relu avant qu'elle soit
+  // posée, mais le schedule créé après la porte (`end_behavior: cancel`). Le
+  // configurer effacerait la résiliation ; on rend l'abonnement à lui-même en
+  // gardant la date de fin (le cas s'est produit en test, voir S11).
+  if (schedule.end_behavior === 'cancel') {
+    if (schedule.status === 'active')
+      await s.subscriptionSchedules.release(schedule.id, { preserve_cancel_date: true });
+    return;
+  }
   // Une descente d'offre programmée (fin de période) a priorité : on n'y
   // réécrit pas la bascule de lancement.
   if (schedule.metadata?.aerox_schedule === 'downgrade') return;
@@ -104,7 +131,7 @@ async function ensureLaunchSchedule(sub: Stripe.Subscription) {
     phases: [
       {
         start_date: current.start_date,
-        end_date: Math.floor(LAUNCH_OFFER.switchAt / 1000),
+        end_date: yearly ? firstYearEnd(sub) : Math.floor(LAUNCH_OFFER.switchAt / 1000),
         items: current.items.map((i) => ({ price: idOf(i.price)!, quantity: i.quantity ?? 1 })),
         // Sans elle, la mise à jour effacerait la période d'essai (premier
         // prélèvement le 1er novembre) et Stripe facturerait tout de suite.
@@ -113,31 +140,112 @@ async function ensureLaunchSchedule(sub: Stripe.Subscription) {
       },
       {
         items: [{ price: afterPrice, quantity: 1 }],
-        duration: { interval: 'month', interval_count: 1 },
-        proration_behavior: 'create_prorations',
+        duration: { interval: yearly ? 'year' : 'month', interval_count: 1 },
+        proration_behavior: yearly ? 'none' : 'create_prorations',
         metadata: sub.metadata,
       },
     ],
   });
 }
 
-/** Aligne `bf_billing` sur l'état actuel d'un abonnement bike fitter. */
-async function syncSubscription(db: SupabaseClient, subscriptionId: string, paymentFailed = false) {
+/** Statuts Stripe d'un abonnement encore en vie (facturé ou relancé). */
+const LIVE_STATUSES = new Set<string>(['active', 'trialing', 'past_due', 'unpaid']);
+
+/**
+ * Second abonnement BF pour un même compte (deux Checkout ouverts puis payés
+ * l'un après l'autre) : celui déjà enregistré est conservé, le nouveau est
+ * résilié immédiatement et ses factures payées sont remboursées. Renvoie
+ * `true` si l'abonnement était un doublon.
+ */
+async function cancelDuplicate(sub: Stripe.Subscription, keptId: string): Promise<boolean> {
+  const s = stripe();
+  const kept = await s.subscriptions.retrieve(keptId).catch(() => null);
+  if (!kept || !LIVE_STATUSES.has(kept.status)) return false;
+
+  console.error('stripe-webhook: abonnement en double', sub.id, '— conservé :', keptId);
+  // Idempotent : un autre événement du même doublon a pu le résilier déjà.
+  if (sub.status !== 'canceled') {
+    await s.subscriptions.cancel(sub.id, { prorate: false, invoice_now: false }).catch(async (err) => {
+      if ((await s.subscriptions.retrieve(sub.id)).status !== 'canceled') throw err;
+    });
+  }
+  for await (const invoice of s.invoices.list({ subscription: sub.id, status: 'paid', limit: 10 })) {
+    if (!invoice.amount_paid) continue;
+    for await (const payment of s.invoicePayments.list({ invoice: invoice.id!, limit: 10 })) {
+      const intent = idOf(payment.payment?.payment_intent);
+      if (payment.status !== 'paid' || !intent) continue;
+      await s.refunds.create(
+        { payment_intent: intent, metadata: { aerox_reason: 'duplicate_subscription', subscription: sub.id } },
+        { idempotencyKey: `aerox-dup-refund-${intent}` }
+      );
+    }
+  }
+  return true;
+}
+
+/**
+ * Descente d'offre programmée (schedule `aerox_schedule=downgrade` posé par
+ * /api/billing/manage/) : offre visée et date d'effet.
+ */
+async function scheduledChange(sub: Stripe.Subscription): Promise<{ offer: string; at: string } | null> {
+  const scheduleId = idOf(sub.schedule);
+  if (!scheduleId) return null;
+  const schedule = await stripe().subscriptionSchedules.retrieve(scheduleId);
+  const offer = schedule.metadata?.aerox_offer;
+  if (schedule.metadata?.aerox_schedule !== 'downgrade' || !isOffer(offer)) return null;
+  const at = toIso(schedule.current_phase?.end_date);
+  return at ? { offer, at } : null;
+}
+
+/**
+ * Facture restée ouverte à la fin d'un abonnement (résilié pendant un
+ * impayé) : Stripe ne la relance plus, et ne sait pas l'envoyer par e-mail
+ * (réservé aux factures `send_invoice`). Elle est conservée comme créance.
+ */
+async function openDebt(subscriptionId: string): Promise<{ id: string; amount: number; url: string | null } | null> {
+  const open = await stripe().invoices.list({ subscription: subscriptionId, status: 'open', limit: 10 });
+  const due = open.data.filter((i) => i.amount_remaining > 0);
+  if (!due.length) return null;
+  return {
+    id: due[0].id!,
+    amount: due.reduce((sum, i) => sum + i.amount_remaining, 0),
+    url: due[0].hosted_invoice_url ?? null,
+  };
+}
+
+/** Facture réglée : la créance correspondante est effacée. */
+async function clearPaidDebt(db: SupabaseClient, invoice: Stripe.Invoice) {
+  const userId = invoice.parent?.subscription_details?.metadata?.userId;
+  if (!userId || !invoice.id) return;
+  const { error } = await db
+    .from('bf_billing')
+    .update({ unpaid_invoice_id: null, unpaid_amount: null, unpaid_invoice_url: null })
+    .eq('user_id', userId)
+    .eq('unpaid_invoice_id', invoice.id);
+  if (error) throw new Error(`bf_billing (créance): ${error.message}`);
+}
+
+/**
+ * Aligne `bf_billing` sur l'état actuel d'un abonnement bike fitter. Appelée
+ * par le webhook et, juste après une action, par /api/billing/manage/ :
+ * l'espace BF affiche le nouvel état sans attendre l'événement.
+ */
+export async function syncSubscription(db: SupabaseClient, subscriptionId: string, paymentFailed = false) {
   const sub = await stripe().subscriptions.retrieve(subscriptionId);
   const userId = sub.metadata?.userId;
   if (!userId || !sub.metadata?.aerox_offer) return;
 
-  const plan = planFromLookupKeys(sub.items.data.map((i) => i.price.lookup_key));
+  const keys = sub.items.data.map((i) => i.price.lookup_key);
+  const plan = planFromLookupKeys(keys);
   if (!plan) {
     console.error('stripe-webhook: abonnement', sub.id, 'sans prix du catalogue BF — ignoré');
     return;
   }
 
   const billing = await loadBilling(db, userId);
+  const otherSub = billing?.stripe_subscription_id && billing.stripe_subscription_id !== sub.id;
   // Un ancien abonnement (remplacé) qui se termine ne doit pas écraser le nouveau.
-  if (billing?.stripe_subscription_id && billing.stripe_subscription_id !== sub.id && sub.status === 'canceled') {
-    return;
-  }
+  if (otherSub && sub.status === 'canceled') return;
 
   // Un échec de paiement peut précéder le passage de l'abonnement en
   // `past_due` : l'événement de facture fait foi pour ouvrir la grâce.
@@ -147,7 +255,15 @@ async function syncSubscription(db: SupabaseClient, subscriptionId: string, paym
 
   if (outcome.kind === 'ignore') return;
 
+  // Un seul abonnement par bike fitter : un second, payé en parallèle, est
+  // annulé et remboursé au lieu de remplacer le premier en base.
+  if (otherSub && outcome.kind === 'access' && (await cancelDuplicate(sub, billing!.stripe_subscription_id!))) return;
+
   if (outcome.kind === 'ended') {
+    // Premier paiement jamais abouti (carte refusée, Checkout abandonné) :
+    // rien n'avait été ouvert, rien à fermer — et surtout pas de « churned »
+    // dans le CRM pour quelqu'un qui n'a jamais été abonné.
+    if (sub.status === 'incomplete_expired' && billing?.stripe_subscription_id !== sub.id) return;
     // Résilié par Stripe pour impayé avant la fin de la grâce : l'offre et
     // l'accès restent jusqu'à `grace_until`, puis `bf_access_level` passe
     // le compte en lecture seule. Le bike fitter peut se réabonner.
@@ -156,11 +272,26 @@ async function syncSubscription(db: SupabaseClient, subscriptionId: string, paym
       billing?.grace_until ?? null,
       Date.now()
     );
+    // Créance : facture impayée conservée. Les relances par e-mail partent
+    // de la base (bf_send_unpaid_reminders → fonction Edge notify-bf-unpaid).
+    const debt = await openDebt(sub.id);
+    const cleared = {
+      stripe_subscription_id: null,
+      cancel_at: null,
+      scheduled_offer: null,
+      scheduled_at: null,
+      unpaid_invoice_id: debt?.id ?? null,
+      unpaid_amount: debt?.amount ?? null,
+      unpaid_invoice_url: debt?.url ?? null,
+    };
+    // Premier traitement de cette fin d'abonnement (les rejeux et les
+    // factures réglées plus tard ne réécrivent pas le CRM).
+    const firstEnd = billing?.stripe_subscription_id === sub.id;
     if (keepUntil) {
       await writeBilling(db, {
         user_id: userId,
         stripe_customer_id: customer,
-        stripe_subscription_id: null,
+        ...cleared,
         status: 'past_due',
         grace_until: keepUntil,
       });
@@ -171,28 +302,35 @@ async function syncSubscription(db: SupabaseClient, subscriptionId: string, paym
     await writeBilling(db, {
       user_id: userId,
       stripe_customer_id: customer,
-      stripe_subscription_id: null,
+      ...cleared,
       plan: nextPlan,
+      offer: null,
       status: 'active',
       grace_until: null,
       current_period_start: null,
       current_period_end: null,
     });
-    await syncCrm(db, userId, nextPlan, 'churned');
+    if (firstEnd) await syncCrm(db, userId, nextPlan, 'churned');
     return;
   }
 
   // API basil : la période est portée par les lignes, pas par l'abonnement.
   const item = sub.items.data[0];
+  const periodEnd = item?.current_period_end;
+  const change = await scheduledChange(sub);
   await writeBilling(db, {
     user_id: userId,
     stripe_customer_id: customer,
     stripe_subscription_id: sub.id,
     plan,
+    offer: offerFromLookupKeys(keys),
     status: outcome.status,
     grace_until: outcome.grace_until,
     current_period_start: toIso(item?.current_period_start),
-    current_period_end: toIso(item?.current_period_end),
+    current_period_end: toIso(periodEnd),
+    cancel_at: toIso(sub.cancel_at ?? (sub.cancel_at_period_end ? periodEnd : null)),
+    scheduled_offer: change?.offer ?? null,
+    scheduled_at: change?.at ?? null,
   });
   // Seulement si quelque chose change pour le CRM : les renouvellements
   // mensuels ne réécrivent pas la fiche.
@@ -257,6 +395,7 @@ export async function handleBillingEvent(db: SupabaseClient, event: Stripe.Event
       // Le statut de l'abonnement (active / past_due) reflète déjà la facture :
       // relire l'abonnement suffit et reste juste si les deux événements se
       // croisent.
+      if (event.type === 'invoice.paid') await clearPaidDebt(db, event.data.object);
       const subId = idOf(event.data.object.parent?.subscription_details?.subscription);
       if (subId) await syncSubscription(db, subId, event.type === 'invoice.payment_failed');
       return;

@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP } from '../src/lib/billing/catalog';
 import {
-  estimatedNextInvoiceCents,
   graceAfterPaymentFailureEnd,
   isDowngrade,
   isOffer,
   launchOfferOpen,
+  nextInvoiceCentsForOffer,
   offerFromLookupKeys,
   planAfterSubscriptionEnds,
   planFromLookupKeys,
@@ -130,34 +130,53 @@ describe('transitions de plan', () => {
   });
 });
 
-describe('estimatedNextInvoiceCents', () => {
+describe('nextInvoiceCentsForOffer', () => {
+  const est = (offer: Parameters<typeof nextInvoiceCentsForOffer>[0], n = 0, now = NOW, end: number | null = null) =>
+    nextInvoiceCentsForOffer(offer, n, now, end);
+
   it('À l’usage : 20 € par analyse', () => {
-    expect(estimatedNextInvoiceCents('payg', 3, NOW)).toBe(6000);
+    expect(est('payg', 3)).toBe(6000);
   });
 
   it('Studio : 79 € + 10 € par analyse au-delà de 5 (14 analyses → 169 €)', () => {
-    expect(estimatedNextInvoiceCents('studio', 14, NOW)).toBe(16900);
-    expect(estimatedNextInvoiceCents('studio', 3, NOW)).toBe(7900);
+    expect(est('studio', 14)).toBe(16900);
+    expect(est('studio', 3)).toBe(7900);
   });
 
   it('paliers : usage < 4, Studio de 4 à 9, Illimité dès 10', () => {
-    expect(estimatedNextInvoiceCents('payg', 3, NOW)!).toBeLessThan(estimatedNextInvoiceCents('studio', 3, NOW)!);
-    expect(estimatedNextInvoiceCents('studio', 4, NOW)!).toBeLessThan(estimatedNextInvoiceCents('payg', 4, NOW)!);
-    expect(estimatedNextInvoiceCents('studio', 10, NOW)!).toBeGreaterThan(11900);
+    expect(est('payg', 3)).toBeLessThan(est('studio', 3));
+    expect(est('studio', 4)).toBeLessThan(est('payg', 4));
+    expect(est('studio', 10)).toBeGreaterThan(11900);
   });
 
   it('Illimité : 119 €/mois ou 1 190 €/an', () => {
-    expect(estimatedNextInvoiceCents('unlimited', 0, NOW)).toBe(11900);
-    expect(estimatedNextInvoiceCents('unlimited', 0, NOW, 365)).toBe(119000);
+    expect(est('unlimited')).toBe(11900);
+    expect(est('unlimited_annual')).toBe(119000);
   });
 
-  it('lancement : 69 € puis 99 €', () => {
-    expect(estimatedNextInvoiceCents('unlimited_launch', 0, NOW)).toBe(6900);
-    expect(estimatedNextInvoiceCents('unlimited_launch', 0, LAUNCH_OFFER.switchAt)).toBe(9900);
+  it('lancement mensuel : 69 € puis 99 €', () => {
+    expect(est('unlimited_launch')).toBe(6900);
+    expect(est('unlimited_launch', 0, LAUNCH_OFFER.switchAt)).toBe(9900);
   });
 
-  it('pas de facture pour l’essai ou legacy', () => {
-    expect(estimatedNextInvoiceCents('trial', 5, NOW)).toBeNull();
-    expect(estimatedNextInvoiceCents('legacy', 5, NOW)).toBeNull();
+  it('lancement annuel : 690 € la 1re année (essai jusqu’au 1er novembre), puis 990 €', () => {
+    expect(est('unlimited_launch_annual', 0, NOW, BF_AVAILABLE_AT)).toBe(69000);
+    expect(est('unlimited_launch_annual', 0, NOW, BF_AVAILABLE_AT + 365 * 86400000)).toBe(99000);
+  });
+});
+
+describe('offre de lancement annuelle', () => {
+  it('reconnue par ses prix, plan « lancement » (mêmes places)', () => {
+    expect(planFromLookupKeys([LOOKUP.unlimitedLaunchYear])).toBe('unlimited_launch');
+    expect(planFromLookupKeys([LOOKUP.unlimitedLaunchYearAfter])).toBe('unlimited_launch');
+    expect(offerFromLookupKeys([LOOKUP.unlimitedLaunchYear])).toBe('unlimited_launch_annual');
+    expect(offerFromLookupKeys([LOOKUP.unlimitedLaunchYearAfter])).toBe('unlimited_launch_annual');
+    expect(isOffer('unlimited_launch_annual')).toBe(true);
+  });
+
+  it('la quitter pour un mensuel attend la fin de l’année payée', () => {
+    expect(isDowngrade('unlimited_launch_annual', 'unlimited')).toBe(true);
+    expect(isDowngrade('unlimited_launch_annual', 'unlimited_launch')).toBe(true);
+    expect(isDowngrade('unlimited_launch_annual', 'unlimited_annual')).toBe(false);
   });
 });
