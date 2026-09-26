@@ -1,7 +1,7 @@
 ---
 // Espace compte (bike fitter ou cycliste), organisé comme une page de
 // paramètres de compte pro : en-tête au nom du studio, navigation par
-// sections (Abonnement, Utilisation, Facturation, Studio, Compte), lignes
+// sections (Abonnement, Activité, Utilisation, Facturation, Studio, Compte), lignes
 // « libellé → valeur → action ». Tout le contenu dépend de la session :
 // le squelette est rendu ici, le script le remplit.
 import PricingSection from '~/components/widgets/PricingSection.astro';
@@ -96,6 +96,43 @@ const labels = {
     ...['name', 'id', 'legal', 'none', 'verified', 'pending', 'kind.siren', 'kind.eu_vat'].map((k) => `studio.${k}`),
     ...['email', 'role', 'signout', 'licence'].map((k) => `account.${k}`),
     ...['purchased', 'preorder', 'available', 'consumed', 'refunded', 'empty'].map((k) => `diag.${k}`),
+    ...[
+      'thisMonth',
+      'prevMonth',
+      'total',
+      'since',
+      'riders',
+      'newRiders',
+      'perMonth',
+      'perMonthBar',
+      'history',
+      'filter',
+      'allRiders',
+      'unnamed',
+      'more',
+      'empty',
+      'emptyCta',
+      'error',
+      'loading',
+      'duration',
+      'power',
+      'cda',
+      'surface',
+      'aero',
+      'stability',
+      'stab.excellent',
+      'stab.good',
+      'stab.average',
+      'stab.poor',
+      'positions',
+      'position',
+      'surfaceShort',
+      'gap',
+      'ref',
+      'best',
+      'noPositions',
+      'positionsError',
+    ].map((k) => `act.${k}`),
   ]),
   notLogged: t(dict, 'dashboard.notLogged'),
   profileNotFound: t(dict, 'dashboard.profileNotFound'),
@@ -105,6 +142,7 @@ const labels = {
 // Sections : [ancre, titre, description, type de compte].
 const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
   ['abonnement', t(dict, 'dash.nav.plan'), t(dict, 'dash.sec.plan'), 'bf'],
+  ['activite', t(dict, 'dash.nav.activity'), t(dict, 'dash.sec.activity'), 'bf'],
   ['utilisation', t(dict, 'dash.nav.usage'), t(dict, 'dash.sec.usage'), 'bf'],
   ['facturation', t(dict, 'dash.nav.billing'), t(dict, 'dash.sec.billing'), 'bf'],
   ['studio', t(dict, 'dash.nav.studio'), t(dict, 'dash.sec.studio'), 'bf'],
@@ -217,6 +255,7 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
     import { isDowngrade, nextInvoiceCentsForOffer, type Offer, type Plan } from '~/lib/billing/logic';
     import { LAUNCH_OFFER } from '~/lib/billing/catalog';
     import { isDiagnosticAvailable } from '~/config/diagnostic';
+    import { countInMonth, formatDuration, monthlyCounts, positionGaps, stabilityLevel } from '~/lib/account/activity';
 
     type Business = {
       kind: 'siren' | 'eu_vat' | 'website' | 'other';
@@ -845,6 +884,281 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
     }
 
     // ---------------------------------------------------------------------
+    // Bike fitter : Activité, les fittings enregistrés par l'application AeroX.
+    // Lecture directe sous RLS : sessions et session_positions (user_id = soi),
+    // bf_clients (bf_user_id = soi). Filtre explicite sur l'utilisateur : un
+    // admin peut lire toutes les lignes.
+    // ---------------------------------------------------------------------
+
+    type Fitting = {
+      id: string;
+      created_at: string;
+      client_id: string | null;
+      duration_s: number | null;
+      avg_power: number | null;
+      avg_cda: number | null;
+      avg_surface: number | null;
+      avg_aero_score: number | null;
+      stability_score: number | null;
+    };
+    type Rider = { id: string; firstname: string | null; lastname: string | null; created_at: string };
+    type Position = { name: string | null; cda: number | null; surface_m2: number | null; note: string | null };
+
+    const FITTINGS_PAGE = 10;
+    const num = (v: number, digits: number) =>
+      new Intl.NumberFormat(lang(), { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(v);
+    const pct = (ratio: number) => new Intl.NumberFormat(lang(), { style: 'percent' }).format(ratio);
+    const monthName = (year: number, month: number, style: 'long' | 'short' = 'long') =>
+      new Intl.DateTimeFormat(lang(), { month: style }).format(new Date(year, month, 1));
+    const dateTimeFmt = (iso: string) =>
+      new Intl.DateTimeFormat(lang(), { dateStyle: 'long', timeStyle: 'short' }).format(new Date(iso));
+
+    function stat(label: string, value: string, sub: string) {
+      const d = el('div', 'acct-stat');
+      d.append(el('p', 'acct-stat-label', label), el('p', 'acct-stat-value', value));
+      if (sub) d.append(el('p', 'acct-muted acct-small', sub));
+      return d;
+    }
+
+    function monthChart(dates: string[], now: Date) {
+      const T = L();
+      const months = monthlyCounts(dates, now);
+      const max = Math.max(1, ...months.map((m) => m.count));
+      const block = el('div', 'acct-block');
+      block.append(el('h3', 'acct-block-title', T['act.perMonth']));
+      const chart = el('ol', 'acct-chart');
+      for (const m of months) {
+        const col = el('li', 'acct-chart-col');
+        col.title = T['act.perMonthBar']
+          .replace('{month}', `${monthName(m.year, m.month)} ${m.year}`)
+          .replace('{n}', String(m.count));
+        const track = el('span', 'acct-chart-track');
+        const bar = el('span', `acct-chart-bar${m.count ? '' : ' is-zero'}`);
+        bar.style.setProperty('--h', String(m.count / max));
+        track.append(el('span', 'acct-chart-n', String(m.count)), bar);
+        col.append(track, el('span', 'acct-chart-m', monthName(m.year, m.month, 'short')));
+        chart.append(col);
+      }
+      block.append(chart);
+      return block;
+    }
+
+    const riderName = (r: Rider | undefined) =>
+      (r ? `${r.firstname ?? ''} ${r.lastname ?? ''}`.trim() : '') || L()['act.unnamed'];
+
+    function fittingFigures(f: Fitting) {
+      const T = L();
+      const items: [string, string][] = [];
+      if (f.duration_s != null) items.push([T['act.duration'], formatDuration(f.duration_s)]);
+      if (f.avg_power != null) items.push([T['act.power'], `${num(f.avg_power, 0)} W`]);
+      if (f.avg_cda != null) items.push([T['act.cda'], `${num(f.avg_cda, 3)} m²`]);
+      if (f.avg_surface != null) items.push([T['act.surface'], `${num(f.avg_surface, 3)} m²`]);
+      if (f.avg_aero_score != null) items.push([T['act.aero'], pct(f.avg_aero_score)]);
+      if (f.stability_score != null) {
+        const level = T[`act.stab.${stabilityLevel(f.stability_score)}`];
+        items.push([T['act.stability'], `${pct(f.stability_score / 100)} · ${level}`]);
+      }
+      const dl = el('dl', 'acct-figs');
+      for (const [k, v] of items) {
+        const d = el('div', 'acct-fig');
+        d.append(el('dt', 'acct-muted acct-small', k), el('dd', 'acct-fig-value', v));
+        dl.append(d);
+      }
+      return dl;
+    }
+
+    async function fittingPositions(sessionId: string, target: HTMLElement) {
+      const T = L();
+      const { data, error } = await supabase
+        .from('session_positions')
+        .select('name, cda, surface_m2, note, timestamp_ms, created_at')
+        .eq('session_id', sessionId)
+        .order('timestamp_ms', { ascending: true })
+        .order('created_at', { ascending: true });
+      if (error) {
+        target.replaceChildren(note('bad', T['act.positionsError']));
+        return;
+      }
+      const list = (data ?? []) as Position[];
+      if (!list.length) {
+        target.replaceChildren(el('p', 'acct-muted acct-small', T['act.noPositions']));
+        return;
+      }
+      const gaps = positionGaps(list);
+      const signed = new Intl.NumberFormat(lang(), {
+        signDisplay: 'exceptZero',
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      });
+      const table = el('table', 'acct-table');
+      const headRow = el('tr');
+      for (const h of [T['act.position'], 'CdA', `${T['act.surfaceShort']} (m²)`, T['act.gap']]) {
+        const th = el('th', '', h);
+        th.scope = 'col';
+        headRow.append(th);
+      }
+      table.append(el('thead'));
+      table.tHead!.append(headRow);
+      const tbody = el('tbody');
+      list.forEach((p, i) => {
+        const g = gaps[i];
+        const tr = el('tr');
+        const name = el('td');
+        const line = el('span', 'acct-inline');
+        line.append(el('strong', '', p.name || `${T['act.position']} ${i + 1}`));
+        if (g.isRef) line.append(pill('info', T['act.ref']));
+        if (g.isBest) line.append(pill('ok', T['act.best']));
+        name.append(line);
+        if (p.note) name.append(el('p', 'acct-muted acct-small', p.note));
+        const gap = el(
+          'td',
+          g.gapPct != null && g.gapPct < 0 ? 'is-better' : 'acct-muted',
+          g.gapPct == null ? '—' : `${signed.format(g.gapPct)} %`
+        );
+        tr.append(
+          name,
+          el('td', '', p.cda != null ? num(p.cda, 3) : '—'),
+          el('td', '', p.surface_m2 != null ? num(p.surface_m2, 3) : '—'),
+          gap
+        );
+        tbody.append(tr);
+      });
+      table.append(tbody);
+      const scroll = el('div', 'acct-table-scroll');
+      scroll.append(table);
+      target.replaceChildren(scroll);
+    }
+
+    async function loadActivity(userId: string) {
+      const T = L();
+      const panel = body('activite');
+      panel.replaceChildren(el('p', 'acct-muted', T['act.loading']));
+      const [fits, riders] = await Promise.all([
+        supabase
+          .from('sessions')
+          .select(
+            'id, created_at, client_id, duration_s, avg_power, avg_cda, avg_surface, avg_aero_score, stability_score'
+          )
+          .eq('user_id', userId)
+          .eq('session_type', 'fitting')
+          .order('created_at', { ascending: false })
+          .limit(5000),
+        supabase.from('bf_clients').select('id, firstname, lastname, created_at').eq('bf_user_id', userId),
+      ]);
+      if (fits.error || riders.error) {
+        panel.replaceChildren(note('bad', T['act.error']));
+        return;
+      }
+      const fittings = (fits.data ?? []) as Fitting[];
+      const clients = (riders.data ?? []) as Rider[];
+      const byId = new Map(clients.map((r) => [r.id, r]));
+      const now = new Date();
+      const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const dates = fittings.map((f) => f.created_at);
+
+      const stats = el('div', 'acct-stats');
+      stats.append(
+        stat(
+          T['act.thisMonth'],
+          String(countInMonth(dates, now)),
+          T['act.prevMonth']
+            .replace('{n}', String(countInMonth(dates, prev)))
+            .replace('{month}', monthName(prev.getFullYear(), prev.getMonth()))
+        ),
+        stat(
+          T['act.total'],
+          String(fittings.length),
+          fittings.length ? T['act.since'].replace('{date}', dateFmt(dates[dates.length - 1])) : ''
+        ),
+        stat(
+          T['act.riders'],
+          String(clients.length),
+          T['act.newRiders'].replace(
+            '{n}',
+            String(
+              countInMonth(
+                clients.map((c) => c.created_at),
+                now
+              )
+            )
+          )
+        )
+      );
+      panel.replaceChildren(stats);
+
+      if (!fittings.length) {
+        panel.append(
+          el('p', 'acct-lead acct-empty', T['act.empty']),
+          actions(linkBtn(T['act.emptyCta'], '#telechargement', 'plain'))
+        );
+        return;
+      }
+      panel.append(monthChart(dates, now));
+
+      // Historique : les plus récents d'abord, résumé déplié à la demande.
+      const history = el('div', 'acct-block');
+      const head = el('div', 'acct-block-head');
+      head.append(el('h3', 'acct-block-title', T['act.history']));
+      const list = el('div', 'acct-fits');
+      let shown = FITTINGS_PAGE;
+      let filter = '';
+      const more = btn(T['act.more'], 'plain', () => {
+        shown += FITTINGS_PAGE;
+        renderList();
+      });
+
+      const ridersWithFittings = [...new Set(fittings.map((f) => f.client_id).filter((id): id is string => !!id))]
+        .map((id) => [id, riderName(byId.get(id))] as const)
+        .sort((a, b) => a[1].localeCompare(b[1], lang()));
+      if (ridersWithFittings.length > 1) {
+        const label = el('label', 'acct-filter');
+        const select = el('select', 'acct-input acct-select');
+        select.append(new Option(T['act.allRiders'], ''));
+        for (const [id, n] of ridersWithFittings) select.append(new Option(n, id));
+        select.addEventListener('change', () => {
+          filter = select.value;
+          shown = FITTINGS_PAGE;
+          renderList();
+        });
+        label.append(el('span', 'acct-muted acct-small', T['act.filter']), select);
+        head.append(label);
+      }
+
+      function fittingItem(f: Fitting) {
+        const item = el('details', 'acct-fit');
+        const summary = el('summary', 'acct-fit-sum');
+        const who = el('span', 'acct-fit-who');
+        who.append(
+          el('strong', '', riderName(f.client_id ? byId.get(f.client_id) : undefined)),
+          el('span', 'acct-muted acct-small', dateTimeFmt(f.created_at))
+        );
+        summary.append(who);
+        if (f.avg_cda != null) summary.append(el('span', 'acct-fit-key', `CdA ${num(f.avg_cda, 3)}`));
+        const positions = el('div');
+        positions.append(el('p', 'acct-muted acct-small', T['act.loading']));
+        const detail = el('div', 'acct-fit-body');
+        detail.append(fittingFigures(f), el('h4', 'acct-fit-sub', T['act.positions']), positions);
+        item.append(summary, detail);
+        let loaded = false;
+        item.addEventListener('toggle', () => {
+          if (item.open && !loaded) {
+            loaded = true;
+            fittingPositions(f.id, positions);
+          }
+        });
+        return item;
+      }
+      function renderList() {
+        const visible = filter ? fittings.filter((f) => f.client_id === filter) : fittings;
+        list.replaceChildren(...visible.slice(0, shown).map(fittingItem));
+        more.classList.toggle('hidden', visible.length <= shown);
+      }
+      renderList();
+      history.append(head, list, actions(more));
+      panel.append(history);
+    }
+
+    // ---------------------------------------------------------------------
     // Cycliste : diagnostics.
     // ---------------------------------------------------------------------
 
@@ -883,7 +1197,9 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
     async function init() {
       const me = await loadProfile();
       if (!me) return;
-      if (me.role === 'bike-fitter' || me.role === 'admin') await loadBf();
+      if (me.role === 'bike-fitter' || me.role === 'admin') await Promise.all([loadBf(), loadActivity(me.id)]);
+      // Compte en attente : pas de lecture des cyclistes (RLS), pas d'onglet.
+      if (me.role === 'pending_bf') showSection('activite', false);
       if (me.role !== 'bike-fitter' && me.role !== 'pending_bf') await loadDiagnostics(me.id);
     }
 
@@ -1059,6 +1375,7 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
 
   #account .acct-sections {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2.75rem;
   }
   #account .acct-section {
@@ -1441,8 +1758,222 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
     color: var(--acct-bad);
   }
 
+  /* Activité */
+  #account .acct-stats {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  }
+  #account .acct-stat {
+    padding: 1rem 1.125rem;
+    border-radius: 0.75rem;
+    background: var(--acct-inset);
+  }
+  #account .acct-stat-label {
+    font-size: 0.875rem;
+    color: var(--acct-muted);
+  }
+  #account .acct-stat-value {
+    font-size: 2rem;
+    line-height: 1.15;
+    font-weight: 700;
+    margin: 0.25rem 0 0.125rem;
+  }
+  #account .acct-empty {
+    margin-top: 1.5rem;
+  }
+  #account .acct-block {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--acct-line);
+  }
+  #account .acct-block-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+  }
+  #account .acct-block-title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+  }
+  #account .acct-chart {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 0.375rem;
+  }
+  #account .acct-chart-col {
+    display: grid;
+    gap: 0.375rem;
+    text-align: center;
+  }
+  #account .acct-chart-track {
+    height: 8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  #account .acct-chart-n {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+  }
+  #account .acct-chart-bar {
+    width: 100%;
+    max-width: 2.25rem;
+    height: calc((100% - 1.25rem) * var(--h));
+    min-height: 2px;
+    border-radius: 0.375rem 0.375rem 0 0;
+    background: color-mix(in srgb, var(--acct-info) 70%, transparent);
+  }
+  #account .acct-chart-col:last-child .acct-chart-bar {
+    background: var(--acct-accent);
+  }
+  #account .acct-chart-bar.is-zero {
+    background: var(--acct-line);
+  }
+  #account .acct-chart-track:has(.is-zero) .acct-chart-n {
+    color: var(--acct-muted);
+  }
+  #account .acct-chart-m {
+    font-size: 0.75rem;
+    color: var(--acct-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+  #account .acct-filter {
+    display: grid;
+    gap: 0.25rem;
+  }
+  #account .acct-select {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    min-width: 12rem;
+  }
+  #account .acct-fits {
+    margin-top: 1rem;
+    border: 1px solid var(--acct-line);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  #account .acct-fit + .acct-fit {
+    border-top: 1px solid var(--acct-line);
+  }
+  #account .acct-fit-sum {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.875rem 1rem;
+    cursor: pointer;
+  }
+  #account .acct-fit-sum::-webkit-details-marker {
+    display: none;
+  }
+  /* Chevron : bas replié, haut déplié. */
+  #account .acct-fit-sum::after {
+    content: '';
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin: 0 0.25rem 0.25rem;
+    border-right: 2px solid var(--acct-muted);
+    border-bottom: 2px solid var(--acct-muted);
+    transform: rotate(45deg);
+    transition: transform 0.15s;
+  }
+  #account .acct-fit[open] > .acct-fit-sum {
+    background: var(--acct-inset);
+  }
+  #account .acct-fit[open] > .acct-fit-sum::after {
+    margin-bottom: -0.25rem;
+    transform: rotate(-135deg);
+  }
+  #account .acct-fit-sum:hover {
+    background: color-mix(in srgb, var(--acct-inset) 70%, transparent);
+  }
+  #account .acct-fit-who {
+    display: grid;
+    min-width: 0;
+    margin-right: auto;
+    overflow-wrap: anywhere;
+  }
+  #account .acct-fit-key {
+    font-size: 0.875rem;
+    color: var(--acct-muted);
+    white-space: nowrap;
+  }
+  #account .acct-fit-body {
+    padding: 0.5rem 1rem 1.25rem;
+    background: var(--acct-inset);
+  }
+  #account .acct-figs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+    gap: 0.875rem 1rem;
+  }
+  #account .acct-fig-value {
+    font-weight: 600;
+    margin-top: 0.125rem;
+  }
+  #account .acct-fit-sub {
+    margin: 1.25rem 0 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+  }
+  #account .acct-table-scroll {
+    overflow-x: auto;
+  }
+  #account .acct-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+  #account .acct-table th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    color: var(--acct-muted);
+    padding: 0.5rem 0.75rem 0.5rem 0;
+    vertical-align: bottom;
+  }
+  #account .acct-table td {
+    padding: 0.625rem 0.75rem 0.625rem 0;
+    border-top: 1px solid var(--acct-line);
+    vertical-align: top;
+    white-space: nowrap;
+  }
+  #account .acct-table td:first-child {
+    white-space: normal;
+    min-width: 6.5rem;
+  }
+  #account .acct-table :is(th, td):last-child {
+    padding-right: 0;
+  }
+  @media (max-width: 480px) {
+    #account .acct-table {
+      font-size: 0.875rem;
+    }
+    #account .acct-table :is(th, td) {
+      padding-right: 0.5rem;
+    }
+    #account .acct-fit-body {
+      padding-inline: 0.75rem;
+    }
+  }
+  #account .acct-table .is-better {
+    color: var(--acct-ok);
+    font-weight: 600;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     #account .acct-meter-fill,
+    #account .acct-fit-sum::after,
     #account .acct-btn {
       transition: none;
     }
