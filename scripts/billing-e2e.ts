@@ -257,8 +257,8 @@ async function s1Payg() {
   const bf = await createBf('payg');
   const b0 = await billing(bf.id);
   check(
-    b0?.plan === 'trial' && b0?.trial_state === 'needs_card',
-    'inscription : compte actif, essai en attente de carte'
+    b0?.plan === 'trial' && b0?.trial_state === 'needs_business_id',
+    'inscription : compte actif, identifiant d’entreprise attendu'
   );
 
   const r = await api('/api/billing/checkout/', bf, { offer: 'payg', lang: 'fr' });
@@ -335,11 +335,13 @@ async function s4LaunchFull() {
 }
 
 async function s5LaunchSwitch() {
-  console.log('\nS5 — Lancement souscrit avant le 1er novembre : 0 € puis 69 €, bascule à 99 € au 01/01/2027');
+  console.log(
+    '\nS5 — Lancement souscrit plus d’un mois avant (essai Stripe) : 0 € puis 69 €, bascule à 99 € au 01/01/2027'
+  );
   const bf = await createBf('launch');
   const { clock, customer } = await clockCustomer(bf, Math.floor(Date.now() / 1000));
   const availableAt = Math.floor(BF_AVAILABLE_AT / 1000);
-  // Comme Checkout avant le 1er novembre : période d'essai jusqu'à la mise à disposition.
+  // Comme Checkout plus d'un mois avant le 1er novembre : période d'essai Stripe.
   const sub = await stripe.subscriptions.create({
     customer: customer.id,
     items: [{ price: await priceId(LOOKUP.unlimitedLaunch), quantity: 1 }],
@@ -515,86 +517,98 @@ async function s7ReverseCharge() {
   );
 }
 
-/** Webhook signé avec le vrai secret, pour un événement que Stripe ne peut pas produire sans navigateur. */
-async function postSignedEvent(type: string, object: Record<string, unknown>) {
-  const payload = JSON.stringify({
-    id: `evt_e2e_${RUN}_${Math.random().toString(36).slice(2)}`,
-    object: 'event',
-    type,
-    created: Math.floor(Date.now() / 1000),
-    data: { object },
-  });
-  const header = stripe.webhooks.generateTestHeaderString({ payload, secret: env('E2E_WEBHOOK_SECRET') });
-  const res = await fetch(`${SITE}/api/stripe-webhook/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'stripe-signature': header },
-    body: payload,
-  });
-  if (!res.ok) throw new Error(`webhook: HTTP ${res.status}`);
+/** Identifiant d'entreprise saisi dans l'espace BF (route réelle, registres officiels). */
+async function submitBusinessId(bf: Bf, id: string) {
+  return api('/api/billing/business-id/', bf, { id });
 }
 
-/** Carte d'essai réelle (SetupIntent confirmé) pour un bike fitter, puis Checkout « setup » simulé. */
-async function registerTrialCard(bf: Bf) {
-  const customer = await stripe.customers.create({ email: bf.email, metadata: { userId: bf.id, aerox_e2e: '1' } });
-  await admin.from('bf_billing').update({ stripe_customer_id: customer.id }).eq('user_id', bf.id);
-  const intent = await stripe.setupIntents.create({
-    customer: customer.id,
-    payment_method: 'pm_card_visa',
-    payment_method_types: ['card'],
-    usage: 'off_session',
-    confirm: true,
-  });
-  await postSignedEvent('checkout.session.completed', {
-    id: `cs_e2e_${RUN}_${bf.id.slice(0, 8)}`,
-    object: 'checkout.session',
-    mode: 'setup',
-    status: 'complete',
-    customer: customer.id,
-    setup_intent: intent.id,
-    metadata: { userId: bf.id, aerox_offer: 'trial_card' },
-  });
-}
+// Danone SA : SIREN 552 032 534 (actif au registre), TVA FR27552032534.
+const DANONE_SIREN = '552 032 534';
 
-async function s8TrialCard() {
-  console.log('\nS8 — Essai : 2 analyses débloquées par une carte, une carte = un essai');
-  // Les cartes de test ont une empreinte fixe : on repart d'une table vide
-  // (base locale uniquement, voir le garde-fou en tête de script).
-  await admin.from('bf_trial_cards').delete().neq('fingerprint', '');
-  const bf = await createBf('trial');
+async function s8BusinessId() {
+  console.log('\nS8 — Tester AeroX maintenant : identifiant d’entreprise vérifié, 2 analyses offertes');
+  await admin.from('bf_business_ids').delete().neq('id_key', '');
+  const bf = await createBf('biz');
   const [c1, c2, c3] = await createClients(bf, 3);
   const before = await register(bf, c1);
-  check(before.status === 'refused' && before.reason === 'needs_card', 'sans carte : analyse refusée (needs_card)');
+  check(
+    before.status === 'refused' && before.reason === 'needs_card',
+    'sans identifiant : analyse refusée (code lu par l’app)'
+  );
+  check((await billing(bf.id))?.trial_state === 'needs_business_id', 'inscription : identifiant d’entreprise attendu');
 
-  const r = await api('/api/billing/trial-card/', bf, { lang: 'fr' });
-  check(r.status === 200 && typeof r.body.url === 'string', 'route trial-card : Checkout créé', `HTTP ${r.status}`);
-  const sessionId = new URL(r.body.url ?? 'http://x/').pathname.split('/').pop()?.split('#')[0] ?? '';
-  if (sessionId.startsWith('cs_')) {
-    const cs = await stripe.checkout.sessions.retrieve(sessionId);
-    check(cs.mode === 'setup' && cs.metadata?.aerox_offer === 'trial_card', 'session en mode setup (0 € débité)');
-  }
+  const bad = await submitBusinessId(bf, '552 032 535');
+  check(bad.body.result === 'invalid', 'SIREN à la clé fausse : « identifiant non reconnu »', String(bad.body.result));
+  const unknown = await submitBusinessId(bf, '000 000 000');
+  check(unknown.body.result === 'not_found', 'SIREN inexistant au registre : refusé', String(unknown.body.result));
+  const wrongVat = await submitBusinessId(bf, 'DE000000000');
+  check(
+    wrongVat.body.result === 'not_found' || wrongVat.body.result === 'registry_down',
+    'TVA inconnue de VIES : refusée',
+    String(wrongVat.body.result)
+  );
 
-  await registerTrialCard(bf);
-  const b = await waitFor('essai débloqué', async () => {
-    const row = await billing(bf.id);
-    return row?.trial_state === 'granted' ? row : null;
-  });
-  check(Boolean(b), 'carte enregistrée : essai débloqué');
+  const ok = await submitBusinessId(bf, DANONE_SIREN);
+  check(
+    ok.status === 200 && ok.body.result === 'granted',
+    'SIREN actif (API Recherche d’entreprises) : analyses ouvertes',
+    `${ok.body.result} ${ok.body.name ?? ''}`
+  );
+  check((await billing(bf.id))?.trial_state === 'granted', 'état : analyses offertes ouvertes');
   check((await register(bf, c1)).status === 'counted', 'analyse 1 comptée');
   check((await register(bf, c2)).status === 'counted', 'analyse 2 comptée');
-  check((await register(bf, c3)).reason === 'no_credits', '3e analyse refusée : essai épuisé');
+  check((await register(bf, c3)).reason === 'no_credits', '3e analyse refusée : analyses offertes épuisées');
+  const again = await submitBusinessId(bf, DANONE_SIREN);
+  check(again.status === 409, 'plus rien à ouvrir une fois les analyses offertes ouvertes', `HTTP ${again.status}`);
 
-  // Même carte (même empreinte) sur un second compte : pas de second essai.
-  const other = await createBf('trial-bis');
-  await registerTrialCard(other);
-  const o = await waitFor('carte déjà utilisée', async () => {
-    const row = await billing(other.id);
-    return row?.trial_state === 'card_already_used' ? row : null;
-  });
-  check(Boolean(o), 'même carte, autre compte : essai refusé');
+  // Même entreprise sous sa forme TVA (VIES), sur un autre compte.
+  const other = await createBf('biz-bis');
+  const dup = await submitBusinessId(other, 'FR27552032534');
+  check(
+    dup.body.result === 'already_used',
+    'même entreprise (n° de TVA), autre compte : refusé',
+    String(dup.body.result)
+  );
   const { count } = await admin.from('bf_credits').select('id', { count: 'exact', head: true }).eq('user_id', other.id);
-  check(count === 0, 'aucun crédit pour le second compte');
-  const r2 = await api('/api/billing/trial-card/', other, { lang: 'fr' });
-  check(r2.status === 409, 'route trial-card refusée une fois la carte utilisée', `HTTP ${r2.status}`);
+  check(count === 0, 'aucune analyse offerte pour le second compte');
+}
+
+async function s24ManualReview() {
+  console.log('\nS24 — Hors UE : vérification manuelle, validation par le lien signé de l’e-mail admin');
+  const bf = await createBf('biz-us');
+  const r = await submitBusinessId(bf, '12-3456789');
+  check(r.body.result === 'pending_review', 'EIN américain : en vérification manuelle', String(r.body.result));
+  check((await billing(bf.id))?.trial_state === 'pending_review', 'espace BF : « vérification sous 24 h »');
+  const [c] = await createClients(bf, 1);
+  check((await register(bf, c)).reason === 'needs_card', 'avant validation : analyses toujours fermées');
+
+  const { createHmac } = await import('node:crypto');
+  const token = createHmac('sha256', env('E2E_BILLING_HOOK_SECRET')).update(bf.id).digest('hex');
+  const link = `${SITE}/api/billing/approve-business/?u=${bf.id}&t=${token}`;
+  const forged = await fetch(`${SITE}/api/billing/approve-business/?u=${bf.id}&t=${'0'.repeat(64)}`);
+  check(forged.status === 403, 'lien falsifié : refusé', `HTTP ${forged.status}`);
+  const view = await fetch(link);
+  const html = await view.text();
+  check(
+    view.status === 200 && html.includes('US123456789'),
+    'le lien affiche une confirmation (rien n’est validé à l’ouverture)'
+  );
+  check(
+    (await billing(bf.id))?.trial_state === 'pending_review',
+    'ouvrir le lien ne valide rien (antivirus de messagerie)'
+  );
+  const post = await fetch(link, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Origin: SITE },
+    body: new URLSearchParams({ u: bf.id, t: token }),
+  });
+  check(
+    post.status === 200 && (await post.text()).includes('validé'),
+    'bouton « Valider » : identifiant validé',
+    `HTTP ${post.status}`
+  );
+  check((await billing(bf.id))?.trial_state === 'granted', 'analyses offertes ouvertes');
+  check((await register(bf, c)).status === 'counted', 'analyse comptée après validation');
 }
 
 async function s9Downgrade() {
@@ -664,18 +678,35 @@ async function summary(bf: Bf) {
   return data as Record<string, unknown>;
 }
 
-/** Abonnement souscrit avant le 1er novembre (période d'essai Stripe jusqu'à la mise à disposition). */
-async function preLaunchSubscription(bf: Bf, offer: string, lookup: string) {
-  const { clock, customer } = await clockCustomer(bf, Math.floor(Date.now() / 1000));
+/** Horloge au 5 octobre 2026 : un ancrage au 1er novembre est accepté pour un mensuel. */
+const OCT5 = Math.floor(Date.UTC(2026, 9, 5, 12) / 1000);
+
+/**
+ * Abonnement souscrit avant le 1er novembre, comme Checkout le crée à moins
+ * d'un mois de la date : facturation ancrée au 1er novembre, sans prorata.
+ */
+async function preLaunchSubscription(bf: Bf, offer: string, lookup: string, extraItems: string[] = []) {
+  const { clock, customer } = await clockCustomer(bf, Math.max(OCT5, Math.floor(Date.now() / 1000)));
+  const metered = [LOOKUP.payg, LOOKUP.studioUsage] as string[];
+  const items = [];
+  for (const key of [lookup, ...extraItems])
+    items.push(metered.includes(key) ? { price: await priceId(key) } : { price: await priceId(key), quantity: 1 });
   const sub = await stripe.subscriptions.create({
     customer: customer.id,
-    items: [{ price: await priceId(lookup), quantity: 1 }],
+    items,
     metadata: metadata(bf, offer),
     automatic_tax: { enabled: true },
     billing_mode: { type: 'flexible' },
-    trial_end: Math.floor(BF_AVAILABLE_AT / 1000),
+    billing_cycle_anchor: Math.floor(BF_AVAILABLE_AT / 1000),
+    proration_behavior: 'none',
   });
   return { clock, customer, sub };
+}
+
+/** Aucune facture non nulle avant le 1er novembre. */
+async function nothingChargedBeforeLaunch(subId: string) {
+  const inv = await stripe.invoices.list({ subscription: subId, limit: 10 });
+  return inv.data.filter((i) => i.created < Math.floor(BF_AVAILABLE_AT / 1000)).every((i) => i.total === 0);
 }
 
 async function s11LaunchCancel() {
@@ -792,7 +823,8 @@ async function s13AnnualPreLaunch() {
   const phases = (
     await stripe.subscriptionSchedules.retrieve((await stripe.subscriptions.retrieve(sub.id)).schedule as string)
   ).phases;
-  check(phases[0].trial_end === Math.floor(BF_AVAILABLE_AT / 1000), 'essai jusqu’au 1er novembre conservé');
+  check(await nothingChargedBeforeLaunch(sub.id), 'rien de prélevé avant le 1er novembre');
+  void phases;
 
   const keep = await api('/api/billing/manage/', bf, { action: 'keep' });
   check(keep.status === 200, 'annulation du changement acceptée');
@@ -896,7 +928,10 @@ async function s17FirstPaymentDeclined() {
   check(Boolean(expired), 'après 23 h : abonnement expiré chez Stripe');
   await sleep(10_000);
   const b2 = await billing(bf.id);
-  check(b2?.plan === 'trial' && b2?.trial_state === 'needs_card', 'base inchangée après l’expiration (essai intact)');
+  check(
+    b2?.plan === 'trial' && b2?.trial_state === 'needs_business_id',
+    'base inchangée après l’expiration (essai intact)'
+  );
 }
 
 async function s18AuthRequiredThenRecovery() {
@@ -1443,20 +1478,16 @@ async function p6RefundBeforePurchase() {
 }
 
 async function p7BfMultiple() {
-  console.log('\nP7 — Bike fitter : cartes d’essai et achats répétés');
-  const bf = await createBf('trial-twice');
-  await admin.from('bf_trial_cards').delete().neq('fingerprint', '');
-  await registerTrialCard(bf);
-  await waitFor('essai', async () => (await billing(bf.id))?.trial_state === 'granted');
-  await registerTrialCard(bf); // seconde carte d'essai (même empreinte) sur le même compte
-  await sleep(3000);
-  const { data: credits } = await admin.from('bf_credits').select('granted').eq('user_id', bf.id);
+  console.log('\nP7 — Bike fitter : identifiants répétés, rôle, corps piégé');
+  const bf = await createBf('biz-twice');
+  const first = await submitBusinessId(bf, '12-3456780');
+  const second = await submitBusinessId(bf, '12-3456781');
+  check(first.body.result === 'pending_review' && second.body.result === 'pending_review', 'deux saisies en attente');
+  const { data: ids } = await admin.from('bf_business_ids').select('id_key').eq('user_id', bf.id);
   check(
-    credits?.length === 1 && credits[0].granted === 2,
-    'deux enregistrements de carte : un seul essai de 2 analyses'
+    ids?.length === 1 && ids[0].id_key === 'OTHER:US123456781',
+    'un seul identifiant par compte : la dernière saisie remplace l’autre'
   );
-  const again = await api('/api/billing/trial-card/', bf, { lang: 'fr' });
-  check(again.status === 409, 'nouvelle carte d’essai refusée une fois l’essai ouvert', `HTTP ${again.status}`);
   const rider = await createRider('not-bf');
   const r = await api('/api/billing/checkout/', rider, { offer: 'studio', lang: 'fr' });
   check(r.status === 403, 'un cycliste ne peut pas souscrire une offre bike fitter', `HTTP ${r.status}`);
@@ -1524,7 +1555,7 @@ async function s21LaunchAnnual() {
     '690 € jusqu’au premier anniversaire (1er novembre 2027)',
     new Date(sch.phases[0].end_date * 1000).toISOString()
   );
-  check(sch.phases[0].trial_end === Math.floor(BF_AVAILABLE_AT / 1000), 'rien avant le 1er novembre 2026');
+  check(await nothingChargedBeforeLaunch(sub.id), 'rien avant le 1er novembre 2026');
 
   const availableAt = Math.floor(BF_AVAILABLE_AT / 1000);
   await advanceStepwise(clock.id, availableAt + 3 * 3600);
@@ -1583,8 +1614,62 @@ async function p8RoleSeparation() {
     const r = await api('/api/billing/checkout/', rider, { offer, lang: 'fr' });
     check(r.status === 403, `cycliste → offre BF « ${offer} » : refusé (403)`, `HTTP ${r.status}`);
   }
-  const t = await api('/api/billing/trial-card/', rider, { lang: 'fr' });
-  check(t.status === 403, 'cycliste → carte d’essai BF : refusé (403)', `HTTP ${t.status}`);
+  const t = await api('/api/billing/business-id/', rider, { id: DANONE_SIREN });
+  check(t.status === 403, 'cycliste → analyses offertes BF : refusé (403)', `HTTP ${t.status}`);
+}
+
+async function s23AnchoredUsage() {
+  console.log('\nS23 — Souscription ancrée au 1er novembre : ce que devient l’usage d’octobre');
+  const bf = await createBf('anchored-payg');
+  const { clock, sub } = await preLaunchSubscription(bf, 'payg', LOOKUP.payg);
+  await waitFor('offre à l’usage', async () => (await billing(bf.id))?.stripe_subscription_id === sub.id);
+  const b = await billing(bf.id);
+  check(
+    b?.status === 'active' && b?.plan === 'payg',
+    'abonné tout de suite (statut actif, pas d’essai)',
+    String(sub.status)
+  );
+
+  // Deux analyses datées du 10 octobre (horloge avancée au 15).
+  const clients = await createClients(bf, 2);
+  for (const c of clients) await register(bf, c);
+  await admin
+    .from('bf_analyses')
+    .update({
+      counted_at: new Date(Date.UTC(2026, 9, 10, 12)).toISOString(),
+      meter_claimed_at: null,
+      meter_last_error: null,
+    })
+    .eq('user_id', bf.id);
+  await advance(clock.id, Math.floor(Date.UTC(2026, 9, 15, 12) / 1000));
+  await reportUsage();
+  await waitFor(
+    'meter events envoyés',
+    async () => {
+      const { count } = await admin
+        .from('bf_analyses')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', bf.id)
+        .is('meter_reported_at', null);
+      return count === 0;
+    },
+    90_000
+  );
+  await sleep(30_000);
+
+  await advance(clock.id, Math.floor(BF_AVAILABLE_AT / 1000) + 3 * 3600);
+  const invoices = (await stripe.invoices.list({ subscription: sub.id, limit: 10 })).data;
+  const nov = invoices.find((i) => i.created >= Math.floor(BF_AVAILABLE_AT / 1000));
+  console.log(
+    `    (facture du 1er novembre : ${(nov?.subtotal ?? 0) / 100} € HT — lignes : ${nov?.lines.data
+      .map(
+        (l) =>
+          `${l.amount / 100} € ${new Date(l.period.start * 1000).toISOString().slice(0, 10)}→${new Date(l.period.end * 1000).toISOString().slice(0, 10)}`
+      )
+      .join(', ')})`
+  );
+  check(Boolean(nov), 'facture émise au 1er novembre');
+  check(await nothingChargedBeforeLaunch(sub.id), 'rien de prélevé avant le 1er novembre');
 }
 
 const ALL: Record<string, () => Promise<void>> = {
@@ -1594,7 +1679,7 @@ const ALL: Record<string, () => Promise<void>> = {
   s5: s5LaunchSwitch,
   s6: s6PaymentFailure,
   s7: s7ReverseCharge,
-  s8: s8TrialCard,
+  s8: s8BusinessId,
   s9: s9Downgrade,
   s10: s10Annual,
   s11: s11LaunchCancel,
@@ -1609,6 +1694,8 @@ const ALL: Record<string, () => Promise<void>> = {
   s20: s20PastDueCancelAndResubscribe,
   s21: s21LaunchAnnual,
   s22: s22LaunchAnnualFull,
+  s23: s23AnchoredUsage,
+  s24: s24ManualReview,
   p1: p1RouteSecurity,
   p2: p2MultiplePurchases,
   p3: p3Consumption,

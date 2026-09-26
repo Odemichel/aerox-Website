@@ -32,7 +32,10 @@ async function accessToken(): Promise<string | null> {
 async function post(
   path: string,
   body: unknown
-): Promise<{ ok: true; data: { url?: string; effective?: string; at?: number } } | { ok: false; error: BillingError }> {
+): Promise<
+  | { ok: true; data: { url?: string; effective?: string; at?: number } & Record<string, unknown> }
+  | { ok: false; error: BillingError }
+> {
   const token = await accessToken();
   if (!token) return { ok: false, error: 'E_AUTH' };
   try {
@@ -59,13 +62,27 @@ export async function startCheckout(offer: Offer, lang: string): Promise<Billing
   return null;
 }
 
-/** Enregistrement de la carte qui débloque l'essai (Checkout « setup »). */
-export async function startTrialCard(lang: string): Promise<BillingError | null> {
-  const r = await post('/api/billing/trial-card/', { lang });
-  if (r.ok === false) return r.error;
-  if (!r.data?.url) return 'E_SERVER';
-  window.location.href = r.data.url;
-  return null;
+export type BusinessIdResult =
+  | 'granted'
+  | 'pending_review'
+  | 'already_used'
+  | 'already_granted'
+  | 'invalid'
+  | 'not_found'
+  | 'inactive'
+  | 'registry_down';
+
+/**
+ * Identifiant d'entreprise qui ouvre les analyses offertes (« tester AeroX
+ * maintenant »). Vérifié côté serveur auprès du registre officiel.
+ */
+export async function submitBusinessId(
+  id: string
+): Promise<{ error: BillingError } | { result: BusinessIdResult; name?: string }> {
+  const r = await post('/api/billing/business-id/', { id });
+  if (r.ok === false) return { error: r.error };
+  const data = r.data as { result?: BusinessIdResult; name?: string };
+  return data.result ? { result: data.result, name: data.name } : { error: 'E_SERVER' };
 }
 
 export async function openPortal(lang: string): Promise<BillingError | null> {

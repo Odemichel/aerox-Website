@@ -72,15 +72,40 @@ export const isDowngrade = (from: Offer, to: Offer) => OFFER_RANK[to] < OFFER_RA
 export const GRACE_DAYS = 7;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+/** Paramètres de démarrage d'un abonnement (Checkout `subscription_data`). */
+export type SubscriptionStart =
+  | { billing_cycle_anchor: number; proration_behavior: 'none' }
+  | { trial_end: number }
+  | Record<string, never>;
+
+/** Même instant, un mois calendaire plus tard (UTC). */
+function oneMonthLater(ms: number): number {
+  const d = new Date(ms);
+  d.setUTCMonth(d.getUTCMonth() + 1);
+  return d.getTime();
+}
+
 /**
  * Premier prélèvement au plus tôt à la mise à disposition (1er novembre
- * 2026) : un abonnement souscrit avant démarre en période d'essai Stripe
- * jusqu'à cette date (carte enregistrée, rien de débité). Stripe exige une
- * fin d'essai à au moins 48 h : à moins de 3 jours de la date, on facture
- * normalement. Renvoie des secondes (format Stripe) ou `undefined`.
+ * 2026). Souscrire avant, c'est s'abonner dès maintenant, sans rien payer
+ * avant cette date.
+ *
+ *  - De préférence, facturation ancrée au 1er novembre sans prorata
+ *    (`billing_cycle_anchor` + `proration_behavior: none`) : Checkout affiche
+ *    « 0,00 € aujourd'hui, puis 69 € par mois à compter du 1er novembre ».
+ *  - Stripe refuse un ancrage au-delà de la première échéance naturelle
+ *    (un mois pour un prix mensuel) : plus d'un mois avant la date, une offre
+ *    mensuelle repasse par une période d'essai Stripe (`trial_end`, 48 h
+ *    minimum), que Checkout présente comme « jours gratuits » — le texte
+ *    sous le bouton de paiement l'explique (voir checkout.ts).
  */
-export function subscriptionStartTrialEnd(nowMs: number): number | undefined {
-  return BF_AVAILABLE_AT - nowMs > 3 * DAY_MS ? Math.floor(BF_AVAILABLE_AT / 1000) : undefined;
+export function subscriptionStart(nowMs: number, annual: boolean): SubscriptionStart {
+  if (BF_AVAILABLE_AT - nowMs <= 60 * 60 * 1000) return {};
+  const anchor = Math.floor(BF_AVAILABLE_AT / 1000);
+  if (annual || oneMonthLater(nowMs) - 60 * 60 * 1000 >= BF_AVAILABLE_AT) {
+    return { billing_cycle_anchor: anchor, proration_behavior: 'none' };
+  }
+  return BF_AVAILABLE_AT - nowMs > 3 * DAY_MS ? { trial_end: anchor } : {};
 }
 
 /** L'offre de lancement est-elle encore ouverte à la souscription ? */

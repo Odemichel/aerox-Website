@@ -10,7 +10,7 @@ import {
   planAfterSubscriptionEnds,
   planFromLookupKeys,
   subscriptionOutcome,
-  subscriptionStartTrialEnd,
+  subscriptionStart,
 } from '../src/lib/billing/logic';
 
 const NOW = Date.UTC(2026, 9, 1, 12);
@@ -112,15 +112,26 @@ describe('graceAfterPaymentFailureEnd', () => {
   });
 });
 
-describe('subscriptionStartTrialEnd', () => {
-  it('avant le 1er novembre : premier prélèvement le 01/11/2026 00:00 (Paris)', () => {
-    expect(new Date(BF_AVAILABLE_AT).toISOString()).toBe('2026-10-31T23:00:00.000Z');
-    expect(subscriptionStartTrialEnd(NOW)).toBe(BF_AVAILABLE_AT / 1000);
+describe('subscriptionStart', () => {
+  const anchor = BF_AVAILABLE_AT / 1000;
+  it('annuel : facturation ancrée au 1er novembre, sans prorata', () => {
+    expect(subscriptionStart(NOW, true)).toEqual({ billing_cycle_anchor: anchor, proration_behavior: 'none' });
   });
 
-  it('à moins de 3 jours, ou après : facturation immédiate', () => {
-    expect(subscriptionStartTrialEnd(BF_AVAILABLE_AT - 2 * 86400000)).toBeUndefined();
-    expect(subscriptionStartTrialEnd(BF_AVAILABLE_AT + 1)).toBeUndefined();
+  it('mensuel à moins d’un mois : ancrée aussi', () => {
+    expect(subscriptionStart(Date.UTC(2026, 9, 5), false)).toEqual({
+      billing_cycle_anchor: anchor,
+      proration_behavior: 'none',
+    });
+  });
+
+  it('mensuel à plus d’un mois : période d’essai Stripe (ancrage refusé par Stripe)', () => {
+    expect(subscriptionStart(Date.UTC(2026, 8, 26), false)).toEqual({ trial_end: anchor });
+  });
+
+  it('après la mise à disposition : facturation immédiate', () => {
+    expect(subscriptionStart(BF_AVAILABLE_AT + 1, false)).toEqual({});
+    expect(subscriptionStart(BF_AVAILABLE_AT - 30 * 60 * 1000, true)).toEqual({});
   });
 });
 

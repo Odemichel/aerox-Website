@@ -17,7 +17,8 @@ import {
   launchOfferOpen,
   METERED_LOOKUP_KEYS,
   OFFER_LOOKUP_KEYS,
-  subscriptionStartTrialEnd,
+  subscriptionStart,
+  ANNUAL_OFFERS,
 } from '~/lib/billing/logic';
 import {
   accountUrl,
@@ -44,6 +45,13 @@ const CHECKOUT_LOCALES: Record<string, Stripe.Checkout.SessionCreateParams.Local
   nl: 'nl',
   ja: 'ja',
   tr: 'tr',
+};
+
+// Texte sous le bouton de paiement quand Checkout parle de « jours
+// gratuits » (voir plus bas). Anglais par défaut pour les autres langues.
+const PREORDER_NOTE: Record<string, string> = {
+  fr: 'Offres disponibles le 1er novembre 2026 : vous êtes abonné dès aujourd’hui, sans aucun prélèvement avant cette date. Ce n’est pas un essai gratuit.',
+  en: 'Plans start on 1 November 2026: you subscribe today and nothing is charged before that date. This is not a free trial.',
 };
 
 export const POST: APIRoute = async ({ request, site }) => {
@@ -90,6 +98,7 @@ export const POST: APIRoute = async ({ request, site }) => {
     const metadata = { userId: user.id, aerox_offer: offer };
     const base = siteBase(request, site);
 
+    const start = subscriptionStart(Date.now(), ANNUAL_OFFERS.includes(offer));
     const params: Stripe.Checkout.SessionCreateParams = {
       mode: 'subscription',
       customer,
@@ -102,6 +111,12 @@ export const POST: APIRoute = async ({ request, site }) => {
       tax_id_collection: { enabled: true },
       locale: CHECKOUT_LOCALES[lang] ?? 'auto',
       allow_promotion_codes: false,
+      // Période d'essai Stripe (offre mensuelle souscrite plus d'un mois avant
+      // le 1er novembre) : Checkout l'annonce en « jours gratuits ». Ce n'en
+      // sont pas : on précise sous le bouton de paiement.
+      ...('trial_end' in start
+        ? { custom_text: { submit: { message: PREORDER_NOTE[lang] ?? PREORDER_NOTE.en } } }
+        : {}),
       success_url: accountUrl(base, lang, 'success'),
       cancel_url: accountUrl(base, lang, 'cancel'),
       metadata,
@@ -112,9 +127,9 @@ export const POST: APIRoute = async ({ request, site }) => {
       ),
       subscription_data: {
         metadata,
-        // Souscrit avant le 1er novembre 2026 : carte enregistrée, premier
-        // prélèvement à la mise à disposition (période d'essai Stripe).
-        trial_end: subscriptionStartTrialEnd(Date.now()),
+        // Souscrit avant le 1er novembre 2026 : abonné tout de suite, premier
+        // prélèvement à la mise à disposition (voir subscriptionStart).
+        ...start,
         // Mode flexible : l'usage non facturé est facturé si l'on retire une
         // ligne mesurée (passage de Studio à Illimité en cours de mois).
         billing_mode: { type: 'flexible' },

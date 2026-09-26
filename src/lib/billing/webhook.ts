@@ -341,35 +341,9 @@ export async function syncSubscription(db: SupabaseClient, subscriptionId: strin
   if (plan === 'unlimited_launch' && outcome.status === 'active') await ensureLaunchSchedule(sub);
 }
 
-/**
- * Essai : la carte enregistrée (Checkout « setup », 0 € débité) débloque les
- * 2 analyses offertes, une seule fois par carte. L'empreinte de la carte est
- * lue chez Stripe, jamais reçue du navigateur.
- */
-async function handleTrialCard(db: SupabaseClient, userId: string, session: Stripe.Checkout.Session) {
-  const setupIntentId = idOf(session.setup_intent);
-  if (!setupIntentId) return;
-  const intent = await stripe().setupIntents.retrieve(setupIntentId, { expand: ['payment_method'] });
-  if (intent.status !== 'succeeded') return;
-  const method = intent.payment_method as Stripe.PaymentMethod | null;
-  const fingerprint = method?.card?.fingerprint;
-  if (!fingerprint) {
-    console.error('stripe-webhook: carte d’essai sans empreinte —', setupIntentId);
-    return;
-  }
-  const { data, error } = await db.rpc('bf_grant_trial', { p_user: userId, p_fingerprint: fingerprint });
-  if (error) throw new Error(`bf_grant_trial: ${error.message}`);
-  if (data === 'card_already_used') console.warn('stripe-webhook: carte déjà utilisée pour un essai —', userId);
-}
-
 async function handleCheckout(db: SupabaseClient, session: Stripe.Checkout.Session) {
   const userId = session.metadata?.userId;
   if (!userId) return;
-
-  if (session.mode === 'setup') {
-    if (session.metadata?.aerox_offer === 'trial_card') await handleTrialCard(db, userId, session);
-    return;
-  }
 
   if (session.mode === 'subscription') {
     const subId = idOf(session.subscription);

@@ -31,7 +31,13 @@ export type BillingRow = {
   grace_until: string | null;
   current_period_start: string | null;
   current_period_end: string | null;
-  trial_state: 'needs_card' | 'granted' | 'card_already_used';
+  trial_state:
+    | 'needs_business_id'
+    | 'pending_review'
+    | 'business_id_used'
+    | 'granted'
+    | 'needs_card'
+    | 'card_already_used';
   unpaid_invoice_id?: string | null;
 };
 

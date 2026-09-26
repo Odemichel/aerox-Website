@@ -24,8 +24,8 @@ select pg_temp.check((select role from users where id = '00000000-0000-0000-0000
 select pg_temp.check((select is_active from users where id = '00000000-0000-0000-0000-0000000000b1'), 'BF is_active');
 select pg_temp.check((select studio_name from users where id = '00000000-0000-0000-0000-0000000000b1') = 'Studio 1', 'studio_name repris');
 select pg_temp.check((select plan from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1') = 'trial', 'plan trial');
-select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b1'), 'essai : aucun crédit avant la carte');
-select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1') = 'needs_card', 'essai : en attente de carte');
+select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b1'), 'aucune analyse offerte avant l''identifiant');
+select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1') = 'needs_business_id', 'en attente de l''identifiant d''entreprise');
 select pg_temp.check((select count(*) from net.calls) = 0, 'pas de notification sans secret');
 
 -- Avec secret : notification « nouveau BF ».
@@ -46,17 +46,32 @@ insert into bf_clients (id, bf_user_id) values ('00000000-0000-0000-0000-0000000
 
 set role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000b1');
-select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'reason' = 'needs_card', 'essai sans carte : refus needs_card');
+select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'reason' = 'needs_card', 'sans identifiant : refus needs_card (code lu par l''application)');
 reset role;
 
--- Carte enregistrée : 2 analyses sur 20 jours. Une carte = un essai.
-select pg_temp.check(bf_grant_trial('00000000-0000-0000-0000-0000000000b1', 'fp_card_1') = 'granted', 'carte : essai ouvert');
+-- Identifiant d'entreprise vérifié : 2 analyses sur 20 jours. Un identifiant = un compte.
+select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:552032534', 'siren', 'FR', 'DANONE', true) = 'granted', 'identifiant vérifié : analyses ouvertes');
 select pg_temp.check((select remaining = 2 and expires_at between now() + interval '19 days 23 hours' and now() + interval '20 days 1 hour'
   from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b1' and source = 'trial'), '2 crédits sur 20 jours');
-select pg_temp.check(bf_grant_trial('00000000-0000-0000-0000-0000000000b1', 'fp_card_1') = 'already_granted', 'rejeu : pas de second essai');
-select pg_temp.check(bf_grant_trial('00000000-0000-0000-0000-0000000000b2', 'fp_card_1') = 'card_already_used', 'même carte, autre compte : refusé');
-select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2') = 'card_already_used', 'état card_already_used');
-select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b2'), 'aucun crédit pour la carte réutilisée');
+select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1') = 'granted', 'état granted');
+select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:552032534', 'siren', 'FR', 'DANONE', true) = 'already_granted', 'rejeu : rien de plus');
+select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b2', 'FR:552032534', 'eu_vat', 'FR', 'DANONE', true) = 'already_used', 'même entreprise (TVA), autre compte : refusé');
+select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2') = 'business_id_used', 'état business_id_used');
+select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b2'), 'aucun crédit pour l''identifiant réutilisé');
+
+-- Hors registre : vérification manuelle, notification admin avec lien signé.
+insert into vault.decrypted_secrets values ('billing_hook_secret', 'hook');
+delete from net.calls;
+select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b2', 'OTHER:US123456789', 'other', null, '', false) = 'pending_review', 'hors UE : en vérification');
+select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2') = 'pending_review', 'état pending_review');
+select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b2'), 'rien d''ouvert avant validation');
+select pg_temp.check((select count(*) = 1 and bool_and(body -> 'review' ->> 'business_id' = 'US123456789'
+  and body -> 'review' ->> 'approve_url' like 'https://aeroxbefaster.com/api/billing/approve-business/?u=00000000-0000-0000-0000-0000000000b2&t='
+    || encode(extensions.hmac('00000000-0000-0000-0000-0000000000b2', 'hook', 'sha256'), 'hex'))
+  from net.calls where url like '%/notify-admin-new-bf'), 'admin prévenu, lien de validation signé');
+select pg_temp.check(bf_approve_business_id('00000000-0000-0000-0000-0000000000b2') = 'granted', 'validation admin : analyses ouvertes');
+select pg_temp.check((select remaining from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b2') = 2, '2 crédits après validation');
+select pg_temp.check(bf_approve_business_id('00000000-0000-0000-0000-0000000000b2') = 'nothing_pending', 'double validation sans effet');
 
 set role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000b1');
@@ -69,8 +84,12 @@ select pg_temp.check((register_analysis('00000000-0000-0000-0000-000000000102') 
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000103') ->> 'reason' = 'no_credits', '3e refusé');
 select pg_temp.check((select count(*) from bf_analyses) = 2, '2 analyses visibles, re-tests non comptés');
 do $$ begin
-  perform bf_grant_trial('00000000-0000-0000-0000-0000000000b1', 'x');
-  raise exception 'ÉCHEC : bf_grant_trial appelable par authenticated';
+  perform bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:1', 'siren', 'FR', '', true);
+  raise exception 'ÉCHEC : bf_register_business_id appelable par authenticated';
+exception when insufficient_privilege then null; end $$;
+do $$ begin
+  perform bf_approve_business_id('00000000-0000-0000-0000-0000000000b1');
+  raise exception 'ÉCHEC : bf_approve_business_id appelable par authenticated';
 exception when insufficient_privilege then null; end $$;
 
 -- Client d'un autre bike fitter.

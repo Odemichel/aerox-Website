@@ -8,7 +8,7 @@ begin if cond is not true then raise exception 'ÉCHEC : %', msg; end if; end $$
 insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000d1', 'bfd@example.com', '{"profile_type":"bike-fitter"}');
 update auth.users set email_confirmed_at = now() where id = '00000000-0000-0000-0000-0000000000d1';
-select bf_grant_trial('00000000-0000-0000-0000-0000000000d1', 'fp_card_d1');
+select bf_register_business_id('00000000-0000-0000-0000-0000000000d1', 'DE:TEST000001', 'eu_vat', 'DE', 'Test GmbH', true);
 insert into bf_clients (id, bf_user_id) select ('00000000-0000-0000-0000-0000000004' || lpad(i::text, 2, '0'))::uuid,
   '00000000-0000-0000-0000-0000000000d1' from generate_series(1, 6) i;
 delete from net.calls;

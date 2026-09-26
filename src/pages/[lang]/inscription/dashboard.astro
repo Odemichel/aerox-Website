@@ -12,15 +12,16 @@ const metadata = {
   title: t(dict, 'dashboard.meta.title'),
   description: t(dict, 'dashboard.meta.description'),
 };
-const role = t(dict, 'dashboard.role');
-const email = t(dict, 'dashboard.email');
-const choosePack = t(dict, 'dashboard.choosePack');
-const licence = t(dict, 'dashboard.licence');
-const noLicence = t(dict, 'dashboard.noLicence');
-const studio = t(dict, 'dashboard.studio');
-const noStudio = t(dict, 'dashboard.noStudio');
-const pendingActivation = t(dict, 'dashboard.pendingActivation');
-const activeBf = t(dict, 'dashboard.activeBf');
+
+// Libellés du compte (profil), lus par le script client.
+const acctLabels = Object.fromEntries(
+  ['role.bike-fitter', 'role.pending_bf', 'role.rider', 'role.admin', 'licence'].map((k) => [
+    k,
+    t(dict, `dash.acct.${k}`),
+  ])
+);
+acctLabels['notLogged'] = t(dict, 'dashboard.notLogged');
+acctLabels['profileNotFound'] = t(dict, 'dashboard.profileNotFound');
 
 // Libellés du panneau de facturation bike fitter, lus par le script client.
 const bfLabels = Object.fromEntries(
@@ -34,16 +35,30 @@ const bfLabels = Object.fromEntries(
     'plan.unlimited_launch',
     'plan.unlimited_launch_annual',
     'plan.legacy',
+    'status.active',
+    'status.pastDue',
+    'status.readOnly',
+    'status.canceling',
     'pastDue',
     'readOnly',
     'analyses',
     'credits',
     'creditsExpiry',
+    'meter.included',
+    'meter.over',
+    'meter.offered',
+    'meter.period',
     'nextInvoice',
     'nextInvoiceOn',
     'portal',
     'seeOffers',
-    'changeTo',
+    'changeOffer',
+    'when.now',
+    'when.later',
+    'choose',
+    'price.analysis',
+    'price.month',
+    'price.year',
     'changeLater',
     'cancel',
     'cancelConfirm',
@@ -64,501 +79,57 @@ const bfLabels = Object.fromEntries(
     'success',
     'error',
     'onboarding',
-    'trialCard.title',
-    'trialCard.text',
-    'trialCard.cta',
-    'trialCard.used',
-    'trialCard.done',
+    'biz.title',
+    'biz.text',
+    'biz.label',
+    'biz.placeholder',
+    'biz.cta',
+    'biz.granted',
+    'biz.pending',
+    'biz.used',
+    'biz.invalid',
+    'biz.notFound',
+    'biz.inactive',
+    'biz.registryDown',
   ].map((k) => [k, t(dict, `dash.bf.${k}`)])
 );
 bfLabels['vat'] = t(dict, 'bfp.vat');
 
 // Achats du Diagnostic AeroX (cycliste), lus par le script client.
 const diagLabels = Object.fromEntries(
-  ['title', 'purchased', 'preorder', 'available', 'consumed', 'refunded'].map((k) => [k, t(dict, `dash.diag.${k}`)])
+  ['title', 'purchased', 'preorder', 'available', 'consumed', 'refunded', 'empty'].map((k) => [
+    k,
+    t(dict, `dash.diag.${k}`),
+  ])
 );
 ---
 
 <Layout metadata={metadata}>
-  <section class="max-w-4xl mx-auto px-6">
-    <h1 class="text-3xl font-bold mb-6 text-center">
-      {t(dict, 'dashboard.title')}
-    </h1>
-    <div
-      id="dashboard-content"
-      data-role={role}
-      data-email={email}
-      data-choosePack={choosePack}
-      data-licence={licence}
-      data-noLicence={noLicence}
-      data-studio={studio}
-      data-noStudio={noStudio}
-      data-pendingActivation={pendingActivation}
-      data-activeBf={activeBf}
-      data-notLogged={t(dict, 'dashboard.notLogged')}
-      data-profileNotFound={t(dict, 'dashboard.profileNotFound')}
-      class="text-center"
-    >
-      <p>{t(dict, 'dashboard.loading')}</p>
+  <section id="account" class="acct" data-lang={lang}>
+    <header class="acct-head">
+      <h1>{t(dict, 'dash.acct.title')}</h1>
+    </header>
+
+    <div class="acct-grid">
+      <div class="acct-main">
+        <!-- Facturation bike fitter : rempli par le script si le compte est BF -->
+        <div id="bf-billing-panel" class="acct-card acct-card--main hidden" data-labels={JSON.stringify(bfLabels)}>
+        </div>
+
+        <!-- Diagnostic AeroX : rempli par le script pour un cycliste -->
+        <div id="diag-panel" class="acct-card acct-card--main hidden" data-labels={JSON.stringify(diagLabels)}></div>
+      </div>
+
+      <aside class="acct-side">
+        <div id="dashboard-content" class="acct-card acct-card--side" data-labels={JSON.stringify(acctLabels)}>
+          <p class="acct-muted">{t(dict, 'dashboard.loading')}</p>
+        </div>
+        <div class="acct-card acct-card--side acct-help">
+          <p>{t(dict, 'dash.acct.help')}</p>
+          <a class="acct-link" href={`/${lang}/contact/`}>{t(dict, 'dash.acct.contact')}</a>
+        </div>
+      </aside>
     </div>
-
-    <!-- Facturation bike fitter : rempli par le script si le compte est BF -->
-    <div
-      id="bf-billing-panel"
-      class="hidden mt-8 p-6 border rounded-lg bg-gray-50 dark:bg-gray-800 text-left"
-      data-lang={lang}
-      data-labels={JSON.stringify(bfLabels)}
-    >
-    </div>
-
-    <!-- Diagnostic AeroX : rempli par le script si le compte a des achats -->
-    <div
-      id="diag-panel"
-      class="hidden mt-8 p-6 border rounded-lg bg-gray-50 dark:bg-gray-800 text-left"
-      data-lang={lang}
-      data-labels={JSON.stringify(diagLabels)}
-    >
-    </div>
-
-    <!-- ✅ Script côté client -->
-    <script>
-      import { supabase } from '../../../config/supabaseClient';
-
-      async function loadDashboard() {
-        console.log('➡️ Init dashboard');
-        const content = document.getElementById('dashboard-content');
-        const labelRole = content?.dataset.role || 'Role';
-        const labelEmail = content?.dataset.email || 'Email';
-        const choosePack = content?.dataset.choosepack || "Choisis ton pack pour profiter d'AeroX";
-        const labelLicence = content?.dataset.licence || 'Licence';
-        const labelNoLicence = content?.dataset.nolicence || 'Non définie';
-        const labelStudio = content?.dataset.studio || 'Studio';
-        const labelNoStudio = content?.dataset.nostudio || 'Non renseigné';
-        const labelPendingActivation = content?.dataset.pendingactivation || "En attente d'activation";
-        const labelActiveBf = content?.dataset.activebf || 'Compte Bike-Fitter actif';
-        if (!content) return;
-
-        // Vérifie si l'utilisateur est connecté
-        const { data: userData, error } = await supabase.auth.getUser();
-        if (error || !userData?.user) {
-          content.innerHTML = `<p class="text-red-600">${content.dataset.notlogged ?? ''}</p>`;
-          return;
-        }
-
-        const user = userData.user;
-        console.log('Connecté :', user.email);
-
-        // Récupère son profil complet
-        const { data: profile, error: profileError } = await supabase
-          .from('users')
-          .select('role, is_active, licencetype, studio_name')
-          .eq('id', user.id)
-          .maybeSingle();
-
-        if (profileError) {
-          console.error('Erreur chargement profil:', profileError);
-        }
-
-        if (profile) {
-          let detailsHtml = '';
-
-          if (profile.role === 'bike-fitter' || profile.role === 'pending_bf') {
-            // Bike-Fitter / pending BF display
-            const studioDisplay = profile.studio_name || labelNoStudio;
-            detailsHtml += `<p><strong>${labelStudio} :</strong> ${studioDisplay}</p>`;
-            if (profile.role === 'pending_bf') {
-              detailsHtml += `<p class="text-yellow-600 font-semibold mt-1">${labelPendingActivation}</p>`;
-            } else {
-              detailsHtml += `<p class="text-green-600 font-semibold mt-1">${labelActiveBf}</p>`;
-            }
-          } else if (profile.role === 'admin') {
-            // Admin: just show role, no licence
-          } else {
-            // Rider display (default)
-            if (profile.is_active) {
-              detailsHtml += `<p><strong>${labelLicence} :</strong> ${profile.licencetype || labelNoLicence}</p>`;
-            } else {
-              detailsHtml += `<p class="text-primary font-semibold text-center mt-2">${choosePack}</p>`;
-            }
-          }
-
-          // Packs cyclistes : pour les cyclistes (et l'admin) seulement.
-          const isBf = profile.role === 'bike-fitter' || profile.role === 'pending_bf';
-          document.getElementById('rider-offers')?.classList.toggle('hidden', isBf);
-          // Compte bike fitter : ni bandeau ni bouton « Pré-réserve ton
-          // Diagnostic » (promotions cyclistes) dans son espace.
-          if (isBf) {
-            document
-              .querySelectorAll<HTMLElement>('[data-rider-promo], [data-header-actions]')
-              .forEach((n) => n.classList.add('hidden'));
-          }
-
-          content.innerHTML = `
-        <div class="mt-6 p-6 border rounded-lg bg-gray-50 dark:bg-gray-800 text-left inline-block">
-          <p><strong>${labelEmail} :</strong> ${user.email}</p>
-          <p><strong>${labelRole} :</strong> ${profile.role}</p>
-          ${detailsHtml}
-        </div>`;
-        } else {
-          // public.users est créé automatiquement par le trigger
-          // handle_email_confirmed côté Supabase à la validation de l'email.
-          // Si le profil n'existe pas encore, la confirmation email est peut-être
-          // encore en cours de propagation — on retente après un court délai.
-          await new Promise((r) => setTimeout(r, 1500));
-          const { data: retry } = await supabase
-            .from('users')
-            .select('role, is_active, licencetype, studio_name')
-            .eq('id', user.id)
-            .maybeSingle();
-
-          if (retry) {
-            loadDashboard();
-            return;
-          }
-          content.innerHTML = `<p class="text-red-600">${content.dataset.profilenotfound ?? ''}</p>`;
-        }
-      }
-
-      loadDashboard();
-    </script>
-
-    <script>
-      import { supabase } from '../../../config/supabaseClient';
-      import { manageSubscription, openPortal, startTrialCard } from '~/lib/billing/client';
-      import { isDowngrade, nextInvoiceCentsForOffer, type Offer, type Plan } from '~/lib/billing/logic';
-      import { isDiagnosticAvailable } from '~/config/diagnostic';
-
-      type Summary = {
-        plan: Plan | null;
-        offer: Offer | null;
-        trial_state: 'needs_card' | 'granted' | 'card_already_used' | null;
-        status: string | null;
-        access: 'full' | 'read_only' | null;
-        grace_until: string | null;
-        current_period_start: string | null;
-        current_period_end: string | null;
-        cancel_at: string | null;
-        scheduled_offer: Offer | null;
-        scheduled_at: string | null;
-        unpaid_amount: number | null;
-        unpaid_invoice_url: string | null;
-        has_stripe_customer: boolean | null;
-        has_subscription: boolean | null;
-        analyses_in_period: number;
-        credits_remaining: number;
-        credits_next_expiry: string | null;
-      };
-
-      const SUBSCRIPTION_PLANS: Plan[] = ['payg', 'studio', 'unlimited', 'unlimited_launch'];
-
-      // Construit par nœuds DOM (textContent), jamais par innerHTML : les
-      // libellés sont des traductions, mais la règle reste la même partout.
-      function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', text = ''): HTMLElementTagNameMap[K] {
-        const node = document.createElement(tag);
-        if (cls) node.className = cls;
-        if (text) node.textContent = text;
-        return node;
-      }
-
-      const dateFmt = (lang: string) => (iso: string | null) =>
-        iso
-          ? new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso))
-          : '';
-
-      async function fetchSummary(): Promise<Summary | null> {
-        const { data, error } = await supabase.rpc('bf_usage_summary');
-        const s = data as Summary | null;
-        return error || !s?.plan ? null : s;
-      }
-
-      /** Rend le panneau de facturation. `flash` : message à afficher après le rendu. */
-      function render(panel: HTMLElement, s: Summary, flash?: { text: string; ok: boolean }) {
-        const lang = panel.dataset.lang ?? 'fr';
-        const L: Record<string, string> = JSON.parse(panel.dataset.labels ?? '{}');
-        const date = dateFmt(lang);
-        const eur = (cents: number) =>
-          new Intl.NumberFormat(lang, { style: 'currency', currency: 'EUR' }).format(cents / 100);
-
-        const msg = el('p', 'mt-4 hidden font-semibold');
-        msg.setAttribute('aria-live', 'polite');
-        const say = (text: string, ok: boolean) => {
-          msg.textContent = text;
-          msg.classList.remove('hidden', 'text-red-600', 'text-green-600');
-          msg.classList.add(ok ? 'text-green-600' : 'text-red-600');
-        };
-
-        // Offre exacte (Illimité mensuel ou annuel) : écrite par le webhook.
-        const current: Offer | null = s.offer ?? (SUBSCRIPTION_PLANS.includes(s.plan!) ? (s.plan as Offer) : null);
-        const offerLabel = (o: string) => L[`plan.${o}`] ?? o;
-
-        panel.replaceChildren();
-        panel.append(el('h2', 'text-xl font-bold mb-2', L.title));
-        panel.append(el('p', 'text-lg font-semibold text-primary', offerLabel(current ?? s.plan!)));
-
-        if (s.status === 'past_due' && s.access === 'full') {
-          panel.append(
-            el('p', 'mt-2 text-yellow-700 dark:text-yellow-400', L.pastDue.replace('{date}', date(s.grace_until)))
-          );
-        } else if (s.access === 'read_only') {
-          panel.append(el('p', 'mt-2 text-red-600 font-semibold', L.readOnly));
-        }
-        if (s.has_subscription && s.cancel_at) {
-          panel.append(
-            el(
-              'p',
-              'mt-2 text-yellow-700 dark:text-yellow-400 font-semibold',
-              L.cancelScheduled.replace('{date}', date(s.cancel_at))
-            )
-          );
-        } else if (s.has_subscription && s.scheduled_offer) {
-          panel.append(
-            el(
-              'p',
-              'mt-2 text-yellow-700 dark:text-yellow-400',
-              L.changeScheduled
-                .replace('{offer}', offerLabel(s.scheduled_offer))
-                .replace('{date}', date(s.scheduled_at))
-            )
-          );
-        }
-
-        // Créance : facture restée impayée à la fin d'un abonnement.
-        if (s.unpaid_amount) {
-          const box = el('div', 'mt-4 rounded-md border-2 border-red-600 bg-white dark:bg-gray-900 p-4');
-          box.append(el('p', 'font-bold text-red-600', L.debt.replace('{amount}', eur(s.unpaid_amount))));
-          if (s.unpaid_invoice_url) {
-            const pay = el('a', 'btn-primary mt-3 inline-flex', L.payDebt);
-            pay.href = s.unpaid_invoice_url;
-            pay.target = '_blank';
-            pay.rel = 'noopener';
-            box.append(pay);
-          }
-          panel.append(box);
-        }
-
-        // Essai : les 2 analyses offertes se débloquent avec une carte (0 €).
-        if (s.plan === 'trial' && s.trial_state === 'needs_card') {
-          const box = el('div', 'mt-4 rounded-md border-2 border-primary bg-white dark:bg-gray-900 p-4');
-          box.append(el('p', 'font-bold', L['trialCard.title']), el('p', 'mt-1 text-sm', L['trialCard.text']));
-          const cta = el('button', 'btn-primary mt-3', L['trialCard.cta']);
-          cta.type = 'button';
-          cta.addEventListener('click', async () => {
-            cta.disabled = true;
-            const err = await startTrialCard(lang);
-            cta.disabled = false;
-            if (err) say(L.error, false);
-          });
-          box.append(cta);
-          panel.append(box);
-        } else if (s.plan === 'trial' && s.trial_state === 'card_already_used') {
-          panel.append(el('p', 'mt-2 text-red-600 font-semibold', L['trialCard.used']));
-        }
-
-        const stats = el('dl', 'mt-4 grid gap-4 sm:grid-cols-2');
-        const stat = (label: string, value: string, sub = '') => {
-          const box = el('div', 'rounded-md bg-white dark:bg-gray-900 p-3');
-          box.append(el('dt', 'text-sm text-gray-500', label), el('dd', 'text-2xl font-bold', value));
-          if (sub) box.append(el('dd', 'text-sm text-gray-500', sub));
-          stats.append(box);
-        };
-        stat(L.analyses, String(s.analyses_in_period));
-        if (s.plan === 'trial' || s.plan === 'pack') {
-          stat(
-            L.credits,
-            String(s.credits_remaining),
-            s.credits_next_expiry ? L.creditsExpiry.replace('{date}', date(s.credits_next_expiry)) : ''
-          );
-        }
-        // Pas de prochaine facture quand l'abonnement s'arrête à l'échéance.
-        // Descente programmée à l'échéance : la facture est celle de la
-        // nouvelle offre.
-        const billed = s.scheduled_offer ?? current;
-        const next =
-          s.has_subscription && !s.cancel_at && billed
-            ? nextInvoiceCentsForOffer(
-                billed,
-                s.scheduled_offer ? 0 : s.analyses_in_period,
-                Date.now(),
-                s.current_period_end ? new Date(s.current_period_end).getTime() : null
-              )
-            : null;
-        if (next !== null) {
-          stat(
-            L.nextInvoice,
-            `${eur(next)} ${L.vat}`,
-            s.current_period_end ? L.nextInvoiceOn.replace('{date}', date(s.current_period_end)) : ''
-          );
-        }
-        panel.append(stats);
-
-        const actions = el('div', 'mt-6 flex flex-wrap gap-3');
-        const button = (label: string, cls: string, onClick: () => Promise<string | null>) => {
-          const b = el('button', cls, label);
-          b.type = 'button';
-          b.addEventListener('click', async () => {
-            b.disabled = true;
-            const err = await onClick();
-            b.disabled = false;
-            if (err) say(L.error, false);
-          });
-          actions.append(b);
-        };
-        const link = (label: string, href: string, cls: string) => {
-          const a = el('a', cls, label);
-          a.href = href;
-          actions.append(a);
-        };
-        // Action sur l'abonnement : la route réaligne la base avant de
-        // répondre, le panneau est redessiné avec l'état à jour.
-        const act = async (action: 'change' | 'cancel' | 'resume' | 'keep', done: string, offer?: Offer) => {
-          say(L.updating, true);
-          const r = await manageSubscription(action, offer);
-          if (r.error) return r.error;
-          const fresh = await fetchSummary();
-          if (fresh) render(panel, fresh, { text: done, ok: true });
-          else say(done, true);
-          return null;
-        };
-
-        if (s.has_stripe_customer) button(L.portal, 'btn-primary', () => openPortal(lang));
-
-        const ownsOffer = SUBSCRIPTION_PLANS.includes(s.plan!);
-        if (s.plan === 'trial' || s.plan === 'pack' || (ownsOffer && !s.has_subscription)) {
-          // Sans abonnement (essai, ou résilié par Stripe pour impayé) : on
-          // propose de souscrire plutôt que de modifier.
-          link(L.seeOffers, '#tarifs', 'btn-secondary');
-        }
-
-        if (ownsOffer && s.has_subscription && current) {
-          if (s.cancel_at) {
-            button(L.resume, 'btn-secondary', () => act('resume', L.resumeDone));
-          } else {
-            if (s.scheduled_offer) button(L.keep, 'btn-secondary', () => act('keep', L.keepDone));
-            const others = (['payg', 'studio', 'unlimited', 'unlimited_annual'] as Offer[]).filter(
-              (o) => o !== current && o !== s.scheduled_offer
-            );
-            for (const offer of others) {
-              const down = isDowngrade(current, offer);
-              button(L.changeTo.replace('{offer}', offerLabel(offer)), 'btn-secondary', async () => {
-                let question = (down ? L.changeConfirmDown : L.changeConfirmUp).replace('{offer}', offerLabel(offer));
-                if (current === 'unlimited_launch') question += `\n\n${L.leaveLaunch}`;
-                if (!confirm(question)) return null;
-                return act(
-                  'change',
-                  down ? L.changeLater.replace('{date}', date(s.current_period_end)) : L.changeDone,
-                  offer
-                );
-              });
-            }
-            button(L.cancel, 'btn-tertiary text-red-600', async () => {
-              if (!confirm(L.cancelConfirm)) return null;
-              return act('cancel', L.cancelDone);
-            });
-          }
-        }
-
-        // Démarrage : seulement tant que l'essai est à ouvrir ou à utiliser
-        // (un abonnement terminé repasse en « essai » sans crédit).
-        if (s.plan === 'trial' && (s.trial_state === 'needs_card' || s.credits_remaining > 0)) {
-          link(L.onboarding, `/${lang}/bike-fitting/bienvenue/`, 'btn-tertiary underline');
-        }
-
-        panel.append(actions, msg);
-        panel.classList.remove('hidden');
-        // Offres BF payables depuis l'espace, tant qu'aucun abonnement n'est en cours.
-        document.getElementById('bf-offers')?.classList.toggle('hidden', Boolean(s.has_subscription));
-        if (flash) say(flash.text, flash.ok);
-      }
-
-      async function loadBfBilling() {
-        const panel = document.getElementById('bf-billing-panel');
-        if (!panel || panel.dataset.bound === '1') return;
-        panel.dataset.bound = '1';
-        const L: Record<string, string> = JSON.parse(panel.dataset.labels ?? '{}');
-
-        const { data: userData } = await supabase.auth.getUser();
-        if (!userData?.user) return;
-        const { data: profile } = await supabase.from('users').select('role').eq('id', userData.user.id).maybeSingle();
-        if (profile?.role !== 'bike-fitter' && profile?.role !== 'admin') return;
-
-        let s = await fetchSummary();
-        if (!s) return;
-
-        // Retour de Checkout : le webhook arrive en général quelques secondes
-        // après. Le message s'affiche tout de suite, le panneau se met à jour
-        // dès que l'offre (ou l'essai) est enregistrée.
-        const billingState = new URLSearchParams(window.location.search).get('billing');
-        const waiting =
-          (billingState === 'success' && !s.has_subscription) ||
-          (billingState === 'card' && s.trial_state === 'needs_card');
-        const flash =
-          billingState === 'success'
-            ? { text: L.success, ok: true }
-            : billingState === 'card' && s.trial_state === 'needs_card'
-              ? { text: L['trialCard.done'], ok: true }
-              : undefined;
-        render(panel, s, flash);
-
-        for (let i = 0; waiting && i < 15; i++) {
-          await new Promise((r) => setTimeout(r, 2000));
-          const fresh = await fetchSummary();
-          if (!fresh) break;
-          const arrived = billingState === 'success' ? fresh.has_subscription : fresh.trial_state !== 'needs_card';
-          if (arrived) {
-            s = fresh;
-            render(panel, s, flash);
-            break;
-          }
-        }
-      }
-
-      /** Achats du Diagnostic AeroX : statut de chaque achat (cycliste). */
-      async function loadDiagnostics() {
-        const panel = document.getElementById('diag-panel');
-        if (!panel || panel.dataset.bound === '1') return;
-        panel.dataset.bound = '1';
-        const lang = panel.dataset.lang ?? 'fr';
-        const L: Record<string, string> = JSON.parse(panel.dataset.labels ?? '{}');
-        const date = dateFmt(lang);
-
-        const { data: userData } = await supabase.auth.getUser();
-        if (!userData?.user) return;
-        const { data } = await supabase
-          .from('diagnostic_purchases')
-          .select('paid_at, consumed_at, refunded_at')
-          .eq('user_id', userData.user.id)
-          .order('paid_at', { ascending: false });
-        const rows = (data ?? []) as { paid_at: string; consumed_at: string | null; refunded_at: string | null }[];
-        if (!rows.length) return;
-
-        panel.replaceChildren(el('h2', 'text-xl font-bold mb-2', L.title));
-        const list = el('ul', 'space-y-2');
-        for (const r of rows) {
-          const status = r.refunded_at
-            ? L.refunded.replace('{date}', date(r.refunded_at))
-            : r.consumed_at
-              ? L.consumed.replace('{date}', date(r.consumed_at))
-              : isDiagnosticAvailable()
-                ? L.available
-                : L.preorder;
-          const li = el('li', 'rounded-md bg-white dark:bg-gray-900 p-3');
-          li.append(
-            el('p', 'font-semibold', L.purchased.replace('{date}', date(r.paid_at))),
-            el('p', r.refunded_at ? 'text-sm text-gray-500' : 'text-sm text-primary', status)
-          );
-          list.append(li);
-        }
-        panel.append(list);
-        panel.classList.remove('hidden');
-      }
-
-      loadBfBilling();
-      loadDiagnostics();
-      document.addEventListener('astro:page-load', () => {
-        loadBfBilling();
-        loadDiagnostics();
-      });
-    </script>
   </section>
 
   <!--
@@ -566,10 +137,1012 @@ const diagLabels = Object.fromEntries(
     abonnement → offres BF payables d'ici ; cycliste → Diagnostic. Jamais
     l'une chez l'autre (les routes de paiement refusent aussi le mauvais rôle).
   -->
-  <div id="bf-offers" class="hidden mt-8">
+  <div id="bf-offers" class="hidden">
     <BfPricing lang={lang as Locale} inAccount />
   </div>
   <div id="rider-offers" class="hidden">
     <PricingSection />
   </div>
+
+  <script>
+    import { supabase } from '../../../config/supabaseClient';
+    import { manageSubscription, openPortal, submitBusinessId } from '~/lib/billing/client';
+    import { isDowngrade, nextInvoiceCentsForOffer, type Offer, type Plan } from '~/lib/billing/logic';
+    import { isDiagnosticAvailable } from '~/config/diagnostic';
+
+    type Summary = {
+      plan: Plan | null;
+      offer: Offer | null;
+      trial_state:
+        | 'needs_business_id'
+        | 'pending_review'
+        | 'business_id_used'
+        | 'granted'
+        | 'needs_card'
+        | 'card_already_used'
+        | null;
+      status: string | null;
+      access: 'full' | 'read_only' | null;
+      grace_until: string | null;
+      current_period_start: string | null;
+      current_period_end: string | null;
+      cancel_at: string | null;
+      scheduled_offer: Offer | null;
+      scheduled_at: string | null;
+      unpaid_amount: number | null;
+      unpaid_invoice_url: string | null;
+      has_stripe_customer: boolean | null;
+      has_subscription: boolean | null;
+      analyses_in_period: number;
+      credits_remaining: number;
+      credits_next_expiry: string | null;
+    };
+
+    type Profile = {
+      role: string | null;
+      is_active: boolean | null;
+      licencetype: string | null;
+      studio_name: string | null;
+    };
+
+    const SUBSCRIPTION_PLANS: Plan[] = ['payg', 'studio', 'unlimited', 'unlimited_launch'];
+    // Offres proposées au changement, avec leur prix HT (centimes) et leur rythme.
+    const CHANGE_TARGETS: { offer: Offer; cents: number; unit: 'analysis' | 'month' | 'year' }[] = [
+      { offer: 'payg', cents: 2000, unit: 'analysis' },
+      { offer: 'studio', cents: 7900, unit: 'month' },
+      { offer: 'unlimited', cents: 11900, unit: 'month' },
+      { offer: 'unlimited_annual', cents: 119000, unit: 'year' },
+    ];
+    // Analyses incluses (Studio) ou offertes (essai) : bornes de la jauge.
+    const STUDIO_INCLUDED = 5;
+    const TRIAL_OFFERED = 2;
+
+    // Construit par nœuds DOM (textContent), jamais par innerHTML : le nom du
+    // studio est saisi par l'utilisateur, les libellés sont des traductions.
+    function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', text = ''): HTMLElementTagNameMap[K] {
+      const node = document.createElement(tag);
+      if (cls) node.className = cls;
+      if (text) node.textContent = text;
+      return node;
+    }
+
+    const langOf = () => document.getElementById('account')?.dataset.lang ?? 'fr';
+    const dateFmt = (iso: string | null) =>
+      iso
+        ? new Intl.DateTimeFormat(langOf(), { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso))
+        : '';
+    const eur = (cents: number) =>
+      new Intl.NumberFormat(langOf(), { style: 'currency', currency: 'EUR' }).format(cents / 100);
+
+    /** Jauge fine : `value` sur `max`, la part au-delà de `max` en couleur d'alerte. */
+    function meter(label: string, value: number, max: number) {
+      const wrap = el('div', 'acct-meter');
+      wrap.append(el('p', 'acct-meter-label', label));
+      const track = el('div', 'acct-meter-track');
+      track.setAttribute('role', 'meter');
+      track.setAttribute('aria-valuemin', '0');
+      track.setAttribute('aria-valuemax', String(max));
+      track.setAttribute('aria-valuenow', String(value));
+      track.setAttribute('aria-label', label);
+      const fill = el('span', 'acct-meter-fill');
+      fill.style.width = `${Math.min(100, (Math.min(value, max) / max) * 100)}%`;
+      track.append(fill);
+      if (value > max) track.classList.add('is-over');
+      wrap.append(track);
+      return wrap;
+    }
+
+    /** Bandeau d'information : `tone` = ok | warn | bad. */
+    function note(tone: 'ok' | 'warn' | 'bad', text: string) {
+      const p = el('p', `acct-note acct-note--${tone}`, text);
+      p.setAttribute('role', tone === 'bad' ? 'alert' : 'status');
+      return p;
+    }
+
+    // ---------------------------------------------------------------------
+    // Profil (colonne de droite) et visibilité des offres selon le rôle.
+    // ---------------------------------------------------------------------
+
+    async function loadProfile(): Promise<{ id: string; email: string; profile: Profile } | null> {
+      const box = document.getElementById('dashboard-content');
+      if (!box) return null;
+      const A: Record<string, string> = JSON.parse(box.dataset.labels ?? '{}');
+
+      const { data: userData, error } = await supabase.auth.getUser();
+      if (error || !userData?.user) {
+        box.replaceChildren(note('bad', A.notLogged));
+        return null;
+      }
+      const user = userData.user;
+      const read = () =>
+        supabase.from('users').select('role, is_active, licencetype, studio_name').eq('id', user.id).maybeSingle();
+      let { data: profile } = await read();
+      // Profil créé par un trigger à la confirmation de l'e-mail : on laisse
+      // un court délai à la propagation avant de conclure à une absence.
+      if (!profile) {
+        await new Promise((r) => setTimeout(r, 1500));
+        ({ data: profile } = await read());
+      }
+      if (!profile) {
+        box.replaceChildren(note('bad', A.profileNotFound));
+        return null;
+      }
+      const p = profile as Profile;
+
+      const name = p.studio_name || user.email || '';
+      const kids: HTMLElement[] = [el('p', 'acct-side-name', name)];
+      if (p.studio_name && user.email) kids.push(el('p', 'acct-muted acct-break', user.email));
+      kids.push(el('p', 'acct-role', A[`role.${p.role}`] ?? p.role ?? ''));
+      if (p.role === 'rider' && p.is_active && p.licencetype) {
+        kids.push(el('p', 'acct-muted', A.licence.replace('{licence}', p.licencetype)));
+      }
+      box.replaceChildren(...kids);
+
+      // Packs cyclistes : pour les cyclistes (et l'admin) seulement.
+      const isBf = p.role === 'bike-fitter' || p.role === 'pending_bf';
+      document.getElementById('rider-offers')?.classList.toggle('hidden', isBf);
+      // Compte bike fitter : ni bandeau ni bouton « Pré-réserve ton
+      // Diagnostic » (promotions cyclistes) dans son espace.
+      if (isBf) {
+        document
+          .querySelectorAll<HTMLElement>('[data-rider-promo], [data-header-actions]')
+          .forEach((n) => n.classList.add('hidden'));
+      }
+      return { id: user.id, email: user.email ?? '', profile: p };
+    }
+
+    // ---------------------------------------------------------------------
+    // Offre bike fitter.
+    // ---------------------------------------------------------------------
+
+    async function fetchSummary(): Promise<Summary | null> {
+      const { data, error } = await supabase.rpc('bf_usage_summary');
+      const s = data as Summary | null;
+      return error || !s?.plan ? null : s;
+    }
+
+    /** Rend le panneau de l'offre. `flash` : message à afficher après le rendu. */
+    function render(panel: HTMLElement, s: Summary, flash?: { text: string; ok: boolean }) {
+      const lang = langOf();
+      const L: Record<string, string> = JSON.parse(panel.dataset.labels ?? '{}');
+
+      const msg = el('p', 'acct-flash hidden');
+      msg.setAttribute('aria-live', 'polite');
+      const say = (text: string, ok: boolean) => {
+        msg.textContent = text;
+        msg.classList.remove('hidden', 'is-ok', 'is-bad');
+        msg.classList.add(ok ? 'is-ok' : 'is-bad');
+      };
+
+      // Offre exacte (Illimité mensuel ou annuel) : écrite par le webhook.
+      const current: Offer | null = s.offer ?? (SUBSCRIPTION_PLANS.includes(s.plan!) ? (s.plan as Offer) : null);
+      const offerLabel = (o: string) => L[`plan.${o}`] ?? o;
+      const ownsOffer = SUBSCRIPTION_PLANS.includes(s.plan!);
+
+      // --- En-tête : nom de l'offre et état ------------------------------
+      const head = el('div', 'acct-plan');
+      const titles = el('div');
+      titles.append(
+        el('p', 'acct-muted acct-plan-kicker', L.title),
+        el('h2', 'acct-plan-name', offerLabel(current ?? s.plan!))
+      );
+      head.append(titles);
+      let pill: [string, string] | null = null;
+      if (s.access === 'read_only') pill = ['bad', L['status.readOnly']];
+      else if (s.status === 'past_due') pill = ['warn', L['status.pastDue']];
+      else if (s.has_subscription && s.cancel_at) pill = ['warn', L['status.canceling']];
+      else if (s.has_subscription) pill = ['ok', L['status.active']];
+      if (pill) head.append(el('span', `acct-pill acct-pill--${pill[0]}`, pill[1]));
+
+      panel.replaceChildren(head);
+
+      // --- Messages d'état -------------------------------------------------
+      if (s.status === 'past_due' && s.access === 'full') {
+        panel.append(note('warn', L.pastDue.replace('{date}', dateFmt(s.grace_until))));
+      } else if (s.access === 'read_only') {
+        panel.append(note('bad', L.readOnly));
+      }
+      if (s.has_subscription && s.cancel_at) {
+        panel.append(note('warn', L.cancelScheduled.replace('{date}', dateFmt(s.cancel_at))));
+      } else if (s.has_subscription && s.scheduled_offer) {
+        panel.append(
+          note(
+            'warn',
+            L.changeScheduled
+              .replace('{offer}', offerLabel(s.scheduled_offer))
+              .replace('{date}', dateFmt(s.scheduled_at))
+          )
+        );
+      }
+
+      // Créance : facture restée impayée à la fin d'un abonnement.
+      if (s.unpaid_amount) {
+        const box = el('div', 'acct-debt');
+        box.append(el('p', '', L.debt.replace('{amount}', eur(s.unpaid_amount))));
+        if (s.unpaid_invoice_url) {
+          const pay = el('a', 'acct-btn acct-btn--primary', L.payDebt);
+          pay.href = s.unpaid_invoice_url;
+          pay.target = '_blank';
+          pay.rel = 'noopener';
+          box.append(pay);
+        }
+        panel.append(box);
+      }
+
+      // --- Tester AeroX maintenant : identifiant d'entreprise -------------
+      const needsId =
+        s.plan === 'trial' &&
+        (s.trial_state === 'needs_business_id' ||
+          s.trial_state === 'business_id_used' ||
+          s.trial_state === 'needs_card' ||
+          s.trial_state === 'card_already_used');
+      if (s.plan === 'trial' && s.trial_state === 'pending_review') {
+        const box = el('div', 'acct-inset');
+        box.append(el('h3', 'acct-inset-title', L['biz.title']), note('ok', L['biz.pending']));
+        panel.append(box);
+      } else if (needsId) {
+        const form = el('form', 'acct-inset');
+        form.noValidate = true;
+        form.append(el('h3', 'acct-inset-title', L['biz.title']), el('p', 'acct-inset-text', L['biz.text']));
+        const label = el('label', 'acct-field');
+        label.append(el('span', 'acct-field-label', L['biz.label']));
+        const input = el('input', 'acct-input');
+        input.name = 'business-id';
+        input.required = true;
+        input.autocomplete = 'off';
+        input.spellcheck = false;
+        input.placeholder = L['biz.placeholder'];
+        label.append(input);
+        const cta = el('button', 'acct-btn acct-btn--primary', L['biz.cta']);
+        cta.type = 'submit';
+        const result = el('p', 'acct-flash hidden');
+        result.setAttribute('aria-live', 'polite');
+        const tell = (text: string, ok: boolean) => {
+          result.textContent = text;
+          result.classList.remove('hidden', 'is-ok', 'is-bad');
+          result.classList.add(ok ? 'is-ok' : 'is-bad');
+        };
+        if (s.trial_state === 'business_id_used' || s.trial_state === 'card_already_used') tell(L['biz.used'], false);
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          if (!input.value.trim()) return input.focus();
+          cta.disabled = true;
+          tell(L.updating, true);
+          const r = await submitBusinessId(input.value);
+          cta.disabled = false;
+          if ('error' in r) return tell(L.error, false);
+          const messages: Record<string, [string, boolean]> = {
+            granted: [L['biz.granted'], true],
+            already_granted: [L['biz.granted'], true],
+            pending_review: [L['biz.pending'], true],
+            already_used: [L['biz.used'], false],
+            invalid: [L['biz.invalid'], false],
+            not_found: [L['biz.notFound'], false],
+            inactive: [L['biz.inactive'], false],
+            registry_down: [L['biz.registryDown'], false],
+          };
+          const [text, ok] = messages[r.result] ?? [L.error, false];
+          if (ok) {
+            // Analyses ouvertes ou vérification en cours : le panneau change.
+            const fresh = await fetchSummary();
+            if (fresh) return render(panel, fresh, { text, ok });
+          }
+          tell(text, ok);
+          input.focus();
+        });
+        const row = el('div', 'acct-field-row');
+        row.append(label, cta);
+        form.append(row, result);
+        panel.append(form);
+      }
+
+      // --- Usage : une seule jauge, selon l'offre ------------------------
+      if ((s.plan === 'trial' || s.plan === 'pack') && s.trial_state === 'granted' && s.credits_remaining > 0) {
+        const m = meter(
+          L['meter.offered'].replace('{n}', String(s.credits_remaining)).replace('{max}', String(TRIAL_OFFERED)),
+          s.credits_remaining,
+          TRIAL_OFFERED
+        );
+        if (s.credits_next_expiry)
+          m.append(el('p', 'acct-muted acct-small', L.creditsExpiry.replace('{date}', dateFmt(s.credits_next_expiry))));
+        panel.append(m);
+      } else if (current === 'studio') {
+        const n = s.analyses_in_period;
+        const label =
+          n > STUDIO_INCLUDED
+            ? L['meter.over'].replace('{max}', String(STUDIO_INCLUDED)).replace('{extra}', String(n - STUDIO_INCLUDED))
+            : L['meter.included'].replace('{n}', String(n)).replace('{max}', String(STUDIO_INCLUDED));
+        panel.append(meter(label, n, STUDIO_INCLUDED));
+      }
+
+      // --- Chiffres clés ---------------------------------------------------
+      const facts = el('dl', 'acct-facts');
+      const fact = (label: string, value: string, sub = '') => {
+        const box = el('div', 'acct-fact');
+        box.append(el('dt', '', label), el('dd', 'acct-fact-value', value));
+        if (sub) box.append(el('dd', 'acct-muted acct-small', sub));
+        facts.append(box);
+      };
+      // Nombre d'analyses : sauf quand la jauge le dit déjà (Studio) ou qu'il
+      // n'y a rien à compter (essai sans analyses ouvertes).
+      if (current !== 'studio' && (s.plan !== 'trial' || s.credits_remaining > 0)) {
+        fact(
+          L.analyses,
+          String(s.analyses_in_period),
+          s.current_period_start && s.has_subscription
+            ? L['meter.period'].replace('{date}', dateFmt(s.current_period_start))
+            : ''
+        );
+      }
+      // Pas de prochaine facture quand l'abonnement s'arrête à l'échéance.
+      // Descente programmée à l'échéance : la facture est celle de la
+      // nouvelle offre.
+      const billed = s.scheduled_offer ?? current;
+      const next =
+        s.has_subscription && !s.cancel_at && billed
+          ? nextInvoiceCentsForOffer(
+              billed,
+              s.scheduled_offer ? 0 : s.analyses_in_period,
+              Date.now(),
+              s.current_period_end ? new Date(s.current_period_end).getTime() : null
+            )
+          : null;
+      if (next !== null) {
+        fact(
+          L.nextInvoice,
+          `${eur(next)} ${L.vat}`,
+          s.current_period_end ? L.nextInvoiceOn.replace('{date}', dateFmt(s.current_period_end)) : ''
+        );
+      }
+      if (facts.childElementCount) panel.append(facts);
+
+      // --- Actions ---------------------------------------------------------
+      const actions = el('div', 'acct-actions');
+      const button = (
+        label: string,
+        cls: string,
+        onClick: () => Promise<string | null>,
+        into: HTMLElement = actions
+      ) => {
+        const b = el('button', cls, label);
+        b.type = 'button';
+        b.addEventListener('click', async () => {
+          b.disabled = true;
+          const err = await onClick();
+          b.disabled = false;
+          if (err) say(L.error, false);
+        });
+        into.append(b);
+        return b;
+      };
+      const link = (label: string, href: string, cls: string) => {
+        const a = el('a', cls, label);
+        a.href = href;
+        actions.append(a);
+      };
+      // Action sur l'abonnement : la route réaligne la base avant de
+      // répondre, le panneau est redessiné avec l'état à jour.
+      const act = async (action: 'change' | 'cancel' | 'resume' | 'keep', done: string, offer?: Offer) => {
+        say(L.updating, true);
+        const r = await manageSubscription(action, offer);
+        if (r.error) return r.error;
+        const fresh = await fetchSummary();
+        if (fresh) render(panel, fresh, { text: done, ok: true });
+        else say(done, true);
+        return null;
+      };
+
+      const hasOffers = s.plan === 'trial' || s.plan === 'pack' || (ownsOffer && !s.has_subscription);
+      // Une seule action principale par panneau, par ordre de priorité :
+      // régler une facture, ouvrir les analyses offertes, souscrire, gérer
+      // la facturation. Les autres restent en boutons discrets.
+      let primaryTaken = Boolean(s.unpaid_amount) || needsId;
+      const primary = () => {
+        if (primaryTaken) return 'acct-btn';
+        primaryTaken = true;
+        return 'acct-btn acct-btn--primary';
+      };
+      if (hasOffers) link(L.seeOffers, '#tarifs', primary());
+      if (s.has_stripe_customer) button(L.portal, primary(), () => openPortal(lang));
+
+      if (ownsOffer && s.has_subscription && current) {
+        if (s.cancel_at) {
+          button(L.resume, 'acct-btn', () => act('resume', L.resumeDone));
+        } else {
+          if (s.scheduled_offer) button(L.keep, 'acct-btn', () => act('keep', L.keepDone));
+
+          // Changer d'offre : liste dépliable, prix et moment d'effet visibles.
+          const details = el('details', 'acct-change');
+          details.append(el('summary', 'acct-btn', L.changeOffer));
+          const list = el('ul', 'acct-change-list');
+          for (const target of CHANGE_TARGETS.filter((t) => t.offer !== current && t.offer !== s.scheduled_offer)) {
+            const down = isDowngrade(current, target.offer);
+            const li = el('li', 'acct-change-row');
+            const info = el('div');
+            const price = L[`price.${target.unit}`].replace('{price}', eur(target.cents));
+            info.append(el('p', 'acct-change-name', offerLabel(target.offer)), el('p', 'acct-muted acct-small', price));
+            const when = el(
+              'p',
+              'acct-small acct-change-when',
+              down ? L['when.later'].replace('{date}', dateFmt(s.current_period_end)) : L['when.now']
+            );
+            li.append(info, when);
+            button(
+              L.choose,
+              'acct-btn acct-btn--small',
+              async () => {
+                let question = (down ? L.changeConfirmDown : L.changeConfirmUp).replace(
+                  '{offer}',
+                  offerLabel(target.offer)
+                );
+                if (current === 'unlimited_launch' || current === 'unlimited_launch_annual')
+                  question += `\n\n${L.leaveLaunch}`;
+                if (!confirm(question)) return null;
+                return act(
+                  'change',
+                  down ? L.changeLater.replace('{date}', dateFmt(s.current_period_end)) : L.changeDone,
+                  target.offer
+                );
+              },
+              li
+            );
+            list.append(li);
+          }
+          details.append(list);
+          actions.append(details);
+
+          button(L.cancel, 'acct-link acct-link--danger', async () => {
+            if (!confirm(L.cancelConfirm)) return null;
+            return act('cancel', L.cancelDone);
+          });
+        }
+      }
+
+      // Démarrage : tant que les analyses offertes sont à ouvrir ou à utiliser.
+      if (s.plan === 'trial' && (needsId || s.credits_remaining > 0)) {
+        link(L.onboarding, `/${lang}/bike-fitting/bienvenue/`, 'acct-link');
+      }
+
+      panel.append(actions, msg);
+      panel.classList.remove('hidden');
+      // Offres BF payables depuis l'espace, tant qu'aucun abonnement n'est en cours.
+      document.getElementById('bf-offers')?.classList.toggle('hidden', Boolean(s.has_subscription));
+      if (flash) say(flash.text, flash.ok);
+    }
+
+    async function loadBfBilling(role: string | null) {
+      const panel = document.getElementById('bf-billing-panel');
+      if (!panel || panel.dataset.bound === '1') return;
+      if (role !== 'bike-fitter' && role !== 'admin') return;
+      panel.dataset.bound = '1';
+      const L: Record<string, string> = JSON.parse(panel.dataset.labels ?? '{}');
+
+      let s = await fetchSummary();
+      if (!s) return;
+
+      // Retour de Checkout : le webhook arrive en général quelques secondes
+      // après. Le message s'affiche tout de suite, le panneau se met à jour
+      // dès que l'offre est enregistrée.
+      const billingState = new URLSearchParams(window.location.search).get('billing');
+      const waiting = billingState === 'success' && !s.has_subscription;
+      const flash = billingState === 'success' ? { text: L.success, ok: true } : undefined;
+      render(panel, s, flash);
+
+      for (let i = 0; waiting && i < 15; i++) {
+        await new Promise((r) => setTimeout(r, 2000));
+        const fresh = await fetchSummary();
+        if (!fresh) break;
+        if (fresh.has_subscription) {
+          s = fresh;
+          render(panel, s, flash);
+          break;
+        }
+      }
+    }
+
+    // ---------------------------------------------------------------------
+    // Diagnostics (cycliste).
+    // ---------------------------------------------------------------------
+
+    async function loadDiagnostics(userId: string, role: string | null) {
+      const panel = document.getElementById('diag-panel');
+      if (!panel || panel.dataset.bound === '1') return;
+      if (role === 'bike-fitter' || role === 'pending_bf') return;
+      panel.dataset.bound = '1';
+      const L: Record<string, string> = JSON.parse(panel.dataset.labels ?? '{}');
+
+      const { data } = await supabase
+        .from('diagnostic_purchases')
+        .select('paid_at, consumed_at, refunded_at')
+        .eq('user_id', userId)
+        .order('paid_at', { ascending: false });
+      const rows = (data ?? []) as { paid_at: string; consumed_at: string | null; refunded_at: string | null }[];
+
+      panel.replaceChildren(el('h2', 'acct-plan-name', L.title));
+      if (!rows.length) {
+        const empty = el('p', 'acct-muted', L.empty);
+        panel.append(empty);
+      } else {
+        const list = el('ul', 'acct-diag-list');
+        for (const r of rows) {
+          const [tone, status] = r.refunded_at
+            ? ['muted', L.refunded.replace('{date}', dateFmt(r.refunded_at))]
+            : r.consumed_at
+              ? ['muted', L.consumed.replace('{date}', dateFmt(r.consumed_at))]
+              : isDiagnosticAvailable()
+                ? ['ok', L.available]
+                : ['warn', L.preorder];
+          const li = el('li', 'acct-diag-row');
+          li.append(
+            el('p', 'acct-change-name', L.purchased.replace('{date}', dateFmt(r.paid_at))),
+            el('p', `acct-small acct-diag-status acct-diag-status--${tone}`, status)
+          );
+          list.append(li);
+        }
+        panel.append(list);
+      }
+      panel.classList.remove('hidden');
+    }
+
+    async function init() {
+      const me = await loadProfile();
+      if (!me) return;
+      await Promise.all([loadBfBilling(me.profile.role), loadDiagnostics(me.id, me.profile.role)]);
+    }
+
+    init();
+    document.addEventListener('astro:page-load', init);
+  </script>
 </Layout>
+
+<style is:global>
+  /*
+    Espace compte : surfaces calmes tirées du bleu nuit du site, orange AeroX
+    réservé à une seule action principale par panneau et à la jauge. Les
+    états (actif, échec de paiement…) sont des pastilles et des bandeaux
+    teintés, jamais du texte jaune ou rouge sur fond sombre.
+  */
+  #account {
+    --acct-surface: #132a40;
+    --acct-inset: #0e2134;
+    --acct-line: #26435f;
+    --acct-text: #e8eef5;
+    --acct-muted: #9db0c4;
+    --acct-accent: #f5a23c;
+    --acct-on-accent: #10202f;
+    --acct-ok: #6fd3a8;
+    --acct-warn: #e9c16b;
+    --acct-bad: #f08a8a;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 2.5rem 1rem 3rem;
+    color: var(--acct-text);
+    font-variant-numeric: tabular-nums;
+  }
+  html:not(.dark) #account {
+    --acct-surface: #ffffff;
+    --acct-inset: #f3f6fa;
+    --acct-line: #d6e0ea;
+    --acct-text: #13253a;
+    --acct-muted: #55697e;
+    --acct-ok: #1f8a5b;
+    --acct-warn: #9a6a06;
+    --acct-bad: #b93838;
+  }
+  @media (min-width: 768px) {
+    #account {
+      padding: 3rem 1.5rem 4rem;
+    }
+  }
+
+  #account .hidden {
+    display: none;
+  }
+  #account .acct-head {
+    margin-bottom: 1.75rem;
+  }
+  #account .acct-head h1 {
+    font-size: 1.875rem;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  #account .acct-muted {
+    color: var(--acct-muted);
+  }
+  #account .acct-small {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+  #account .acct-break {
+    overflow-wrap: anywhere;
+  }
+
+  #account .acct-grid {
+    display: grid;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  @media (min-width: 960px) {
+    #account .acct-grid {
+      grid-template-columns: minmax(0, 1fr) 18rem;
+      gap: 1.5rem;
+    }
+  }
+  #account .acct-main,
+  #account .acct-side {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  /* Surfaces : le panneau principal porte l'information, les autres se taisent. */
+  #account .acct-card {
+    background: var(--acct-surface);
+    border: 1px solid var(--acct-line);
+    border-radius: 1rem;
+    padding: 1.5rem;
+  }
+  #account .acct-card--main {
+    padding: 1.75rem;
+  }
+  #account .acct-card--side {
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    background: transparent;
+  }
+  #account .acct-side-name {
+    font-weight: 700;
+    font-size: 1.0625rem;
+    overflow-wrap: anywhere;
+  }
+  #account .acct-role {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--acct-muted);
+  }
+  #account .acct-help p {
+    color: var(--acct-muted);
+    font-size: 0.9375rem;
+  }
+  #account .acct-help .acct-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+  }
+
+  /* En-tête de l'offre */
+  #account .acct-plan {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  #account .acct-plan-kicker {
+    font-size: 0.875rem;
+  }
+  #account .acct-plan-name {
+    font-size: 1.75rem;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-top: 0.125rem;
+  }
+  #account .acct-pill {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+  #account .acct-pill::before {
+    content: '';
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  #account .acct-pill--ok {
+    color: var(--acct-ok);
+    background: color-mix(in srgb, var(--acct-ok) 14%, transparent);
+  }
+  #account .acct-pill--warn {
+    color: var(--acct-warn);
+    background: color-mix(in srgb, var(--acct-warn) 14%, transparent);
+  }
+  #account .acct-pill--bad {
+    color: var(--acct-bad);
+    background: color-mix(in srgb, var(--acct-bad) 14%, transparent);
+  }
+
+  /* Bandeaux d'état : filet coloré, texte dans la couleur normale. */
+  #account .acct-note {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--tone);
+    background: color-mix(in srgb, var(--tone) 10%, transparent);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+  #account .acct-note--ok {
+    --tone: var(--acct-ok);
+  }
+  #account .acct-note--warn {
+    --tone: var(--acct-warn);
+  }
+  #account .acct-note--bad {
+    --tone: var(--acct-bad);
+  }
+  #account .acct-debt {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--acct-bad) 55%, transparent);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  /* Encart « Tester AeroX maintenant » */
+  #account .acct-inset {
+    margin-top: 1.25rem;
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    background: var(--acct-inset);
+  }
+  #account .acct-inset-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+  #account .acct-inset-text {
+    margin-top: 0.25rem;
+    color: var(--acct-muted);
+    max-width: 60ch;
+  }
+  #account .acct-field-row {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+  }
+  #account .acct-field {
+    flex: 1 1 18rem;
+    display: grid;
+    gap: 0.375rem;
+  }
+  #account .acct-field-label {
+    font-size: 0.875rem;
+    color: var(--acct-muted);
+  }
+  #account .acct-input {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid var(--acct-line);
+    background: var(--acct-surface);
+    color: var(--acct-text);
+    padding: 0.7rem 0.875rem;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+  }
+  #account .acct-input::placeholder {
+    color: color-mix(in srgb, var(--acct-muted) 70%, transparent);
+  }
+  #account .acct-input:focus {
+    outline: 2px solid var(--acct-accent);
+    outline-offset: 1px;
+    border-color: transparent;
+  }
+
+  /* Jauge : une ligne de flux fine, l'unique élément coloré de l'usage. */
+  #account .acct-meter {
+    margin-top: 1.5rem;
+  }
+  #account .acct-meter-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  #account .acct-meter-track {
+    position: relative;
+    height: 0.375rem;
+    border-radius: 999px;
+    background: var(--acct-inset);
+    overflow: hidden;
+  }
+  #account .acct-meter-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--acct-accent) 35%, transparent), var(--acct-accent));
+    transition: width 0.6s ease-out;
+  }
+  #account .acct-meter-track.is-over .acct-meter-fill {
+    background: linear-gradient(90deg, var(--acct-accent), var(--acct-warn));
+  }
+  #account .acct-meter .acct-small {
+    margin-top: 0.5rem;
+  }
+
+  /* Chiffres clés */
+  #account .acct-facts {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1.25rem 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--acct-line);
+  }
+  #account .acct-fact dt {
+    font-size: 0.875rem;
+    color: var(--acct-muted);
+  }
+  #account .acct-fact-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  /* Actions */
+  #account .acct-actions {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+  }
+  #account .acct-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.625rem 1.125rem;
+    border-radius: 0.625rem;
+    border: 1px solid var(--acct-line);
+    background: transparent;
+    color: var(--acct-text);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition:
+      background-color 0.15s,
+      border-color 0.15s;
+  }
+  #account .acct-btn:hover {
+    border-color: var(--acct-muted);
+  }
+  #account .acct-btn--primary {
+    background: var(--acct-accent);
+    border-color: var(--acct-accent);
+    color: var(--acct-on-accent);
+  }
+  #account .acct-btn--primary:hover {
+    background: color-mix(in srgb, var(--acct-accent) 88%, white);
+    border-color: transparent;
+  }
+  #account .acct-btn--small {
+    min-height: 2.25rem;
+    padding: 0.4rem 0.875rem;
+    font-size: 0.875rem;
+  }
+  #account .acct-btn:disabled {
+    opacity: 0.55;
+    cursor: progress;
+  }
+  #account .acct-link {
+    background: none;
+    border: 0;
+    padding: 0.25rem 0;
+    color: var(--acct-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-size: 0.9375rem;
+    cursor: pointer;
+  }
+  #account .acct-link:hover {
+    color: var(--acct-text);
+  }
+  #account .acct-link--danger:hover {
+    color: var(--acct-bad);
+  }
+  #account :is(.acct-btn, .acct-link, summary):focus-visible {
+    outline: 2px solid var(--acct-accent);
+    outline-offset: 2px;
+  }
+
+  /* Changer d'offre : liste dépliable */
+  #account .acct-change {
+    flex-basis: 100%;
+    order: 1;
+  }
+  #account .acct-change > summary {
+    list-style: none;
+    width: fit-content;
+  }
+  #account .acct-change > summary::-webkit-details-marker {
+    display: none;
+  }
+  #account .acct-change > summary::after {
+    content: '\25BE';
+    font-size: 0.8em;
+    color: var(--acct-muted);
+  }
+  #account .acct-change[open] > summary::after {
+    content: '\25B4';
+  }
+  #account .acct-change-list {
+    margin-top: 0.75rem;
+    border: 1px solid var(--acct-line);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  #account .acct-change-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    padding: 0.875rem 1rem;
+  }
+  #account .acct-change-row + .acct-change-row {
+    border-top: 1px solid var(--acct-line);
+  }
+  #account .acct-change-name {
+    font-weight: 600;
+  }
+  #account .acct-change-when {
+    grid-column: 1;
+    color: var(--acct-muted);
+  }
+  #account .acct-change-row > button {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  #account .acct-change ~ .acct-link--danger {
+    order: 2;
+  }
+
+  /* Messages après une action */
+  #account .acct-flash {
+    margin-top: 1rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+  #account .acct-flash.is-ok {
+    color: var(--acct-ok);
+  }
+  #account .acct-flash.is-bad {
+    color: var(--acct-bad);
+  }
+
+  /* Diagnostics (cycliste) */
+  #account .acct-diag-list {
+    margin-top: 1rem;
+  }
+  #account .acct-diag-row {
+    padding: 0.875rem 0;
+    border-top: 1px solid var(--acct-line);
+  }
+  #account .acct-diag-status {
+    margin-top: 0.25rem;
+  }
+  #account .acct-diag-status--ok {
+    color: var(--acct-ok);
+  }
+  #account .acct-diag-status--warn {
+    color: var(--acct-text);
+  }
+  #account .acct-diag-status--muted {
+    color: var(--acct-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #account .acct-meter-fill,
+    #account .acct-btn {
+      transition: none;
+    }
+  }
+</style>
