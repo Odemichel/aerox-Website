@@ -526,10 +526,10 @@ async function submitBusinessId(bf: Bf, id: string) {
 const DANONE_SIREN = '552 032 534';
 
 async function s8BusinessId() {
-  console.log('\nS8 — Tester AeroX maintenant : identifiant d’entreprise vérifié, 2 analyses offertes');
+  console.log('\nS8 — Essai de 14 jours : numéro d’entreprise vérifié, analyses illimitées, refus après');
   await admin.from('bf_business_ids').delete().neq('id_key', '');
   const bf = await createBf('biz');
-  const [c1, c2, c3] = await createClients(bf, 3);
+  const [c1, c2, c3, c4] = await createClients(bf, 4);
   const before = await register(bf, c1);
   check(
     before.status === 'refused' && before.reason === 'needs_card',
@@ -538,28 +538,40 @@ async function s8BusinessId() {
   check((await billing(bf.id))?.trial_state === 'needs_business_id', 'inscription : identifiant d’entreprise attendu');
 
   const bad = await submitBusinessId(bf, '552 032 535');
-  check(bad.body.result === 'invalid', 'SIREN à la clé fausse : « identifiant non reconnu »', String(bad.body.result));
+  check(bad.body.result === 'invalid', 'SIREN à la clé fausse : refusé', String(bad.body.result));
   const unknown = await submitBusinessId(bf, '000 000 000');
   check(unknown.body.result === 'not_found', 'SIREN inexistant au registre : refusé', String(unknown.body.result));
-  const wrongVat = await submitBusinessId(bf, 'DE000000000');
+  const us = await submitBusinessId(bf, '12-3456789');
   check(
-    wrongVat.body.result === 'not_found' || wrongVat.body.result === 'registry_down',
-    'TVA inconnue de VIES : refusée',
-    String(wrongVat.body.result)
+    us.body.result === 'invalid',
+    'numéro hors UE : refusé (le site internet est demandé à la place)',
+    String(us.body.result)
   );
 
   const ok = await submitBusinessId(bf, DANONE_SIREN);
   check(
     ok.status === 200 && ok.body.result === 'granted',
-    'SIREN actif (API Recherche d’entreprises) : analyses ouvertes',
+    'SIREN actif : essai ouvert',
     `${ok.body.result} ${ok.body.name ?? ''}`
   );
-  check((await billing(bf.id))?.trial_state === 'granted', 'état : analyses offertes ouvertes');
-  check((await register(bf, c1)).status === 'counted', 'analyse 1 comptée');
-  check((await register(bf, c2)).status === 'counted', 'analyse 2 comptée');
-  check((await register(bf, c3)).reason === 'no_credits', '3e analyse refusée : analyses offertes épuisées');
+  const b = await billing(bf.id);
+  const days = (new Date(b?.trial_ends_at ?? 0).getTime() - Date.now()) / 86400000;
+  check(b?.trial_state === 'granted' && days > 13.9 && days <= 14, 'essai de 14 jours', `${days.toFixed(2)} j`);
+  for (const [i, c] of [c1, c2, c3].entries()) {
+    check((await register(bf, c)).status === 'counted', `analyse ${i + 1} comptée (illimité pendant l’essai)`);
+  }
   const again = await submitBusinessId(bf, DANONE_SIREN);
-  check(again.status === 409, 'plus rien à ouvrir une fois les analyses offertes ouvertes', `HTTP ${again.status}`);
+  check(again.status === 409, 'essai déjà ouvert : rien de plus', `HTTP ${again.status}`);
+
+  await admin
+    .from('bf_billing')
+    .update({ trial_ends_at: new Date(Date.now() - 60_000).toISOString() })
+    .eq('user_id', bf.id);
+  const after = await register(bf, c4);
+  check(
+    after.status === 'refused' && after.reason === 'no_credits',
+    'essai terminé : analyse refusée (no_credits, lu par l’app)'
+  );
 
   // Même entreprise sous sa forme TVA (VIES), sur un autre compte.
   const other = await createBf('biz-bis');
@@ -569,18 +581,28 @@ async function s8BusinessId() {
     'même entreprise (n° de TVA), autre compte : refusé',
     String(dup.body.result)
   );
-  const { count } = await admin.from('bf_credits').select('id', { count: 'exact', head: true }).eq('user_id', other.id);
-  check(count === 0, 'aucune analyse offerte pour le second compte');
+  check(!(await billing(other.id))?.trial_ends_at, 'aucun essai pour le second compte');
 }
 
 async function s24ManualReview() {
-  console.log('\nS24 — Hors UE : vérification manuelle, validation par le lien signé de l’e-mail admin');
-  const bf = await createBf('biz-us');
-  const r = await submitBusinessId(bf, '12-3456789');
-  check(r.body.result === 'pending_review', 'EIN américain : en vérification manuelle', String(r.body.result));
+  console.log('\nS24 — Site internet : contrôles, vérification manuelle, validation par le lien signé');
+  await admin.from('bf_business_ids').delete().like('id_key', 'WEB:example.%');
+  const bf = await createBf('biz-web');
+  const social = await submitBusinessId(bf, 'instagram.com/monstudio');
+  check(social.body.result === 'invalid', 'réseau social : refusé', String(social.body.result));
+  const dead = await submitBusinessId(bf, 'aerox-studio-qui-nexiste-pas-4815.com');
+  check(dead.body.result === 'unreachable', 'site qui ne répond pas : refusé', String(dead.body.result));
+  // createBf crée des e-mails @example.com : même domaine que le site.
+  const r = await submitBusinessId(bf, 'https://www.example.com/');
+  check(r.body.result === 'pending_review', 'site qui répond : en vérification', String(r.body.result));
+  const { data: row } = await admin.from('bf_business_ids').select('*').eq('user_id', bf.id).single();
+  check(
+    row?.id_key === 'WEB:example.com' && row?.email_domain_match === true,
+    'domaine enregistré, e-mail du même domaine signalé'
+  );
   check((await billing(bf.id))?.trial_state === 'pending_review', 'espace BF : « vérification sous 24 h »');
   const [c] = await createClients(bf, 1);
-  check((await register(bf, c)).reason === 'needs_card', 'avant validation : analyses toujours fermées');
+  check((await register(bf, c)).reason === 'needs_card', 'avant validation : analyses fermées');
 
   const { createHmac } = await import('node:crypto');
   const token = createHmac('sha256', env('E2E_BILLING_HOOK_SECRET')).update(bf.id).digest('hex');
@@ -590,13 +612,10 @@ async function s24ManualReview() {
   const view = await fetch(link);
   const html = await view.text();
   check(
-    view.status === 200 && html.includes('US123456789'),
-    'le lien affiche une confirmation (rien n’est validé à l’ouverture)'
+    view.status === 200 && html.includes('example.com</a>'),
+    'le lien affiche le site à vérifier (rien n’est validé à l’ouverture)'
   );
-  check(
-    (await billing(bf.id))?.trial_state === 'pending_review',
-    'ouvrir le lien ne valide rien (antivirus de messagerie)'
-  );
+  check((await billing(bf.id))?.trial_state === 'pending_review', 'ouvrir le lien ne valide rien');
   const post = await fetch(link, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded', Origin: SITE },
@@ -604,11 +623,16 @@ async function s24ManualReview() {
   });
   check(
     post.status === 200 && (await post.text()).includes('validé'),
-    'bouton « Valider » : identifiant validé',
+    'bouton « Valider » : studio validé',
     `HTTP ${post.status}`
   );
-  check((await billing(bf.id))?.trial_state === 'granted', 'analyses offertes ouvertes');
+  const b = await billing(bf.id);
+  check(b?.trial_state === 'granted' && Boolean(b?.trial_ends_at), 'essai de 14 jours ouvert');
   check((await register(bf, c)).status === 'counted', 'analyse comptée après validation');
+
+  const other = await createBf('biz-web-bis');
+  const dup = await submitBusinessId(other, 'example.com');
+  check(dup.body.result === 'already_used', 'même site, autre compte : refusé', String(dup.body.result));
 }
 
 async function s9Downgrade() {
@@ -1478,14 +1502,18 @@ async function p6RefundBeforePurchase() {
 }
 
 async function p7BfMultiple() {
-  console.log('\nP7 — Bike fitter : identifiants répétés, rôle, corps piégé');
+  console.log('\nP7 — Bike fitter : saisies répétées, rôle, corps piégé');
+  await admin.from('bf_business_ids').delete().like('id_key', 'WEB:example.%');
   const bf = await createBf('biz-twice');
-  const first = await submitBusinessId(bf, '12-3456780');
-  const second = await submitBusinessId(bf, '12-3456781');
-  check(first.body.result === 'pending_review' && second.body.result === 'pending_review', 'deux saisies en attente');
+  const first = await submitBusinessId(bf, 'example.org');
+  const second = await submitBusinessId(bf, 'example.net');
+  check(
+    first.body.result === 'pending_review' && second.body.result === 'pending_review',
+    'deux sites saisis, en attente'
+  );
   const { data: ids } = await admin.from('bf_business_ids').select('id_key').eq('user_id', bf.id);
   check(
-    ids?.length === 1 && ids[0].id_key === 'OTHER:US123456781',
+    ids?.length === 1 && ids[0].id_key === 'WEB:example.net',
     'un seul identifiant par compte : la dernière saisie remplace l’autre'
   );
   const rider = await createRider('not-bf');

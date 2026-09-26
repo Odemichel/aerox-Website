@@ -70,11 +70,12 @@ export type BusinessIdResult =
   | 'invalid'
   | 'not_found'
   | 'inactive'
-  | 'registry_down';
+  | 'registry_down'
+  | 'unreachable';
 
 /**
- * Identifiant d'entreprise qui ouvre les analyses offertes (« tester AeroX
- * maintenant »). Vérifié côté serveur auprès du registre officiel.
+ * Identifiant d'entreprise (SIREN, SIRET, TVA) ou site internet du studio,
+ * qui ouvre l'essai de 14 jours. Vérifié côté serveur.
  */
 export async function submitBusinessId(
   id: string

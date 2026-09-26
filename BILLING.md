@@ -3,15 +3,15 @@
 Grille publique en 3 offres, facturée par Stripe, activation automatique du
 compte, comptage des analyses côté serveur.
 
-| Offre              | Prix HT                                                               | Stripe (`lookup_key`)                                                                |
-| ------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Analyses offertes  | 2 analyses, 20 jours, ouvertes par l'identifiant d'entreprise vérifié | SIRENE / VIES, un identifiant = un compte (`bf_business_ids`)                        |
-| À l'usage          | 20 € par analyse, facturé en fin de mois                              | `aerox_bf_payg` (meter, sans forfait)                                                |
-| Studio             | 79 €/mois, 5 incluses, puis 10 €                                      | `aerox_bf_studio_base` + `aerox_bf_studio_usage` (meter)                             |
-| Illimité           | 119 €/mois ou 1 190 €/an (2 mois offerts)                             | `aerox_bf_unlimited`, `aerox_bf_unlimited_year`                                      |
-| Illimité lancement | 69 €/mois jusqu'au 31/12/2026, puis 99 € au prorata                   | `aerox_bf_unlimited_launch` → `aerox_bf_unlimited_launch_after` (schedule)           |
-| Lancement annuel   | 690 € la 1re année, puis 990 €/an (souscription jusqu'au 31/12/2026)  | `aerox_bf_unlimited_launch_year` → `aerox_bf_unlimited_launch_year_after` (schedule) |
-| Founding Partner   | inchangé (69 $/mois, lien de paiement)                                | plan `legacy`, abonnement Stripe jamais touché                                       |
+| Offre              | Prix HT                                                                                                      | Stripe (`lookup_key`)                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| Essai              | 14 jours, analyses illimitées, ouvert par SIRET / SIREN / TVA (vérifiés) ou site internet (validé à la main) | `bf_billing.trial_ends_at`, un identifiant ou un domaine = un compte (`bf_business_ids`) |
+| À l'usage          | 20 € par analyse, facturé en fin de mois                                                                     | `aerox_bf_payg` (meter, sans forfait)                                                    |
+| Studio             | 79 €/mois, 5 incluses, puis 10 €                                                                             | `aerox_bf_studio_base` + `aerox_bf_studio_usage` (meter)                                 |
+| Illimité           | 119 €/mois ou 1 190 €/an (2 mois offerts)                                                                    | `aerox_bf_unlimited`, `aerox_bf_unlimited_year`                                          |
+| Illimité lancement | 69 €/mois jusqu'au 31/12/2026, puis 99 € au prorata                                                          | `aerox_bf_unlimited_launch` → `aerox_bf_unlimited_launch_after` (schedule)               |
+| Lancement annuel   | 690 € la 1re année, puis 990 €/an (souscription jusqu'au 31/12/2026)                                         | `aerox_bf_unlimited_launch_year` → `aerox_bf_unlimited_launch_year_after` (schedule)     |
+| Founding Partner   | inchangé (69 $/mois, lien de paiement)                                                                       | plan `legacy`, abonnement Stripe jamais touché                                           |
 
 Les deux offres de lancement partagent les 20 places (plan `unlimited_launch`,
 offre `unlimited_launch` ou `unlimited_launch_annual`).
@@ -96,24 +96,28 @@ Principes :
   `handle_email_confirmed` crée l'utilisateur en `bike-fitter` actif, plan
   `trial`, `trial_state = needs_business_id`. Notification admin par
   `notify-admin-new-bf`.
-- **Tester AeroX maintenant** (analyses offertes) : le BF saisit l'identifiant
-  de son entreprise dans son espace (`/api/billing/business-id/`,
-  `src/lib/billing/businessId.ts`) :
+- **Essai de 14 jours** : le BF renseigne, dans un seul champ de son espace
+  (`/api/billing/business-id/`, `src/lib/billing/businessId.ts`) :
   - SIREN / SIRET (clé de Luhn) → API Recherche d'entreprises, entreprise
     active exigée ; TVA intracommunautaire → VIES (TVA française ramenée au
-    SIREN : même entreprise, même clé) ;
-  - identifiant vérifié : `bf_register_business_id` ouvre 2 analyses sur
-    20 jours ; déjà utilisé par un autre compte : refusé (`business_id_used`) ;
-  - hors UE (EIN américain, UID suisse…) : `pending_review`, e-mail admin avec
-    un lien signé (HMAC du compte, secret `billing_hook_secret` =
-    `BILLING_HOOK_SECRET`) vers `/api/billing/approve-business/` : page de
-    confirmation (GET sans effet), bouton « Valider » (POST) →
-    `bf_approve_business_id`. Aussi possible en SQL.
-    Tant que les analyses ne sont pas ouvertes, `register_analysis` répond
-    `needs_card` : code conservé pour l'application desktop, qui bloque la
-    séance et renvoie vers l'espace (ses textes parlent encore de carte, à
-    mettre à jour dans veloaero). L'ancien parcours par carte (`bf_trial_cards`)
-    est retiré ; la table reste pour l'historique.
+    SIREN : même entreprise, même clé) : essai ouvert aussitôt
+    (`trial_ends_at = now() + 14 jours`, analyses illimitées) ;
+  - sinon le site internet du studio : refusé s'il s'agit d'une messagerie ou
+    d'un réseau social, ou s'il ne répond pas ; clé = domaine sans « www. » ;
+    `email_domain_match` signale un e-mail du même domaine. Puis
+    `pending_review` et e-mail admin « Studio à vérifier » avec le site, la
+    consigne de contrôle et un lien signé (HMAC du compte, secret
+    `billing_hook_secret` = `BILLING_HOOK_SECRET`) vers
+    `/api/billing/approve-business/` : page de confirmation (GET sans
+    effet), bouton « Valider » (POST) → `bf_approve_business_id`. Aussi
+    possible en SQL ;
+  - déjà utilisé par un autre compte : refusé (`business_id_used`).
+    `register_analysis` répond `needs_card` tant que l'essai n'est pas
+    ouvert, et `no_credits` une fois l'essai terminé sans offre : codes
+    conservés pour l'application desktop (ses textes parlent encore de carte
+    et d'analyses offertes, à mettre à jour dans veloaero). L'ancien parcours
+    par carte (`bf_trial_cards`) est retiré ; la table reste pour
+    l'historique.
 - **Échec de paiement** : `past_due`, accès complet jusqu'à `grace_until`
   (premier échec + 7 jours, calculé en temps réel par `bf_access_level`), puis
   lecture seule. Paiement régularisé : retour en `active`. Si Stripe résilie
@@ -248,7 +252,7 @@ Chaque étape marquée ⚠ touche la production : à faire sur accord explicite.
    versions restent comptées par le filet de sécurité (sans possibilité de
    refus au démarrage).
 7. **Test réel** : sur son propre compte bike fitter, saisir l'identifiant
-   de l'entreprise (analyses offertes ouvertes), souscrire « À l'usage », faire une analyse, vérifier
+   de l'entreprise (essai ouvert), souscrire « À l'usage », faire une analyse, vérifier
    la facture de fin de mois, puis résilier. Vérifier aussi `bf_status` /
    `bf_plan` dans MailerLite et le bandeau de places.
 
@@ -279,7 +283,7 @@ Chaque étape marquée ⚠ touche la production : à faire sur accord explicite.
 5. `E2E_SUPABASE_URL=… E2E_SUPABASE_ANON_KEY=… E2E_SUPABASE_SERVICE_KEY=… E2E_SITE_URL=http://localhost:4399 E2E_BILLING_HOOK_SECRET=… node --env-file=.env scripts/billing-e2e.ts`
 
 Scénarios : S1 à l'usage, S2/S3 Studio et re-tests, S4 places épuisées, S5
-bascule du lancement, S6 impayé et grâce, S7 autoliquidation, S8 analyses offertes par
+bascule du lancement, S6 impayé et grâce, S7 autoliquidation, S8 essai de 14 jours par
 identifiant d'entreprise (SIRENE, VIES), S9 descente / remontée, S10 annuel, S11 résiliation du lancement
 (reprise, aucun prélèvement), S12 double abonnement, S13 annuel avant le
 1er novembre (descente programmée puis annulée), S14 places libérées après
@@ -302,7 +306,7 @@ webhook, rejeux), P3 consommation (plus ancien d'abord, démarrages simultanés)
 tentatives côté client (RLS, trigger de garde), P5 remboursements (non
 utilisé, en cours, partiel), P6 remboursement reçu avant l'achat, P7 bike
 fitter (identifiants répétés, rôle), P8 séparation des rôles, S24 vérification
-manuelle hors UE et lien signé. Les scénarios P supposent les tables
+manuelle d'un site internet et lien signé. Les scénarios P supposent les tables
 et fonctions du diagnostic (dépôt veloaero) dans la base locale, et un prix
 `diagnostic_preorder` dans la sandbox Stripe (créé le 2026-09-26).
 
@@ -317,10 +321,9 @@ du client ; le scénario Studio avance l'horloge à l'heure réelle avant l'envo
   21 abonnés (contrôle au Checkout, pas de réservation). Le webhook honore le
   paiement. Un abonnement résilié pour impayé libère sa place à la fin de la
   grâce.
-- **Analyses offertes** : un identifiant d'entreprise = un compte. Hors UE,
-  la vérification est manuelle (pas de registre public gratuit pour la
-  plupart des pays ; brancher Companies House, UID suisse, Brønnøysund ou
-  ABN Lookup si des studios de ces pays s'inscrivent).
+- **Essai** : un identifiant d'entreprise ou un domaine = un compte. Un site
+  internet reste validé à la main : quelqu'un peut saisir le site d'un studio
+  qui n'est pas le sien (l'indicateur de domaine de l'e-mail aide à trancher).
 - **Code taxe produit** `txcd_10103101` (SaaS, téléchargement, usage pro) :
   à valider par le comptable.
 - **Liens de téléchargement** (`src/config/downloads.ts`) : ils pointent sur

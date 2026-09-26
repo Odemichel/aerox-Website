@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { frVatKey, luhnValid, parseBusinessId } from '../src/lib/billing/businessId';
+import { emailMatchesHost, frVatKey, luhnValid, parseBusinessId } from '../src/lib/billing/businessId';
 
 // Danone SA : SIREN 552 032 534, TVA FR27552032534 (vérifiés sur les registres).
 describe('parseBusinessId', () => {
@@ -40,11 +40,43 @@ describe('parseBusinessId', () => {
     expect(parseBusinessId('EL123456789').kind).toBe('eu_vat');
   });
 
-  it('hors UE : vérification manuelle, sauf saisie sans chiffres suffisants', () => {
-    expect(parseBusinessId('12-3456789')).toEqual({ kind: 'other', key: 'OTHER:US123456789', raw: 'US123456789' });
-    expect(parseBusinessId('CHE-123.456.789')).toMatchObject({ kind: 'other', key: 'OTHER:CHE123456789' });
+  it('site internet du studio : domaine normalisé (sans www), une clé par domaine', () => {
+    expect(parseBusinessId('monstudio.ch')).toEqual({
+      kind: 'website',
+      key: 'WEB:monstudio.ch',
+      host: 'monstudio.ch',
+      url: 'https://monstudio.ch',
+    });
+    expect(parseBusinessId('https://www.MonStudio.ch/contact')).toMatchObject({
+      kind: 'website',
+      key: 'WEB:monstudio.ch',
+    });
+    expect(parseBusinessId('http://bike-fit.co.uk')).toMatchObject({ kind: 'website', key: 'WEB:bike-fit.co.uk' });
+  });
+
+  it('messageries, réseaux sociaux et pages de liens refusés', () => {
+    expect(parseBusinessId('instagram.com/monstudio').kind).toBe('invalid');
+    expect(parseBusinessId('https://www.facebook.com/monstudio').kind).toBe('invalid');
+    expect(parseBusinessId('linktr.ee/monstudio').kind).toBe('invalid');
+    expect(parseBusinessId('paul@gmail.com').kind).toBe('invalid');
+  });
+
+  it('ni numéro ni site : refusé', () => {
+    expect(parseBusinessId('12-3456789').kind).toBe('invalid');
+    expect(parseBusinessId('CHE-123.456.789').kind).toBe('invalid');
     expect(parseBusinessId('hello').kind).toBe('invalid');
+    expect(parseBusinessId('mon studio.fr').kind).toBe('invalid');
     expect(parseBusinessId(undefined).kind).toBe('invalid');
     expect(parseBusinessId('<script>1234567</script>').kind).toBe('invalid');
+  });
+});
+
+describe('emailMatchesHost', () => {
+  it('domaine de l’e-mail = site (sous-domaine compris), jamais pour une messagerie', () => {
+    expect(emailMatchesHost('paul@monstudio.ch', 'monstudio.ch')).toBe(true);
+    expect(emailMatchesHost('paul@monstudio.ch', 'shop.monstudio.ch')).toBe(true);
+    expect(emailMatchesHost('paul@autre.ch', 'monstudio.ch')).toBe(false);
+    expect(emailMatchesHost('paul@gmail.com', 'gmail.com')).toBe(false);
+    expect(emailMatchesHost(null, 'monstudio.ch')).toBe(false);
   });
 });

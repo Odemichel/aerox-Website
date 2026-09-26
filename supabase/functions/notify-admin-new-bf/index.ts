@@ -2,8 +2,8 @@
 //
 // Prévient l'admin qu'un bike fitter vient de s'inscrire. Depuis la facturation
 // automatique, le compte est actif tout de suite : ce mail informe, il ne
-// demande plus de validation. Seconde forme (`review`) : un identifiant
-// d'entreprise hors registre public, à vérifier puis valider par le lien.
+// demande plus de validation. Seconde forme (`review`) : le site internet
+// d'un studio, à vérifier puis valider par le lien signé.
 //
 // Appelée par le trigger `trg_notify_admin_new_bf` (pg_net). pg_net n'envoie
 // pas de JWT : la fonction est déployée avec `--no-verify-jwt` et
@@ -68,16 +68,22 @@ Deno.serve(async (req) => {
 
     // Identifiant d'entreprise sans registre public (hors UE) : à vérifier à
     // la main, validation par le lien signé (voir bf_notify_business_review).
-    if (review?.business_id) rows.unshift(['Identifiant', review.business_id]);
+    if (review?.website) {
+      rows.unshift(['Domaine e-mail = site', review.email_domain_match ? 'oui' : 'non']);
+      rows.unshift(['Site internet', review.website]);
+    } else if (review?.business_id) {
+      rows.unshift(['Identifiant', review.business_id]);
+    }
     const approve =
       typeof review?.approve_url === 'string' && review.approve_url.startsWith('https://')
         ? `<p style="margin: 24px 0;"><a href="${escapeHtml(review.approve_url)}" style="background: #f59e0b; color: #1a1a2e; padding: 12px 22px; border-radius: 8px; text-decoration: none; font-weight: 600;">Vérifier et valider</a></p>`
         : '';
     const intro = review
-      ? `<h1 style="font-size: 20px;">Identifiant d'entreprise à vérifier</h1>
-  <p>Un bike fitter a saisi un identifiant qu'aucun registre public ne permet de vérifier automatiquement. Vérifiez-le, puis validez : ses 2 analyses offertes s'ouvriront.</p>${approve}`
+      ? `<h1 style="font-size: 20px;">Studio à vérifier</h1>
+  <p>Un bike fitter a renseigné le site internet de son studio pour ouvrir son essai de 14 jours.</p>
+  <p><strong>À vérifier :</strong> le site répond et présente bien un studio de bike fitting ou un magasin vélo ; son nom correspond au studio du compte ; le domaine de l'e-mail identique au site est un bon signe.</p>${approve}`
       : `<h1 style="font-size: 20px;">Nouveau bike fitter</h1>
-  <p>Un bike fitter vient de créer son compte. Il est <strong>actif immédiatement</strong> ; ses 2 analyses offertes s'ouvrent avec l'identifiant de son entreprise.</p>`;
+  <p>Un bike fitter vient de créer son compte. Il est <strong>actif immédiatement</strong> ; son essai de 14 jours s'ouvre avec le SIRET, le n° de TVA ou le site internet de son studio.</p>`;
 
     const html = `<!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8"></head>
@@ -104,7 +110,9 @@ Deno.serve(async (req) => {
     const info = await transporter.sendMail({
       from: SMTP_FROM,
       to: ADMIN_EMAILS,
-      subject: review ? `[AeroX] Identifiant d'entreprise à vérifier : ${who}` : `[AeroX] Nouveau bike fitter : ${who}`,
+      subject: review
+        ? `[AeroX] Studio à vérifier : ${record.studio_name || who}`
+        : `[AeroX] Nouveau bike fitter : ${who}`,
       html,
     });
     return Response.json({ message: 'Notification sent', messageId: info.messageId });

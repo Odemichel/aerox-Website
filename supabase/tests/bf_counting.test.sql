@@ -13,10 +13,10 @@ insert into bf_clients (id, bf_user_id) select ('00000000-0000-0000-0000-0000000
   '00000000-0000-0000-0000-0000000000d1' from generate_series(1, 6) i;
 delete from net.calls;
 
--- Séance sans appel préalable : comptée par le filet (crédit d'essai consommé).
+-- Séance sans appel préalable : comptée par le filet (essai en cours).
 insert into sessions (user_id, client_id) values ('00000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-000000000401');
 select pg_temp.check((select origin from bf_analyses where client_id = '00000000-0000-0000-0000-000000000401') = 'session_backstop', 'filet : compté');
-select pg_temp.check((select remaining from bf_credits where user_id = '00000000-0000-0000-0000-0000000000d1') = 1, 'filet : crédit consommé');
+select pg_temp.check((select billing_mode from bf_analyses where client_id = '00000000-0000-0000-0000-000000000401') = 'trial', 'filet : compté sur l''essai');
 
 -- Appel de l'app puis séance : une seule analyse.
 set role authenticated;
@@ -26,7 +26,8 @@ reset role;
 insert into sessions (user_id, client_id) values ('00000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-000000000402');
 select pg_temp.check((select count(*) from bf_analyses where client_id = '00000000-0000-0000-0000-000000000402') = 1, 'app + séance : 1 seule analyse');
 
--- Plus de crédit : la séance est tracée « uncredited », une seule fois par fenêtre.
+-- Essai terminé : la séance est tracée « uncredited », une seule fois par fenêtre.
+update bf_billing set trial_ends_at = now() - interval '1 minute' where user_id = '00000000-0000-0000-0000-0000000000d1';
 insert into sessions (user_id, client_id) values ('00000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-000000000403');
 insert into sessions (user_id, client_id) values ('00000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-000000000404');
 insert into sessions (user_id, client_id) values ('00000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-000000000404');

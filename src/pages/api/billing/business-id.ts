@@ -1,10 +1,9 @@
 // src/pages/api/billing/business-id.ts
 //
-// « Tester AeroX maintenant » : le bike fitter renseigne l'identifiant de son
-// entreprise (SIREN / SIRET, n° de TVA intracommunautaire, ou identifiant
-// d'un autre pays). Vérifié par le registre officiel quand il en existe un
-// (voir src/lib/billing/businessId.ts) : les 2 analyses offertes s'ouvrent
-// aussitôt. Sinon, vérification manuelle par l'admin (notification).
+// Essai de 14 jours : le bike fitter renseigne le SIREN / SIRET, le n° de TVA
+// intracommunautaire ou le site internet de son studio (voir
+// src/lib/billing/businessId.ts). Numéro vérifié par le registre officiel :
+// essai ouvert aussitôt. Site internet : vérification manuelle par l'admin.
 //
 // Un identifiant ne sert qu'à un compte (unicité en base). L'utilisateur vient
 // du jeton, jamais du corps.
@@ -12,7 +11,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { authenticatedUser } from '~/lib/serverAuth';
-import { parseBusinessId, verifyBusinessId } from '~/lib/billing/businessId';
+import { emailMatchesHost, parseBusinessId, verifyBusinessId } from '~/lib/billing/businessId';
 import { json, loadBilling, loadRole, supabaseAdmin } from '~/lib/billing/server';
 
 export const POST: APIRoute = async ({ request }) => {
@@ -38,15 +37,18 @@ export const POST: APIRoute = async ({ request }) => {
     if (check.status === 'not_found') return json({ result: 'not_found' });
     if (check.status === 'inactive') return json({ result: 'inactive', name: check.name });
     if (check.status === 'registry_down') return json({ result: 'registry_down' });
+    if (check.status === 'unreachable') return json({ result: 'unreachable' });
 
     const verified = check.status === 'verified';
     const { data, error } = await db.rpc('bf_register_business_id', {
       p_user: user.id,
       p_key: id.key,
       p_kind: id.kind,
-      p_country: id.kind === 'other' ? null : id.country,
+      p_country: id.kind === 'website' ? null : id.country,
       p_name: verified ? check.name : '',
       p_verified: verified,
+      p_website: id.kind === 'website' ? id.url : null,
+      p_email_match: id.kind === 'website' ? emailMatchesHost(user.email, id.host) : null,
     });
     if (error) throw new Error(`bf_register_business_id: ${error.message}`);
     return json({ result: data as string, name: verified ? check.name : undefined });

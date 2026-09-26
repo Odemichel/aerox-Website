@@ -41,7 +41,7 @@ select pg_temp.check(not exists (select 1 from bf_billing where user_id = '00000
 
 -- Clients de test.
 insert into bf_clients (id, bf_user_id) select ('00000000-0000-0000-0000-0000000001' || lpad(i::text, 2, '0'))::uuid,
-  '00000000-0000-0000-0000-0000000000b1' from generate_series(1, 15) i;
+  '00000000-0000-0000-0000-0000000000b1' from generate_series(1, 18) i;
 insert into bf_clients (id, bf_user_id) values ('00000000-0000-0000-0000-000000000299', '00000000-0000-0000-0000-0000000000b2');
 
 set role authenticated;
@@ -49,40 +49,49 @@ select pg_temp.as_user('00000000-0000-0000-0000-0000000000b1');
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'reason' = 'needs_card', 'sans identifiant : refus needs_card (code lu par l''application)');
 reset role;
 
--- Identifiant d'entreprise vérifié : 2 analyses sur 20 jours. Un identifiant = un compte.
-select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:552032534', 'siren', 'FR', 'DANONE', true) = 'granted', 'identifiant vérifié : analyses ouvertes');
-select pg_temp.check((select remaining = 2 and expires_at between now() + interval '19 days 23 hours' and now() + interval '20 days 1 hour'
-  from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b1' and source = 'trial'), '2 crédits sur 20 jours');
+-- Identifiant d'entreprise vérifié : essai de 14 jours. Un identifiant = un compte.
+select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:552032534', 'siren', 'FR', 'DANONE', true) = 'granted', 'identifiant vérifié : essai ouvert');
+select pg_temp.check((select trial_ends_at between now() + interval '13 days 23 hours' and now() + interval '14 days 1 hour'
+  from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1'), 'essai de 14 jours');
+select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b1'), 'essai sans crédits : au temps');
 select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1') = 'granted', 'état granted');
 select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:552032534', 'siren', 'FR', 'DANONE', true) = 'already_granted', 'rejeu : rien de plus');
 select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b2', 'FR:552032534', 'eu_vat', 'FR', 'DANONE', true) = 'already_used', 'même entreprise (TVA), autre compte : refusé');
 select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2') = 'business_id_used', 'état business_id_used');
 select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b2'), 'aucun crédit pour l''identifiant réutilisé');
 
--- Hors registre : vérification manuelle, notification admin avec lien signé.
+-- Site internet : vérification manuelle, notification admin avec lien signé.
 insert into vault.decrypted_secrets values ('billing_hook_secret', 'hook');
 delete from net.calls;
-select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b2', 'OTHER:US123456789', 'other', null, '', false) = 'pending_review', 'hors UE : en vérification');
+select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b2', 'WEB:monstudio.ch', 'website', null, '', false, 'https://monstudio.ch', true) = 'pending_review', 'site internet : en vérification');
 select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2') = 'pending_review', 'état pending_review');
-select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b2'), 'rien d''ouvert avant validation');
-select pg_temp.check((select count(*) = 1 and bool_and(body -> 'review' ->> 'business_id' = 'US123456789'
+select pg_temp.check((select trial_ends_at is null from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2'), 'rien d''ouvert avant validation');
+select pg_temp.check((select count(*) = 1 and bool_and(body -> 'review' ->> 'website' = 'https://monstudio.ch'
+  and body -> 'review' ->> 'email_domain_match' = 'true' and body -> 'review' ->> 'kind' = 'website'
   and body -> 'review' ->> 'approve_url' like 'https://aeroxbefaster.com/api/billing/approve-business/?u=00000000-0000-0000-0000-0000000000b2&t='
     || encode(extensions.hmac('00000000-0000-0000-0000-0000000000b2', 'hook', 'sha256'), 'hex'))
   from net.calls where url like '%/notify-admin-new-bf'), 'admin prévenu, lien de validation signé');
-select pg_temp.check(bf_approve_business_id('00000000-0000-0000-0000-0000000000b2') = 'granted', 'validation admin : analyses ouvertes');
-select pg_temp.check((select remaining from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b2') = 2, '2 crédits après validation');
+select pg_temp.check(bf_approve_business_id('00000000-0000-0000-0000-0000000000b2') = 'granted', 'validation admin : essai ouvert');
+select pg_temp.check((select trial_state = 'granted' and trial_ends_at > now() + interval '13 days' from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2'), '14 jours après validation');
 select pg_temp.check(bf_approve_business_id('00000000-0000-0000-0000-0000000000b2') = 'nothing_pending', 'double validation sans effet');
+-- Crédit d'un autre compte (isolation RLS vérifiée plus bas).
+insert into bf_credits (user_id, granted, remaining, expires_at, source)
+values ('00000000-0000-0000-0000-0000000000b2', 1, 1, now() + interval '1 year', 'isolation');
 
 set role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000b1');
 
--- Essai : 2 clients comptés, re-tests gratuits, 3e refusé.
+-- Essai : analyses illimitées pendant 14 jours, re-tests gratuits, refus après.
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'status' = 'counted', 'essai 1');
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'status' = 'already_counted', 're-test 1');
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'status' = 'already_counted', 're-test 2');
-select pg_temp.check((register_analysis('00000000-0000-0000-0000-000000000102') ->> 'credits_remaining')::int = 0, 'essai 2, plus de crédit');
-select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000103') ->> 'reason' = 'no_credits', '3e refusé');
-select pg_temp.check((select count(*) from bf_analyses) = 2, '2 analyses visibles, re-tests non comptés');
+select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000102') ->> 'status' = 'counted', 'essai 2');
+select pg_temp.check((register_analysis('00000000-0000-0000-0000-000000000116') ->> 'plan') = 'trial', 'essai 3 : illimité');
+select pg_temp.check((select count(*) from bf_analyses) = 3, '3 analyses visibles, re-tests non comptés');
+reset role;
+update bf_billing set trial_ends_at = now() - interval '1 minute' where user_id = '00000000-0000-0000-0000-0000000000b1';
+set role authenticated;
+select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000117') ->> 'reason' = 'no_credits', 'essai terminé : refus (no_credits, lu par l''app)');
 do $$ begin
   perform bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:1', 'siren', 'FR', '', true);
   raise exception 'ÉCHEC : bf_register_business_id appelable par authenticated';
@@ -101,7 +110,7 @@ do $$ begin
   values ('00000000-0000-0000-0000-0000000000b1', 99, 99, now() + interval '1 year', 'hack');
   raise exception 'ÉCHEC : insertion directe acceptée';
 exception when insufficient_privilege then null; end $$;
-select pg_temp.check((select count(*) from bf_credits) = 1, 'lecture limitée à ses crédits');
+select pg_temp.check((select count(*) from bf_credits) = 0, 'lecture limitée à ses crédits (celui d''un autre compte invisible)');
 do $$ begin
   perform bf_grant_credits('00000000-0000-0000-0000-0000000000b1', 10, now() + interval '1 year', 'x');
   raise exception 'ÉCHEC : bf_grant_credits appelable par authenticated';

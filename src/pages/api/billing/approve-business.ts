@@ -1,7 +1,7 @@
 // src/pages/api/billing/approve-business.ts
 //
-// Validation manuelle d'un identifiant d'entreprise sans registre public
-// (hors UE), depuis le lien de l'e-mail admin « identifiant à vérifier ».
+// Validation manuelle du site internet d'un studio (ou d'un identifiant sans
+// registre public), depuis le lien de l'e-mail admin « studio à vérifier ».
 //
 // Le lien porte le compte et une signature HMAC-SHA256 du compte, calculée
 // en base avec le secret partagé `billing_hook_secret` (= BILLING_HOOK_SECRET
@@ -42,7 +42,7 @@ const escapeHtml = (v: unknown) =>
 async function pending(user: string) {
   const db = supabaseAdmin();
   const [{ data: id }, { data: profile }] = await Promise.all([
-    db.from('bf_business_ids').select('id_key, status').eq('user_id', user).maybeSingle(),
+    db.from('bf_business_ids').select('id_key, status, website, email_domain_match').eq('user_id', user).maybeSingle(),
     db.from('users').select('email, studio_name').eq('id', user).maybeSingle(),
   ]);
   return { id, profile };
@@ -55,13 +55,20 @@ export const GET: APIRoute = async ({ url }) => {
 
   const { id, profile } = await pending(user);
   if (!id || id.status !== 'pending_review') {
-    return page('Rien à valider', '<p>Aucun identifiant en attente pour ce compte (déjà validé ?).</p>');
+    return page('Rien à valider', '<p>Rien en attente pour ce compte (déjà validé ?).</p>');
   }
+  const site = id.website ? String(id.website) : '';
   return page(
-    'Valider cet identifiant d’entreprise ?',
+    'Valider ce studio ?',
     `<p><strong>${escapeHtml(profile?.studio_name ?? '')}</strong><br>${escapeHtml(profile?.email ?? '')}</p>
-<p>Identifiant saisi : <strong>${escapeHtml(String(id.id_key).replace(/^OTHER:/, ''))}</strong></p>
-<p>Valider ouvre les 2 analyses offertes de ce compte.</p>
+${
+  site
+    ? `<p>Site internet : <a href="${escapeHtml(site)}" target="_blank" rel="noopener">${escapeHtml(site)}</a></p>
+<p>Domaine de l’e-mail identique au site : <strong>${id.email_domain_match ? 'oui' : 'non'}</strong></p>`
+    : `<p>Identifiant saisi : <strong>${escapeHtml(String(id.id_key).replace(/^[A-Z]+:/, ''))}</strong></p>`
+}
+<p>À vérifier : le site présente bien un studio de bike fitting ou un magasin vélo, et son nom correspond au compte.</p>
+<p>Valider ouvre l’essai de 14 jours de ce compte.</p>
 <form method="post"><input type="hidden" name="u" value="${escapeHtml(user)}"><input type="hidden" name="t" value="${escapeHtml(token)}">
 <button type="submit" style="background: #f59e0b; border: 0; padding: 12px 22px; border-radius: 8px; font-weight: 600; cursor: pointer;">Valider</button></form>`
   );
@@ -79,6 +86,6 @@ export const POST: APIRoute = async ({ request }) => {
     return page('Erreur', '<p>La validation a échoué. Réessayez dans un instant.</p>', 500);
   }
   return data === 'granted'
-    ? page('Identifiant validé', '<p>Les 2 analyses offertes de ce compte sont ouvertes.</p>')
-    : page('Rien à valider', '<p>Aucun identifiant en attente pour ce compte (déjà validé ?).</p>');
+    ? page('Studio validé', '<p>L’essai de 14 jours de ce compte est ouvert.</p>')
+    : page('Rien à valider', '<p>Rien en attente pour ce compte (déjà validé ?).</p>');
 };

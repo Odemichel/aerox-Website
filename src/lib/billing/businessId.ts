@@ -1,23 +1,22 @@
 // src/lib/billing/businessId.ts
 //
-// Identifiant d'entreprise d'un bike fitter : c'est lui qui ouvre les
-// analyses offertes (« tester AeroX maintenant »). Deux registres publics
-// officiels, gratuits et sans clé :
+// Identifiant d'entreprise d'un bike fitter : c'est lui qui ouvre l'essai de
+// 14 jours. Trois formes, dans un seul champ :
 //   - France : SIREN / SIRET → API Recherche d'entreprises
 //     (recherche-entreprises.api.gouv.fr), entreprise active exigée ;
-//   - Union européenne : n° de TVA intracommunautaire → VIES
-//     (Commission européenne).
-// Hors de ces cas (pas de registre public vérifiable), l'identifiant est mis
-// en vérification manuelle par l'admin.
+//   - Union européenne : n° de TVA intracommunautaire → VIES ;
+//   - sinon le site internet du studio : contrôles automatiques légers
+//     (adresse valide, site qui répond, pas une messagerie ni un réseau
+//     social), puis validation manuelle par l'admin.
 //
 // Un identifiant ne sert qu'à un compte : la clé normalisée (`key`) est
 // unique en base. SIREN, SIRET et TVA française d'une même entreprise donnent
-// la même clé.
+// la même clé ; un site donne la clé de son domaine (sans « www. »).
 
 export type ParsedBusinessId =
   | { kind: 'siren'; key: string; siren: string; country: 'FR' }
   | { kind: 'eu_vat'; key: string; country: string; number: string }
-  | { kind: 'other'; key: string; raw: string }
+  | { kind: 'website'; key: string; host: string; url: string }
   | { kind: 'invalid' };
 
 // Préfixes TVA des États membres (EL = Grèce, XI = Irlande du Nord).
@@ -86,14 +85,95 @@ export function frVatKey(siren: string): string {
   return String((12 + 3 * (Number(siren) % 97)) % 97).padStart(2, '0');
 }
 
+// Domaines qui ne désignent pas un studio : messageries, réseaux sociaux,
+// pages de liens, hébergeurs de pages génériques.
+const GENERIC_DOMAINS = [
+  'gmail.com',
+  'googlemail.com',
+  'outlook.com',
+  'hotmail.com',
+  'hotmail.fr',
+  'live.com',
+  'yahoo.com',
+  'yahoo.fr',
+  'icloud.com',
+  'orange.fr',
+  'free.fr',
+  'sfr.fr',
+  'laposte.net',
+  'wanadoo.fr',
+  'gmx.com',
+  'gmx.de',
+  'proton.me',
+  'protonmail.com',
+  'facebook.com',
+  'fb.com',
+  'instagram.com',
+  'linkedin.com',
+  'twitter.com',
+  'x.com',
+  'tiktok.com',
+  'youtube.com',
+  'linktr.ee',
+  'beacons.ai',
+  'google.com',
+  'goo.gl',
+  'maps.app.goo.gl',
+  'strava.com',
+  'whatsapp.com',
+  'wa.me',
+  't.me',
+  'bit.ly',
+  'aeroxbefaster.com',
+];
+
+/** Domaine générique (ou l'un de ses sous-domaines) : ne désigne pas un studio. */
+export function isGenericDomain(host: string): boolean {
+  return GENERIC_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`));
+}
+
+/** Nom d'hôte normalisé : minuscules, sans « www. ». */
+function normalizeHost(host: string): string {
+  return host
+    .toLowerCase()
+    .replace(/^www\./, '')
+    .replace(/\.$/, '');
+}
+
+/** Le domaine de l'e-mail du compte correspond-il au site ? (paul@monstudio.ch ↔ monstudio.ch) */
+export function emailMatchesHost(email: string | null | undefined, host: string): boolean {
+  const domain = normalizeHost((email ?? '').split('@')[1] ?? '');
+  return Boolean(domain) && !isGenericDomain(domain) && (host === domain || host.endsWith(`.${domain}`));
+}
+
+function parseWebsite(input: string): ParsedBusinessId {
+  const text = input.trim();
+  if (/\s/.test(text) || !/[a-z]/i.test(text) || !text.includes('.')) return { kind: 'invalid' };
+  let url: URL;
+  try {
+    url = new URL(/^https?:\/\//i.test(text) ? text : `https://${text}`);
+  } catch {
+    return { kind: 'invalid' };
+  }
+  const host = normalizeHost(url.hostname);
+  if (!/^([a-z0-9-]+\.)+[a-z]{2,}$/.test(host) || isGenericDomain(host)) return { kind: 'invalid' };
+  return {
+    kind: 'website',
+    key: `WEB:${host}`,
+    host,
+    url: `https://${url.hostname}${url.pathname === '/' ? '' : url.pathname}`,
+  };
+}
+
 /** Lecture d'un identifiant saisi librement (espaces, points, tirets tolérés). */
 export function parseBusinessId(input: unknown): ParsedBusinessId {
   if (typeof input !== 'string') return { kind: 'invalid' };
-  // EIN américain (12-3456789) : 9 chiffres comme un SIREN, reconnu à son
-  // tiret avant qu'on ne l'efface. Pas de registre public : vérification manuelle.
-  if (/^\s*\d{2}-\d{7}\s*$/.test(input)) {
-    const ein = input.replace(/\D/g, '');
-    return { kind: 'other', key: `OTHER:US${ein}`, raw: `US${ein}` };
+  // Site internet : un domaine (lettres, point, extension) ou une URL.
+  if (
+    /^\s*(https?:\/\/)?[^\s/]*[a-z][^\s/]*\.[a-z]{2,}(\/\S*)?\s*$/i.test(input) &&
+    !/^\s*[A-Z]{2}[\d\s.]+\s*$/i.test(input)
+  ) {
+    return parseWebsite(input);
   }
   const raw = input.toUpperCase().replace(/[\s.\-/]/g, '');
   if (raw.length < 4 || raw.length > 20 || !/^[A-Z0-9]+$/.test(raw)) return { kind: 'invalid' };
@@ -119,10 +199,7 @@ export function parseBusinessId(input: unknown): ParsedBusinessId {
     return { kind: 'eu_vat', key: `${prefix}:${number}`, country: prefix, number };
   }
 
-  // Hors registre vérifiable : au moins quelques chiffres, sinon ce n'est pas
-  // un identifiant (évite d'envoyer n'importe quel texte en vérification).
-  if ((raw.match(/\d/g) ?? []).length < 5) return { kind: 'invalid' };
-  return { kind: 'other', key: `OTHER:${raw}`, raw };
+  return { kind: 'invalid' };
 }
 
 export type Verification =
@@ -130,6 +207,7 @@ export type Verification =
   | { status: 'inactive'; name: string }
   | { status: 'not_found' }
   | { status: 'registry_down' }
+  | { status: 'unreachable' }
   | { status: 'manual' };
 
 const TIMEOUT_MS = 8000;
@@ -165,7 +243,17 @@ export async function verifyBusinessId(id: ParsedBusinessId): Promise<Verificati
         ? { status: 'not_found' }
         : { status: 'registry_down' };
     }
-    return { status: 'manual' };
+    if (id.kind === 'website') {
+      // Le site doit répondre (après redirections). Le contenu est jugé par
+      // l'admin : un domaine qui existe ne prouve pas encore un studio.
+      const res = await fetch(id.url, {
+        redirect: 'follow',
+        headers: { 'user-agent': 'AeroX-verification/1.0 (+https://aeroxbefaster.com)' },
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+      }).catch(() => null);
+      return res && res.status < 400 ? { status: 'manual' } : { status: 'unreachable' };
+    }
+    return { status: 'not_found' };
   } catch {
     return { status: 'registry_down' };
   }
