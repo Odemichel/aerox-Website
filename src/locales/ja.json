@@ -887,5 +887,16 @@
   "dash.account.role": "アカウント種別",
   "dash.account.signout": "ログアウト",
   "dash.account.licence": "ライセンス",
-  "dash.bf.biz.unreachable": "このサイトは応答しません。アドレスをご確認ください。"
+  "dash.bf.biz.unreachable": "このサイトは応答しません。アドレスをご確認ください。",
+  "dash.nav.download": "ダウンロード",
+  "dash.sec.download": "パソコンとスマートフォンでAeroXを。",
+  "dash.download.desktop": "デスクトップアプリ",
+  "dash.download.desktopText": "カメラを接続したパソコンにインストールしてください。",
+  "dash.download.mac": "macOS版をダウンロード",
+  "dash.download.windows": "Windows版をダウンロード",
+  "dash.download.mobileTitle": "モバイルアプリ",
+  "dash.download.mobileBf": "フィッティング中はデスクトップアプリと併用すると、AeroXを最大限に活用できます。スマートフォンでQRコードを読み取ってインストールしてください。",
+  "dash.download.mobileRider": "セッション中はデスクトップアプリと併用すると、AeroXを最大限に活用できます。スマートフォンでQRコードを読み取ってインストールしてください。",
+  "dash.download.or": "またはスマートフォンで開く：",
+  "dash.download.qrAlt": "AeroXモバイルアプリのQRコード"
 }

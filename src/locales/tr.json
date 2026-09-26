@@ -887,5 +887,16 @@
   "dash.account.role": "Hesap türü",
   "dash.account.signout": "Çıkış yap",
   "dash.account.licence": "Lisans",
-  "dash.bf.biz.unreachable": "Bu site yanıt vermiyor: adresi kontrol et."
+  "dash.bf.biz.unreachable": "Bu site yanıt vermiyor: adresi kontrol et.",
+  "dash.nav.download": "İndirme",
+  "dash.sec.download": "AeroX bilgisayarında ve akıllı telefonunda.",
+  "dash.download.desktop": "Masaüstü uygulaması",
+  "dash.download.desktopText": "Kameraya bağlı bilgisayara kur.",
+  "dash.download.mac": "macOS için indir",
+  "dash.download.windows": "Windows için indir",
+  "dash.download.mobileTitle": "Mobil uygulama",
+  "dash.download.mobileBf": "Fitting sırasında masaüstü uygulamasını tamamlayarak en iyi AeroX deneyimini sunar. Kurmak için QR kodunu akıllı telefonunla tara.",
+  "dash.download.mobileRider": "Seanslarında masaüstü uygulamasını tamamlayarak en iyi AeroX deneyimini sunar. Kurmak için QR kodunu akıllı telefonunla tara.",
+  "dash.download.or": "Veya telefonunda aç:",
+  "dash.download.qrAlt": "AeroX mobil uygulaması QR kodu"
 }

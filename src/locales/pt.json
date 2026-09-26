@@ -887,5 +887,16 @@
   "dash.account.role": "Tipo de conta",
   "dash.account.signout": "Sair",
   "dash.account.licence": "Licença",
-  "dash.bf.biz.unreachable": "Este site não responde: confira o endereço."
+  "dash.bf.biz.unreachable": "Este site não responde: confira o endereço.",
+  "dash.nav.download": "Downloads",
+  "dash.sec.download": "AeroX no seu computador e no seu smartphone.",
+  "dash.download.desktop": "Aplicativo desktop",
+  "dash.download.desktopText": "Instale no computador conectado à câmera.",
+  "dash.download.mac": "Baixar para macOS",
+  "dash.download.windows": "Baixar para Windows",
+  "dash.download.mobileTitle": "Aplicativo móvel",
+  "dash.download.mobileBf": "Durante seus fittings, ele complementa o aplicativo desktop para uma experiência AeroX ideal. Escaneie o QR code com seu smartphone para instalá-lo.",
+  "dash.download.mobileRider": "Durante suas sessões, ele complementa o aplicativo desktop para uma experiência AeroX ideal. Escaneie o QR code com seu smartphone para instalá-lo.",
+  "dash.download.or": "Ou abra no seu telefone:",
+  "dash.download.qrAlt": "QR code do aplicativo móvel AeroX"
 }

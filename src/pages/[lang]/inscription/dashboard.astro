@@ -9,6 +9,12 @@ import BfPricing from '~/components/widgets/BfPricing.astro';
 
 import Layout from '../../../layouts/PageLayout.astro';
 import { getDict, t, type Locale } from '~/lib/i18n';
+import { DOWNLOADS } from '~/config/downloads';
+// QR code de l'application mobile (webapp companion), généré une fois en SVG
+// statique : même cible que le QR affiché par l'application desktop.
+import companionQr from '~/assets/images/companion-qr.svg?raw';
+
+const COMPANION_URL = 'https://mycompanion.aeroxbefaster.com';
 
 const { lang } = Astro.params;
 const dict = getDict(lang);
@@ -103,6 +109,7 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
   ['facturation', t(dict, 'dash.nav.billing'), t(dict, 'dash.sec.billing'), 'bf'],
   ['studio', t(dict, 'dash.nav.studio'), t(dict, 'dash.sec.studio'), 'bf'],
   ['diagnostics', t(dict, 'dash.nav.diag'), t(dict, 'dash.sec.diag'), 'rider'],
+  ['telechargement', t(dict, 'dash.nav.download'), t(dict, 'dash.sec.download'), 'all'],
   ['compte', t(dict, 'dash.nav.account'), t(dict, 'dash.sec.account'), 'all'],
 ];
 ---
@@ -142,7 +149,49 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
                 <h2 id={`${id}-title`}>{title}</h2>
                 <p class="acct-muted">{desc}</p>
               </div>
-              <div class="acct-panel" data-body />
+              {id === 'telechargement' ? (
+                <div class="acct-panel">
+                  <dl class="acct-rows">
+                    <div class="acct-row">
+                      <dt class="acct-row-label">{t(dict, 'dash.download.desktop')}</dt>
+                      <dd class="acct-row-value acct-muted">{t(dict, 'dash.download.desktopText')}</dd>
+                    </div>
+                  </dl>
+                  <div class="acct-actions acct-actions--tight">
+                    <a class="acct-btn acct-btn--primary" href={DOWNLOADS.mac}>
+                      {t(dict, 'dash.download.mac')}
+                    </a>
+                    <a class="acct-btn" href={DOWNLOADS.windows}>
+                      {t(dict, 'dash.download.windows')}
+                    </a>
+                  </div>
+                  <div class="acct-mobile">
+                    <div
+                      class="acct-qr"
+                      role="img"
+                      aria-label={t(dict, 'dash.download.qrAlt')}
+                      set:html={companionQr}
+                    />
+                    <div>
+                      <h3 class="acct-mobile-title">{t(dict, 'dash.download.mobileTitle')}</h3>
+                      <p class="acct-lead" data-for-text="bf">
+                        {t(dict, 'dash.download.mobileBf')}
+                      </p>
+                      <p class="acct-lead hidden" data-for-text="rider">
+                        {t(dict, 'dash.download.mobileRider')}
+                      </p>
+                      <p class="acct-muted acct-small acct-mobile-or">
+                        {t(dict, 'dash.download.or')}{' '}
+                        <a class="acct-link" href={COMPANION_URL}>
+                          {COMPANION_URL.replace('https://', '')}
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div class="acct-panel" data-body />
+              )}
             </section>
           ))
         }
@@ -301,7 +350,45 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
       document
         .querySelector<HTMLElement>(`#acct-nav a[href="#${id}"]`)
         ?.parentElement?.classList.toggle('hidden', !visible);
+      if (!visible && currentTab === id) openTab(firstTab());
     }
+
+    // --- Onglets : une section affichée à la fois, lien direct par ancre. ---
+    let currentTab = '';
+    // Offres affichées sous la page, seulement dans l'onglet concerné.
+    const offers = { bf: false, rider: false };
+    const tabIds = () =>
+      [...document.querySelectorAll<HTMLElement>('#account .acct-section')]
+        .filter((sec) => !sec.classList.contains('hidden'))
+        .map((sec) => sec.id);
+    const firstTab = () => tabIds()[0] ?? '';
+    function syncOffers() {
+      document.getElementById('bf-offers')?.classList.toggle('hidden', !(offers.bf && currentTab === 'abonnement'));
+      document
+        .getElementById('rider-offers')
+        ?.classList.toggle('hidden', !(offers.rider && currentTab === 'diagnostics'));
+    }
+    function openTab(id: string, updateUrl = false) {
+      if (!tabIds().includes(id)) return;
+      currentTab = id;
+      document.querySelectorAll<HTMLElement>('#account .acct-section').forEach((sec) => {
+        sec.toggleAttribute('data-active', sec.id === id);
+      });
+      document.querySelectorAll<HTMLAnchorElement>('#acct-nav a').forEach((a) => {
+        if (a.getAttribute('href') === `#${id}`) a.setAttribute('aria-current', 'page');
+        else a.removeAttribute('aria-current');
+      });
+      if (updateUrl) history.replaceState(null, '', `#${id}`);
+      syncOffers();
+    }
+    document.getElementById('acct-nav')?.addEventListener('click', (e) => {
+      const a = (e.target as HTMLElement).closest('a');
+      if (!a) return;
+      e.preventDefault();
+      openTab(a.getAttribute('href')!.slice(1), true);
+      document.getElementById('account')?.scrollIntoView({ block: 'start' });
+    });
+    window.addEventListener('hashchange', () => openTab(location.hash.slice(1)));
     // Message après une action, en bas du panneau concerné.
     function flashIn(panel: HTMLElement, text: string, ok: boolean) {
       panel.querySelector(':scope > .acct-flash')?.remove();
@@ -361,7 +448,11 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
         n.classList.toggle('hidden', !(f === 'all' || f === who || (p.role === 'admin' && f === 'rider')));
       });
       document.getElementById('acct-nav')!.classList.remove('hidden');
-      document.getElementById('rider-offers')?.classList.toggle('hidden', isBf);
+      offers.rider = !isBf;
+      document.querySelectorAll<HTMLElement>('#account [data-for-text]').forEach((n) => {
+        n.classList.toggle('hidden', n.dataset.forText !== (isBf ? 'bf' : 'rider'));
+      });
+      openTab(tabIds().includes(location.hash.slice(1)) ? location.hash.slice(1) : firstTab());
       if (isBf) {
         // Ni bandeau ni bouton « Pré-réserve ton Diagnostic » pour un BF.
         document
@@ -729,8 +820,10 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
       }
       body('studio').replaceChildren(rows(...items));
 
-      // Offres BF payables depuis l'espace, tant qu'aucun abonnement n'est en cours.
-      document.getElementById('bf-offers')?.classList.toggle('hidden', subscribed || s.plan === 'legacy');
+      // Offres BF payables depuis l'espace (onglet Abonnement), tant qu'aucun
+      // abonnement n'est en cours.
+      offers.bf = !(subscribed || s.plan === 'legacy');
+      syncOffers();
       if (flash) flashIn(body(flash.panel), flash.text, flash.ok);
     }
 
@@ -923,9 +1016,9 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
   }
   @media (min-width: 960px) {
     #account .acct-layout {
-      grid-template-columns: 11rem minmax(0, 1fr);
-      gap: 3rem;
-      align-items: start;
+      grid-template-columns: 12rem minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: stretch;
     }
   }
   #account .acct-nav ul {
@@ -948,11 +1041,14 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
     color: var(--acct-text);
   }
   @media (min-width: 960px) {
+    /* Séparation entre le menu et le contenu, sur toute la hauteur. */
     #account .acct-nav {
-      position: sticky;
-      top: 6rem;
+      border-right: 1px solid color-mix(in srgb, var(--acct-muted) 35%, transparent);
+      padding-right: 1.25rem;
     }
     #account .acct-nav ul {
+      position: sticky;
+      top: 6rem;
       flex-direction: column;
       border-bottom: 0;
     }
@@ -967,6 +1063,23 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
   }
   #account .acct-section {
     scroll-margin-top: 6rem;
+  }
+  /* Onglets : seule la section active est affichée. */
+  #account .acct-section:not([data-active]) {
+    display: none;
+  }
+  /* Onglet actif : trait orange sous l'onglet (mobile), à gauche (bureau). */
+  #account .acct-nav a[aria-current='page'] {
+    color: var(--acct-text);
+    box-shadow: inset 0 -2px 0 var(--acct-accent);
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+  @media (min-width: 960px) {
+    #account .acct-nav a[aria-current='page'] {
+      background: var(--acct-surface);
+      box-shadow: inset 3px 0 0 var(--acct-accent);
+      border-radius: 0 0.5rem 0.5rem 0;
+    }
   }
   #account .acct-section-head {
     margin-bottom: 0.875rem;
@@ -1237,6 +1350,42 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
   }
 
   /* Changer d'offre */
+  /* Téléchargement */
+  #account .acct-actions--tight {
+    margin-top: 0.25rem;
+  }
+  #account .acct-mobile {
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--acct-line);
+    display: grid;
+    gap: 1.25rem;
+    align-items: center;
+  }
+  @media (min-width: 640px) {
+    #account .acct-mobile {
+      grid-template-columns: 9.5rem minmax(0, 1fr);
+      gap: 1.75rem;
+    }
+  }
+  #account .acct-qr {
+    width: 9.5rem;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    background: #fff;
+  }
+  #account .acct-qr svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  #account .acct-mobile-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+  #account .acct-mobile-or {
+    margin-top: 0.75rem;
+  }
   #account .acct-change {
     flex-basis: 100%;
     order: 1;
