@@ -110,20 +110,23 @@ const labels = {
       'error',
       'loading',
     ].map((k) => `act.${k}`),
+    ...['training', 'fitting', 'diag', 'thisMonth', 'perMonth', 'empty'].map((k) => `ract.${k}`),
+    ...['item', 'paid', 'refunded', 'partRefund', 'receipt', 'empty', 'error'].map((k) => `rbill.${k}`),
   ]),
   notLogged: t(dict, 'dashboard.notLogged'),
   profileNotFound: t(dict, 'dashboard.profileNotFound'),
   vat: t(dict, 'bfp.vat'),
 };
 
-// Sections : [ancre, titre, description, type de compte].
-const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
+// Sections : [ancre, titre, description, type de compte]. Une section commune
+// aux deux comptes peut avoir une description par type : [bike fitter, cycliste].
+const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'all'][] = [
   ['abonnement', t(dict, 'dash.nav.plan'), t(dict, 'dash.sec.plan'), 'bf'],
-  ['activite', t(dict, 'dash.nav.activity'), t(dict, 'dash.sec.activity'), 'bf'],
-  ['utilisation', t(dict, 'dash.nav.usage'), t(dict, 'dash.sec.usage'), 'bf'],
-  ['facturation', t(dict, 'dash.nav.billing'), t(dict, 'dash.sec.billing'), 'bf'],
-  ['studio', t(dict, 'dash.nav.studio'), t(dict, 'dash.sec.studio'), 'bf'],
   ['diagnostics', t(dict, 'dash.nav.diag'), t(dict, 'dash.sec.diag'), 'rider'],
+  ['activite', t(dict, 'dash.nav.activity'), [t(dict, 'dash.sec.activity'), t(dict, 'dash.sec.activityRider')], 'all'],
+  ['utilisation', t(dict, 'dash.nav.usage'), t(dict, 'dash.sec.usage'), 'bf'],
+  ['facturation', t(dict, 'dash.nav.billing'), [t(dict, 'dash.sec.billing'), t(dict, 'dash.sec.billingRider')], 'all'],
+  ['studio', t(dict, 'dash.nav.studio'), t(dict, 'dash.sec.studio'), 'bf'],
   ['telechargement', t(dict, 'dash.nav.download'), t(dict, 'dash.sec.download'), 'all'],
   ['compte', t(dict, 'dash.nav.account'), t(dict, 'dash.sec.account'), 'all'],
 ];
@@ -162,7 +165,18 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
             <section id={id} class="acct-section hidden" data-for={who} aria-labelledby={`${id}-title`}>
               <div class="acct-section-head">
                 <h2 id={`${id}-title`}>{title}</h2>
-                <p class="acct-muted">{desc}</p>
+                {typeof desc === 'string' ? (
+                  <p class="acct-muted">{desc}</p>
+                ) : (
+                  <>
+                    <p class="acct-muted" data-for-text="bf">
+                      {desc[0]}
+                    </p>
+                    <p class="acct-muted hidden" data-for-text="rider">
+                      {desc[1]}
+                    </p>
+                  </>
+                )}
               </div>
               {id === 'telechargement' ? (
                 <div class="acct-panel">
@@ -223,12 +237,12 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
     <BfPricing lang={lang as Locale} inAccount />
   </div>
   <div id="rider-offers" class="hidden">
-    <PricingSection />
+    <PricingSection riderOnly />
   </div>
 
   <script>
     import { supabase } from '../../../config/supabaseClient';
-    import { manageSubscription, openPortal, submitBusinessId } from '~/lib/billing/client';
+    import { manageSubscription, openPortal, openReceipt, submitBusinessId } from '~/lib/billing/client';
     import { isDowngrade, nextInvoiceCentsForOffer, type Offer, type Plan } from '~/lib/billing/logic';
     import { LAUNCH_OFFER } from '~/lib/billing/catalog';
     import { isDiagnosticAvailable } from '~/config/diagnostic';
@@ -466,7 +480,7 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
       document.getElementById('acct-nav')!.classList.remove('hidden');
       offers.rider = !isBf;
       document.querySelectorAll<HTMLElement>('#account [data-for-text]').forEach((n) => {
-        n.classList.toggle('hidden', n.dataset.forText !== (isBf ? 'bf' : 'rider'));
+        n.classList.toggle('hidden', n.dataset.forText !== who);
       });
       openTab(tabIds().includes(location.hash.slice(1)) ? location.hash.slice(1) : firstTab());
       if (isBf) {
@@ -877,25 +891,53 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
       return d;
     }
 
-    function monthChart(dates: string[], now: Date) {
+    type Series = { label: string; dates: string[]; tone: 'info' | 'accent' | 'ok' };
+
+    /**
+     * Barres par mois sur 12 mois. Une série : barres simples, mois en cours
+     * en orange. Plusieurs séries : barres empilées et légende.
+     */
+    function monthChart(title: string, series: Series[], now: Date) {
       const T = L();
-      const months = monthlyCounts(dates, now);
-      const max = Math.max(1, ...months.map((m) => m.count));
+      const counts = series.map((sr) => monthlyCounts(sr.dates, now));
+      const months = counts[0];
+      const totals = months.map((_, i) => counts.reduce((sum, c) => sum + c[i].count, 0));
+      const max = Math.max(1, ...totals);
+      const stacked = series.length > 1;
       const block = el('div', 'acct-block');
-      block.append(el('h3', 'acct-block-title', T['act.perMonth']));
-      const chart = el('ol', 'acct-chart');
-      for (const m of months) {
+      block.append(el('h3', 'acct-block-title', title));
+      if (stacked) {
+        const legend = el('ul', 'acct-legend');
+        for (const sr of series) {
+          const item = el('li', '', sr.label);
+          item.prepend(el('span', `acct-swatch acct-tone--${sr.tone}`));
+          legend.append(item);
+        }
+        block.append(legend);
+      }
+      const chart = el('ol', `acct-chart${stacked ? ' is-stacked' : ''}`);
+      months.forEach((m, i) => {
         const col = el('li', 'acct-chart-col');
-        col.title = T['act.perMonthBar']
-          .replace('{month}', `${monthName(m.year, m.month)} ${m.year}`)
-          .replace('{n}', String(m.count));
+        const month = `${monthName(m.year, m.month)} ${m.year}`;
+        col.title = stacked
+          ? `${month} : ${series.map((sr, k) => `${sr.label} ${counts[k][i].count}`).join(', ')}`
+          : T['act.perMonthBar'].replace('{month}', month).replace('{n}', String(totals[i]));
         const track = el('span', 'acct-chart-track');
-        const bar = el('span', `acct-chart-bar${m.count ? '' : ' is-zero'}`);
-        bar.style.setProperty('--h', String(m.count / max));
-        track.append(el('span', 'acct-chart-n', String(m.count)), bar);
+        const bar = el('span', `acct-chart-bar${totals[i] ? '' : ' is-zero'}`);
+        bar.style.setProperty('--h', String(totals[i] / max));
+        if (stacked) {
+          series.forEach((sr, k) => {
+            const n = counts[k][i].count;
+            if (!n) return;
+            const seg = el('span', `acct-chart-seg acct-tone--${sr.tone}`);
+            seg.style.flexGrow = String(n);
+            bar.append(seg);
+          });
+        }
+        track.append(el('span', 'acct-chart-n', String(totals[i])), bar);
         col.append(track, el('span', 'acct-chart-m', monthName(m.year, m.month, 'short')));
         chart.append(col);
-      }
+      });
       block.append(chart);
       return block;
     }
@@ -960,21 +1002,32 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
         );
         return;
       }
-      panel.append(monthChart(dates, now));
+      panel.append(monthChart(T['act.perMonth'], [{ label: T['act.total'], dates, tone: 'info' }], now));
     }
 
     // ---------------------------------------------------------------------
     // Cycliste : diagnostics.
     // ---------------------------------------------------------------------
 
-    async function loadDiagnostics(userId: string) {
+    type Purchase = {
+      id: string;
+      paid_at: string;
+      consumed_at: string | null;
+      refunded_at: string | null;
+      amount_total: number | null;
+      amount_refunded: number | null;
+      currency: string | null;
+    };
+
+    async function loadDiagnostics(userId: string, withBilling: boolean) {
       const T = L();
       const { data } = await supabase
         .from('diagnostic_purchases')
-        .select('paid_at, consumed_at, refunded_at')
+        .select('id, paid_at, consumed_at, refunded_at, amount_total, amount_refunded, currency')
         .eq('user_id', userId)
         .order('paid_at', { ascending: false });
-      const list = (data ?? []) as { paid_at: string; consumed_at: string | null; refunded_at: string | null }[];
+      const list = (data ?? []) as Purchase[];
+      if (withBilling) renderRiderBilling(list);
       const panel = body('diagnostics');
       if (!list.length) {
         panel.replaceChildren(
@@ -999,13 +1052,146 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
       );
     }
 
+    // Facturation du cycliste : ses achats du Diagnostic et leur reçu Stripe
+    // (paiement unique, sans facture ; voir /api/billing/receipt/).
+    function renderRiderBilling(list: Purchase[]) {
+      const T = L();
+      const panel = body('facturation');
+      if (!list.length) {
+        panel.replaceChildren(el('p', 'acct-muted', T['rbill.empty']));
+        return;
+      }
+      const money = (cents: number, currency: string | null) =>
+        new Intl.NumberFormat(lang(), { style: 'currency', currency: (currency ?? 'eur').toUpperCase() }).format(
+          cents / 100
+        );
+      panel.replaceChildren(
+        rows(
+          ...list.map((r) => {
+            const total = r.amount_total ?? 0;
+            const refunded = r.amount_refunded ?? 0;
+            const status =
+              r.refunded_at && refunded >= total
+                ? pill('info', T['rbill.refunded'].replace('{date}', dateFmt(r.refunded_at)))
+                : r.refunded_at && refunded > 0
+                  ? pill(
+                      'info',
+                      T['rbill.partRefund']
+                        .replace('{amount}', money(refunded, r.currency))
+                        .replace('{date}', dateFmt(r.refunded_at))
+                    )
+                  : pill('ok', T['rbill.paid']);
+            const v = el('span', 'acct-inline');
+            v.append(el('strong', '', T['rbill.item']), el('span', '', money(total, r.currency)), status);
+            return row(
+              dateFmt(r.paid_at),
+              v,
+              btn(T['rbill.receipt'], 'plain', async () => {
+                if (await openReceipt(r.id)) flashIn(panel, T['rbill.error'], false);
+              })
+            );
+          })
+        )
+      );
+    }
+
+    // Activité du cycliste : entraînements, fittings réalisés chez un bike
+    // fitter (séance rattachée à son compte), séances du Diagnostic.
+    async function loadRiderActivity(userId: string) {
+      const T = L();
+      const panel = body('activite');
+      panel.replaceChildren(el('p', 'acct-muted', T['act.loading']));
+      const [training, fittings, diags] = await Promise.all([
+        supabase
+          .from('sessions')
+          .select('created_at')
+          .eq('user_id', userId)
+          .eq('session_type', 'training')
+          .limit(10000),
+        supabase
+          .from('sessions')
+          .select('created_at')
+          .eq('rider_id', userId)
+          .neq('user_id', userId)
+          .eq('session_type', 'fitting')
+          .limit(10000),
+        supabase.from('diagnostic_basic').select('id').eq('user_id', userId),
+      ]);
+      if (training.error || fittings.error || diags.error) {
+        panel.replaceChildren(note('bad', T['act.error']));
+        return;
+      }
+      // Une séance S1 = ses positions (même index) ; une séance S2 = une ligne.
+      const diagIds = ((diags.data ?? []) as { id: string }[]).map((d) => d.id);
+      const diagDates: string[] = [];
+      if (diagIds.length) {
+        const [s1, s2] = await Promise.all([
+          supabase
+            .from('diagnostic_basic_positions')
+            .select('diagnostic_id, s1_session_index, captured_at')
+            .in('diagnostic_id', diagIds),
+          supabase.from('diagnostic_basic_s2').select('captured_at').in('diagnostic_id', diagIds),
+        ]);
+        if (s1.error || s2.error) {
+          panel.replaceChildren(note('bad', T['act.error']));
+          return;
+        }
+        const firstCapture = new Map<string, string>();
+        for (const p of (s1.data ?? []) as { diagnostic_id: string; s1_session_index: number; captured_at: string }[]) {
+          const key = `${p.diagnostic_id}:${p.s1_session_index}`;
+          const known = firstCapture.get(key);
+          if (!known || p.captured_at < known) firstCapture.set(key, p.captured_at);
+        }
+        diagDates.push(...firstCapture.values());
+        diagDates.push(...((s2.data ?? []) as { captured_at: string }[]).map((r) => r.captured_at));
+      }
+
+      const now = new Date();
+      const series: Series[] = [
+        {
+          label: T['ract.training'],
+          dates: ((training.data ?? []) as { created_at: string }[]).map((r) => r.created_at),
+          tone: 'info',
+        },
+        {
+          label: T['ract.fitting'],
+          dates: ((fittings.data ?? []) as { created_at: string }[]).map((r) => r.created_at),
+          tone: 'accent',
+        },
+        { label: T['ract.diag'], dates: diagDates, tone: 'ok' },
+      ];
+      const stats = el('div', 'acct-stats');
+      for (const sr of series) {
+        const card = stat(
+          sr.label,
+          String(sr.dates.length),
+          T['ract.thisMonth'].replace('{n}', String(countInMonth(sr.dates, now)))
+        );
+        card.prepend(el('span', `acct-swatch acct-tone--${sr.tone}`));
+        stats.append(card);
+      }
+      panel.replaceChildren(stats);
+      if (series.every((sr) => !sr.dates.length)) {
+        panel.append(
+          el('p', 'acct-lead acct-empty', T['ract.empty']),
+          actions(linkBtn(T['act.emptyCta'], '#telechargement', 'plain'))
+        );
+        return;
+      }
+      panel.append(monthChart(T['ract.perMonth'], series, now));
+    }
+
     async function init() {
       const me = await loadProfile();
       if (!me) return;
       if (me.role === 'bike-fitter' || me.role === 'admin') await Promise.all([loadBf(), loadActivity(me.id)]);
       // Compte en attente : pas de lecture des cyclistes (RLS), pas d'onglet.
       if (me.role === 'pending_bf') showSection('activite', false);
-      if (me.role !== 'bike-fitter' && me.role !== 'pending_bf') await loadDiagnostics(me.id);
+      if (me.role !== 'bike-fitter' && me.role !== 'pending_bf') {
+        // Admin : facturation et activité restent celles du bike fitter.
+        const rider = me.role !== 'admin';
+        await Promise.all([loadDiagnostics(me.id, rider), rider ? loadRiderActivity(me.id) : null]);
+      }
     }
 
     init();
@@ -1629,6 +1815,53 @@ const sections: [string, string, string, 'bf' | 'rider' | 'all'][] = [
   }
   #account .acct-chart-col:last-child .acct-chart-bar {
     background: var(--acct-accent);
+  }
+  /* Séries empilées (cycliste) : un segment par type de séance. */
+  #account .acct-tone--info {
+    --tone: color-mix(in srgb, var(--acct-info) 75%, transparent);
+  }
+  #account .acct-tone--accent {
+    --tone: var(--acct-accent);
+  }
+  #account .acct-tone--ok {
+    --tone: var(--acct-ok);
+  }
+  #account .acct-chart.is-stacked .acct-chart-bar:not(.is-zero) {
+    display: flex;
+    flex-direction: column-reverse;
+    overflow: hidden;
+    background: none;
+  }
+  #account .acct-chart-seg {
+    flex-basis: 0;
+    background: var(--tone);
+  }
+  #account .acct-chart-seg + .acct-chart-seg {
+    border-bottom: 2px solid var(--acct-surface);
+  }
+  #account .acct-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem 1.25rem;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--acct-muted);
+  }
+  #account .acct-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  #account .acct-swatch {
+    display: inline-block;
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 0.1875rem;
+    background: var(--tone);
+  }
+  #account .acct-stat > .acct-swatch {
+    float: right;
+    margin-top: 0.3rem;
   }
   #account .acct-chart-bar.is-zero {
     background: var(--acct-line);

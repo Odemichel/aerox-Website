@@ -107,3 +107,20 @@ export async function manageSubscription(
   if (r.ok === false) return { error: r.error };
   return { error: null, effectiveAt: r.data.effective === 'period_end' ? r.data.at : undefined };
 }
+
+/**
+ * Reçu Stripe d'un achat du Diagnostic, ouvert dans un nouvel onglet. L'onglet
+ * est ouvert pendant le clic (sinon le navigateur bloque la fenêtre), puis
+ * dirigé vers le reçu une fois l'URL connue.
+ */
+export async function openReceipt(purchaseId: string): Promise<BillingError | null> {
+  const tab = window.open('', '_blank');
+  const r = await post('/api/billing/receipt/', { purchase: purchaseId });
+  if (r.ok === false || !r.data?.url) {
+    tab?.close();
+    return r.ok === false ? r.error : 'E_SERVER';
+  }
+  if (tab) tab.location.href = r.data.url;
+  else window.location.href = r.data.url;
+  return null;
+}

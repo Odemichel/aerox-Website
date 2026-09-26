@@ -8,13 +8,15 @@ import { localizedHref } from '~/utils/localize';
 // `#pricing` visée par l'entrée de menu « Tarifs » (src/navigation.ts).
 const lang = (Astro.params.lang as Locale) ?? 'fr';
 const dict = getDict(lang);
+// Espace compte d'un cycliste : seules ses offres, sans la carte bike fitter.
+const { riderOnly = false } = Astro.props as { riderOnly?: boolean };
 ---
 
 <Prices
   id="pricing"
   title={t(dict, 'pricing.title')}
   subtitle={t(dict, 'pricing.subtitle')}
-  subsubtitle={t(dict, 'pricing.subsubtitle')}
+  subsubtitle={t(dict, riderOnly ? 'pricing.subsubtitleRider' : 'pricing.subsubtitle')}
   prices={[
     {
       title: t(dict, 'pricing.diagnostic.title'),
@@ -37,25 +39,29 @@ const dict = getDict(lang);
       hasRibbon: true,
       ribbonTitle: t(dict, 'pricing.diagnostic.ribbon'),
     },
-    {
-      // Pas de `price` : la carte affiche `priceLabel` au lieu d'un € orphelin.
-      title: t(dict, 'pricing.b2b.title'),
-      subtitle: t(dict, 'pricing.b2b.subtitle'),
-      priceLabel: t(dict, 'pricing.b2b.priceLabel'),
-      period: t(dict, 'pricing.b2b.period'),
-      items: [
-        { description: t(dict, 'pricing.b2b.items.1'), icon: 'tabler:receipt-euro' },
-        { description: t(dict, 'pricing.b2b.items.2'), icon: 'tabler:users' },
-        { description: t(dict, 'pricing.b2b.items.3'), icon: 'tabler:lifebuoy' },
-      ],
-      callToAction: {
-        text: t(dict, 'pricing.b2b.cta'),
-        href: localizedHref(lang, '/bike-fitting/#tarifs'),
-        target: '',
-      },
-      hasRibbon: false,
-      ribbonTitle: '',
-    },
+    ...(riderOnly
+      ? []
+      : [
+          {
+            // Pas de `price` : la carte affiche `priceLabel` au lieu d'un € orphelin.
+            title: t(dict, 'pricing.b2b.title'),
+            subtitle: t(dict, 'pricing.b2b.subtitle'),
+            priceLabel: t(dict, 'pricing.b2b.priceLabel'),
+            period: t(dict, 'pricing.b2b.period'),
+            items: [
+              { description: t(dict, 'pricing.b2b.items.1'), icon: 'tabler:receipt-euro' },
+              { description: t(dict, 'pricing.b2b.items.2'), icon: 'tabler:users' },
+              { description: t(dict, 'pricing.b2b.items.3'), icon: 'tabler:lifebuoy' },
+            ],
+            callToAction: {
+              text: t(dict, 'pricing.b2b.cta'),
+              href: localizedHref(lang, '/bike-fitting/#tarifs'),
+              target: '',
+            },
+            hasRibbon: false,
+            ribbonTitle: '',
+          },
+        ]),
   ]}
 />
 
