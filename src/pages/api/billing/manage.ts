@@ -3,14 +3,16 @@
 // Changement d'offre et résiliation d'un abonnement bike fitter existant.
 //
 // Le portail Stripe ne peut pas le faire lui-même : il refuse de modifier un
-// abonnement à usage mesuré (À l'usage, Studio), et de modifier ou résilier
+// abonnement à usage mesuré (Essentiel), et de modifier ou résilier
 // un abonnement piloté par un subscription schedule (offre de lancement).
 // Cette route couvre ces cas pour toutes les offres, avec la même règle :
 // l'abonnement et l'utilisateur viennent du serveur, jamais du corps.
 //
-// Monter d'offre est immédiat (au prorata). Descendre prend effet à la fin
-// de la période déjà payée, par un schedule : un passage en Illimité le temps
-// d'un mois chargé ne se rembourse pas.
+// Monter d'offre est immédiat (au prorata), ou programmé pour la période
+// suivante (`when: 'next_period'`, proposé à un abonné Essentiel qui dépasse
+// 7 analyses). Descendre prend effet à la fin de la période déjà payée, par
+// un schedule : un passage en Illimité le temps d'un mois chargé ne se
+// rembourse pas.
 //
 // Après chaque action, `bf_billing` est réaligné sur Stripe par la même
 // fonction que le webhook (`syncSubscription`) : l'espace BF affiche tout de
@@ -32,7 +34,7 @@ import {
   OFFER_LOOKUP_KEYS,
 } from '~/lib/billing/logic';
 import { json, launchSeatsRemaining, loadBilling, priceIdsFor, stripe, supabaseAdmin } from '~/lib/billing/server';
-import { syncSubscription } from '~/lib/billing/webhook';
+import { SCHEDULED_CHANGES, syncSubscription } from '~/lib/billing/webhook';
 
 const idOf = (v: string | { id: string } | null | undefined) => (typeof v === 'string' ? v : (v?.id ?? null));
 
@@ -51,7 +53,7 @@ function itemsFor(offer: keyof typeof OFFER_LOOKUP_KEYS, priceIds: string[]) {
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const body = (await request.json().catch(() => ({}))) as { action?: unknown; offer?: unknown };
+    const body = (await request.json().catch(() => ({}))) as { action?: unknown; offer?: unknown; when?: unknown };
 
     const user = await authenticatedUser(request, 'billing/manage');
     if (!user) return json({ error: 'E_AUTH' }, 401);
@@ -97,11 +99,13 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     if (body.action === 'keep') {
-      // Annule une descente programmée : l'offre actuelle continue.
+      // Annule un changement programmé : l'offre actuelle continue.
       const scheduleId = idOf(sub.schedule);
       if (scheduleId) {
         const schedule = await s.subscriptionSchedules.retrieve(scheduleId);
-        if (schedule.metadata?.aerox_schedule === 'downgrade') await s.subscriptionSchedules.release(scheduleId);
+        if (SCHEDULED_CHANGES.has(schedule.metadata?.aerox_schedule ?? '')) {
+          await s.subscriptionSchedules.release(scheduleId);
+        }
       }
       return done();
     }
@@ -120,9 +124,11 @@ export const POST: APIRoute = async ({ request }) => {
     const priceIds = await priceIdsFor(offer);
     const metadata = { userId: user.id, aerox_offer: offer };
 
-    if (current && isDowngrade(current, offer)) {
-      // Descente : phase actuelle jusqu'à la fin de la période payée, puis la
-      // nouvelle offre. Le schedule est ensuite relâché.
+    const downgrade = Boolean(current && isDowngrade(current, offer));
+    if (downgrade || body.when === 'next_period') {
+      // Descente, ou montée pour la période suivante : phase actuelle jusqu'à
+      // la fin de la période payée, puis la nouvelle offre. Le schedule est
+      // ensuite relâché.
       // Changer d'offre, c'est continuer : une résiliation programmée est
       // levée d'abord (un schedule ne se crée pas proprement dessus).
       if (sub.cancel_at_period_end || sub.cancel_at) {
@@ -135,7 +141,7 @@ export const POST: APIRoute = async ({ request }) => {
         schedule.phases.find((p) => p.start_date === schedule.current_phase?.start_date) ?? schedule.phases[0];
       await s.subscriptionSchedules.update(scheduleId, {
         end_behavior: 'release',
-        metadata: { aerox_schedule: 'downgrade', aerox_offer: offer },
+        metadata: { aerox_schedule: downgrade ? 'downgrade' : 'upgrade', aerox_offer: offer },
         phases: [
           {
             start_date: phase.start_date,

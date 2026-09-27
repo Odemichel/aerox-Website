@@ -3,7 +3,7 @@ title: 'Conditions Générales d’Utilisation'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Dernière mise à jour : 24 septembre 2026_
+_Dernière mise à jour : 27 septembre 2026_
 
 Merci d’utiliser **AeroX**, la solution qui transforme ton home-trainer en soufflerie virtuelle.  
 Ces Conditions Générales d’Utilisation (CGU) encadrent l’accès et l’usage du service AeroX.  
@@ -51,6 +51,23 @@ Les présentes CGU définissent les droits et obligations d’AeroX et de l’Ut
 - **Droit de rétractation** : l’Utilisateur consommateur dispose de **14 jours à compter de l’achat** pour se rétracter, sans avoir à se justifier, en écrivant à contact@aeroxbefaster.com. AeroX rembourse alors l’intégralité des sommes versées, par le même moyen de paiement, au plus tard 14 jours après la demande.
 - **Renonciation** : lors du paiement, l’Utilisateur demande expressément l’accès immédiat au diagnostic et reconnaît perdre son droit de rétractation dès la réalisation de sa première séance (article L221-28 13° du Code de la consommation). Une fois une séance réalisée, le diagnostic n’est plus remboursable.
 - **Effet d’un remboursement** : tout remboursement met fin à l’accès au diagnostic correspondant.
+
+---
+
+## 5 bis. Offres bike fitter : essai gratuit, abonnement et résiliation
+
+Cet article s’applique aux comptes bike fitter. En cas de contradiction, il prévaut sur les articles 4 et 9.
+
+- **Offres** : **Essentiel**, 20 € HT par mois, plus 15 € HT par analyse, facturées à la fin de chaque période mensuelle ; **Illimité**, 99 € HT par mois ou 990 € HT par an. **Offre de lancement**, réservée aux 20 premiers studios et souscrite au plus tard le 31 décembre 2026 : l’Illimité à 69 € HT par mois jusqu’au 31 décembre 2026 puis 99 € HT par mois, ou 690 € HT la première année puis 990 € HT par an. Les prix sont hors taxes ; la TVA est appliquée selon la réglementation en vigueur.
+- **Analyse** : un client analysé avec AeroX, décompté une fois par période glissante de 30 jours. Les nouvelles séances du même client pendant cette période ne sont pas décomptées.
+- **Essai gratuit** : la première souscription commence par un **essai gratuit de 14 jours** (prolongé jusqu’au 1er novembre 2026 pour une souscription antérieure). Il est réservé aux entreprises dont l’identifiant a été vérifié (SIREN ou SIRET, n° de TVA intracommunautaire, ou site internet validé par AeroX), à raison d’un essai par entreprise. Un moyen de paiement valide est enregistré au démarrage de l’essai ; **aucun montant n’est prélevé pendant l’essai**, et les analyses réalisées pendant l’essai ne sont pas facturées.
+- **Fin de l’essai** : **sauf résiliation avant la fin de l’essai, l’abonnement choisi démarre automatiquement à son terme et le premier paiement est prélevé ce jour-là** sur le moyen de paiement enregistré. La date de fin de l’essai est indiquée lors de la souscription et dans l’espace bike fitter.
+- **Résilier pendant l’essai** : à tout moment avant la fin de l’essai, depuis l’espace bike fitter (« Résilier l’essai »). Aucun montant n’est alors prélevé, et l’accès reste ouvert jusqu’à la fin de l’essai.
+- **Durée et résiliation** : les abonnements sont sans engagement de durée et reconduits tacitement par période (mois ou année). Ils se résilient à tout moment depuis l’espace bike fitter ; la résiliation prend effet à la fin de la période en cours, déjà payée, sans remboursement au prorata.
+- **Changement d’offre** : le passage à une offre supérieure est immédiat, la différence étant calculée au prorata ; le passage à une offre inférieure prend effet à la fin de la période en cours.
+- **Défaut de paiement** : en cas d’échec de paiement, l’accès est maintenu 7 jours ; au-delà, le compte passe en lecture seule jusqu’à régularisation. Les sommes dues restent exigibles.
+- **Factures** : disponibles dans l’espace bike fitter (« Gérer ma facturation »).
+- **Professionnels** : les offres bike fitter sont réservées aux professionnels agissant pour les besoins de leur activité ; le droit de rétractation prévu pour les consommateurs ne s’applique pas.
 
 ---
 

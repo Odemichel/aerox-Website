@@ -86,10 +86,9 @@ const softwareSchema = {
   },
   // Grille publique (HT). Source des montants : src/lib/billing/catalog.ts.
   offers: [
-    { name: t(dict, 'bfp.payg.name'), price: '20.00', unitCode: undefined },
-    { name: t(dict, 'bfp.studio.name'), price: '79.00', unitCode: 'MON' },
-    { name: t(dict, 'bfp.unlimited.name'), price: '119.00', unitCode: 'MON' },
-    { name: `${t(dict, 'bfp.unlimited.name')} (${t(dict, 'bfp.billing.yearly')})`, price: '1190.00', unitCode: 'ANN' },
+    { name: t(dict, 'bfp.essential.name'), price: '20.00', unitCode: 'MON' },
+    { name: t(dict, 'bfp.unlimited.name'), price: '99.00', unitCode: 'MON' },
+    { name: `${t(dict, 'bfp.unlimited.name')} (${t(dict, 'bfp.billing.yearly')})`, price: '990.00', unitCode: 'ANN' },
   ].map((o) => ({
     '@type': 'Offer',
     name: o.name,

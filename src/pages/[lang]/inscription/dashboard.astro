@@ -29,9 +29,8 @@ const pick = (prefix: string, keys: string[]) => Object.fromEntries(keys.map((k)
 const labels = {
   ...pick('dash.acct.', ['role.bike-fitter', 'role.pending_bf', 'role.rider', 'role.admin']),
   ...pick('dash.bf.', [
-    'plan.payg',
+    'plan.essential',
     'plan.unlimited_annual',
-    'plan.studio',
     'plan.unlimited',
     'plan.unlimited_launch',
     'plan.unlimited_launch_annual',
@@ -41,8 +40,6 @@ const labels = {
     'status.canceling',
     'pastDue',
     'readOnly',
-    'meter.included',
-    'meter.over',
     'meter.period',
     'analyses',
     'nextInvoiceOn',
@@ -51,9 +48,16 @@ const labels = {
     'when.now',
     'when.later',
     'choose',
-    'price.analysis',
+    'price.essential',
     'price.month',
     'price.year',
+    'redirecting',
+    'upgrade.title',
+    'upgrade.text',
+    'upgrade.cta',
+    'usage.billed',
+    'usage.trialFree',
+    'usage.essential',
     'changeLater',
     'cancel',
     'cancelConfirm',
@@ -88,9 +92,27 @@ const labels = {
   ]),
   // Groupes lus avec leur préfixe (T['trial.name'], T['plan.current']…).
   ...pick('dash.', [
-    ...['unlock.title', 'unlock.text', 'name', 'left', 'until', 'ended', 'endedText', 'choose', 'pending'].map(
-      (k) => `trial.${k}`
-    ),
+    ...[
+      'unlock.title',
+      'unlock.text',
+      'name',
+      'left',
+      'ended',
+      'endedText',
+      'choose',
+      'pending',
+      'firstCharge',
+      'on',
+      'howToCancel',
+      'canceled',
+      'cancel',
+      'cancelConfirm',
+      'cancelDone',
+      'start.title',
+      'start.text',
+      'start.cta',
+      'start.others',
+    ].map((k) => `trial.${k}`),
     ...['current', 'price', 'nextDate', 'noSub'].map((k) => `plan.${k}`),
     ...['estimate', 'manage', 'manageText', 'none', 'debtRow'].map((k) => `billing.${k}`),
     ...['name', 'id', 'legal', 'none', 'verified', 'pending', 'kind.siren', 'kind.eu_vat'].map((k) => `studio.${k}`),
@@ -242,8 +264,16 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
 
   <script>
     import { supabase } from '../../../config/supabaseClient';
-    import { manageSubscription, openPortal, openReceipt, submitBusinessId } from '~/lib/billing/client';
-    import { isDowngrade, nextInvoiceCentsForOffer, type Offer, type Plan } from '~/lib/billing/logic';
+    import { manageSubscription, openPortal, openReceipt, startCheckout, submitBusinessId } from '~/lib/billing/client';
+    import {
+      DEFAULT_OFFER,
+      isDowngrade,
+      nextInvoiceCentsForOffer,
+      suggestUpgrade,
+      trialEnd as trialEndFor,
+      type Offer,
+      type Plan,
+    } from '~/lib/billing/logic';
     import { LAUNCH_OFFER } from '~/lib/billing/catalog';
     import { isDiagnosticAvailable } from '~/config/diagnostic';
     import { countInMonth, monthlyCounts } from '~/lib/account/activity';
@@ -282,6 +312,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       has_subscription: boolean | null;
       business: Business | null;
       analyses_in_period: number;
+      billable_in_period: number;
     };
     type Profile = {
       role: string | null;
@@ -290,16 +321,17 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       studio_name: string | null;
     };
 
-    const SUBSCRIPTION_PLANS: Plan[] = ['payg', 'studio', 'unlimited', 'unlimited_launch'];
-    // Offres proposées au changement, avec leur prix HT (centimes) et leur rythme.
-    const CHANGE_TARGETS: { offer: Offer; cents: number; unit: 'analysis' | 'month' | 'year' }[] = [
-      { offer: 'payg', cents: 2000, unit: 'analysis' },
-      { offer: 'studio', cents: 7900, unit: 'month' },
-      { offer: 'unlimited', cents: 11900, unit: 'month' },
-      { offer: 'unlimited_annual', cents: 119000, unit: 'year' },
+    const SUBSCRIPTION_PLANS: Plan[] = ['essential', 'unlimited', 'unlimited_launch'];
+    // Offres proposées au changement, avec leur prix HT (centimes) et leur
+    // rythme. Offres de lancement : jusqu'au 31/12/2026 (places vérifiées par
+    // le serveur).
+    const CHANGE_TARGETS: { offer: Offer; cents: number; unit: 'month' | 'year' | 'essential'; launch?: boolean }[] = [
+      { offer: 'essential', cents: 2000, unit: 'essential' },
+      { offer: 'unlimited_launch', cents: 6900, unit: 'month', launch: true },
+      { offer: 'unlimited_launch_annual', cents: 69000, unit: 'year', launch: true },
+      { offer: 'unlimited', cents: 9900, unit: 'month' },
+      { offer: 'unlimited_annual', cents: 99000, unit: 'year' },
     ];
-    const STUDIO_INCLUDED = 5;
-    const TRIAL_DAYS = 14;
     const DAY_MS = 86_400_000;
 
     const root = () => document.getElementById('account') as HTMLElement;
@@ -314,10 +346,14 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       if (text) node.textContent = text;
       return node;
     }
-    const dateFmt = (iso: string | null) =>
-      iso
-        ? new Intl.DateTimeFormat(lang(), { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso))
-        : '';
+    // En français, le premier du mois s'écrit « 1er » (Intl écrit « 1 »).
+    const dateFmt = (iso: string | null) => {
+      if (!iso) return '';
+      const text = new Intl.DateTimeFormat(lang(), { day: 'numeric', month: 'long', year: 'numeric' }).format(
+        new Date(iso)
+      );
+      return lang() === 'fr' ? text.replace(/^1 /, '1er ') : text;
+    };
     const eur = (cents: number) =>
       new Intl.NumberFormat(lang(), { style: 'currency', currency: 'EUR' }).format(cents / 100);
 
@@ -521,16 +557,14 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       const month = (c: number) => T['price.month'].replace('{price}', eur(c));
       const year = (c: number) => T['price.year'].replace('{price}', eur(c));
       switch (offer) {
-        case 'payg':
-          return T['price.analysis'].replace('{price}', eur(2000));
-        case 'studio':
-          return month(7900);
+        case 'essential':
+          return T['price.essential'].replace('{price}', eur(2000)).replace('{analysis}', eur(1500));
         case 'unlimited':
-          return month(11900);
+          return month(9900);
         case 'unlimited_annual':
-          return year(119000);
+          return year(99000);
         case 'unlimited_launch':
-          return month(now < LAUNCH_OFFER.switchAt ? 6900 : 11900);
+          return month(now < LAUNCH_OFFER.switchAt ? 6900 : 9900);
         case 'unlimited_launch_annual':
           return year(69000);
       }
@@ -543,13 +577,21 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       const details = el('details', 'acct-change');
       details.append(el('summary', 'acct-btn', T.changeOffer));
       const list = el('ul', 'acct-change-list');
-      for (const target of CHANGE_TARGETS.filter((x) => x.offer !== current && x.offer !== s.scheduled_offer)) {
+      const launchOpen = Date.now() < LAUNCH_OFFER.switchAt;
+      const targets = CHANGE_TARGETS.filter(
+        (x) => x.offer !== current && x.offer !== s.scheduled_offer && (!x.launch || launchOpen)
+      );
+      for (const target of targets) {
         const down = isDowngrade(current, target.offer);
         const li = el('li', 'acct-change-row');
         const info = el('div');
         info.append(
           el('p', 'acct-change-name', offerLabel(target.offer)),
-          el('p', 'acct-muted acct-small', T[`price.${target.unit}`].replace('{price}', eur(target.cents))),
+          el(
+            'p',
+            'acct-muted acct-small',
+            T[`price.${target.unit}`].replace('{price}', eur(target.cents)).replace('{analysis}', eur(1500))
+          ),
           el(
             'p',
             'acct-muted acct-small',
@@ -632,6 +674,15 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       return head;
     }
 
+    /** Démarre l'essai (Checkout avec carte) ; en cas d'échec, message dans le panneau. */
+    async function startTrial(offer: Offer) {
+      const T = L();
+      const panel = body('abonnement');
+      flashIn(panel, T.redirecting, true);
+      const error = await startCheckout(offer, lang());
+      if (error) flashIn(panel, T.error, false);
+    }
+
     function renderBf(s: Summary, flash?: { panel: string; text: string; ok: boolean }) {
       const T = L();
       const now = Date.now();
@@ -639,17 +690,30 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       const offerLabel = (o: string) => T[`plan.${o}`] ?? o;
       const subscribed = Boolean(SUBSCRIPTION_PLANS.includes(s.plan!) && s.has_subscription && current);
       const trialEnd = s.trial_ends_at ? new Date(s.trial_ends_at).getTime() : null;
-      const inTrial = s.plan === 'trial' && trialEnd !== null && trialEnd > now;
-      const trialOver = s.plan === 'trial' && trialEnd !== null && trialEnd <= now;
-      const pendingId = s.plan === 'trial' && trialEnd === null && s.trial_state === 'pending_review';
-      const needsId = s.plan === 'trial' && trialEnd === null && !pendingId;
+      // Essai gratuit en cours sur l'abonnement (Stripe `trialing`).
+      const inTrial = subscribed && trialEnd !== null && trialEnd > now;
+      // Sans abonnement : essai déjà utilisé, ou pas encore démarré.
+      const trialUsed = trialEnd !== null;
+      const noSub = !subscribed && s.plan !== 'legacy';
+      const pendingId = noSub && !trialUsed && s.trial_state === 'pending_review';
+      const canStartTrial = noSub && !trialUsed && s.trial_state === 'granted';
+      const needsId = noSub && !trialUsed && !pendingId && !canStartTrial;
       // Une seule action orange à la fois : régler une facture passe avant tout.
       const primaryFree = !s.unpaid_amount;
 
       // Action sur l'abonnement : la route réaligne la base, on redessine.
-      const act = async (action: 'change' | 'cancel' | 'resume' | 'keep', done: string, offer?: Offer) => {
+      const act = async (
+        action: 'change' | 'cancel' | 'resume' | 'keep',
+        done: string,
+        offer?: Offer,
+        when?: 'next_period'
+      ) => {
         flashIn(body('abonnement'), T.updating, true);
-        const r = await manageSubscription(action, offer);
+        let r = await manageSubscription(action, offer, when);
+        // Offre de lancement complète entre-temps : l'Illimité au tarif normal.
+        if (r.error === 'E_LAUNCH_CLOSED' && offer === 'unlimited_launch') {
+          r = await manageSubscription(action, 'unlimited', when);
+        }
         if (r.error) return flashIn(body('abonnement'), T.error, false);
         const fresh = await fetchSummary();
         if (fresh) renderBf(fresh, { panel: 'abonnement', text: done, ok: true });
@@ -685,19 +749,41 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       // --- Abonnement ------------------------------------------------------
       const plan = body('abonnement');
       plan.replaceChildren();
+      const billed = s.scheduled_offer ?? current;
+      const periodEndMs = s.current_period_end ? new Date(s.current_period_end).getTime() : null;
+      const next =
+        subscribed && !s.cancel_at && billed
+          ? nextInvoiceCentsForOffer(billed, s.scheduled_offer ? 0 : s.billable_in_period, now, periodEndMs, inTrial)
+          : null;
+
       if (subscribed && current) {
+        const days = inTrial ? Math.max(1, Math.ceil((trialEnd! - now) / DAY_MS)) : 0;
         const badge =
           s.status === 'past_due'
             ? pill('warn', T['status.pastDue'])
             : s.cancel_at
               ? pill('warn', T['status.canceling'])
-              : pill('ok', T['status.active']);
-        plan.append(planHead(T['plan.current'], offerLabel(current), badge));
+              : inTrial
+                ? pill('info', T['trial.left'].replace('{n}', String(days)))
+                : pill('ok', T['status.active']);
+        plan.append(planHead(inTrial ? T['trial.name'] : T['plan.current'], offerLabel(current), badge));
         const items = [row(T['plan.price'], priceOf(current, now))];
-        if (s.current_period_end && !s.cancel_at) items.push(row(T['plan.nextDate'], dateFmt(s.current_period_end)));
+        if (inTrial && !s.cancel_at && next !== null) {
+          items.push(
+            row(
+              T['trial.firstCharge'],
+              `${eur(next)} ${T.vat}, ${T['trial.on'].replace('{date}', dateFmt(s.trial_ends_at))}`
+            )
+          );
+        } else if (s.current_period_end && !s.cancel_at) {
+          items.push(row(T['plan.nextDate'], dateFmt(s.current_period_end)));
+        }
         plan.append(rows(...items));
-        if (s.cancel_at) plan.append(note('warn', T.cancelScheduled.replace('{date}', dateFmt(s.cancel_at))));
-        else if (s.scheduled_offer) {
+        if (s.cancel_at) {
+          plan.append(
+            note('warn', (inTrial ? T['trial.canceled'] : T.cancelScheduled).replace('{date}', dateFmt(s.cancel_at)))
+          );
+        } else if (s.scheduled_offer) {
           plan.append(
             note(
               'warn',
@@ -706,7 +792,35 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
                 .replace('{date}', dateFmt(s.scheduled_at))
             )
           );
+        } else if (inTrial) {
+          plan.append(note('ok', T['trial.howToCancel'].replace('{date}', dateFmt(s.trial_ends_at))));
         }
+
+        // Essentiel au-delà de 7 analyses : l'Illimité pour la période suivante.
+        if (!s.cancel_at && !s.scheduled_offer && suggestUpgrade(current, s.analyses_in_period)) {
+          const target: Offer = now < LAUNCH_OFFER.switchAt ? 'unlimited_launch' : 'unlimited';
+          const box = el('div', 'acct-upgrade');
+          box.append(
+            el('p', 'acct-upgrade-title', T['upgrade.title'].replace('{n}', String(s.analyses_in_period))),
+            el(
+              'p',
+              'acct-lead',
+              T['upgrade.text']
+                .replace('{cost}', eur(2000 + s.analyses_in_period * 1500))
+                .replace('{price}', eur(target === 'unlimited_launch' ? 6900 : 9900))
+            ),
+            actions(
+              btn(
+                T['upgrade.cta'].replace('{date}', dateFmt(s.current_period_end)),
+                primaryFree ? 'primary' : 'plain',
+                () =>
+                  act('change', T.changeLater.replace('{date}', dateFmt(s.current_period_end)), target, 'next_period')
+              )
+            )
+          );
+          plan.append(box);
+        }
+
         if (s.cancel_at) {
           plan.append(actions(btn(T.resume, 'plain', () => act('resume', T.resumeDone))));
         } else {
@@ -716,30 +830,30 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
             changeOffer(s, current, (o, down) =>
               act('change', down ? T.changeLater.replace('{date}', dateFmt(s.current_period_end)) : T.changeDone, o)
             ),
-            btn(T.cancel, 'danger', () => (confirm(T.cancelConfirm) ? act('cancel', T.cancelDone) : null))
+            btn(inTrial ? T['trial.cancel'] : T.cancel, 'danger', () =>
+              confirm(inTrial ? T['trial.cancelConfirm'] : T.cancelConfirm)
+                ? act('cancel', inTrial ? T['trial.cancelDone'] : T.cancelDone)
+                : null
+            )
           );
           plan.append(a);
         }
       } else if (s.plan === 'legacy') {
         plan.append(planHead(T['plan.current'], offerLabel('legacy'), pill('ok', T['status.active'])));
-      } else if (inTrial) {
-        const days = Math.max(1, Math.ceil((trialEnd! - now) / DAY_MS));
+      } else if (canStartTrial) {
+        // Entreprise vérifiée : l'essai démarre avec l'offre choisie (Essentiel
+        // par défaut) et une carte, sans prélèvement pendant 14 jours.
+        const end = new Date(trialEndFor(now) * 1000).toISOString();
         plan.append(
-          planHead(T['plan.current'], T['trial.name'], pill('info', T['trial.left'].replace('{n}', String(days)))),
-          el('p', 'acct-lead', T['trial.until'].replace('{date}', dateFmt(s.trial_ends_at)))
-        );
-        const track = el('div', 'acct-meter-track');
-        const fill = el('span', 'acct-meter-fill');
-        fill.style.width = `${Math.min(100, Math.max(4, ((TRIAL_DAYS - days) / TRIAL_DAYS) * 100))}%`;
-        track.append(fill);
-        plan.append(
-          track,
+          el('h3', 'acct-plan-name', T['trial.start.title']),
+          el('p', 'acct-lead', T['trial.start.text'].replace('{date}', dateFmt(end))),
           actions(
-            linkBtn(T['trial.choose'], '#tarifs', primaryFree ? 'primary' : 'plain'),
-            linkBtn(T.onboarding, `/${lang()}/bike-fitting/bienvenue/`, 'link')
+            btn(T['trial.start.cta'], primaryFree ? 'primary' : 'plain', () => startTrial(DEFAULT_OFFER)),
+            linkBtn(T['trial.start.others'], '#tarifs', 'link')
           )
         );
-      } else if (trialOver) {
+      } else if (trialUsed) {
+        // Essai terminé (ou abonnement arrêté) : choisir une offre, sans nouvel essai.
         plan.append(
           el('h3', 'acct-plan-name', T['trial.ended'].replace('{date}', dateFmt(s.trial_ends_at))),
           el('p', 'acct-lead', T['trial.endedText']),
@@ -749,41 +863,14 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         plan.append(el('h3', 'acct-plan-name', T['trial.unlock.title']), note('ok', T['trial.pending']));
       } else if (needsId) {
         plan.append(unlockForm(s));
-      } else {
-        // Abonnement terminé (impayé pendant la grâce, résiliation…) : souscrire.
-        plan.append(
-          el('p', 'acct-lead', T['plan.noSub']),
-          actions(linkBtn(T['trial.choose'], '#tarifs', primaryFree ? 'primary' : 'plain'))
-        );
       }
 
       // --- Utilisation -----------------------------------------------------
       const usage = body('utilisation');
       usage.replaceChildren();
-      const showUsage = subscribed || inTrial || trialOver || s.plan === 'legacy';
+      const showUsage = subscribed || s.plan === 'legacy';
       showSection('utilisation', showUsage);
       if (showUsage) {
-        if (current === 'studio' && subscribed) {
-          const n = s.analyses_in_period;
-          const label =
-            n > STUDIO_INCLUDED
-              ? T['meter.over']
-                  .replace('{max}', String(STUDIO_INCLUDED))
-                  .replace('{extra}', String(n - STUDIO_INCLUDED))
-              : T['meter.included'].replace('{n}', String(n)).replace('{max}', String(STUDIO_INCLUDED));
-          const m = el('div', 'acct-meter');
-          const track = el('div', `acct-meter-track${n > STUDIO_INCLUDED ? ' is-over' : ''}`);
-          track.setAttribute('role', 'meter');
-          track.setAttribute('aria-valuemin', '0');
-          track.setAttribute('aria-valuemax', String(STUDIO_INCLUDED));
-          track.setAttribute('aria-valuenow', String(n));
-          track.setAttribute('aria-label', label);
-          const fill = el('span', 'acct-meter-fill');
-          fill.style.width = `${Math.min(100, (n / STUDIO_INCLUDED) * 100)}%`;
-          track.append(fill);
-          m.append(el('p', 'acct-meter-label', label), track);
-          usage.append(m);
-        }
         const v = el('span', 'acct-inline');
         v.append(el('strong', 'acct-big', String(s.analyses_in_period)));
         if (s.current_period_start) {
@@ -791,24 +878,28 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
             el('span', 'acct-muted acct-small', T['meter.period'].replace('{date}', dateFmt(s.current_period_start)))
           );
         }
-        usage.append(rows(row(T.analyses, v)));
+        const items = [row(T.analyses, v)];
+        if (inTrial) {
+          items.push(row(T['usage.billed'], T['usage.trialFree']));
+        } else if (current === 'essential') {
+          items.push(
+            row(
+              T['usage.billed'],
+              T['usage.essential']
+                .replace('{n}', String(s.billable_in_period))
+                .replace('{amount}', eur(s.billable_in_period * 1500))
+            )
+          );
+        }
+        usage.append(rows(...items));
       }
 
       // --- Facturation -----------------------------------------------------
       const billing = body('facturation');
       const billItems: HTMLElement[] = [];
-      const billed = s.scheduled_offer ?? current;
-      const next =
-        subscribed && !s.cancel_at && billed
-          ? nextInvoiceCentsForOffer(
-              billed,
-              s.scheduled_offer ? 0 : s.analyses_in_period,
-              now,
-              s.current_period_end ? new Date(s.current_period_end).getTime() : null
-            )
-          : null;
       if (next !== null) {
-        const when = s.current_period_end ? T.nextInvoiceOn.replace('{date}', dateFmt(s.current_period_end)) : '';
+        const date = inTrial ? s.trial_ends_at : s.current_period_end;
+        const when = date ? T.nextInvoiceOn.replace('{date}', dateFmt(date)) : '';
         billItems.push(row(T['billing.estimate'], `${eur(next)} ${T.vat}${when ? `, ${when}` : ''}`));
       }
       if (s.unpaid_amount) {
@@ -1527,6 +1618,21 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
   }
   #account .acct-note--bad {
     --tone: var(--acct-bad);
+  }
+
+  /* Proposition d'Illimité (Essentiel au-delà de 7 analyses) */
+  #account .acct-upgrade {
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--acct-accent) 45%, transparent);
+    background: color-mix(in srgb, var(--acct-accent) 8%, transparent);
+  }
+  #account .acct-upgrade-title {
+    font-weight: 700;
+  }
+  #account .acct-upgrade .acct-actions {
+    margin-top: 0.75rem;
   }
 
   /* Jauges */

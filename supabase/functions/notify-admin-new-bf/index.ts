@@ -80,10 +80,10 @@ Deno.serve(async (req) => {
         : '';
     const intro = review
       ? `<h1 style="font-size: 20px;">Studio à vérifier</h1>
-  <p>Un bike fitter a renseigné le site internet de son studio pour ouvrir son essai de 14 jours.</p>
+  <p>Un bike fitter a renseigné le site internet de son studio pour pouvoir démarrer son essai de 14 jours.</p>
   <p><strong>À vérifier :</strong> le site répond et présente bien un studio de bike fitting ou un magasin vélo ; son nom correspond au studio du compte ; le domaine de l'e-mail identique au site est un bon signe.</p>${approve}`
       : `<h1 style="font-size: 20px;">Nouveau bike fitter</h1>
-  <p>Un bike fitter vient de créer son compte. Il est <strong>actif immédiatement</strong> ; son essai de 14 jours s'ouvre avec le SIRET, le n° de TVA ou le site internet de son studio.</p>`;
+  <p>Un bike fitter vient de créer son compte. Il est <strong>actif immédiatement</strong> ; son essai de 14 jours démarre avec une offre et une carte, une fois son entreprise vérifiée (SIRET, n° de TVA ou site internet).</p>`;
 
     const html = `<!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8"></head>

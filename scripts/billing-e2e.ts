@@ -73,7 +73,7 @@ async function waitFor<T>(
 type Bf = { id: string; email: string; client: SupabaseClient; token: string };
 
 /** Bike fitter inscrit comme sur le site : création puis confirmation d'e-mail. */
-async function createBf(tag: string): Promise<Bf> {
+async function createBf(tag: string, verified = true): Promise<Bf> {
   const email = `bf-${tag}-${RUN}@example.com`;
   const password = `Test-${RUN}-A1`;
   const { data, error } = await admin.auth.admin.createUser({
@@ -87,6 +87,9 @@ async function createBf(tag: string): Promise<Bf> {
   const client = createClient(SUPABASE_URL, ANON_KEY, { auth: { persistSession: false } });
   const { data: s, error: e2 } = await client.auth.signInWithPassword({ email, password });
   if (e2 || !s.session) throw new Error(`signIn: ${e2?.message}`);
+  // Entreprise vérifiée (SIRET, TVA ou site validé) : la souscription avec
+  // essai est autorisée. S8 et S24 passent par la vraie vérification.
+  if (verified) await admin.from('bf_billing').update({ trial_state: 'granted' }).eq('user_id', data.user.id);
   return { id: data.user.id, email, client, token: s.session.access_token };
 }
 
@@ -183,7 +186,7 @@ async function clockSubscription(
   start = Math.floor(Date.now() / 1000) - 3600
 ) {
   const { clock, customer } = await clockCustomer(bf, start);
-  const metered = [LOOKUP.payg, LOOKUP.studioUsage] as string[];
+  const metered = [LOOKUP.essentialUsage] as string[];
   const items = [];
   for (const key of lookups)
     items.push(metered.includes(key) ? { price: await priceId(key) } : { price: await priceId(key), quantity: 1 });
@@ -252,45 +255,60 @@ async function usageInvoice(bf: Bf, clockId: string, sub: Stripe.Subscription, a
   });
 }
 
-async function s1Payg() {
-  console.log('\nS1 — À l’usage : 3 analyses → 3 × 20 € = 60 € HT, sans forfait');
-  const bf = await createBf('payg');
-  const b0 = await billing(bf.id);
+async function s1Essential() {
+  console.log('\nS1 — Essentiel : essai réservé aux entreprises vérifiées ; 3 analyses → 20 € + 3 × 15 € = 65 € HT');
+  const unverified = await createBf('essential-unverified', false);
+  const b0 = await billing(unverified.id);
   check(
     b0?.plan === 'trial' && b0?.trial_state === 'needs_business_id',
     'inscription : compte actif, identifiant d’entreprise attendu'
   );
+  const blocked = await api('/api/billing/checkout/', unverified, { offer: 'essential', lang: 'fr' });
+  check(
+    blocked.status === 409 && blocked.body.error === 'E_NEEDS_BUSINESS_ID',
+    'entreprise non vérifiée : pas de souscription (E_NEEDS_BUSINESS_ID)',
+    `HTTP ${blocked.status}`
+  );
 
-  const r = await api('/api/billing/checkout/', bf, { offer: 'payg', lang: 'fr' });
-  check(r.status === 200 && typeof r.body.url === 'string', 'checkout À l’usage créé par la route', `HTTP ${r.status}`);
+  const bf = await createBf('essential');
+  const r = await api('/api/billing/checkout/', bf, { offer: 'essential', lang: 'fr' });
+  check(r.status === 200 && typeof r.body.url === 'string', 'checkout Essentiel créé par la route', `HTTP ${r.status}`);
   const sessionId = new URL(r.body.url ?? 'http://x/').pathname.split('/').pop()?.split('#')[0] ?? '';
   if (sessionId.startsWith('cs_')) {
     const cs = await stripe.checkout.sessions.retrieve(sessionId, { expand: ['line_items'] });
     check(
-      cs.mode === 'subscription' && cs.line_items?.data.length === 1,
-      'session : abonnement, une seule ligne mesurée'
+      cs.mode === 'subscription' && cs.line_items?.data.length === 2,
+      'session : abonnement, forfait + ligne mesurée'
     );
     check(
       cs.automatic_tax.enabled === true && cs.tax_id_collection?.enabled === true,
       'session : Stripe Tax + n° de TVA'
     );
+    check(cs.consent_collection?.terms_of_service === 'required', 'session : acceptation des CGV obligatoire');
+    check(
+      Boolean(cs.custom_text?.submit?.message?.includes('novembre 2026')),
+      'session : fin de l’essai annoncée sous le bouton',
+      cs.custom_text?.submit?.message ?? ''
+    );
   }
 
-  const { clock, sub } = await clockSubscription(bf, 'payg', [LOOKUP.payg]);
-  await waitFor('offre à l’usage', async () => (await billing(bf.id))?.plan === 'payg');
-  check(true, 'webhook : offre À l’usage active');
+  const { clock, sub } = await clockSubscription(bf, 'essential', [LOOKUP.essentialBase, LOOKUP.essentialUsage]);
+  await waitFor('offre Essentiel', async () => (await billing(bf.id))?.plan === 'essential');
+  check(true, 'webhook : offre Essentiel active');
+  const first = (await stripe.invoices.list({ subscription: sub.id, limit: 1 })).data[0];
+  check(first?.subtotal === 2000, 'première facture : forfait 20,00 € HT', `${(first?.subtotal ?? 0) / 100} €`);
   const invoice = await usageInvoice(bf, clock.id, sub, 3);
-  check(invoice.subtotal === 6000, 'facture HT : 60,00 €', `${invoice.subtotal / 100} € HT`);
+  check(invoice.subtotal === 6500, 'facture HT : 20 € + 3 × 15 € = 65,00 €', `${invoice.subtotal / 100} € HT`);
   const tax = (invoice.total_taxes ?? []).reduce((a, t) => a + t.amount, 0);
-  check(tax === 1200, 'TVA FR 20 % : 12,00 €', `${tax / 100} €`);
+  check(tax === 1300, 'TVA FR 20 % : 13,00 €', `${tax / 100} €`);
 }
 
-async function s2Studio() {
-  console.log('\nS2 + S3 — Studio : 14 analyses (+ re-tests) → 79 € + 9 × 10 € = 169 € HT');
-  const bf = await createBf('studio');
-  const { clock, sub } = await clockSubscription(bf, 'studio', [LOOKUP.studioBase, LOOKUP.studioUsage]);
-  await waitFor('offre studio', async () => (await billing(bf.id))?.plan === 'studio');
-  check(true, 'webhook : offre Studio active');
+async function s2Essential14() {
+  console.log('\nS2 + S3 — Essentiel : 14 analyses (+ re-tests) → 20 € + 14 × 15 € = 230 € HT');
+  const bf = await createBf('essential14');
+  const { clock, sub } = await clockSubscription(bf, 'essential', [LOOKUP.essentialBase, LOOKUP.essentialUsage]);
+  await waitFor('offre Essentiel', async () => (await billing(bf.id))?.plan === 'essential');
+  check(true, 'webhook : offre Essentiel active');
 
   // S3 : le même client re-testé 3 fois dans les 30 jours → 1 seule analyse.
   const [first] = await createClients(bf, 1);
@@ -300,13 +318,15 @@ async function s2Studio() {
     retests.every((r) => r.status === 'already_counted'),
     'S3 : 3 re-tests du même client non comptés'
   );
+  const s = (await summary(bf)) as { analyses_in_period?: number; billable_in_period?: number };
+  check(s.billable_in_period === 1, 'espace BF : 1 analyse facturable', String(s.billable_in_period));
 
   const invoice = await usageInvoice(bf, clock.id, sub, 13);
   const { count } = await admin.from('bf_analyses').select('id', { count: 'exact', head: true }).eq('user_id', bf.id);
   check(count === 14, '14 analyses en base');
-  check(invoice.subtotal === 16900, 'facture HT : 169,00 €', `${invoice.subtotal / 100} € HT`);
+  check(invoice.subtotal === 23000, 'facture HT : 230,00 €', `${invoice.subtotal / 100} € HT`);
   const tax = (invoice.total_taxes ?? []).reduce((a, t) => a + t.amount, 0);
-  check(tax === 3380, 'TVA FR 20 % : 33,80 €', `${tax / 100} €`);
+  check(tax === 4600, 'TVA FR 20 % : 46,00 €', `${tax / 100} €`);
 }
 
 async function s4LaunchFull() {
@@ -326,7 +346,7 @@ async function s4LaunchFull() {
   const bf = await createBf('launch21');
   const r = await api('/api/billing/checkout/', bf, { offer: 'unlimited_launch', lang: 'fr' });
   check(r.status === 409 && r.body.error === 'E_LAUNCH_CLOSED', '21e : refus E_LAUNCH_CLOSED', `HTTP ${r.status}`);
-  check(r.body.fallback === 'unlimited', 'offre proposée à la place : Illimité (119 €)');
+  check(r.body.fallback === 'unlimited', 'offre proposée à la place : Illimité (99 €)');
   const r2 = await api('/api/billing/checkout/', bf, { offer: 'unlimited', lang: 'fr' });
   check(r2.status === 200, 'Illimité reste souscriptible', `HTTP ${r2.status}`);
 
@@ -336,7 +356,7 @@ async function s4LaunchFull() {
 
 async function s5LaunchSwitch() {
   console.log(
-    '\nS5 — Lancement souscrit plus d’un mois avant (essai Stripe) : 0 € puis 69 €, passage à 119 € (tarif normal) au 01/01/2027'
+    '\nS5 — Lancement souscrit plus d’un mois avant (essai Stripe) : 0 € puis 69 €, passage à 99 € (tarif normal) au 01/01/2027'
   );
   const bf = await createBf('launch');
   const { clock, customer } = await clockCustomer(bf, Math.floor(Date.now() / 1000));
@@ -357,14 +377,14 @@ async function s5LaunchSwitch() {
     if (!s.schedule) return null;
     const sch = await stripe.subscriptionSchedules.retrieve(s.schedule as string);
     // Stripe crée d'abord deux phases (essai, puis prix courant) : on attend
-    // celle au tarif normal (119 €) posée par le webhook.
+    // celle au tarif normal (99 €) posée par le webhook.
     const after = await priceId(LOOKUP.unlimited);
     return sch.phases.some((p) => p.items.some((i) => i.price === after)) ? sch : null;
   });
   const switchAt = Math.floor(LAUNCH_OFFER.switchAt / 1000);
   check(schedule.phases[0].end_date === switchAt, 'phase 1 jusqu’au 01/01/2027 00:00 (Paris)');
   check(schedule.phases[0].trial_end === availableAt, 'le schedule conserve l’essai jusqu’au 1er novembre');
-  check(schedule.phases[1]?.items[0]?.price === (await priceId(LOOKUP.unlimited)), 'phase 2 : tarif normal, 119 €');
+  check(schedule.phases[1]?.items[0]?.price === (await priceId(LOOKUP.unlimited)), 'phase 2 : tarif normal, 99 €');
 
   const early = await stripe.invoices.list({ subscription: sub.id, limit: 10 });
   check(
@@ -380,7 +400,7 @@ async function s5LaunchSwitch() {
 
   await advanceStepwise(clock.id, switchAt + 45 * 86400);
   const after = await stripe.subscriptions.retrieve(sub.id);
-  check(after.items.data[0].price.lookup_key === LOOKUP.unlimited, 'abonnement passé au tarif normal, 119 €');
+  check(after.items.data[0].price.lookup_key === LOOKUP.unlimited, 'abonnement passé au tarif normal, 99 €');
   const invoices = await stripe.invoices.list({ subscription: sub.id, limit: 20 });
   const lines = invoices.data.flatMap((i) => i.lines.data);
   // Avec un premier prélèvement le 1er novembre, les échéances tombent le 1er
@@ -390,8 +410,8 @@ async function s5LaunchSwitch() {
     'pas de prorata : la bascule tombe sur une échéance'
   );
   check(
-    lines.some((l) => l.period.start >= switchAt && l.amount === 11900),
-    'échéance de janvier : 119,00 € HT'
+    lines.some((l) => l.period.start >= switchAt && l.amount === 9900),
+    'échéance de janvier : 99,00 € HT'
   );
   check(
     lines.some((l) => l.period.start < switchAt && l.amount === 6900),
@@ -530,10 +550,10 @@ async function submitBusinessId(bf: Bf, id: string) {
 const DANONE_SIREN = '552 032 534';
 
 async function s8BusinessId() {
-  console.log('\nS8 — Essai de 14 jours : numéro d’entreprise vérifié, analyses illimitées, refus après');
+  console.log('\nS8 — Numéro d’entreprise vérifié : essai autorisé (il démarre avec l’abonnement), un par entreprise');
   await admin.from('bf_business_ids').delete().neq('id_key', '');
-  const bf = await createBf('biz');
-  const [c1, c2, c3, c4] = await createClients(bf, 4);
+  const bf = await createBf('biz', false);
+  const [c1] = await createClients(bf, 1);
   const before = await register(bf, c1);
   check(
     before.status === 'refused' && before.reason === 'needs_card',
@@ -555,30 +575,23 @@ async function s8BusinessId() {
   const ok = await submitBusinessId(bf, DANONE_SIREN);
   check(
     ok.status === 200 && ok.body.result === 'granted',
-    'SIREN actif : essai ouvert',
+    'SIREN actif : entreprise vérifiée',
     `${ok.body.result} ${ok.body.name ?? ''}`
   );
   const b = await billing(bf.id);
-  const days = (new Date(b?.trial_ends_at ?? 0).getTime() - Date.now()) / 86400000;
-  check(b?.trial_state === 'granted' && days > 13.9 && days <= 14, 'essai de 14 jours', `${days.toFixed(2)} j`);
-  for (const [i, c] of [c1, c2, c3].entries()) {
-    check((await register(bf, c)).status === 'counted', `analyse ${i + 1} comptée (illimité pendant l’essai)`);
-  }
-  const again = await submitBusinessId(bf, DANONE_SIREN);
-  check(again.status === 409, 'essai déjà ouvert : rien de plus', `HTTP ${again.status}`);
-
-  await admin
-    .from('bf_billing')
-    .update({ trial_ends_at: new Date(Date.now() - 60_000).toISOString() })
-    .eq('user_id', bf.id);
-  const after = await register(bf, c4);
+  check(b?.trial_state === 'granted' && !b?.trial_ends_at, 'essai autorisé, pas encore démarré (pas d’abonnement)');
+  const still = await register(bf, c1);
   check(
-    after.status === 'refused' && after.reason === 'no_credits',
-    'essai terminé : analyse refusée (no_credits, lu par l’app)'
+    still.status === 'refused' && still.reason === 'needs_card',
+    'sans abonnement : analyse refusée (« démarrez votre essai » dans l’app)'
   );
+  const go = await api('/api/billing/checkout/', bf, { offer: 'essential', lang: 'fr' });
+  check(go.status === 200, 'la souscription avec essai est ouverte', `HTTP ${go.status}`);
+  const again = await submitBusinessId(bf, DANONE_SIREN);
+  check(again.status === 409, 'entreprise déjà vérifiée : rien de plus', `HTTP ${again.status}`);
 
   // Même entreprise sous sa forme TVA (VIES), sur un autre compte.
-  const other = await createBf('biz-bis');
+  const other = await createBf('biz-bis', false);
   const dup = await submitBusinessId(other, 'FR27552032534');
   check(
     dup.body.result === 'already_used',
@@ -591,7 +604,7 @@ async function s8BusinessId() {
 async function s24ManualReview() {
   console.log('\nS24 — Site internet : contrôles, vérification manuelle, validation par le lien signé');
   await admin.from('bf_business_ids').delete().like('id_key', 'WEB:example.%');
-  const bf = await createBf('biz-web');
+  const bf = await createBf('biz-web', false);
   const social = await submitBusinessId(bf, 'instagram.com/monstudio');
   check(social.body.result === 'invalid', 'réseau social : refusé', String(social.body.result));
   const dead = await submitBusinessId(bf, 'aerox-studio-qui-nexiste-pas-4815.com');
@@ -631,7 +644,7 @@ async function s24ManualReview() {
     `HTTP ${post.status}`
   );
   const b = await billing(bf.id);
-  check(b?.trial_state === 'granted' && Boolean(b?.trial_ends_at), 'essai de 14 jours ouvert');
+  check(b?.trial_state === 'granted' && !b?.trial_ends_at, 'essai autorisé (il démarre avec l’abonnement)');
   check((await register(bf, c)).status === 'counted', 'analyse comptée après validation');
 
   const other = await createBf('biz-web-bis');
@@ -640,11 +653,11 @@ async function s24ManualReview() {
 }
 
 async function s9Downgrade() {
-  console.log('\nS9 — Descente Illimité → Studio : effective à la fin de la période payée');
+  console.log('\nS9 — Descente Illimité → Essentiel : effective à la fin de la période payée');
   const bf = await createBf('downgrade');
   const { clock, sub } = await clockSubscription(bf, 'unlimited', [LOOKUP.unlimited], Math.floor(Date.now() / 1000));
   await waitFor('offre illimitée', async () => (await billing(bf.id))?.plan === 'unlimited');
-  const r = await api('/api/billing/manage/', bf, { action: 'change', offer: 'studio' });
+  const r = await api('/api/billing/manage/', bf, { action: 'change', offer: 'essential' });
   check(
     r.status === 200 && r.body.effective === 'period_end',
     'descente programmée en fin de période',
@@ -659,15 +672,15 @@ async function s9Downgrade() {
   );
 
   await advance(clock.id, sub.items.data[0].current_period_end + 3600);
-  await waitFor('passage en Studio', async () => (await billing(bf.id))?.plan === 'studio', 120_000);
-  check(true, 'après l’échéance : offre Studio');
+  await waitFor('passage en Essentiel', async () => (await billing(bf.id))?.plan === 'essential', 120_000);
+  check(true, 'après l’échéance : offre Essentiel');
   const after = await stripe.subscriptions.retrieve(sub.id);
   check(
     after.items.data
       .map((i) => i.price.lookup_key)
       .sort()
-      .join() === [LOOKUP.studioBase, LOOKUP.studioUsage].sort().join(),
-    'abonnement : forfait Studio + ligne mesurée'
+      .join() === [LOOKUP.essentialBase, LOOKUP.essentialUsage].sort().join(),
+    'abonnement : forfait Essentiel + ligne mesurée'
   );
 
   // Remontée : immédiate.
@@ -678,7 +691,7 @@ async function s9Downgrade() {
 }
 
 async function s10Annual() {
-  console.log('\nS10 — Illimité annuel : 1 190 € HT / an');
+  console.log('\nS10 — Illimité annuel : 990 € HT / an');
   const bf = await createBf('annual');
   const r = await api('/api/billing/checkout/', bf, { offer: 'unlimited_annual', lang: 'fr' });
   check(r.status === 200, 'checkout annuel créé par la route', `HTTP ${r.status}`);
@@ -691,8 +704,8 @@ async function s10Annual() {
   await waitFor('offre illimitée annuelle', async () => (await billing(bf.id))?.plan === 'unlimited');
   const invoices = await stripe.invoices.list({ subscription: sub.id, limit: 1 });
   check(
-    invoices.data[0]?.subtotal === 119000,
-    'première facture : 1 190,00 € HT',
+    invoices.data[0]?.subtotal === 99000,
+    'première facture : 990,00 € HT',
     `${(invoices.data[0]?.subtotal ?? 0) / 100} €`
   );
   const b = await billing(bf.id);
@@ -715,7 +728,7 @@ const OCT5 = Math.floor(Date.UTC(2026, 9, 5, 12) / 1000);
  */
 async function preLaunchSubscription(bf: Bf, offer: string, lookup: string, extraItems: string[] = []) {
   const { clock, customer } = await clockCustomer(bf, Math.max(OCT5, Math.floor(Date.now() / 1000)));
-  const metered = [LOOKUP.payg, LOOKUP.studioUsage] as string[];
+  const metered = [LOOKUP.essentialUsage] as string[];
   const items = [];
   for (const key of [lookup, ...extraItems])
     items.push(metered.includes(key) ? { price: await priceId(key) } : { price: await priceId(key), quantity: 1 });
@@ -797,8 +810,11 @@ async function s12Duplicate() {
   await waitFor('premier abonnement', async () => (await billing(bf.id))?.stripe_subscription_id === first.id);
   const second = await stripe.subscriptions.create({
     customer: customer.id,
-    items: [{ price: await priceId(LOOKUP.studioBase), quantity: 1 }, { price: await priceId(LOOKUP.studioUsage) }],
-    metadata: metadata(bf, 'studio'),
+    items: [
+      { price: await priceId(LOOKUP.essentialBase), quantity: 1 },
+      { price: await priceId(LOOKUP.essentialUsage) },
+    ],
+    metadata: metadata(bf, 'essential'),
     automatic_tax: { enabled: true },
     billing_mode: { type: 'flexible' },
   });
@@ -895,10 +911,10 @@ async function s15ChangeWhileCancelled() {
   await waitFor('offre illimitée', async () => (await billing(bf.id))?.stripe_subscription_id === sub.id);
   await api('/api/billing/manage/', bf, { action: 'cancel' });
   check(Boolean((await billing(bf.id))?.cancel_at), 'résiliation programmée');
-  const down = await api('/api/billing/manage/', bf, { action: 'change', offer: 'studio' });
+  const down = await api('/api/billing/manage/', bf, { action: 'change', offer: 'essential' });
   check(down.status === 200 && down.body.effective === 'period_end', 'descente acceptée', `HTTP ${down.status}`);
   const b = await billing(bf.id);
-  check(!b?.cancel_at && b?.scheduled_offer === 'studio', 'résiliation levée, descente vers Studio programmée');
+  check(!b?.cancel_at && b?.scheduled_offer === 'essential', 'résiliation levée, descente vers Essentiel programmée');
   const up = await api('/api/billing/manage/', bf, { action: 'cancel' });
   check(up.status === 200, 'nouvelle résiliation (schedule détaché)');
   const b2 = await billing(bf.id);
@@ -908,7 +924,7 @@ async function s15ChangeWhileCancelled() {
 async function s16CheckoutExpire() {
   console.log('\nS16 — Une seule page de paiement ouverte : la précédente est expirée');
   const bf = await createBf('expire');
-  const a = await api('/api/billing/checkout/', bf, { offer: 'studio', lang: 'fr' });
+  const a = await api('/api/billing/checkout/', bf, { offer: 'essential', lang: 'fr' });
   const b = await api('/api/billing/checkout/', bf, { offer: 'unlimited', lang: 'fr' });
   check(a.status === 200 && b.status === 200, 'deux sessions créées');
   const idOfUrl = (u?: string) => new URL(u ?? 'http://x/').pathname.split('/').pop()?.split('#')[0] ?? '';
@@ -945,7 +961,7 @@ async function s17FirstPaymentDeclined() {
   await sleep(10_000);
   const b = await billing(bf.id);
   check(b?.plan === 'trial' && !b?.stripe_subscription_id && !b?.offer, 'base : toujours en essai, aucun abonnement');
-  const r = await api('/api/billing/checkout/', bf, { offer: 'studio', lang: 'fr' });
+  const r = await api('/api/billing/checkout/', bf, { offer: 'essential', lang: 'fr' });
   check(r.status === 200, 'le bike fitter peut réessayer une offre', `HTTP ${r.status}`);
 
   await advance(clock.id, Math.floor(Date.now() / 1000) + 25 * 3600);
@@ -957,7 +973,7 @@ async function s17FirstPaymentDeclined() {
   await sleep(10_000);
   const b2 = await billing(bf.id);
   check(
-    b2?.plan === 'trial' && b2?.trial_state === 'needs_business_id',
+    b2?.plan === 'trial' && b2?.trial_state === 'granted' && !b2?.trial_ends_at,
     'base inchangée après l’expiration (essai intact)'
   );
 }
@@ -967,11 +983,11 @@ async function s18AuthRequiredThenRecovery() {
   const bf = await createBf('sca');
   const { clock, customer, sub } = await clockSubscription(
     bf,
-    'studio',
-    [LOOKUP.studioBase, LOOKUP.studioUsage],
+    'essential',
+    [LOOKUP.essentialBase, LOOKUP.essentialUsage],
     Math.floor(Date.now() / 1000)
   );
-  await waitFor('offre studio', async () => (await billing(bf.id))?.stripe_subscription_id === sub.id);
+  await waitFor('offre Essentiel', async () => (await billing(bf.id))?.stripe_subscription_id === sub.id);
   await swapCard(customer.id, sub.id, 'pm_card_authenticationRequired');
   await advance(clock.id, sub.items.data[0].current_period_end + 3 * 3600);
   const b = await waitFor(
@@ -1059,7 +1075,7 @@ async function s20PastDueCancelAndResubscribe() {
   check(r.status === 200, 'résiliation acceptée pendant l’impayé', `HTTP ${r.status}`);
   const b = await billing(bf.id);
   check(b?.status === 'past_due' && Boolean(b?.cancel_at), 'base : impayé + résiliation programmée');
-  const blocked = await api('/api/billing/checkout/', bf, { offer: 'studio', lang: 'fr' });
+  const blocked = await api('/api/billing/checkout/', bf, { offer: 'essential', lang: 'fr' });
   check(
     blocked.status === 409,
     'nouvel abonnement refusé tant que l’ancien existe (pas de doublon)',
@@ -1074,7 +1090,7 @@ async function s20PastDueCancelAndResubscribe() {
   });
   console.log(`    (après la fin : plan ${b2.plan}, statut ${b2.status}, grâce ${b2.grace_until})`);
   check(!b2.cancel_at && !b2.scheduled_offer, 'résiliation programmée effacée');
-  const again = await api('/api/billing/checkout/', bf, { offer: 'studio', lang: 'fr' });
+  const again = await api('/api/billing/checkout/', bf, { offer: 'essential', lang: 'fr' });
   check(again.status === 200, 'réabonnement possible', `HTTP ${again.status}`);
   // Créance : la facture impayée reste due, relancée, réglable depuis l'espace.
   const open = (await stripe.invoices.list({ subscription: sub.id, limit: 5 })).data.filter((i) => i.status === 'open');
@@ -1521,7 +1537,7 @@ async function p7BfMultiple() {
     'un seul identifiant par compte : la dernière saisie remplace l’autre'
   );
   const rider = await createRider('not-bf');
-  const r = await api('/api/billing/checkout/', rider, { offer: 'studio', lang: 'fr' });
+  const r = await api('/api/billing/checkout/', rider, { offer: 'essential', lang: 'fr' });
   check(r.status === 403, 'un cycliste ne peut pas souscrire une offre bike fitter', `HTTP ${r.status}`);
   const m = await api('/api/billing/manage/', rider, { action: 'cancel' });
   check(m.status === 404, 'ni gérer un abonnement qu’il n’a pas', `HTTP ${m.status}`);
@@ -1544,7 +1560,7 @@ async function p7BfMultiple() {
 }
 
 async function s21LaunchAnnual() {
-  console.log('\nS21 — Illimité annuel de lancement : 690 € la 1re année, puis 1 190 €/an');
+  console.log('\nS21 — Illimité annuel de lancement : 690 € la 1re année, puis 990 €/an');
   const bf = await createBf('launch-year');
   const r = await api('/api/billing/checkout/', bf, { offer: 'unlimited_launch_annual', lang: 'fr' });
   const id = new URL(r.body.url ?? 'http://x/').pathname.split('/').pop()?.split('#')[0] ?? '';
@@ -1574,7 +1590,7 @@ async function s21LaunchAnnual() {
   );
 
   const after = await priceId(LOOKUP.unlimitedYear);
-  const sch = await waitFor('schedule 690 → 1 190', async () => {
+  const sch = await waitFor('schedule 690 → 990', async () => {
     const s2 = await stripe.subscriptions.retrieve(sub.id);
     if (!s2.schedule) return null;
     const x = await stripe.subscriptionSchedules.retrieve(s2.schedule as string);
@@ -1603,12 +1619,12 @@ async function s21LaunchAnnual() {
     (i) => i.subtotal > 0 && i.created >= Math.floor(anniversary.getTime() / 1000)
   );
   check(
-    renewal?.subtotal === 119000,
-    'renouvellement du 1er novembre 2027 : 1 190,00 € HT',
+    renewal?.subtotal === 99000,
+    'renouvellement du 1er novembre 2027 : 990,00 € HT',
     `${(renewal?.subtotal ?? 0) / 100} €`
   );
   const s3 = await stripe.subscriptions.retrieve(sub.id);
-  check(s3.items.data[0].price.lookup_key === LOOKUP.unlimitedYear, 'abonnement passé au tarif normal, 1 190 €/an');
+  check(s3.items.data[0].price.lookup_key === LOOKUP.unlimitedYear, 'abonnement passé au tarif normal, 990 €/an');
   await waitFor('bf_billing après bascule', async () => (await billing(bf.id))?.offer === 'unlimited_annual');
   check((await billing(bf.id))?.status === 'active', 'toujours actif, passé en Illimité annuel');
 }
@@ -1627,7 +1643,7 @@ async function s22LaunchAnnualFull() {
   const bf = await createBf('launch-year-full');
   const r = await api('/api/billing/checkout/', bf, { offer: 'unlimited_launch_annual', lang: 'fr' });
   check(r.status === 409 && r.body.error === 'E_LAUNCH_CLOSED', 'annuel de lancement refusé', `HTTP ${r.status}`);
-  check(r.body.fallback === 'unlimited_annual', 'offre proposée à la place : Illimité annuel (1 190 €)');
+  check(r.body.fallback === 'unlimited_annual', 'offre proposée à la place : Illimité annuel (990 €)');
   await admin.from('bf_billing').delete().in('user_id', fillers);
   for (const id of fillers) await admin.auth.admin.deleteUser(id);
 }
@@ -1642,7 +1658,7 @@ async function p8RoleSeparation() {
   });
   check(res.status === 403, 'bike fitter → Diagnostic : refusé (403)', `HTTP ${res.status}`);
   const rider = await createRider('no-bf');
-  for (const offer of ['payg', 'studio', 'unlimited_launch', 'unlimited_launch_annual']) {
+  for (const offer of ['essential', 'unlimited_launch', 'unlimited_launch_annual']) {
     const r = await api('/api/billing/checkout/', rider, { offer, lang: 'fr' });
     check(r.status === 403, `cycliste → offre BF « ${offer} » : refusé (403)`, `HTTP ${r.status}`);
   }
@@ -1652,12 +1668,12 @@ async function p8RoleSeparation() {
 
 async function s23AnchoredUsage() {
   console.log('\nS23 — Souscription ancrée au 1er novembre : ce que devient l’usage d’octobre');
-  const bf = await createBf('anchored-payg');
-  const { clock, sub } = await preLaunchSubscription(bf, 'payg', LOOKUP.payg);
-  await waitFor('offre à l’usage', async () => (await billing(bf.id))?.stripe_subscription_id === sub.id);
+  const bf = await createBf('anchored-essential');
+  const { clock, sub } = await preLaunchSubscription(bf, 'essential', LOOKUP.essentialBase, [LOOKUP.essentialUsage]);
+  await waitFor('offre Essentiel', async () => (await billing(bf.id))?.stripe_subscription_id === sub.id);
   const b = await billing(bf.id);
   check(
-    b?.status === 'active' && b?.plan === 'payg',
+    b?.status === 'active' && b?.plan === 'essential',
     'abonné tout de suite (statut actif, pas d’essai)',
     String(sub.status)
   );
@@ -1704,9 +1720,221 @@ async function s23AnchoredUsage() {
   check(await nothingChargedBeforeLaunch(sub.id), 'rien de prélevé avant le 1er novembre');
 }
 
+/** Abonnement en essai gratuit (test clock), comme Checkout le crée pour un premier abonnement. */
+async function trialSubscription(bf: Bf, offer: string, lookups: string[], start: number, trialDays = 14) {
+  const { clock, customer } = await clockCustomer(bf, start);
+  const metered = [LOOKUP.essentialUsage] as string[];
+  const items = [];
+  for (const key of lookups)
+    items.push(metered.includes(key) ? { price: await priceId(key) } : { price: await priceId(key), quantity: 1 });
+  const trialEnd = start + trialDays * 86400;
+  const sub = await stripe.subscriptions.create({
+    customer: customer.id,
+    items,
+    metadata: metadata(bf, offer),
+    automatic_tax: { enabled: true },
+    billing_mode: { type: 'flexible' },
+    trial_end: trialEnd,
+  });
+  return { clock, customer, sub, trialEnd };
+}
+
+async function s25TrialEssential() {
+  console.log('\nS25 — Essai de 14 jours (Essentiel) : analyses gratuites, premier prélèvement 20 € à la fin');
+  const bf = await createBf('trial-essential');
+  const start = Math.floor(Date.now() / 1000) - 3600;
+  const { clock, sub, trialEnd } = await trialSubscription(
+    bf,
+    'essential',
+    [LOOKUP.essentialBase, LOOKUP.essentialUsage],
+    start
+  );
+  check(sub.status === 'trialing', 'Stripe : abonnement en essai (trialing)');
+  const b = await waitFor('essai enregistré', async () => {
+    const row = await billing(bf.id);
+    return row?.plan === 'essential' && row?.trial_ends_at ? row : null;
+  });
+  check(
+    new Date(b.trial_ends_at!).getTime() === trialEnd * 1000 && b.status === 'active',
+    'base : offre Essentiel, fin de l’essai enregistrée, accès complet',
+    String(b.trial_ends_at)
+  );
+
+  const clients = await createClients(bf, 3);
+  const during = [];
+  for (const c of clients) during.push(await register(bf, c));
+  check(
+    during.every((r) => r.status === 'counted'),
+    '3 analyses pendant l’essai : comptées'
+  );
+  const { data: rows } = await admin
+    .from('bf_analyses')
+    .select('billing_mode, stripe_meter_event_identifier')
+    .eq('user_id', bf.id);
+  check(
+    (rows ?? []).length === 3 &&
+      (rows ?? []).every((r) => r.billing_mode === 'trial' && !r.stripe_meter_event_identifier),
+    'analyses de l’essai : gratuites, rien envoyé au meter'
+  );
+  const sm = (await summary(bf)) as { billable_in_period?: number; analyses_in_period?: number };
+  check(sm.billable_in_period === 0 && sm.analyses_in_period === 3, 'espace BF : 3 analyses, 0 facturable');
+  const early = await stripe.invoices.list({ subscription: sub.id, limit: 5 });
+  check(
+    early.data.every((i) => i.total === 0),
+    'rien de prélevé pendant l’essai'
+  );
+
+  await advance(clock.id, trialEnd + 2 * 3600);
+  const first = await waitFor('première facture après l’essai', async () => {
+    const list = await stripe.invoices.list({ subscription: sub.id, limit: 5 });
+    return list.data.find((i) => i.subtotal > 0 && i.status === 'paid');
+  });
+  check(
+    first.subtotal === 2000,
+    'fin de l’essai : premier prélèvement, forfait 20,00 € HT',
+    `${first.subtotal / 100} €`
+  );
+  const live = await stripe.subscriptions.retrieve(sub.id);
+  check(live.status === 'active', 'Stripe : abonnement actif après l’essai');
+}
+
+async function s26CancelDuringTrial() {
+  console.log('\nS26 — Résiliation pendant l’essai : rien de prélevé ; ensuite, plus d’essai');
+  const bf = await createBf('trial-cancel');
+  const start = Math.floor(Date.now() / 1000) - 3600;
+  const { clock, sub, trialEnd } = await trialSubscription(bf, 'unlimited', [LOOKUP.unlimited], start);
+  await waitFor('essai enregistré', async () => Boolean((await billing(bf.id))?.trial_ends_at));
+
+  const r = await api('/api/billing/manage/', bf, { action: 'cancel' });
+  check(r.status === 200, 'résiliation depuis l’espace', `HTTP ${r.status}`);
+  const b = await billing(bf.id);
+  check(
+    new Date(b?.cancel_at ?? 0).getTime() === trialEnd * 1000,
+    'fin programmée à la fin de l’essai',
+    String(b?.cancel_at)
+  );
+
+  await advance(clock.id, trialEnd + 2 * 3600);
+  await waitFor('abonnement terminé', async () => (await stripe.subscriptions.retrieve(sub.id)).status === 'canceled');
+  const invoices = await stripe.invoices.list({ subscription: sub.id, limit: 10 });
+  check(
+    invoices.data.every((i) => (i.amount_paid ?? 0) === 0),
+    'aucun prélèvement',
+    invoices.data.map((i) => i.amount_paid).join(', ')
+  );
+  const after = await waitFor('base : plus d’abonnement', async () => {
+    const row = await billing(bf.id);
+    return row?.plan === 'trial' && !row?.stripe_subscription_id ? row : null;
+  });
+  check(Boolean(after.trial_ends_at), 'essai marqué utilisé');
+  const [c] = await createClients(bf, 1);
+  const refused = await register(bf, c);
+  check(
+    refused.status === 'refused' && refused.reason === 'no_credits',
+    'analyse refusée (no_credits : « choisissez une offre » dans l’app)'
+  );
+
+  const again = await api('/api/billing/checkout/', bf, { offer: 'essential', lang: 'fr' });
+  check(again.status === 200, 'nouvelle souscription possible', `HTTP ${again.status}`);
+  const sessionId = new URL(again.body.url ?? 'http://x/').pathname.split('/').pop()?.split('#')[0] ?? '';
+  if (sessionId.startsWith('cs_')) {
+    const cs = await stripe.checkout.sessions.retrieve(sessionId);
+    check(!cs.custom_text?.submit, 'sans nouvel essai (pas d’annonce d’essai au paiement)');
+  }
+  const biz = await submitBusinessId(bf, DANONE_SIREN);
+  check(biz.status === 409, 'pas de second essai par l’identifiant', `HTTP ${biz.status}`);
+}
+
+async function s27UpgradeNextPeriod() {
+  const afterPrice = await priceId(LOOKUP.unlimited);
+  console.log('\nS27 — Essentiel au-delà de 7 analyses : Illimité programmé pour la période suivante');
+  const bf = await createBf('upgrade');
+  const { clock, sub } = await clockSubscription(bf, 'essential', [LOOKUP.essentialBase, LOOKUP.essentialUsage]);
+  await waitFor('offre Essentiel', async () => (await billing(bf.id))?.plan === 'essential');
+  const clients = await createClients(bf, 7);
+  for (const c of clients) await register(bf, c);
+  const sm = (await summary(bf)) as { analyses_in_period?: number };
+  check(sm.analyses_in_period === 7, 'espace BF : 7 analyses sur la période (proposition affichée)');
+
+  const r = await api('/api/billing/manage/', bf, { action: 'change', offer: 'unlimited_launch', when: 'next_period' });
+  check(
+    r.status === 200 && r.body.effective === 'period_end',
+    'Illimité programmé à la fin de la période',
+    `HTTP ${r.status}`
+  );
+  const b = await billing(bf.id);
+  check(
+    b?.plan === 'essential' && b?.scheduled_offer === 'unlimited_launch',
+    'base : toujours Essentiel, changement programmé',
+    `${b?.plan} → ${b?.scheduled_offer}`
+  );
+  const live = await stripe.subscriptions.retrieve(sub.id);
+  const schedule = await stripe.subscriptionSchedules.retrieve(live.schedule as string);
+  check(schedule.metadata?.aerox_schedule === 'upgrade', 'schedule « upgrade »');
+
+  await advance(clock.id, Math.floor(Date.now() / 1000) + 120);
+  await reportUsage();
+  await advance(clock.id, sub.items.data[0].current_period_end + 2 * 3600);
+  await waitFor('passage en Illimité', async () => (await billing(bf.id))?.plan === 'unlimited_launch', 120_000);
+  check(true, 'à l’échéance : offre de lancement Illimité');
+  const after = await stripe.subscriptions.retrieve(sub.id);
+  check(
+    after.items.data.length === 1 && after.items.data[0].price.lookup_key === LOOKUP.unlimitedLaunch,
+    'abonnement : une ligne, Illimité 69 €'
+  );
+  const cycle = await waitFor('facture de l’échéance', async () => {
+    const list = await stripe.invoices.list({ subscription: sub.id, limit: 5 });
+    return list.data.find((i) => i.lines.data.some((l) => l.amount === 6900));
+  });
+  check(Boolean(cycle), 'échéance : Illimité 69,00 € HT facturé');
+  const b2 = await waitFor('changement appliqué', async () => {
+    const row = await billing(bf.id);
+    return row && !row.scheduled_offer ? row : null;
+  });
+  check(Boolean(b2), 'plus de changement en attente');
+  const launch = await waitFor(
+    'bascule de lancement posée',
+    async () => {
+      const x = await stripe.subscriptions.retrieve(sub.id);
+      if (!x.schedule) return null;
+      const sch = await stripe.subscriptionSchedules.retrieve(x.schedule as string);
+      return sch.metadata?.aerox_schedule === 'launch' ? sch : null;
+    },
+    120_000
+  );
+  check(
+    launch.phases.some((p) => p.items.some((i) => (typeof i.price === 'string' ? i.price : i.price.id) === afterPrice)),
+    'bascule au tarif normal (99 €) posée après le changement'
+  );
+}
+
+async function s28LaunchTrialCrossesSwitch() {
+  console.log('\nS28 — Lancement mensuel souscrit fin décembre : essai au-delà du 01/01, bascule à la fin de l’essai');
+  const bf = await createBf('launch-dec');
+  const start = Math.floor(Date.UTC(2026, 11, 25, 12) / 1000);
+  const { clock, sub, trialEnd } = await trialSubscription(bf, 'unlimited_launch', [LOOKUP.unlimitedLaunch], start);
+  const schedule = await waitFor('schedule de lancement', async () => {
+    const s = await stripe.subscriptions.retrieve(sub.id);
+    if (!s.schedule) return null;
+    const sch = await stripe.subscriptionSchedules.retrieve(s.schedule as string);
+    const after = await priceId(LOOKUP.unlimited);
+    return sch.phases.some((p) => p.items.some((i) => i.price === after)) ? sch : null;
+  });
+  check(
+    schedule.phases[0].end_date === trialEnd && schedule.phases[0].trial_end === trialEnd,
+    'phase de lancement jusqu’à la fin de l’essai (après le 01/01/2027)'
+  );
+  await advance(clock.id, trialEnd + 2 * 3600);
+  const first = await waitFor('première facture', async () => {
+    const list = await stripe.invoices.list({ subscription: sub.id, limit: 5 });
+    return list.data.find((i) => i.subtotal > 0);
+  });
+  check(first.subtotal === 9900, 'premier prélèvement au tarif normal : 99,00 € HT', `${first.subtotal / 100} €`);
+}
+
 const ALL: Record<string, () => Promise<void>> = {
-  s1: s1Payg,
-  s2: s2Studio,
+  s1: s1Essential,
+  s2: s2Essential14,
   s4: s4LaunchFull,
   s5: s5LaunchSwitch,
   s6: s6PaymentFailure,
@@ -1728,6 +1956,10 @@ const ALL: Record<string, () => Promise<void>> = {
   s22: s22LaunchAnnualFull,
   s23: s23AnchoredUsage,
   s24: s24ManualReview,
+  s25: s25TrialEssential,
+  s26: s26CancelDuringTrial,
+  s27: s27UpgradeNextPeriod,
+  s28: s28LaunchTrialCrossesSwitch,
   p1: p1RouteSecurity,
   p2: p2MultiplePurchases,
   p3: p3Consumption,

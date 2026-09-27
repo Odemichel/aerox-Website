@@ -3,7 +3,7 @@ title: 'Allgemeine Nutzungsbedingungen'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Letzte Aktualisierung: 24. September 2026_
+_Letzte Aktualisierung: 27. September 2026_
 
 Vielen Dank, dass Sie **AeroX** nutzen – die Lösung, die Ihren Rollentrainer in einen virtuellen Windkanal verwandelt.
 Diese Allgemeinen Nutzungsbedingungen (ANB) regeln den Zugang zu und die Nutzung des AeroX-Dienstes.
@@ -51,6 +51,23 @@ Diese ANB legen die Rechte und Pflichten von AeroX und dem Nutzer im Rahmen der 
 - **Widerrufsrecht**: Ein Nutzer, der als Verbraucher handelt, kann **innerhalb von 14 Tagen ab dem Kauf** ohne Angabe von Gründen widerrufen, indem er an contact@aeroxbefaster.com schreibt. AeroX erstattet dann alle geleisteten Zahlungen über dasselbe Zahlungsmittel spätestens 14 Tage nach dem Widerruf.
 - **Verzicht**: Beim Bezahlen verlangt der Nutzer ausdrücklich den sofortigen Zugang zur Diagnose und bestätigt, dass er sein Widerrufsrecht mit Abschluss seiner ersten Einheit verliert (französisches Verbrauchergesetzbuch, Art. L221-28 Nr. 13). Nach einer abgeschlossenen Einheit ist die Diagnose nicht mehr erstattungsfähig.
 - **Wirkung einer Erstattung**: Jede Erstattung beendet den Zugang zur betreffenden Diagnose.
+
+---
+
+## 5a. Bike-Fitter-Tarife: kostenloser Test, Abonnement und Kündigung
+
+Dieser Abschnitt gilt für Bike-Fitter-Konten. Bei Widersprüchen hat er Vorrang vor den Abschnitten 4 und 9.
+
+- **Tarife**: **Essential**, 20 € netto pro Monat zuzüglich 15 € netto pro Analyse, abgerechnet am Ende jedes Monatszeitraums; **Unbegrenzt**, 99 € netto pro Monat oder 990 € netto pro Jahr. **Einführungsangebot**, den ersten 20 Studios vorbehalten und bis spätestens 31. Dezember 2026 abzuschließen: Unbegrenzt für 69 € netto pro Monat bis 31. Dezember 2026, danach 99 € netto pro Monat, oder 690 € netto im ersten Jahr, danach 990 € netto pro Jahr. Alle Preise verstehen sich netto; die Mehrwertsteuer wird nach geltendem Recht berechnet.
+- **Analyse**: ein mit AeroX analysierter Kunde, gezählt einmal pro gleitendem Zeitraum von 30 Tagen. Weitere Sitzungen desselben Kunden in diesem Zeitraum werden nicht gezählt.
+- **Kostenloser Test**: Das erste Abonnement beginnt mit einem **kostenlosen Test von 14 Tagen** (bei früherem Abschluss verlängert bis 1. November 2026). Er ist Unternehmen vorbehalten, deren Kennung geprüft wurde (USt-IdNr., französische SIREN/SIRET oder von AeroX bestätigte Website), ein Test pro Unternehmen. Beim Start des Tests wird ein gültiges Zahlungsmittel hinterlegt; **während des Tests wird nichts abgebucht**, und Analysen während des Tests werden nicht berechnet.
+- **Ende des Tests**: **Ohne Kündigung vor Ende des Tests beginnt das gewählte Abonnement automatisch mit dessen Ablauf, und die erste Zahlung wird an diesem Tag** vom hinterlegten Zahlungsmittel **eingezogen**. Das Enddatum des Tests wird beim Abschluss und im Bike-Fitter-Bereich angezeigt.
+- **Kündigung während des Tests**: jederzeit vor Ende des Tests im Bike-Fitter-Bereich („Test kündigen“). Es wird dann nichts abgebucht, und der Zugang bleibt bis zum Ende des Tests bestehen.
+- **Laufzeit und Kündigung**: Die Abonnements haben keine Mindestlaufzeit und verlängern sich automatisch um jeweils einen Zeitraum (Monat oder Jahr). Sie sind jederzeit im Bike-Fitter-Bereich kündbar; die Kündigung wird zum Ende des laufenden, bereits bezahlten Zeitraums wirksam, ohne anteilige Erstattung.
+- **Tarifwechsel**: Der Wechsel zu einem höheren Tarif erfolgt sofort, die Differenz wird anteilig berechnet; der Wechsel zu einem niedrigeren Tarif wird zum Ende des laufenden Zeitraums wirksam.
+- **Zahlungsausfall**: Schlägt eine Zahlung fehl, bleibt der Zugang 7 Tage erhalten; danach wird das Konto bis zur Zahlung schreibgeschützt. Fällige Beträge bleiben geschuldet.
+- **Rechnungen**: im Bike-Fitter-Bereich verfügbar („Abrechnung verwalten“).
+- **Unternehmer**: Die Bike-Fitter-Tarife sind Unternehmern vorbehalten, die zu gewerblichen Zwecken handeln; das Widerrufsrecht für Verbraucher gilt nicht.
 
 ---
 

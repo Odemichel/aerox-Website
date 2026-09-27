@@ -11,6 +11,7 @@ export type BillingError =
   | 'E_AUTH'
   | 'E_HAS_SUBSCRIPTION'
   | 'E_LAUNCH_CLOSED'
+  | 'E_NEEDS_BUSINESS_ID'
   | 'E_ROLE'
   | 'E_TRIAL_UNAVAILABLE'
   | 'E_SERVER';
@@ -95,15 +96,17 @@ export async function openPortal(lang: string): Promise<BillingError | null> {
 }
 
 /**
- * Change d'offre, résilie, reprend un abonnement résilié ou annule une
- * descente programmée (`keep`). `effectiveAt` (secondes) est posé quand le
- * changement est une descente, appliquée à la fin de la période payée.
+ * Change d'offre, résilie, reprend un abonnement résilié ou annule un
+ * changement programmé (`keep`). `when: 'next_period'` : montée programmée
+ * pour la période suivante. `effectiveAt` (secondes) est posé quand le
+ * changement prend effet à la fin de la période payée.
  */
 export async function manageSubscription(
   action: 'change' | 'cancel' | 'resume' | 'keep',
-  offer?: Offer
+  offer?: Offer,
+  when?: 'next_period'
 ): Promise<{ error: BillingError | null; effectiveAt?: number }> {
-  const r = await post('/api/billing/manage/', { action, offer });
+  const r = await post('/api/billing/manage/', { action, offer, when });
   if (r.ok === false) return { error: r.error };
   return { error: null, effectiveAt: r.data.effective === 'period_end' ? r.data.at : undefined };
 }

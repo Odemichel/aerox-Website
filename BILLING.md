@@ -1,25 +1,29 @@
 # Facturation bike fitters — BILLING.md
 
-Grille publique en 3 offres, facturée par Stripe, activation automatique du
-compte, comptage des analyses côté serveur.
+Grille publique (depuis le 2026-09-27) : Essentiel et Illimité, 14 jours
+d'essai gratuit sur toutes les offres, facturée par Stripe, activation
+automatique du compte, comptage des analyses côté serveur.
 
-| Offre              | Prix HT                                                                                                      | Stripe (`lookup_key`)                                                                    |
-| ------------------ | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| Essai              | 14 jours, analyses illimitées, ouvert par SIRET / SIREN / TVA (vérifiés) ou site internet (validé à la main) | `bf_billing.trial_ends_at`, un identifiant ou un domaine = un compte (`bf_business_ids`) |
-| À l'usage          | 20 € par analyse, facturé en fin de mois                                                                     | `aerox_bf_payg` (meter, sans forfait)                                                    |
-| Studio             | 79 €/mois, 5 incluses, puis 10 €                                                                             | `aerox_bf_studio_base` + `aerox_bf_studio_usage` (meter)                                 |
-| Illimité           | 119 €/mois ou 1 190 €/an (2 mois offerts)                                                                    | `aerox_bf_unlimited`, `aerox_bf_unlimited_year`                                          |
-| Illimité lancement | 69 €/mois jusqu'au 31/12/2026, puis le tarif normal (119 €/mois, au prorata)                                 | `aerox_bf_unlimited_launch` → `aerox_bf_unlimited` (schedule)                            |
-| Lancement annuel   | 690 € la 1re année, puis le tarif normal (1 190 €/an) ; souscription jusqu'au 31/12/2026                     | `aerox_bf_unlimited_launch_year` → `aerox_bf_unlimited_year` (schedule)                  |
-| Founding Partner   | inchangé (69 $/mois, lien de paiement)                                                                       | plan `legacy`, abonnement Stripe jamais touché                                           |
+| Offre              | Prix HT                                                                                                      | Stripe (`lookup_key`)                                                     |
+| ------------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| Essai              | 14 jours gratuits sur l'abonnement choisi, carte enregistrée, puis prélèvement sauf résiliation avant la fin | `trial_end` Stripe → `bf_billing.trial_ends_at` ; un essai par entreprise |
+| Essentiel          | 20 €/mois + 15 € par analyse, facturées en fin de mois (offre par défaut de l'essai)                         | `aerox_bf_essential_base` + `aerox_bf_essential_usage` (meter)            |
+| Illimité           | 99 €/mois ou 990 €/an (2 mois offerts)                                                                       | `aerox_bf_unlimited`, `aerox_bf_unlimited_year`                           |
+| Illimité lancement | 69 €/mois jusqu'au 31/12/2026, puis le tarif normal (99 €/mois, au prorata)                                  | `aerox_bf_unlimited_launch` → `aerox_bf_unlimited` (schedule)             |
+| Lancement annuel   | 690 € la 1re année, puis le tarif normal (990 €/an) ; souscription jusqu'au 31/12/2026                       | `aerox_bf_unlimited_launch_year` → `aerox_bf_unlimited_year` (schedule)   |
+| Founding Partner   | inchangé (69 $/mois, lien de paiement)                                                                       | plan `legacy`, abonnement Stripe jamais touché                            |
 
 Les deux offres de lancement partagent les 20 places (plan `unlimited_launch`,
 offre `unlimited_launch` ou `unlimited_launch_annual`).
 
-Paliers : 1 à 3 analyses par mois → à l'usage ; 4 à 9 → Studio ; 10 et plus →
-Illimité. Toutes les offres incluent l'installation du setup en visio et une
-visio collective par mois. Le Pack (crédits prépayés) a été retiré avant toute
-vente ; le plan `pack` reste valide en base pour l'historique.
+Bascule : 1 à 5 analyses par mois → Essentiel ; 6 et plus → Illimité
+(20 + 15 × 5,3 ≈ 99 €). À partir de 7 analyses sur la période
+(`UPGRADE_HINT_AT`), l'espace d'un abonné Essentiel propose de passer à
+l'Illimité pour la période suivante. Toutes les offres incluent l'installation
+du setup en visio et une visio collective par mois. À l'usage (20 €/analyse)
+et Studio (79 €/mois), grille du 2026-09-24, ont été retirés le 2026-09-27
+avant toute vente, comme le Pack ; les plans `payg`, `studio`, `pack` restent
+valides en base pour l'historique.
 
 **Analyse** = un client (`bf_clients`) analysé, décompté une fois par période
 glissante de 30 jours. Les re-tests dans la fenêtre sont gratuits.
@@ -38,7 +42,7 @@ Vercel (routes Astro, clé Stripe)       Supabase Postgres
   ├─ checkout / portal / manage  ──────▶  bf_billing · bf_credits · bf_analyses · stripe_events
   ├─ /api/stripe-webhook/  ◀── Stripe     ├─ bf_register_analysis_for (verrou par client, crédits atomiques)
   │     └─ handleBillingEvent             ├─ trigger sessions → filet de sécurité (comptage à l'enregistrement)
-  └─ /api/billing/report-usage/ ◀── pg_net├─ trigger bf_analyses (Studio) → ping report-usage
+  └─ /api/billing/report-usage/ ◀── pg_net├─ trigger bf_analyses (Essentiel) → ping report-usage
         └─ meter events Stripe            └─ pg_cron bf-report-usage (toutes les 10 min, rejeu)
 ```
 
@@ -61,23 +65,25 @@ Principes :
 
 ### Fichiers
 
-| Rôle                         | Fichier                                                                                         |
-| ---------------------------- | ----------------------------------------------------------------------------------------------- |
-| Catalogue (source de vérité) | `src/lib/billing/catalog.ts`                                                                    |
-| Règles pures (testées)       | `src/lib/billing/logic.ts`                                                                      |
-| Script catalogue Stripe      | `scripts/stripe-catalog.ts` (`npm run stripe:catalog`)                                          |
-| Checkout / portail / gestion | `src/pages/api/billing/{checkout,portal,manage}.ts`                                             |
-| Webhook                      | `src/pages/api/stripe-webhook.ts` → `src/lib/billing/webhook.ts`                                |
-| Envoi de l'usage Studio      | `src/pages/api/billing/report-usage.ts`                                                         |
-| Migrations                   | `supabase/migrations/2026092*_bf_*.sql` (dont `…26100000_bf_subscription_state.sql`)            |
-| Notification « nouveau BF »  | `supabase/functions/notify-admin-new-bf/`                                                       |
-| Relance d'une créance        | `supabase/functions/notify-bf-unpaid/` (`--no-verify-jwt`, secret `BF_NOTIFY_SECRET`)           |
-| Site                         | `BfPricing.astro` (#tarifs), `bike-fitting/bienvenue.astro`, `inscription/*`, dashboard         |
-| App desktop                  | dépôt veloaero, branche `feat-bf-billing` : `bf_billing_service.dart`, `session_lifecycle.dart` |
+| Rôle                         | Fichier                                                                                 |
+| ---------------------------- | --------------------------------------------------------------------------------------- |
+| Catalogue (source de vérité) | `src/lib/billing/catalog.ts`                                                            |
+| Règles pures (testées)       | `src/lib/billing/logic.ts`                                                              |
+| Script catalogue Stripe      | `scripts/stripe-catalog.ts` (`npm run stripe:catalog`)                                  |
+| Checkout / portail / gestion | `src/pages/api/billing/{checkout,portal,manage}.ts`                                     |
+| Webhook                      | `src/pages/api/stripe-webhook.ts` → `src/lib/billing/webhook.ts`                        |
+| Envoi de l'usage Essentiel   | `src/pages/api/billing/report-usage.ts`                                                 |
+| Migrations                   | `supabase/migrations/2026092*_bf_*.sql` (dont `…26100000_bf_subscription_state.sql`)    |
+| Notification « nouveau BF »  | `supabase/functions/notify-admin-new-bf/`                                               |
+| Relance d'une créance        | `supabase/functions/notify-bf-unpaid/` (`--no-verify-jwt`, secret `BF_NOTIFY_SECRET`)   |
+| Site                         | `BfPricing.astro` (#tarifs), `bike-fitting/bienvenue.astro`, `inscription/*`, dashboard |
+| App desktop                  | dépôt veloaero, branche `main` : `bf_billing_service.dart`, `session_lifecycle.dart`    |
 
 ### Données
 
-- `bf_billing` : `plan` (`trial|pack|payg|studio|unlimited|unlimited_launch|legacy`),
+- `bf_billing` : `plan` (`trial|essential|unlimited|unlimited_launch|legacy`, et
+  `pack|payg|studio` pour l'historique), `trial_ends_at` (fin de l'essai Stripe,
+  jamais effacée : renseignée = essai utilisé),
   `offer` (offre exacte, dont `unlimited_annual`), `status`
   (`active|past_due|read_only`), `grace_until`, période, ids Stripe,
   `cancel_at` (résiliation programmée), `scheduled_offer` / `scheduled_at`
@@ -96,28 +102,35 @@ Principes :
   `handle_email_confirmed` crée l'utilisateur en `bike-fitter` actif, plan
   `trial`, `trial_state = needs_business_id`. Notification admin par
   `notify-admin-new-bf`.
-- **Essai de 14 jours** : le BF renseigne, dans un seul champ de son espace
-  (`/api/billing/business-id/`, `src/lib/billing/businessId.ts`) :
-  - SIREN / SIRET (clé de Luhn) → API Recherche d'entreprises, entreprise
-    active exigée ; TVA intracommunautaire → VIES (TVA française ramenée au
-    SIREN : même entreprise, même clé) : essai ouvert aussitôt
-    (`trial_ends_at = now() + 14 jours`, analyses illimitées) ;
-  - sinon le site internet du studio : refusé s'il s'agit d'une messagerie ou
-    d'un réseau social, ou s'il ne répond pas ; clé = domaine sans « www. » ;
-    `email_domain_match` signale un e-mail du même domaine. Puis
-    `pending_review` et e-mail admin « Studio à vérifier » avec le site, la
-    consigne de contrôle et un lien signé (HMAC du compte, secret
-    `billing_hook_secret` = `BILLING_HOOK_SECRET`) vers
-    `/api/billing/approve-business/` : page de confirmation (GET sans
-    effet), bouton « Valider » (POST) → `bf_approve_business_id`. Aussi
-    possible en SQL ;
-  - déjà utilisé par un autre compte : refusé (`business_id_used`).
-    `register_analysis` répond `needs_card` tant que l'essai n'est pas
-    ouvert, et `no_credits` une fois l'essai terminé sans offre : codes
-    conservés pour l'application desktop (ses textes parlent encore de carte
-    et d'analyses offertes, à mettre à jour dans veloaero). L'ancien parcours
-    par carte (`bf_trial_cards`) est retiré ; la table reste pour
-    l'historique.
+- **Essai de 14 jours** (décision du 2026-09-27, modèle « à la Zwift ») :
+  1. le BF fait vérifier son entreprise, dans un seul champ de son espace
+     (`/api/billing/business-id/`, `src/lib/billing/businessId.ts`) :
+     SIREN / SIRET (clé de Luhn) → API Recherche d'entreprises, entreprise
+     active exigée ; TVA intracommunautaire → VIES (TVA française ramenée au
+     SIREN) ; sinon le site internet du studio (refusé s'il s'agit d'une
+     messagerie ou d'un réseau social, ou s'il ne répond pas), vérifié à la
+     main : `pending_review`, e-mail admin « Studio à vérifier » avec un lien
+     signé (HMAC, secret `billing_hook_secret` = `BILLING_HOOK_SECRET`) vers
+     `/api/billing/approve-business/` (GET sans effet, POST
+     → `bf_approve_business_id`). Un identifiant ou un domaine = un compte
+     (`business_id_used`). Vérifiée, l'entreprise passe en
+     `trial_state = granted` : la souscription avec essai est autorisée ;
+  2. il choisit son offre (Essentiel par défaut) : Checkout avec carte,
+     `subscription_data.trial_end` = maintenant + 14 jours (au plus tôt le
+     1er novembre 2026), acceptation des CGV obligatoire
+     (`consent_collection`, article 5 bis) et date de fin d'essai sous le
+     bouton. `/api/billing/checkout/` refuse un premier abonnement sans
+     entreprise vérifiée (`E_NEEDS_BUSINESS_ID`) ;
+  3. pendant l'essai (Stripe `trialing`, accès complet), les analyses sont
+     comptées en `billing_mode = 'trial'` : rien n'est envoyé au meter ;
+  4. à la fin, Stripe prélève la première échéance (Essentiel : 20 €),
+     sauf résiliation avant (« Résilier l'essai » → fin à la date de fin
+     d'essai, aucun prélèvement ; test S26).
+     Essai utilisé (`trial_ends_at` renseignée) : un nouvel abonnement démarre
+     sans essai, et l'identifiant ne rouvre rien. Sans abonnement,
+     `register_analysis` répond `needs_card` (essai jamais démarré :
+     « démarrez votre essai » dans l'app) ou `no_credits` (essai utilisé :
+     « choisissez une offre »). Tests S1, S8, S24–S26.
 - **Échec de paiement** : `past_due`, accès complet jusqu'à `grace_until`
   (premier échec + 7 jours, calculé en temps réel par `bf_access_level`), puis
   lecture seule. Paiement régularisé : retour en `active`. Si Stripe résilie
@@ -127,8 +140,14 @@ Principes :
   promesse des 7 jours ne dépend donc pas du réglage des relances Stripe.
 - **Fin d'abonnement** : retour au plan `trial` (analyses refusées s'il ne reste
   aucun crédit d'essai).
-- **À l'usage et Studio** : chaque analyse comptée part au meter
-  `aerox_analysis` ; Stripe facture en fin de période.
+- **Essentiel** : forfait de 20 € payé d'avance ; chaque analyse comptée
+  hors essai part au meter `aerox_analysis` (15 €), facturée en fin de période.
+- **Proposition d'Illimité** : abonné Essentiel à partir de 7 analyses sur la
+  période → encart dans l'espace, bouton « Passer à l'Illimité le {date} »
+  (`/api/billing/manage/` `when: 'next_period'`, schedule
+  `aerox_schedule=upgrade`, offre de lancement tant qu'elle est ouverte).
+  Une fois le changement appliqué (dernière phase), le schedule est relâché
+  et la bascule du lancement posée (test S27).
 - **Démarrage au 1er novembre 2026** (`BF_AVAILABLE_AT`, `subscriptionStart`) :
   souscrire avant, c'est être abonné tout de suite, sans rien payer avant
   cette date. Facturation ancrée au 1er novembre sans prorata
@@ -137,9 +156,9 @@ Principes :
   Stripe refuse un ancrage au-delà de la première échéance naturelle : plus
   d'un mois avant la date (jusqu'au 1er octobre), une offre mensuelle passe
   par une période d'essai Stripe (`trial_end`), que Checkout présente en
-  « jours gratuits » ; un texte sous le bouton de paiement précise que ce
-  n'est pas un essai. L'usage mesuré (À l'usage, Studio) d'avant le
-  1er novembre est facturé le 1er novembre (décision du 2026-09-26, test S23).
+  « jours gratuits ». Ce démarrage ne concerne plus que les réabonnements
+  sans essai : un premier abonnement a son essai jusqu'au 1er novembre au
+  moins (test S23 pour l'usage d'avant le 1er novembre).
   Les schedules (lancement, descente) conservent un éventuel `trial_end`.
 - **Factures** : PDF créée par Stripe à chaque paiement, téléchargeable dans
   « Gérer ma facturation » (portail). Aucun e-mail de reçu n'est promis
@@ -147,26 +166,26 @@ Principes :
 - **Fin du lancement** (décision du 2026-09-26) : les deux offres de lancement
   reviennent au **tarif normal** (prix `aerox_bf_unlimited` /
   `aerox_bf_unlimited_year`) : l'abonnement devient Illimité (`plan =
-unlimited`) et la place de lancement se libère. Les anciens paliers
-  99 € / 990 € (`…_launch_after`, `…_launch_year_after`) sont retirés
-  (`RETIRED_LOOKUP_KEYS`), jamais facturés.
+unlimited`) et la place de lancement se libère. Tarif normal : 99 €/mois,
+  990 €/an depuis le 2026-09-27 (119 € / 1 190 € auparavant, jamais vendus).
 - **Offre de lancement** : au premier paiement, le webhook pose un subscription
-  schedule. Phase 1 jusqu'au 01/01/2027 00:00 (Paris), phase 2 au tarif normal (119 €)
+  schedule. Phase 1 jusqu'au 01/01/2027 00:00 (Paris) — ou jusqu'à la fin de
+  l'essai si elle est plus tardive (test S28) —, phase 2 au tarif normal (99 €)
   avec `proration_behavior: create_prorations`, puis le schedule est relâché.
-  **Effet** : 119 € dès le 01/01 ; la période à cheval est régularisée au
-  prorata (crédit 69 €, débit 119 € sur les jours restants) sur l'échéance
+  **Effet** : 99 € dès le 01/01 ; la période à cheval est régularisée au
+  prorata (crédit 69 €, débit 99 € sur les jours restants) sur l'échéance
   suivante (vérifié par le test S5).
 - **Changement d'offre / résiliation** : `/api/billing/manage/` (le portail
   Stripe ne sait pas modifier un abonnement à usage mesuré ni un abonnement
   sous schedule). Actions : `change`, `cancel`, `resume` (lève une
-  résiliation), `keep` (annule une descente programmée). **Monter** (usage → Studio → lancement → Illimité → annuel)
+  résiliation), `keep` (annule un changement programmé). **Monter** (Essentiel → lancement → Illimité → annuel)
   est immédiat, au prorata. **Descendre** prend effet à la fin de la période
   payée, via un schedule `aerox_schedule=downgrade` : un passage en Illimité
   le temps d'un mois chargé ne se rembourse pas. Changer d'offre alors qu'une
   résiliation est programmée lève la résiliation. Le portail sert aux
   factures, à la carte et au n° de TVA.
 - **Offre de lancement résiliée** : le webhook ne repose pas la bascule à
-  119 € sur un abonnement dont la résiliation est programmée. Si un webhook
+  99 € sur un abonnement dont la résiliation est programmée. Si un webhook
   concurrent crée malgré tout un schedule (il porte alors `end_behavior:
 cancel`), il est détaché en gardant la date de fin (test S11).
 - **Créance après une fin d'abonnement impayée** : la facture ouverte reste
@@ -178,7 +197,7 @@ cancel`), il est détaché en gardant la date de fin (test S11).
   et J+21. `invoice.paid` efface la créance.
 - **Lancement annuel** : au premier paiement (ou dès la souscription pendant
   l'essai Stripe), le webhook pose un schedule : 690 € jusqu'au premier
-  anniversaire (`billing_cycle_anchor` + 1 an), puis 1 190 €/an, sans prorata
+  anniversaire (`billing_cycle_anchor` + 1 an), puis 990 €/an, sans prorata
   (la bascule tombe sur l'échéance), puis relâché (test S21).
 - **Rôles** : un bike fitter n'achète pas le Diagnostic (`create-api-checkout`
   → 403), un cycliste ne souscrit pas d'offre BF (`/api/billing/checkout/`,
@@ -288,9 +307,10 @@ Chaque étape marquée ⚠ touche la production : à faire sur accord explicite.
    `MAILERLITE_API_KEY` vide (rien n'est écrit dans MailerLite).
 5. `E2E_SUPABASE_URL=… E2E_SUPABASE_ANON_KEY=… E2E_SUPABASE_SERVICE_KEY=… E2E_SITE_URL=http://localhost:4399 E2E_BILLING_HOOK_SECRET=… node --env-file=.env scripts/billing-e2e.ts`
 
-Scénarios : S1 à l'usage, S2/S3 Studio et re-tests, S4 places épuisées, S5
-bascule du lancement, S6 impayé et grâce, S7 autoliquidation, S8 essai de 14 jours par
-identifiant d'entreprise (SIRENE, VIES), S9 descente / remontée, S10 annuel, S11 résiliation du lancement
+Scénarios : S1 Essentiel (et souscription réservée aux entreprises
+vérifiées), S2/S3 Essentiel 14 analyses et re-tests, S4 places épuisées, S5
+bascule du lancement, S6 impayé et grâce, S7 autoliquidation, S8 vérification de
+l'entreprise (SIRENE, VIES), S9 descente / remontée, S10 annuel, S11 résiliation du lancement
 (reprise, aucun prélèvement), S12 double abonnement, S13 annuel avant le
 1er novembre (descente programmée puis annulée), S14 places libérées après
 impayé, S15 changement d'offre pendant une résiliation, S16 expiration des
@@ -312,7 +332,11 @@ webhook, rejeux), P3 consommation (plus ancien d'abord, démarrages simultanés)
 tentatives côté client (RLS, trigger de garde), P5 remboursements (non
 utilisé, en cours, partiel), P6 remboursement reçu avant l'achat, P7 bike
 fitter (identifiants répétés, rôle), P8 séparation des rôles, S24 vérification
-manuelle d'un site internet et lien signé. Les scénarios P supposent les tables
+manuelle d'un site internet et lien signé. Essai avec carte : S25 essai
+Essentiel (analyses gratuites, 20 € prélevés à la fin), S26 résiliation
+pendant l'essai (rien de prélevé, pas de second essai), S27 Illimité programmé
+pour la période suivante au-delà de 7 analyses, S28 lancement mensuel dont
+l'essai dépasse le 01/01/2027. Les scénarios P supposent les tables
 et fonctions du diagnostic (dépôt veloaero) dans la base locale, et un prix
 `diagnostic_preorder` dans la sandbox Stripe (créé le 2026-09-26).
 

@@ -38,6 +38,9 @@ export type BillingRow = {
     | 'granted'
     | 'needs_card'
     | 'card_already_used';
+  // Fin de l'essai gratuit Stripe (posée par le webhook). Renseignée = essai
+  // déjà utilisé : un nouvel abonnement démarre sans essai.
+  trial_ends_at?: string | null;
   unpaid_invoice_id?: string | null;
 };
 

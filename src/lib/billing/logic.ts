@@ -5,28 +5,25 @@
 // selon son statut. Les routes et le webhook n'y ajoutent que les appels
 // réseau ; tout ce qui décide est ici, et testé (test/billingLogic.test.ts).
 
-import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP } from './catalog';
+import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP, TRIAL_DAYS, UPGRADE_HINT_AT } from './catalog';
 
 // `pack` : plan historique (crédits prépayés), plus vendu ; conservé pour les
-// comptes et les crédits existants.
-export type Plan = 'trial' | 'pack' | 'payg' | 'studio' | 'unlimited' | 'unlimited_launch' | 'legacy';
-export type Offer =
-  | 'payg'
-  | 'studio'
-  | 'unlimited'
-  | 'unlimited_annual'
-  | 'unlimited_launch'
-  | 'unlimited_launch_annual';
+// comptes et les crédits existants. `payg` et `studio` (grille du 24/09/2026,
+// jamais vendue) restent reconnus par la base, plus par le site.
+export type Plan = 'trial' | 'pack' | 'essential' | 'unlimited' | 'unlimited_launch' | 'legacy';
+export type Offer = 'essential' | 'unlimited' | 'unlimited_annual' | 'unlimited_launch' | 'unlimited_launch_annual';
 export type BillingStatus = 'active' | 'past_due' | 'read_only';
 
 export const OFFERS: readonly Offer[] = [
-  'payg',
-  'studio',
+  'essential',
   'unlimited',
   'unlimited_annual',
   'unlimited_launch',
   'unlimited_launch_annual',
 ];
+
+/** Offre proposée par défaut au démarrage de l'essai. */
+export const DEFAULT_OFFER: Offer = 'essential';
 
 /** Offres de lancement : 20 places partagées, souscription jusqu'au 31/12/2026. */
 export const LAUNCH_OFFERS: readonly Offer[] = ['unlimited_launch', 'unlimited_launch_annual'];
@@ -38,10 +35,8 @@ export const isOffer = (raw: unknown): raw is Offer => typeof raw === 'string' &
 
 /** Prix Stripe (lookup_key) de chaque offre, dans l'ordre des lignes Checkout. */
 export const OFFER_LOOKUP_KEYS: Record<Offer, string[]> = {
-  // Prix mesuré seul : 0 € fixe, 20 € par analyse, facturé en fin de mois.
-  payg: [LOOKUP.payg],
-  // Deux lignes : le forfait et le prix mesuré (5 analyses à 0 €, puis 10 €).
-  studio: [LOOKUP.studioBase, LOOKUP.studioUsage],
+  // Deux lignes : le forfait (20 €/mois) et le prix mesuré (15 € l'analyse).
+  essential: [LOOKUP.essentialBase, LOOKUP.essentialUsage],
   unlimited: [LOOKUP.unlimited],
   unlimited_annual: [LOOKUP.unlimitedYear],
   unlimited_launch: [LOOKUP.unlimitedLaunch],
@@ -49,7 +44,7 @@ export const OFFER_LOOKUP_KEYS: Record<Offer, string[]> = {
 };
 
 /** Prix mesurés : pas de quantité dans Checkout ni dans un changement d'offre. */
-export const METERED_LOOKUP_KEYS: readonly string[] = [LOOKUP.payg, LOOKUP.studioUsage];
+export const METERED_LOOKUP_KEYS: readonly string[] = [LOOKUP.essentialUsage];
 
 /**
  * Rang d'une offre, du moins au plus engageant. Monter est immédiat (au
@@ -57,14 +52,13 @@ export const METERED_LOOKUP_KEYS: readonly string[] = [LOOKUP.payg, LOOKUP.studi
  * qu'un passage en Illimité le temps d'un mois chargé ne se rembourse pas.
  */
 export const OFFER_RANK: Record<Offer, number> = {
-  payg: 0,
-  studio: 1,
-  unlimited_launch: 2,
-  unlimited: 3,
+  essential: 0,
+  unlimited_launch: 1,
+  unlimited: 2,
   // Annuel : engagement le plus long. Le quitter pour un mensuel prend
   // effet à la fin de l'année déjà payée.
-  unlimited_launch_annual: 4,
-  unlimited_annual: 5,
+  unlimited_launch_annual: 3,
+  unlimited_annual: 4,
 };
 
 export const isDowngrade = (from: Offer, to: Offer) => OFFER_RANK[to] < OFFER_RANK[from];
@@ -85,21 +79,26 @@ function oneMonthLater(ms: number): number {
   return d.getTime();
 }
 
+/** Fin de l'essai gratuit : 14 jours, et jamais avant la mise à disposition. */
+export function trialEnd(nowMs: number): number {
+  return Math.floor(Math.max(nowMs + TRIAL_DAYS * DAY_MS, BF_AVAILABLE_AT) / 1000);
+}
+
 /**
- * Premier prélèvement au plus tôt à la mise à disposition (1er novembre
- * 2026). Souscrire avant, c'est s'abonner dès maintenant, sans rien payer
- * avant cette date.
+ * Démarrage d'un abonnement.
  *
- *  - De préférence, facturation ancrée au 1er novembre sans prorata
- *    (`billing_cycle_anchor` + `proration_behavior: none`) : Checkout affiche
- *    « 0,00 € aujourd'hui, puis 69 € par mois à compter du 1er novembre ».
- *  - Stripe refuse un ancrage au-delà de la première échéance naturelle
- *    (un mois pour un prix mensuel) : plus d'un mois avant la date, une offre
- *    mensuelle repasse par une période d'essai Stripe (`trial_end`, 48 h
- *    minimum), que Checkout présente comme « jours gratuits » — le texte
- *    sous le bouton de paiement l'explique (voir checkout.ts).
+ *  - Premier abonnement (essai jamais utilisé) : 14 jours d'essai gratuit
+ *    (`trial_end`), carte enregistrée, premier prélèvement à la fin de
+ *    l'essai sauf résiliation avant. Souscrit avant le 1er novembre 2026,
+ *    l'essai court au moins jusqu'à cette date.
+ *  - Essai déjà utilisé : pas de nouvel essai. Avant le 1er novembre, la
+ *    facturation est ancrée à cette date sans prorata
+ *    (`billing_cycle_anchor` + `proration_behavior: none`) ; Stripe refuse
+ *    un ancrage au-delà de la première échéance naturelle (un mois pour un
+ *    prix mensuel), d'où le repli sur `trial_end` plus d'un mois avant.
  */
-export function subscriptionStart(nowMs: number, annual: boolean): SubscriptionStart {
+export function subscriptionStart(nowMs: number, annual: boolean, withTrial: boolean): SubscriptionStart {
+  if (withTrial) return { trial_end: trialEnd(nowMs) };
   if (BF_AVAILABLE_AT - nowMs <= 60 * 60 * 1000) return {};
   const anchor = Math.floor(BF_AVAILABLE_AT / 1000);
   if (annual || oneMonthLater(nowMs) - 60 * 60 * 1000 >= BF_AVAILABLE_AT) {
@@ -114,36 +113,26 @@ export function launchOfferOpen(nowMs: number, seatsRemaining: number): boolean 
 }
 
 /**
- * Plan porté par un abonnement, d'après les lookup_key de ses prix. Le prix
- * d'après-lancement (99 €) reste « unlimited_launch » : ce sont les mêmes
- * abonnés, seul le montant a basculé. `null` : abonnement étranger aux
- * offres bike fitter (ex. Founding Partner), à ne jamais toucher.
+ * Plan porté par un abonnement, d'après les lookup_key de ses prix.
+ * `null` : abonnement étranger aux offres bike fitter (ex. Founding
+ * Partner), à ne jamais toucher.
  */
 export function planFromLookupKeys(keys: (string | null | undefined)[]): Plan | null {
   const set = new Set(keys.filter(Boolean));
-  if (set.has(LOOKUP.studioBase)) return 'studio';
-  if (
-    set.has(LOOKUP.unlimitedLaunch) ||
-    set.has(LOOKUP.unlimitedLaunchAfter) ||
-    set.has(LOOKUP.unlimitedLaunchYear) ||
-    set.has(LOOKUP.unlimitedLaunchYearAfter)
-  ) {
-    return 'unlimited_launch';
-  }
+  if (set.has(LOOKUP.essentialBase)) return 'essential';
+  if (set.has(LOOKUP.unlimitedLaunch) || set.has(LOOKUP.unlimitedLaunchYear)) return 'unlimited_launch';
   if (set.has(LOOKUP.unlimited) || set.has(LOOKUP.unlimitedYear)) return 'unlimited';
-  if (set.has(LOOKUP.payg)) return 'payg';
   return null;
 }
 
 /** Offre correspondant aux prix d'un abonnement (pour comparer les rangs). */
 export function offerFromLookupKeys(keys: (string | null | undefined)[]): Offer | null {
   const set = new Set(keys.filter(Boolean));
-  if (set.has(LOOKUP.unlimitedLaunchYear) || set.has(LOOKUP.unlimitedLaunchYearAfter)) return 'unlimited_launch_annual';
+  if (set.has(LOOKUP.unlimitedLaunchYear)) return 'unlimited_launch_annual';
   if (set.has(LOOKUP.unlimitedYear)) return 'unlimited_annual';
-  if (set.has(LOOKUP.unlimitedLaunch) || set.has(LOOKUP.unlimitedLaunchAfter)) return 'unlimited_launch';
+  if (set.has(LOOKUP.unlimitedLaunch)) return 'unlimited_launch';
   if (set.has(LOOKUP.unlimited)) return 'unlimited';
-  if (set.has(LOOKUP.studioBase)) return 'studio';
-  if (set.has(LOOKUP.payg)) return 'payg';
+  if (set.has(LOOKUP.essentialBase)) return 'essential';
   return null;
 }
 
@@ -212,30 +201,41 @@ export function planAfterSubscriptionEnds(): Plan {
 /**
  * Montant HT estimé (centimes) de la prochaine facture d'une offre, pour
  * l'espace bike fitter. `periodEndMs` : fin de la période en cours (date de
- * la prochaine facture).
+ * la prochaine facture). `analysesInPeriod` : analyses facturables de la
+ * période. `inTrial` : la prochaine facture est la première, à la fin de
+ * l'essai (analyses de l'essai gratuites).
  */
 export function nextInvoiceCentsForOffer(
   offer: Offer,
   analysesInPeriod: number,
   nowMs: number,
-  periodEndMs: number | null
+  periodEndMs: number | null,
+  inTrial = false
 ): number {
   switch (offer) {
-    case 'payg':
-      return analysesInPeriod * 2000;
-    case 'studio':
-      return 7900 + Math.max(0, analysesInPeriod - 5) * 1000;
+    case 'essential':
+      // Forfait du mois qui commence + analyses du mois écoulé.
+      return 2000 + (inTrial ? 0 : analysesInPeriod) * 1500;
     case 'unlimited':
-      return 11900;
+      return 9900;
     case 'unlimited_annual':
-      return 119000;
+      return 99000;
     case 'unlimited_launch':
-      return nowMs < LAUNCH_OFFER.switchAt ? 6900 : 11900;
+      // Le prix normal s'applique dès le 01/01/2027 (schedule du webhook).
+      return (periodEndMs ?? nowMs) < LAUNCH_OFFER.switchAt ? 6900 : 9900;
     case 'unlimited_launch_annual':
-      // Avant le 1er novembre, la prochaine facture est la première année, à
-      // 690 €. Sinon c'est le renouvellement, au tarif normal (1 190 €).
-      return periodEndMs !== null && periodEndMs <= BF_AVAILABLE_AT + DAY_MS ? 69000 : 119000;
+      // Première année à 690 € (facturée à la fin de l'essai), renouvellement
+      // au tarif normal (schedule du webhook).
+      return inTrial ? 69000 : 99000;
   }
+}
+
+/**
+ * Essentiel : faut-il proposer l'Illimité pour la période suivante ?
+ * Au-delà de 7 analyses sur la période, Essentiel coûte plus que l'Illimité.
+ */
+export function suggestUpgrade(offer: Offer | null, analysesInPeriod: number): boolean {
+  return offer === 'essential' && analysesInPeriod >= UPGRADE_HINT_AT;
 }
 
 /** Valeur MailerLite `bf_status` correspondant à l'état de facturation. */

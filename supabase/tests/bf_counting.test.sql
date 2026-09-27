@@ -1,4 +1,4 @@
--- supabase/tests/bf_counting.test.sql — filet de sécurité et meter Studio.
+-- supabase/tests/bf_counting.test.sql — filet de sécurité et meter (Essentiel, anciens Studio / payg).
 create function pg_temp.as_user(p uuid) returns void language sql as $$
   select set_config('request.jwt.claim.sub', coalesce(p::text, ''), false);
 $$;
@@ -9,6 +9,9 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000d1', 'bfd@example.com', '{"profile_type":"bike-fitter"}');
 update auth.users set email_confirmed_at = now() where id = '00000000-0000-0000-0000-0000000000d1';
 select bf_register_business_id('00000000-0000-0000-0000-0000000000d1', 'DE:TEST000001', 'eu_vat', 'DE', 'Test GmbH', true);
+-- Abonnement en essai Stripe (ce qu'écrit le webhook).
+update bf_billing set plan = 'essential', offer = 'essential', stripe_subscription_id = 'sub_d1',
+  trial_ends_at = now() + interval '14 days' where user_id = '00000000-0000-0000-0000-0000000000d1';
 insert into bf_clients (id, bf_user_id) select ('00000000-0000-0000-0000-0000000004' || lpad(i::text, 2, '0'))::uuid,
   '00000000-0000-0000-0000-0000000000d1' from generate_series(1, 6) i;
 delete from net.calls;
@@ -26,8 +29,10 @@ reset role;
 insert into sessions (user_id, client_id) values ('00000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-000000000402');
 select pg_temp.check((select count(*) from bf_analyses where client_id = '00000000-0000-0000-0000-000000000402') = 1, 'app + séance : 1 seule analyse');
 
--- Essai terminé : la séance est tracée « uncredited », une seule fois par fenêtre.
-update bf_billing set trial_ends_at = now() - interval '1 minute' where user_id = '00000000-0000-0000-0000-0000000000d1';
+-- Essai terminé et abonnement arrêté : la séance est tracée « uncredited »,
+-- une seule fois par fenêtre.
+update bf_billing set trial_ends_at = now() - interval '1 minute', plan = 'trial', offer = null, stripe_subscription_id = null
+  where user_id = '00000000-0000-0000-0000-0000000000d1';
 insert into sessions (user_id, client_id) values ('00000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-000000000403');
 insert into sessions (user_id, client_id) values ('00000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-000000000404');
 insert into sessions (user_id, client_id) values ('00000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-000000000404');
@@ -88,14 +93,14 @@ select bf_mark_meter_reported((select id from claim2 limit 1), 'tardif');
 select pg_temp.check((select meter_reported_at is not null and meter_last_error is null from bf_analyses
   where id = (select id from claim2 limit 1)), 'une ligne envoyée n’est jamais repassée en erreur');
 
--- À l'usage (payg) : comptée et envoyée au meter comme Studio.
-update bf_billing set plan = 'payg' where user_id = '00000000-0000-0000-0000-0000000000d1';
+-- Essentiel (après l'essai) : comptée et envoyée au meter.
+update bf_billing set plan = 'essential' where user_id = '00000000-0000-0000-0000-0000000000d1';
 insert into bf_clients (id, bf_user_id) values ('00000000-0000-0000-0000-000000000601', '00000000-0000-0000-0000-0000000000d1');
 set role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000d1');
-select pg_temp.check((select r ->> 'plan' = 'payg' and r ->> 'meter_pending' = 'true'
-  from (select register_analysis('00000000-0000-0000-0000-000000000601') r) t), 'payg : comptée, meter en attente');
+select pg_temp.check((select r ->> 'plan' = 'essential' and r ->> 'meter_pending' = 'true'
+  from (select register_analysis('00000000-0000-0000-0000-000000000601') r) t), 'essentiel : comptée, meter en attente');
 reset role;
-select pg_temp.check((select billing_mode from bf_analyses where client_id = '00000000-0000-0000-0000-000000000601') = 'payg', 'payg : billing_mode');
+select pg_temp.check((select billing_mode from bf_analyses where client_id = '00000000-0000-0000-0000-000000000601') = 'essential', 'essentiel : billing_mode');
 select pg_temp.check((select count(*) from bf_claim_meter_batch(100) c
-  join bf_analyses a using (id) where a.billing_mode = 'payg') = 1, 'payg : réservée pour l’envoi');
+  join bf_analyses a using (id) where a.billing_mode = 'essential') = 1, 'essentiel : réservée pour l’envoi');

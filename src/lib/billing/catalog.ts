@@ -41,7 +41,7 @@ export const PRODUCT_TAX_CODE = 'txcd_10103101';
 export const PRODUCT_IMAGE =
   'https://files.stripe.com/links/MDB8YWNjdF8xUmpIcFdBbXpvS3NCaUNOfGZsX2xpdmVfcXZTaGdVVW5iZ0tIZ0NScG9YcjJpY1Zi00JyhHhjAR';
 
-export type ProductKey = 'bf_payg' | 'bf_studio' | 'bf_studio_usage' | 'bf_unlimited' | 'bf_unlimited_launch';
+export type ProductKey = 'bf_essential' | 'bf_essential_usage' | 'bf_unlimited' | 'bf_unlimited_launch';
 
 export type ProductSpec = {
   key: ProductKey;
@@ -51,19 +51,14 @@ export type ProductSpec = {
 
 export const PRODUCTS: ProductSpec[] = [
   {
-    key: 'bf_payg',
-    name: 'AeroX Bike Fit — À l’usage',
-    description: 'Sans abonnement fixe : 20 € HT par analyse, facturé en fin de mois.',
+    key: 'bf_essential',
+    name: 'AeroX Bike Fit — Essentiel',
+    description: 'Abonnement mensuel : 20 € HT par mois, puis 15 € HT par analyse.',
   },
   {
-    key: 'bf_studio',
-    name: 'AeroX Bike Fit — Studio',
-    description: 'Abonnement mensuel, 5 analyses incluses chaque mois.',
-  },
-  {
-    key: 'bf_studio_usage',
-    name: 'AeroX Bike Fit — Studio, analyses',
-    description: 'Analyses du mois : les 5 premières sont incluses, puis 10 € HT l’analyse.',
+    key: 'bf_essential_usage',
+    name: 'AeroX Bike Fit — Essentiel, analyses',
+    description: 'Analyses du mois : 15 € HT l’analyse, facturées en fin de mois.',
   },
   {
     key: 'bf_unlimited',
@@ -94,9 +89,8 @@ export type PriceSpec = {
 };
 
 export const LOOKUP = {
-  payg: 'aerox_bf_payg',
-  studioBase: 'aerox_bf_studio_base',
-  studioUsage: 'aerox_bf_studio_usage',
+  essentialBase: 'aerox_bf_essential_base',
+  essentialUsage: 'aerox_bf_essential_usage',
   unlimited: 'aerox_bf_unlimited',
   unlimitedYear: 'aerox_bf_unlimited_year',
   unlimitedLaunch: 'aerox_bf_unlimited_launch',
@@ -105,10 +99,6 @@ export const LOOKUP = {
   // posé par le webhook ramène les deux offres au tarif normal
   // (`unlimited`, `unlimitedYear`).
   unlimitedLaunchYear: 'aerox_bf_unlimited_launch_year',
-  // Anciens paliers d'après-lancement (99 €, 990 €), retirés avant toute
-  // vente : gardés pour reconnaître un abonnement qui les porterait.
-  unlimitedLaunchAfter: 'aerox_bf_unlimited_launch_after',
-  unlimitedLaunchYearAfter: 'aerox_bf_unlimited_launch_year_after',
 } as const;
 
 // Clés d'anciens prix retirés de la grille : le script archive les prix qui
@@ -116,63 +106,53 @@ export const LOOKUP = {
 export const RETIRED_LOOKUP_KEYS = [
   'aerox_bf_pack10',
   'aerox_bf_pack15',
-  // Paliers d'après-lancement (99 €/mois, 990 €/an) remplacés par le tarif
-  // normal le 2026-09-26, jamais facturés.
   'aerox_bf_unlimited_launch_after',
   'aerox_bf_unlimited_launch_year_after',
+  // Grille du 2026-09-24 (À l'usage 20 €, Studio 79 €), remplacée le
+  // 2026-09-27 par Essentiel, avant toute vente.
+  'aerox_bf_payg',
+  'aerox_bf_studio_base',
+  'aerox_bf_studio_usage',
 ];
 // Produits retirés, archivés par le script.
-export const RETIRED_PRODUCT_KEYS = ['bf_pack'];
+export const RETIRED_PRODUCT_KEYS = ['bf_pack', 'bf_payg', 'bf_studio', 'bf_studio_usage'];
 
 export const PRICES: PriceSpec[] = [
   {
-    lookup_key: LOOKUP.payg,
-    product: 'bf_payg',
-    nickname: 'À l’usage — 20 € HT par analyse',
+    lookup_key: LOOKUP.essentialBase,
+    product: 'bf_essential',
+    nickname: 'Essentiel — 20 € HT / mois',
     currency: 'eur',
     tax_behavior: 'exclusive',
     unit_amount: 2000,
-    recurring: { interval: 'month', usage_type: 'metered' },
-    metered: true,
-  },
-  {
-    lookup_key: LOOKUP.studioBase,
-    product: 'bf_studio',
-    nickname: 'Studio — 79 € HT / mois',
-    currency: 'eur',
-    tax_behavior: 'exclusive',
-    unit_amount: 7900,
     recurring: { interval: 'month', usage_type: 'licensed' },
   },
   {
-    lookup_key: LOOKUP.studioUsage,
-    product: 'bf_studio_usage',
-    nickname: 'Studio — analyses (5 incluses, puis 10 € HT)',
+    lookup_key: LOOKUP.essentialUsage,
+    product: 'bf_essential_usage',
+    nickname: 'Essentiel — 15 € HT par analyse',
     currency: 'eur',
     tax_behavior: 'exclusive',
+    unit_amount: 1500,
     recurring: { interval: 'month', usage_type: 'metered' },
     metered: true,
-    tiers: [
-      { up_to: 5, unit_amount: 0 },
-      { up_to: 'inf', unit_amount: 1000 },
-    ],
   },
   {
     lookup_key: LOOKUP.unlimited,
     product: 'bf_unlimited',
-    nickname: 'Illimité — 119 € HT / mois',
+    nickname: 'Illimité — 99 € HT / mois',
     currency: 'eur',
     tax_behavior: 'exclusive',
-    unit_amount: 11900,
+    unit_amount: 9900,
     recurring: { interval: 'month', usage_type: 'licensed' },
   },
   {
     lookup_key: LOOKUP.unlimitedYear,
     product: 'bf_unlimited',
-    nickname: 'Illimité — 1 190 € HT / an (2 mois offerts)',
+    nickname: 'Illimité — 990 € HT / an (2 mois offerts)',
     currency: 'eur',
     tax_behavior: 'exclusive',
-    unit_amount: 119000,
+    unit_amount: 99000,
     recurring: { interval: 'year', usage_type: 'licensed' },
   },
   {
@@ -194,6 +174,15 @@ export const PRICES: PriceSpec[] = [
     recurring: { interval: 'year', usage_type: 'licensed' },
   },
 ];
+
+// Essai : 14 jours gratuits sur toutes les offres, carte enregistrée au
+// départ, abonnement payant à la fin sauf résiliation avant (CGV, art. 5 bis).
+// Un essai par entreprise (identifiant vérifié) et par compte.
+export const TRIAL_DAYS = 14;
+
+// Essentiel : à partir de ce nombre d'analyses sur la période, l'espace
+// propose l'Illimité pour la période suivante (20 + 15 × 7 = 125 € > 99 €).
+export const UPGRADE_HINT_AT = 7;
 
 // Mise à disposition des offres bike fitter : avec la version de l'application
 // qui compte les analyses (même date que le Diagnostic AeroX).

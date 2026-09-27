@@ -61,6 +61,15 @@ async function writeBilling(db: SupabaseClient, row: Record<string, unknown>) {
   if (error) throw new Error(`bf_billing: ${error.message}`);
 }
 
+/**
+ * Le schedule est-il dans sa dernière phase ? Un changement d'offre
+ * programmé y est alors déjà appliqué : il ne reste qu'à relâcher le schedule.
+ */
+function inLastPhase(schedule: Stripe.SubscriptionSchedule): boolean {
+  const i = schedule.phases.findIndex((p) => p.start_date === schedule.current_phase?.start_date);
+  return i === schedule.phases.length - 1;
+}
+
 /** Premier anniversaire de facturation (fin de la première année payée). */
 function firstYearEnd(sub: Stripe.Subscription): number {
   const d = new Date(sub.billing_cycle_anchor * 1000);
@@ -70,11 +79,12 @@ function firstYearEnd(sub: Stripe.Subscription): number {
 
 /**
  * Offres de lancement : pose le schedule qui ramène au tarif normal.
- *  - Mensuel : 69 € → 119 € au 01/01/2027 00:00 (Paris), avec
- *    `proration_behavior: 'create_prorations'` : 119 € s'applique dès le
+ *  - Mensuel : 69 € → 99 € au 01/01/2027 00:00 (Paris), avec
+ *    `proration_behavior: 'create_prorations'` : 99 € s'applique dès le
  *    01/01 ; le reste de la période en cours, payé à 69 €, est régularisé au
- *    prorata sur l'échéance suivante.
- *  - Annuel : 690 € la première année, 1 190 € par an ensuite, à la date
+ *    prorata sur l'échéance suivante. Essai gratuit courant au-delà du
+ *    01/01 : la bascule a lieu à la fin de l'essai (rien n'a été payé à 69 €).
+ *  - Annuel : 690 € la première année, 990 € par an ensuite, à la date
  *    anniversaire (échéance : pas de prorata).
  * L'abonnement passe alors sur le prix Illimité standard : offre `unlimited`
  * (ou `unlimited_annual`), et la place de lancement se libère.
@@ -97,7 +107,7 @@ async function ensureLaunchSchedule(sub: Stripe.Subscription) {
   if (monthly && Date.now() >= LAUNCH_OFFER.switchAt) return;
 
   const s = stripe();
-  // Après le lancement : le tarif normal (119 €/mois, 1 190 €/an).
+  // Après le lancement : le tarif normal (99 €/mois, 990 €/an).
   const afterPrice = await priceIdForLookup(yearly ? LOOKUP.unlimitedYear : LOOKUP.unlimited);
 
   let scheduleId = idOf(sub.schedule);
@@ -111,7 +121,15 @@ async function ensureLaunchSchedule(sub: Stripe.Subscription) {
     }
   }
 
-  const schedule = await s.subscriptionSchedules.retrieve(scheduleId);
+  let schedule = await s.subscriptionSchedules.retrieve(scheduleId);
+  // Changement d'offre programmé déjà appliqué (dernière phase) : le schedule
+  // est relâché, puis recréé pour la bascule de lancement. Encore à venir : il
+  // a priorité, on n'y réécrit pas la bascule.
+  if (SCHEDULED_CHANGES.has(schedule.metadata?.aerox_schedule ?? '')) {
+    if (!inLastPhase(schedule)) return;
+    await s.subscriptionSchedules.release(schedule.id);
+    schedule = await s.subscriptionSchedules.create({ from_subscription: sub.id });
+  }
   // Course avec une résiliation : l'abonnement a été relu avant qu'elle soit
   // posée, mais le schedule créé après la porte (`end_behavior: cancel`). Le
   // configurer effacerait la résiliation ; on rend l'abonnement à lui-même en
@@ -121,20 +139,19 @@ async function ensureLaunchSchedule(sub: Stripe.Subscription) {
       await s.subscriptionSchedules.release(schedule.id, { preserve_cancel_date: true });
     return;
   }
-  // Une descente d'offre programmée (fin de période) a priorité : on n'y
-  // réécrit pas la bascule de lancement.
-  if (schedule.metadata?.aerox_schedule === 'downgrade') return;
   const configured = schedule.phases.some((p) => p.items.some((i) => idOf(i.price) === afterPrice));
   if (configured || schedule.status !== 'active') return;
 
   const current = schedule.phases[0];
+  // Mensuel : bascule au 01/01/2027, ou à la fin de l'essai s'il court au-delà.
+  const monthlySwitch = Math.max(Math.floor(LAUNCH_OFFER.switchAt / 1000), current.trial_end ?? 0);
   await s.subscriptionSchedules.update(schedule.id, {
     end_behavior: 'release',
     metadata: { aerox_schedule: 'launch' },
     phases: [
       {
         start_date: current.start_date,
-        end_date: yearly ? firstYearEnd(sub) : Math.floor(LAUNCH_OFFER.switchAt / 1000),
+        end_date: yearly ? firstYearEnd(sub) : monthlySwitch,
         items: current.items.map((i) => ({ price: idOf(i.price)!, quantity: i.quantity ?? 1 })),
         // Sans elle, la mise à jour effacerait la période d'essai (premier
         // prélèvement le 1er novembre) et Stripe facturerait tout de suite.
@@ -150,6 +167,13 @@ async function ensureLaunchSchedule(sub: Stripe.Subscription) {
     ],
   });
 }
+
+/**
+ * Schedules de changement d'offre posés par /api/billing/manage/ : descente
+ * (`downgrade`) ou montée programmée pour la période suivante (`upgrade`,
+ * proposée à un abonné Essentiel qui dépasse 7 analyses).
+ */
+export const SCHEDULED_CHANGES = new Set(['downgrade', 'upgrade']);
 
 /** Statuts Stripe d'un abonnement encore en vie (facturé ou relancé). */
 const LIVE_STATUSES = new Set<string>(['active', 'trialing', 'past_due', 'unpaid']);
@@ -187,15 +211,17 @@ async function cancelDuplicate(sub: Stripe.Subscription, keptId: string): Promis
 }
 
 /**
- * Descente d'offre programmée (schedule `aerox_schedule=downgrade` posé par
- * /api/billing/manage/) : offre visée et date d'effet.
+ * Changement d'offre programmé (schedule posé par /api/billing/manage/) :
+ * offre visée et date d'effet.
  */
 async function scheduledChange(sub: Stripe.Subscription): Promise<{ offer: string; at: string } | null> {
   const scheduleId = idOf(sub.schedule);
   if (!scheduleId) return null;
   const schedule = await stripe().subscriptionSchedules.retrieve(scheduleId);
   const offer = schedule.metadata?.aerox_offer;
-  if (schedule.metadata?.aerox_schedule !== 'downgrade' || !isOffer(offer)) return null;
+  if (!SCHEDULED_CHANGES.has(schedule.metadata?.aerox_schedule ?? '') || !isOffer(offer)) return null;
+  // Dernière phase : le changement est fait, rien n'est plus « programmé ».
+  if (inLastPhase(schedule)) return null;
   const at = toIso(schedule.current_phase?.end_date);
   return at ? { offer, at } : null;
 }
@@ -334,6 +360,8 @@ export async function syncSubscription(db: SupabaseClient, subscriptionId: strin
     cancel_at: toIso(sub.cancel_at ?? (sub.cancel_at_period_end ? periodEnd : null)),
     scheduled_offer: change?.offer ?? null,
     scheduled_at: change?.at ?? null,
+    // Essai gratuit : sa fin, jamais effacée ensuite (essai utilisé).
+    ...(sub.trial_end ? { trial_ends_at: toIso(sub.trial_end) } : {}),
   });
   // Seulement si quelque chose change pour le CRM : les renouvellements
   // mensuels ne réécrivent pas la fiche.

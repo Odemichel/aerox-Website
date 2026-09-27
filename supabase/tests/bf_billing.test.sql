@@ -49,10 +49,10 @@ select pg_temp.as_user('00000000-0000-0000-0000-0000000000b1');
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'reason' = 'needs_card', 'sans identifiant : refus needs_card (code lu par l''application)');
 reset role;
 
--- Identifiant d'entreprise vérifié : essai de 14 jours. Un identifiant = un compte.
-select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:552032534', 'siren', 'FR', 'DANONE', true) = 'granted', 'identifiant vérifié : essai ouvert');
-select pg_temp.check((select trial_ends_at between now() + interval '13 days 23 hours' and now() + interval '14 days 1 hour'
-  from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1'), 'essai de 14 jours');
+-- Identifiant d'entreprise vérifié : la souscription avec essai est autorisée
+-- (l'essai démarre avec l'abonnement Stripe). Un identifiant = un compte.
+select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:552032534', 'siren', 'FR', 'DANONE', true) = 'granted', 'identifiant vérifié : essai autorisé');
+select pg_temp.check((select trial_ends_at is null from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1'), 'essai pas démarré sans abonnement');
 select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b1'), 'essai sans crédits : au temps');
 select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1') = 'granted', 'état granted');
 select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:552032534', 'siren', 'FR', 'DANONE', true) = 'already_granted', 'rejeu : rien de plus');
@@ -72,7 +72,7 @@ select pg_temp.check((select count(*) = 1 and bool_and(body -> 'review' ->> 'web
     || encode(extensions.hmac('00000000-0000-0000-0000-0000000000b2', 'hook', 'sha256'), 'hex'))
   from net.calls where url like '%/notify-admin-new-bf'), 'admin prévenu, lien de validation signé');
 select pg_temp.check(bf_approve_business_id('00000000-0000-0000-0000-0000000000b2') = 'granted', 'validation admin : essai ouvert');
-select pg_temp.check((select trial_state = 'granted' and trial_ends_at > now() + interval '13 days' from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2'), '14 jours après validation');
+select pg_temp.check((select trial_state = 'granted' and trial_ends_at is null from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2'), 'validation : essai autorisé, pas démarré');
 select pg_temp.check(bf_approve_business_id('00000000-0000-0000-0000-0000000000b2') = 'nothing_pending', 'double validation sans effet');
 -- Crédit d'un autre compte (isolation RLS vérifiée plus bas).
 insert into bf_credits (user_id, granted, remaining, expires_at, source)
@@ -81,17 +81,35 @@ values ('00000000-0000-0000-0000-0000000000b2', 1, 1, now() + interval '1 year',
 set role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000b1');
 
--- Essai : analyses illimitées pendant 14 jours, re-tests gratuits, refus après.
+-- Entreprise vérifiée mais pas d'abonnement : l'essai n'a pas démarré.
+select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'reason' = 'needs_card', 'vérifiée sans abonnement : needs_card');
+reset role;
+-- Abonnement Essentiel en essai Stripe (ce qu'écrit le webhook).
+update bf_billing set plan = 'essential', offer = 'essential', stripe_subscription_id = 'sub_test', stripe_customer_id = 'cus_test',
+  trial_ends_at = now() + interval '14 days' where user_id = '00000000-0000-0000-0000-0000000000b1';
+set role authenticated;
+
+-- Essai : analyses gratuites (billing_mode trial, rien au meter), re-tests gratuits.
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'status' = 'counted', 'essai 1');
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'status' = 'already_counted', 're-test 1');
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'status' = 'already_counted', 're-test 2');
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000102') ->> 'status' = 'counted', 'essai 2');
-select pg_temp.check((register_analysis('00000000-0000-0000-0000-000000000116') ->> 'plan') = 'trial', 'essai 3 : illimité');
+select pg_temp.check((register_analysis('00000000-0000-0000-0000-000000000116') ->> 'trial_ends_at') is not null, 'essai 3 : gratuit');
 select pg_temp.check((select count(*) from bf_analyses) = 3, '3 analyses visibles, re-tests non comptés');
+select pg_temp.check((select bool_and(billing_mode = 'trial' and stripe_meter_event_identifier is null) from bf_analyses), 'essai : rien pour le meter');
 reset role;
+-- Fin de l'essai : Essentiel facture chaque analyse (meter).
 update bf_billing set trial_ends_at = now() - interval '1 minute' where user_id = '00000000-0000-0000-0000-0000000000b1';
 set role authenticated;
-select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000117') ->> 'reason' = 'no_credits', 'essai terminé : refus (no_credits, lu par l''app)');
+select pg_temp.check((select r ->> 'meter_pending' = 'true' and r ->> 'plan' = 'essential'
+  from (select register_analysis('00000000-0000-0000-0000-000000000118') r) t), 'Essentiel après l''essai : meter en attente');
+reset role;
+select pg_temp.check((select billing_mode from bf_analyses where client_id = '00000000-0000-0000-0000-000000000118') = 'essential', 'Essentiel : billing_mode');
+-- Abonnement arrêté (retour au plan d'essai, essai utilisé) : refus no_credits.
+update bf_billing set plan = 'trial', offer = null, stripe_subscription_id = null where user_id = '00000000-0000-0000-0000-0000000000b1';
+select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:552032534', 'siren', 'FR', 'DANONE', true) = 'already_granted', 'essai utilisé : pas de nouvel essai');
+set role authenticated;
+select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000117') ->> 'reason' = 'no_credits', 'essai utilisé, sans abonnement : refus (no_credits, lu par l''app)');
 do $$ begin
   perform bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:1', 'siren', 'FR', '', true);
   raise exception 'ÉCHEC : bf_register_business_id appelable par authenticated';

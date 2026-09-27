@@ -3,7 +3,7 @@ title: 'Algemene Gebruiksvoorwaarden'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Laatste update: 24 september 2026_
+_Laatste update: 27 september 2026_
 
 Bedankt voor het gebruik van **AeroX**, de oplossing die uw fietstrainer omtovert in een virtuele windtunnel.
 Deze Algemene Gebruiksvoorwaarden (AGV) regelen de toegang tot en het gebruik van de AeroX-dienst.
@@ -51,6 +51,23 @@ Deze AGV bepalen de rechten en plichten van AeroX en de Gebruiker in het kader v
 - **Herroepingsrecht**: een gebruiker die als consument handelt, heeft **14 dagen vanaf de aankoop** om zonder opgave van redenen te herroepen, door te schrijven naar contact@aeroxbefaster.com. AeroX betaalt dan alle betaalde bedragen terug via hetzelfde betaalmiddel, uiterlijk 14 dagen na het verzoek.
 - **Afstand**: bij het betalen vraagt de gebruiker uitdrukkelijk om onmiddellijke toegang tot de diagnose en erkent hij zijn herroepingsrecht te verliezen zodra zijn eerste sessie is uitgevoerd (Franse consumentenwet, art. L221-28 13°). Na een uitgevoerde sessie wordt de diagnose niet meer terugbetaald.
 - **Gevolg van een terugbetaling**: elke terugbetaling beëindigt de toegang tot de betreffende diagnose.
+
+---
+
+## 5a. Formules voor bike fitters: gratis proefperiode, abonnement en opzegging
+
+Dit artikel geldt voor bike-fitteraccounts. Bij tegenstrijdigheid heeft het voorrang op de artikelen 4 en 9.
+
+- **Formules**: **Essentieel**, € 20 excl. btw per maand plus € 15 excl. btw per analyse, gefactureerd aan het einde van elke maandperiode; **Onbeperkt**, € 99 excl. btw per maand of € 990 excl. btw per jaar. **Lanceringsaanbod**, voorbehouden aan de eerste 20 studio's en uiterlijk op 31 december 2026 afgesloten: Onbeperkt voor € 69 excl. btw per maand tot 31 december 2026, daarna € 99 excl. btw per maand, of € 690 excl. btw het eerste jaar, daarna € 990 excl. btw per jaar. Prijzen zijn exclusief belastingen; btw wordt toegepast volgens de geldende regels.
+- **Analyse**: één klant die met AeroX wordt geanalyseerd, één keer geteld per glijdende periode van 30 dagen. Nieuwe sessies met dezelfde klant in die periode worden niet geteld.
+- **Gratis proefperiode**: het eerste abonnement begint met een **gratis proefperiode van 14 dagen** (verlengd tot 1 november 2026 bij een eerdere afsluiting). Ze is voorbehouden aan bedrijven waarvan de identificatie is gecontroleerd (btw-nummer, Frans SIREN of SIRET, of een door AeroX goedgekeurde website), één proefperiode per bedrijf. Bij de start wordt een geldig betaalmiddel geregistreerd; **tijdens de proefperiode wordt niets afgeschreven** en analyses tijdens de proefperiode worden niet gefactureerd.
+- **Einde van de proefperiode**: **tenzij vóór het einde van de proefperiode opgezegd, start het gekozen abonnement automatisch na afloop en wordt de eerste betaling die dag afgeschreven** van het geregistreerde betaalmiddel. De einddatum wordt bij het afsluiten en in de bike-fitterruimte getoond.
+- **Opzeggen tijdens de proefperiode**: op elk moment vóór het einde van de proefperiode, in de bike-fitterruimte („Proefperiode opzeggen”). Er wordt dan niets afgeschreven en de toegang blijft open tot het einde van de proefperiode.
+- **Looptijd en opzegging**: abonnementen hebben geen minimale looptijd en worden stilzwijgend per periode (maand of jaar) verlengd. Ze zijn op elk moment op te zeggen in de bike-fitterruimte; de opzegging gaat in aan het einde van de lopende, al betaalde periode, zonder terugbetaling naar rato.
+- **Wijzigen van formule**: overstappen naar een hogere formule gaat meteen, met het verschil naar rato; naar een lagere formule aan het einde van de lopende periode.
+- **Betalingsachterstand**: mislukt een betaling, dan blijft de toegang 7 dagen behouden; daarna wordt het account alleen-lezen tot betaling. Verschuldigde bedragen blijven opeisbaar.
+- **Facturen**: beschikbaar in de bike-fitterruimte („Facturatie beheren”).
+- **Professionals**: de bike-fitterformules zijn voorbehouden aan professionals die handelen in het kader van hun bedrijf; het herroepingsrecht voor consumenten is niet van toepassing.
 
 ---
 

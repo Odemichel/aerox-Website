@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP } from '../src/lib/billing/catalog';
 import {
+  DEFAULT_OFFER,
+  suggestUpgrade,
+  trialEnd,
   graceAfterPaymentFailureEnd,
   isDowngrade,
   isOffer,
@@ -17,9 +20,11 @@ const NOW = Date.UTC(2026, 9, 1, 12);
 
 describe('offres', () => {
   it('reconnaît les offres, rien d’autre', () => {
-    expect(isOffer('studio')).toBe(true);
-    expect(isOffer('payg')).toBe(true);
+    expect(isOffer('essential')).toBe(true);
     expect(isOffer('unlimited_annual')).toBe(true);
+    // Grille du 24/09/2026, jamais vendue : plus proposée.
+    expect(isOffer('studio')).toBe(false);
+    expect(isOffer('payg')).toBe(false);
     expect(isOffer('pack')).toBe(false);
     expect(isOffer('legacy')).toBe(false);
     expect(isOffer('__proto__')).toBe(false);
@@ -27,11 +32,14 @@ describe('offres', () => {
   });
 
   it('monter est immédiat, descendre attend la fin de période', () => {
-    expect(isDowngrade('unlimited', 'studio')).toBe(true);
+    expect(isDowngrade('unlimited', 'essential')).toBe(true);
     expect(isDowngrade('unlimited_annual', 'unlimited')).toBe(true);
-    expect(isDowngrade('studio', 'payg')).toBe(true);
-    expect(isDowngrade('payg', 'studio')).toBe(false);
-    expect(isDowngrade('studio', 'unlimited_launch')).toBe(false);
+    expect(isDowngrade('essential', 'unlimited')).toBe(false);
+    expect(isDowngrade('essential', 'unlimited_launch')).toBe(false);
+  });
+
+  it('offre par défaut de l’essai : Essentiel', () => {
+    expect(DEFAULT_OFFER).toBe('essential');
   });
 });
 
@@ -50,14 +58,12 @@ describe('offre de lancement', () => {
 
 describe('planFromLookupKeys', () => {
   it('déduit le plan des prix de l’abonnement', () => {
-    expect(planFromLookupKeys([LOOKUP.studioBase, LOOKUP.studioUsage])).toBe('studio');
+    expect(planFromLookupKeys([LOOKUP.essentialBase, LOOKUP.essentialUsage])).toBe('essential');
     expect(planFromLookupKeys([LOOKUP.unlimited])).toBe('unlimited');
     expect(planFromLookupKeys([LOOKUP.unlimitedLaunch])).toBe('unlimited_launch');
-    expect(planFromLookupKeys([LOOKUP.unlimitedLaunchAfter])).toBe('unlimited_launch');
     expect(planFromLookupKeys([LOOKUP.unlimitedYear])).toBe('unlimited');
-    expect(planFromLookupKeys([LOOKUP.payg])).toBe('payg');
     expect(offerFromLookupKeys([LOOKUP.unlimitedYear])).toBe('unlimited_annual');
-    expect(offerFromLookupKeys([LOOKUP.studioBase, LOOKUP.studioUsage])).toBe('studio');
+    expect(offerFromLookupKeys([LOOKUP.essentialBase, LOOKUP.essentialUsage])).toBe('essential');
   });
 
   it('ignore un abonnement étranger (Founding Partner)', () => {
@@ -114,24 +120,38 @@ describe('graceAfterPaymentFailureEnd', () => {
 
 describe('subscriptionStart', () => {
   const anchor = BF_AVAILABLE_AT / 1000;
-  it('annuel : facturation ancrée au 1er novembre, sans prorata', () => {
-    expect(subscriptionStart(NOW, true)).toEqual({ billing_cycle_anchor: anchor, proration_behavior: 'none' });
+  const DAY = 86_400_000;
+
+  it('premier abonnement : 14 jours d’essai, jamais avant le 1er novembre', () => {
+    // Souscrit le 1er octobre : essai jusqu'au 1er novembre (plus de 14 jours).
+    expect(subscriptionStart(NOW, false, true)).toEqual({ trial_end: anchor });
+    expect(subscriptionStart(NOW, true, true)).toEqual({ trial_end: anchor });
+    // Souscrit le 25 octobre : 14 jours, jusqu'au 8 novembre.
+    const late = Date.UTC(2026, 9, 25, 10);
+    expect(subscriptionStart(late, false, true)).toEqual({ trial_end: Math.floor((late + 14 * DAY) / 1000) });
+    // Après la mise à disposition : 14 jours.
+    const after = BF_AVAILABLE_AT + 10 * DAY;
+    expect(trialEnd(after)).toBe(Math.floor((after + 14 * DAY) / 1000));
   });
 
-  it('mensuel à moins d’un mois : ancrée aussi', () => {
-    expect(subscriptionStart(Date.UTC(2026, 9, 5), false)).toEqual({
+  it('essai déjà utilisé, annuel : facturation ancrée au 1er novembre, sans prorata', () => {
+    expect(subscriptionStart(NOW, true, false)).toEqual({ billing_cycle_anchor: anchor, proration_behavior: 'none' });
+  });
+
+  it('essai déjà utilisé, mensuel à moins d’un mois : ancrée aussi', () => {
+    expect(subscriptionStart(Date.UTC(2026, 9, 5), false, false)).toEqual({
       billing_cycle_anchor: anchor,
       proration_behavior: 'none',
     });
   });
 
-  it('mensuel à plus d’un mois : période d’essai Stripe (ancrage refusé par Stripe)', () => {
-    expect(subscriptionStart(Date.UTC(2026, 8, 26), false)).toEqual({ trial_end: anchor });
+  it('essai déjà utilisé, mensuel à plus d’un mois : période d’essai Stripe (ancrage refusé)', () => {
+    expect(subscriptionStart(Date.UTC(2026, 8, 26), false, false)).toEqual({ trial_end: anchor });
   });
 
-  it('après la mise à disposition : facturation immédiate', () => {
-    expect(subscriptionStart(BF_AVAILABLE_AT + 1, false)).toEqual({});
-    expect(subscriptionStart(BF_AVAILABLE_AT - 30 * 60 * 1000, true)).toEqual({});
+  it('essai déjà utilisé, après la mise à disposition : facturation immédiate', () => {
+    expect(subscriptionStart(BF_AVAILABLE_AT + 1, false, false)).toEqual({});
+    expect(subscriptionStart(BF_AVAILABLE_AT - 30 * 60 * 1000, true, false)).toEqual({});
   });
 });
 
@@ -142,46 +162,57 @@ describe('transitions de plan', () => {
 });
 
 describe('nextInvoiceCentsForOffer', () => {
-  const est = (offer: Parameters<typeof nextInvoiceCentsForOffer>[0], n = 0, now = NOW, end: number | null = null) =>
-    nextInvoiceCentsForOffer(offer, n, now, end);
+  const est = (
+    offer: Parameters<typeof nextInvoiceCentsForOffer>[0],
+    n = 0,
+    now = NOW,
+    end: number | null = null,
+    inTrial = false
+  ) => nextInvoiceCentsForOffer(offer, n, now, end, inTrial);
 
-  it('À l’usage : 20 € par analyse', () => {
-    expect(est('payg', 3)).toBe(6000);
+  it('Essentiel : 20 € + 15 € par analyse (6 analyses → 110 €)', () => {
+    expect(est('essential', 6)).toBe(11000);
+    expect(est('essential', 0)).toBe(2000);
   });
 
-  it('Studio : 79 € + 10 € par analyse au-delà de 5 (14 analyses → 169 €)', () => {
-    expect(est('studio', 14)).toBe(16900);
-    expect(est('studio', 3)).toBe(7900);
+  it('Essentiel en essai : analyses gratuites, premier prélèvement 20 €', () => {
+    expect(est('essential', 9, NOW, null, true)).toBe(2000);
   });
 
-  it('paliers : usage < 4, Studio de 4 à 9, Illimité dès 10', () => {
-    expect(est('payg', 3)).toBeLessThan(est('studio', 3));
-    expect(est('studio', 4)).toBeLessThan(est('payg', 4));
-    expect(est('studio', 10)).toBeGreaterThan(11900);
+  it('bascule : Essentiel jusqu’à 5 analyses, Illimité dès 6', () => {
+    expect(est('essential', 5)).toBeLessThan(est('unlimited'));
+    expect(est('essential', 6)).toBeGreaterThan(est('unlimited'));
   });
 
-  it('Illimité : 119 €/mois ou 1 190 €/an', () => {
-    expect(est('unlimited')).toBe(11900);
-    expect(est('unlimited_annual')).toBe(119000);
+  it('Illimité : 99 €/mois ou 990 €/an', () => {
+    expect(est('unlimited')).toBe(9900);
+    expect(est('unlimited_annual')).toBe(99000);
   });
 
-  it('lancement mensuel : 69 € puis le tarif normal, 119 €', () => {
+  it('lancement mensuel : 69 € puis le tarif normal, 99 €', () => {
     expect(est('unlimited_launch')).toBe(6900);
-    expect(est('unlimited_launch', 0, LAUNCH_OFFER.switchAt)).toBe(11900);
+    expect(est('unlimited_launch', 0, NOW, LAUNCH_OFFER.switchAt)).toBe(9900);
   });
 
-  it('lancement annuel : 690 € la 1re année, puis le tarif normal, 1 190 €', () => {
-    expect(est('unlimited_launch_annual', 0, NOW, BF_AVAILABLE_AT)).toBe(69000);
-    expect(est('unlimited_launch_annual', 0, NOW, BF_AVAILABLE_AT + 365 * 86400000)).toBe(119000);
+  it('lancement annuel : 690 € en fin d’essai, puis le tarif normal, 990 €', () => {
+    expect(est('unlimited_launch_annual', 0, NOW, null, true)).toBe(69000);
+    expect(est('unlimited_launch_annual', 0, NOW, BF_AVAILABLE_AT + 365 * 86400000)).toBe(99000);
+  });
+});
+
+describe('suggestUpgrade', () => {
+  it('Essentiel à partir de 7 analyses sur la période', () => {
+    expect(suggestUpgrade('essential', 6)).toBe(false);
+    expect(suggestUpgrade('essential', 7)).toBe(true);
+    expect(suggestUpgrade('unlimited', 30)).toBe(false);
+    expect(suggestUpgrade(null, 30)).toBe(false);
   });
 });
 
 describe('offre de lancement annuelle', () => {
   it('reconnue par ses prix, plan « lancement » (mêmes places)', () => {
     expect(planFromLookupKeys([LOOKUP.unlimitedLaunchYear])).toBe('unlimited_launch');
-    expect(planFromLookupKeys([LOOKUP.unlimitedLaunchYearAfter])).toBe('unlimited_launch');
     expect(offerFromLookupKeys([LOOKUP.unlimitedLaunchYear])).toBe('unlimited_launch_annual');
-    expect(offerFromLookupKeys([LOOKUP.unlimitedLaunchYearAfter])).toBe('unlimited_launch_annual');
     expect(isOffer('unlimited_launch_annual')).toBe(true);
   });
 

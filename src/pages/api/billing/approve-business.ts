@@ -68,7 +68,7 @@ ${
     : `<p>Identifiant saisi : <strong>${escapeHtml(String(id.id_key).replace(/^[A-Z]+:/, ''))}</strong></p>`
 }
 <p>À vérifier : le site présente bien un studio de bike fitting ou un magasin vélo, et son nom correspond au compte.</p>
-<p>Valider ouvre l’essai de 14 jours de ce compte.</p>
+<p>Valider autorise ce compte à démarrer son essai de 14 jours (offre choisie et carte enregistrée).</p>
 <form method="post"><input type="hidden" name="u" value="${escapeHtml(user)}"><input type="hidden" name="t" value="${escapeHtml(token)}">
 <button type="submit" style="background: #f59e0b; border: 0; padding: 12px 22px; border-radius: 8px; font-weight: 600; cursor: pointer;">Valider</button></form>`
   );
@@ -86,6 +86,6 @@ export const POST: APIRoute = async ({ request }) => {
     return page('Erreur', '<p>La validation a échoué. Réessayez dans un instant.</p>', 500);
   }
   return data === 'granted'
-    ? page('Studio validé', '<p>L’essai de 14 jours de ce compte est ouvert.</p>')
+    ? page('Studio validé', '<p>Ce compte peut démarrer son essai de 14 jours depuis son espace.</p>')
     : page('Rien à valider', '<p>Rien en attente pour ce compte (déjà validé ?).</p>');
 };
