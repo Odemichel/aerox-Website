@@ -645,9 +645,9 @@ async function s24ManualReview() {
   );
   const b = await billing(bf.id);
   check(b?.trial_state === 'granted' && !b?.trial_ends_at, 'essai autorisé (il démarre avec l’abonnement)');
-  check((await register(bf, c)).status === 'counted', 'analyse comptée après validation');
+  check((await register(bf, c)).reason === 'needs_card', 'après validation : l’essai démarre avec l’abonnement');
 
-  const other = await createBf('biz-web-bis');
+  const other = await createBf('biz-web-bis', false);
   const dup = await submitBusinessId(other, 'example.com');
   check(dup.body.result === 'already_used', 'même site, autre compte : refusé', String(dup.body.result));
 }
@@ -1524,7 +1524,7 @@ async function p6RefundBeforePurchase() {
 async function p7BfMultiple() {
   console.log('\nP7 — Bike fitter : saisies répétées, rôle, corps piégé');
   await admin.from('bf_business_ids').delete().like('id_key', 'WEB:example.%');
-  const bf = await createBf('biz-twice');
+  const bf = await createBf('biz-twice', false);
   const first = await submitBusinessId(bf, 'example.org');
   const second = await submitBusinessId(bf, 'example.net');
   check(
