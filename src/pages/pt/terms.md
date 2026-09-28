@@ -3,7 +3,7 @@ title: 'Termos de Uso'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Última atualização: 27 de setembro de 2026_
+_Última atualização: 28 de setembro de 2026_
 
 Obrigado por usar o **AeroX**, a solução que transforma o seu rolo de treino em um túnel de vento virtual.  
 Estes Termos de Uso regem o acesso e o uso do serviço AeroX.  
@@ -60,7 +60,7 @@ Este artigo aplica-se às contas de bike fitter. Em caso de contradição, preva
 
 - **Planos**: **Essencial**, 20 € sem IVA por mês mais 15 € sem IVA por análise, faturados no fim de cada período mensal; **Ilimitado**, 99 € sem IVA por mês ou 990 € sem IVA por ano. **Oferta de lançamento**, reservada aos 20 primeiros estúdios e subscrita até 31 de dezembro de 2026: Ilimitado a 69 € sem IVA por mês até 31 de dezembro de 2026, depois 99 € sem IVA por mês, ou 690 € sem IVA no primeiro ano, depois 990 € sem IVA por ano. Os preços não incluem impostos; o IVA é aplicado de acordo com a regulamentação em vigor.
 - **Análise**: um cliente analisado com o AeroX, contado uma vez por período móvel de 30 dias. As novas sessões do mesmo cliente nesse período não são contadas.
-- **Teste gratuito**: a primeira assinatura começa com um **teste gratuito de 14 dias** (prolongado até 1 de novembro de 2026 para uma subscrição anterior). É reservado a empresas cujo identificador foi verificado (número de IVA intracomunitário, SIREN ou SIRET francês, ou site validado pela AeroX), um teste por empresa. No início do teste é registado um meio de pagamento válido; **nada é cobrado durante o teste**, e as análises realizadas durante o teste não são faturadas.
+- **Teste gratuito**: a primeira assinatura começa com um **teste gratuito de 14 dias** (para uma subscrição anterior, os 14 dias só começam a contar quando a nova versão da aplicação estiver disponível, a 20 de outubro de 2026). É reservado a empresas cujo identificador foi verificado (número de IVA intracomunitário, SIREN ou SIRET francês, ou site validado pela AeroX), um teste por empresa. No início do teste é registado um meio de pagamento válido; **nada é cobrado durante o teste**, e as análises realizadas durante o teste não são faturadas.
 - **Fim do teste**: **salvo cancelamento antes do fim do teste, a assinatura escolhida começa automaticamente no seu termo e o primeiro pagamento é cobrado nesse dia** no meio de pagamento registado. A data de fim do teste é indicada na subscrição e no espaço de bike fitter.
 - **Cancelar durante o teste**: a qualquer momento antes do fim do teste, no espaço de bike fitter («Cancelar o teste»). Nesse caso nada é cobrado e o acesso mantém-se até ao fim do teste.
 - **Duração e cancelamento**: as assinaturas não têm fidelização e renovam-se tacitamente por período (mês ou ano). Cancelam-se a qualquer momento no espaço de bike fitter; o cancelamento produz efeito no fim do período em curso, já pago, sem reembolso proporcional.

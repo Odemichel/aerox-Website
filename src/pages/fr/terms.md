@@ -3,7 +3,7 @@ title: 'Conditions Générales d’Utilisation'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Dernière mise à jour : 27 septembre 2026_
+_Dernière mise à jour : 28 septembre 2026_
 
 Merci d’utiliser **AeroX**, la solution qui transforme ton home-trainer en soufflerie virtuelle.  
 Ces Conditions Générales d’Utilisation (CGU) encadrent l’accès et l’usage du service AeroX.  
@@ -60,7 +60,7 @@ Cet article s’applique aux comptes bike fitter. En cas de contradiction, il pr
 
 - **Offres** : **Essentiel**, 20 € HT par mois, plus 15 € HT par analyse, facturées à la fin de chaque période mensuelle ; **Illimité**, 99 € HT par mois ou 990 € HT par an. **Offre de lancement**, réservée aux 20 premiers studios et souscrite au plus tard le 31 décembre 2026 : l’Illimité à 69 € HT par mois jusqu’au 31 décembre 2026 puis 99 € HT par mois, ou 690 € HT la première année puis 990 € HT par an. Les prix sont hors taxes ; la TVA est appliquée selon la réglementation en vigueur.
 - **Analyse** : un client analysé avec AeroX, décompté une fois par période glissante de 30 jours. Les nouvelles séances du même client pendant cette période ne sont pas décomptées.
-- **Essai gratuit** : la première souscription commence par un **essai gratuit de 14 jours** (prolongé jusqu’au 1er novembre 2026 pour une souscription antérieure). Il est réservé aux entreprises dont l’identifiant a été vérifié (SIREN ou SIRET, n° de TVA intracommunautaire, ou site internet validé par AeroX), à raison d’un essai par entreprise. Un moyen de paiement valide est enregistré au démarrage de l’essai ; **aucun montant n’est prélevé pendant l’essai**, et les analyses réalisées pendant l’essai ne sont pas facturées.
+- **Essai gratuit** : la première souscription commence par un **essai gratuit de 14 jours** (les 14 jours ne sont décomptés qu’à partir de la mise à disposition de la nouvelle version de l’application, le 20 octobre 2026, pour une souscription antérieure). Il est réservé aux entreprises dont l’identifiant a été vérifié (SIREN ou SIRET, n° de TVA intracommunautaire, ou site internet validé par AeroX), à raison d’un essai par entreprise. Un moyen de paiement valide est enregistré au démarrage de l’essai ; **aucun montant n’est prélevé pendant l’essai**, et les analyses réalisées pendant l’essai ne sont pas facturées.
 - **Fin de l’essai** : **sauf résiliation avant la fin de l’essai, l’abonnement choisi démarre automatiquement à son terme et le premier paiement est prélevé ce jour-là** sur le moyen de paiement enregistré. La date de fin de l’essai est indiquée lors de la souscription et dans l’espace bike fitter.
 - **Résilier pendant l’essai** : à tout moment avant la fin de l’essai, depuis l’espace bike fitter (« Résilier l’essai »). Aucun montant n’est alors prélevé, et l’accès reste ouvert jusqu’à la fin de l’essai.
 - **Durée et résiliation** : les abonnements sont sans engagement de durée et reconduits tacitement par période (mois ou année). Ils se résilient à tout moment depuis l’espace bike fitter ; la résiliation prend effet à la fin de la période en cours, déjà payée, sans remboursement au prorata.

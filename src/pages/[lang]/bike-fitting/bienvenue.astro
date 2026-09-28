@@ -44,7 +44,7 @@ const steps = [1, 2, 3, 4].map((i) => ({ i, title: t(dict, `onb.s${i}.title`), d
 
               {s.i === 1 && (
                 <div class="mt-4">
-                  <DownloadGate lang={lang}>
+                  <DownloadGate lang={lang} trialNote="always">
                     <div class="flex flex-col sm:flex-row gap-3">
                       <a href={DOWNLOADS.mac} class="btn-primary justify-center" download>
                         <Icon name="tabler:brand-apple" class="h-5 w-5" />

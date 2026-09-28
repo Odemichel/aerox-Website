@@ -3,7 +3,7 @@ title: 'Condiciones de Uso'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Última actualización: 27 de septiembre de 2026_
+_Última actualización: 28 de septiembre de 2026_
 
 Gracias por usar **AeroX**, la solución que convierte tu rodillo en un túnel de viento virtual.  
 Estas Condiciones de Uso regulan el acceso y el uso del servicio AeroX.  
@@ -60,7 +60,7 @@ Este artículo se aplica a las cuentas de bike fitter. En caso de contradicción
 
 - **Planes**: **Esencial**, 20 € sin IVA al mes más 15 € sin IVA por análisis, facturados al final de cada periodo mensual; **Ilimitado**, 99 € sin IVA al mes o 990 € sin IVA al año. **Oferta de lanzamiento**, reservada a los 20 primeros estudios y contratada a más tardar el 31 de diciembre de 2026: Ilimitado a 69 € sin IVA al mes hasta el 31 de diciembre de 2026 y después 99 € sin IVA al mes, o 690 € sin IVA el primer año y después 990 € sin IVA al año. Los precios no incluyen impuestos; el IVA se aplica según la normativa vigente.
 - **Análisis**: un cliente analizado con AeroX, contado una vez por periodo móvil de 30 días. Las nuevas sesiones del mismo cliente durante ese periodo no se cuentan.
-- **Prueba gratuita**: la primera suscripción empieza con una **prueba gratuita de 14 días** (ampliada hasta el 1 de noviembre de 2026 para una suscripción anterior). Está reservada a empresas cuyo identificador se haya verificado (número de IVA intracomunitario, SIREN o SIRET francés, o web validada por AeroX), una prueba por empresa. Al empezar la prueba se registra un medio de pago válido; **no se cobra nada durante la prueba** y los análisis realizados durante la prueba no se facturan.
+- **Prueba gratuita**: la primera suscripción empieza con una **prueba gratuita de 14 días** (para una suscripción anterior, los 14 días solo empiezan a contar cuando la nueva versión de la aplicación esté disponible, el 20 de octubre de 2026). Está reservada a empresas cuyo identificador se haya verificado (número de IVA intracomunitario, SIREN o SIRET francés, o web validada por AeroX), una prueba por empresa. Al empezar la prueba se registra un medio de pago válido; **no se cobra nada durante la prueba** y los análisis realizados durante la prueba no se facturan.
 - **Fin de la prueba**: **salvo cancelación antes del final de la prueba, la suscripción elegida empieza automáticamente al terminar y el primer pago se cobra ese día** en el medio de pago registrado. La fecha de fin de la prueba se indica al contratar y en el espacio de bike fitter.
 - **Cancelar durante la prueba**: en cualquier momento antes del final de la prueba, desde el espacio de bike fitter («Cancelar la prueba»). En ese caso no se cobra nada y el acceso sigue abierto hasta el final de la prueba.
 - **Duración y cancelación**: las suscripciones no tienen permanencia y se renuevan tácitamente por periodos (mes o año). Se cancelan en cualquier momento desde el espacio de bike fitter; la cancelación surte efecto al final del periodo en curso, ya pagado, sin reembolso proporcional.

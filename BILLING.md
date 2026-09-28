@@ -116,8 +116,11 @@ Principes :
      (`business_id_used`). Vérifiée, l'entreprise passe en
      `trial_state = granted` : la souscription avec essai est autorisée ;
   2. il choisit son offre (Essentiel par défaut) : Checkout avec carte,
-     `subscription_data.trial_end` = maintenant + 14 jours (au plus tôt le
-     1er novembre 2026), acceptation des CGV obligatoire
+     `subscription_data.trial_end` = 14 jours comptés à partir de la sortie
+     de l'application (`NEXT_RELEASE.opensAt`, 20/10/2026) si l'on souscrit
+     avant, sinon à partir de la souscription (`trialEnd`, décision du
+     2026-09-28 : aucun jour d'essai sans application téléchargeable),
+     acceptation des CGV obligatoire
      (`consent_collection`, article 5 bis) et date de fin d'essai sous le
      bouton. `/api/billing/checkout/` refuse un premier abonnement sans
      entreprise vérifiée (`E_NEEDS_BUSINESS_ID`) ;
@@ -157,8 +160,11 @@ Principes :
   d'un mois avant la date (jusqu'au 1er octobre), une offre mensuelle passe
   par une période d'essai Stripe (`trial_end`), que Checkout présente en
   « jours gratuits ». Ce démarrage ne concerne plus que les réabonnements
-  sans essai : un premier abonnement a son essai jusqu'au 1er novembre au
-  moins (test S23 pour l'usage d'avant le 1er novembre).
+  sans essai : un premier abonnement a son essai jusqu'au 20 octobre + 14
+  jours au moins (test S23 pour l'usage d'avant le 1er novembre). Si la
+  sortie est décalée, changer `NEXT_RELEASE.opensAt` vaut pour les nouveaux
+  essais ; ceux déjà démarrés se prolongent chez Stripe (`trial_end` de
+  l'abonnement).
   Les schedules (lancement, descente) conservent un éventuel `trial_end`.
 - **Factures** : PDF créée par Stripe à chaque paiement, téléchargeable dans
   « Gérer ma facturation » (portail). Aucun e-mail de reçu n'est promis

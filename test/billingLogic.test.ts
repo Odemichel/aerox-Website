@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP } from '../src/lib/billing/catalog';
+import { NEXT_RELEASE } from '../src/config/downloads';
 import {
   DEFAULT_OFFER,
   suggestUpgrade,
@@ -122,14 +123,15 @@ describe('subscriptionStart', () => {
   const anchor = BF_AVAILABLE_AT / 1000;
   const DAY = 86_400_000;
 
-  it('premier abonnement : 14 jours d’essai, jamais avant le 1er novembre', () => {
-    // Souscrit le 1er octobre : essai jusqu'au 1er novembre (plus de 14 jours).
-    expect(subscriptionStart(NOW, false, true)).toEqual({ trial_end: anchor });
-    expect(subscriptionStart(NOW, true, true)).toEqual({ trial_end: anchor });
-    // Souscrit le 25 octobre : 14 jours, jusqu'au 8 novembre.
+  it('premier abonnement : 14 jours d’essai comptés à partir de la sortie de l’application', () => {
+    const fromRelease = Math.floor((NEXT_RELEASE.opensAt + 14 * DAY) / 1000);
+    // Souscrit le 1er octobre, avant la sortie (20 octobre) : 14 jours à partir du 20.
+    expect(subscriptionStart(NOW, false, true)).toEqual({ trial_end: fromRelease });
+    expect(subscriptionStart(NOW, true, true)).toEqual({ trial_end: fromRelease });
+    expect(fromRelease * 1000).toBeGreaterThan(BF_AVAILABLE_AT);
+    // Souscrit le 25 octobre, après la sortie : 14 jours, jusqu'au 8 novembre.
     const late = Date.UTC(2026, 9, 25, 10);
     expect(subscriptionStart(late, false, true)).toEqual({ trial_end: Math.floor((late + 14 * DAY) / 1000) });
-    // Après la mise à disposition : 14 jours.
     const after = BF_AVAILABLE_AT + 10 * DAY;
     expect(trialEnd(after)).toBe(Math.floor((after + 14 * DAY) / 1000));
   });

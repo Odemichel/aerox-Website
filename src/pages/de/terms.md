@@ -3,7 +3,7 @@ title: 'Allgemeine Nutzungsbedingungen'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Letzte Aktualisierung: 27. September 2026_
+_Letzte Aktualisierung: 28. September 2026_
 
 Vielen Dank, dass Sie **AeroX** nutzen – die Lösung, die Ihren Rollentrainer in einen virtuellen Windkanal verwandelt.
 Diese Allgemeinen Nutzungsbedingungen (ANB) regeln den Zugang zu und die Nutzung des AeroX-Dienstes.
@@ -60,7 +60,7 @@ Dieser Abschnitt gilt für Bike-Fitter-Konten. Bei Widersprüchen hat er Vorrang
 
 - **Tarife**: **Essential**, 20 € netto pro Monat zuzüglich 15 € netto pro Analyse, abgerechnet am Ende jedes Monatszeitraums; **Unbegrenzt**, 99 € netto pro Monat oder 990 € netto pro Jahr. **Einführungsangebot**, den ersten 20 Studios vorbehalten und bis spätestens 31. Dezember 2026 abzuschließen: Unbegrenzt für 69 € netto pro Monat bis 31. Dezember 2026, danach 99 € netto pro Monat, oder 690 € netto im ersten Jahr, danach 990 € netto pro Jahr. Alle Preise verstehen sich netto; die Mehrwertsteuer wird nach geltendem Recht berechnet.
 - **Analyse**: ein mit AeroX analysierter Kunde, gezählt einmal pro gleitendem Zeitraum von 30 Tagen. Weitere Sitzungen desselben Kunden in diesem Zeitraum werden nicht gezählt.
-- **Kostenloser Test**: Das erste Abonnement beginnt mit einem **kostenlosen Test von 14 Tagen** (bei früherem Abschluss verlängert bis 1. November 2026). Er ist Unternehmen vorbehalten, deren Kennung geprüft wurde (USt-IdNr., französische SIREN/SIRET oder von AeroX bestätigte Website), ein Test pro Unternehmen. Beim Start des Tests wird ein gültiges Zahlungsmittel hinterlegt; **während des Tests wird nichts abgebucht**, und Analysen während des Tests werden nicht berechnet.
+- **Kostenloser Test**: Das erste Abonnement beginnt mit einem **kostenlosen Test von 14 Tagen** (bei früherem Abschluss werden die 14 Tage erst ab Bereitstellung der neuen App-Version am 20. Oktober 2026 gezählt). Er ist Unternehmen vorbehalten, deren Kennung geprüft wurde (USt-IdNr., französische SIREN/SIRET oder von AeroX bestätigte Website), ein Test pro Unternehmen. Beim Start des Tests wird ein gültiges Zahlungsmittel hinterlegt; **während des Tests wird nichts abgebucht**, und Analysen während des Tests werden nicht berechnet.
 - **Ende des Tests**: **Ohne Kündigung vor Ende des Tests beginnt das gewählte Abonnement automatisch mit dessen Ablauf, und die erste Zahlung wird an diesem Tag** vom hinterlegten Zahlungsmittel **eingezogen**. Das Enddatum des Tests wird beim Abschluss und im Bike-Fitter-Bereich angezeigt.
 - **Kündigung während des Tests**: jederzeit vor Ende des Tests im Bike-Fitter-Bereich („Test kündigen“). Es wird dann nichts abgebucht, und der Zugang bleibt bis zum Ende des Tests bestehen.
 - **Laufzeit und Kündigung**: Die Abonnements haben keine Mindestlaufzeit und verlängern sich automatisch um jeweils einen Zeitraum (Monat oder Jahr). Sie sind jederzeit im Bike-Fitter-Bereich kündbar; die Kündigung wird zum Ende des laufenden, bereits bezahlten Zeitraums wirksam, ohne anteilige Erstattung.

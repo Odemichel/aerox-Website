@@ -6,6 +6,7 @@
 // réseau ; tout ce qui décide est ici, et testé (test/billingLogic.test.ts).
 
 import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP, TRIAL_DAYS, UPGRADE_HINT_AT } from './catalog';
+import { NEXT_RELEASE } from '../../config/downloads';
 
 // `pack` : plan historique (crédits prépayés), plus vendu ; conservé pour les
 // comptes et les crédits existants. `payg` et `studio` (grille du 24/09/2026,
@@ -79,9 +80,15 @@ function oneMonthLater(ms: number): number {
   return d.getTime();
 }
 
-/** Fin de l'essai gratuit : 14 jours, et jamais avant la mise à disposition. */
+/**
+ * Fin de l'essai gratuit : 14 jours comptés à partir du moment où
+ * l'application est téléchargeable (sortie de la nouvelle version,
+ * `NEXT_RELEASE.opensAt`), et jamais avant la mise à disposition des offres.
+ * Souscrire avant la sortie ne consomme donc aucun jour d'essai.
+ */
 export function trialEnd(nowMs: number): number {
-  return Math.floor(Math.max(nowMs + TRIAL_DAYS * DAY_MS, BF_AVAILABLE_AT) / 1000);
+  const start = Math.max(nowMs, NEXT_RELEASE.opensAt);
+  return Math.floor(Math.max(start + TRIAL_DAYS * DAY_MS, BF_AVAILABLE_AT) / 1000);
 }
 
 /**

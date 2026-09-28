@@ -14,9 +14,18 @@ import { NEXT_RELEASE, releaseLinksReady } from '~/config/downloads';
 
 interface Props {
   lang: Locale | string;
+  // Rappel pour les bike fitters : l'essai ne démarre qu'à la sortie.
+  // 'always' (page réservée aux BF) ou 'bf' (masqué sauf compte BF, via
+  // l'attribut data-for-text de l'espace compte).
+  trialNote?: 'always' | 'bf';
 }
-const { lang } = Astro.props;
+const { lang, trialNote } = Astro.props;
 const dict = getDict(lang);
+const releaseDay = new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : lang, {
+  day: 'numeric',
+  month: 'long',
+  timeZone: 'Europe/Paris',
+}).format(new Date(NEXT_RELEASE.opensAt));
 ---
 
 <div
@@ -31,6 +40,16 @@ const dict = getDict(lang);
   <div class="dl-gate-closed rounded-xl border border-primary/40 bg-primary/5 p-5 text-left">
     <p class="font-semibold">{t(dict, 'dl.gate.title')}</p>
     <p class="mt-1 text-muted">{t(dict, 'dl.gate.text')}</p>
+    {
+      trialNote && (
+        <p
+          class={`mt-2 font-semibold ${trialNote === 'bf' ? 'hidden' : ''}`}
+          data-for-text={trialNote === 'bf' ? 'bf' : undefined}
+        >
+          {t(dict, 'dl.gate.trial').replace('{date}', releaseDay)}
+        </p>
+      )
+    }
     <form class="dl-gate-form mt-4 flex flex-wrap items-end gap-3" novalidate>
       <label class="flex min-w-[14rem] flex-1 flex-col gap-1 text-sm">
         <span class="text-muted">{t(dict, 'dl.gate.label')}</span>

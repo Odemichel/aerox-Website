@@ -3,7 +3,7 @@ title: 'Genel Kullanım Koşulları'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Son güncelleme: 27 Eylül 2026_
+_Son güncelleme: 28 Eylül 2026_
 
 **AeroX**'u kullandığınız için teşekkür ederiz. AeroX, ev bisiklet antrenörünüzü sanal bir rüzgar tüneline dönüştüren çözümdür.
 Bu Genel Kullanım Koşulları (GKK), AeroX hizmetine erişimi ve kullanımını düzenlemektedir.
@@ -60,7 +60,7 @@ Bu madde bike fitter hesapları için geçerlidir. 4. ve 9. maddelerle çelişme
 
 - **Planlar**: **Temel**, aylık 20 € KDV hariç artı analiz başına 15 € KDV hariç, her aylık dönemin sonunda faturalanır; **Sınırsız**, aylık 99 € KDV hariç veya yıllık 990 € KDV hariç. **Lansman teklifi**, ilk 20 stüdyoya ayrılmış ve en geç 31 Aralık 2026'ya kadar abone olunmuş: Sınırsız 31 Aralık 2026'ya kadar aylık 69 € KDV hariç, ardından aylık 99 € KDV hariç; veya ilk yıl 690 € KDV hariç, ardından yıllık 990 € KDV hariç. Fiyatlar vergiler hariçtir; KDV yürürlükteki kurallara göre uygulanır.
 - **Analiz**: AeroX ile analiz edilen bir müşteri; 30 günlük kayan dönemde bir kez sayılır. Aynı müşterinin bu dönemdeki yeni seansları sayılmaz.
-- **Ücretsiz deneme**: ilk abonelik **14 günlük ücretsiz denemeyle** başlar (daha önce yapılan abonelikte 1 Kasım 2026'ya kadar uzatılır). Kimliği doğrulanmış şirketlere ayrılmıştır (AB KDV numarası, Fransız SIREN veya SIRET, ya da AeroX tarafından onaylanmış web sitesi); şirket başına bir deneme. Deneme başlarken geçerli bir ödeme yöntemi kaydedilir; **deneme süresince hiçbir ücret alınmaz** ve deneme sırasında yapılan analizler faturalanmaz.
+- **Ücretsiz deneme**: ilk abonelik **14 günlük ücretsiz denemeyle** başlar (daha önce yapılan abonelikte 14 gün, uygulamanın yeni sürümünün kullanıma sunulduğu 20 Ekim 2026'dan itibaren sayılır). Kimliği doğrulanmış şirketlere ayrılmıştır (AB KDV numarası, Fransız SIREN veya SIRET, ya da AeroX tarafından onaylanmış web sitesi); şirket başına bir deneme. Deneme başlarken geçerli bir ödeme yöntemi kaydedilir; **deneme süresince hiçbir ücret alınmaz** ve deneme sırasında yapılan analizler faturalanmaz.
 - **Denemenin sonu**: **deneme bitmeden iptal edilmedikçe, seçilen abonelik süre sonunda otomatik olarak başlar ve ilk ödeme o gün** kayıtlı ödeme yönteminden **alınır**. Denemenin bitiş tarihi abonelik sırasında ve bike fitter alanında gösterilir.
 - **Deneme sırasında iptal**: deneme bitmeden istediğiniz zaman bike fitter alanından („Denemeyi iptal et”). Bu durumda hiçbir ücret alınmaz ve erişim deneme sonuna kadar açık kalır.
 - **Süre ve iptal**: abonelikler taahhütsüzdür ve dönem bazında (ay veya yıl) kendiliğinden yenilenir. Bike fitter alanından istediğiniz zaman iptal edilebilir; iptal, ödenmiş mevcut dönemin sonunda geçerli olur, orantılı iade yapılmaz.

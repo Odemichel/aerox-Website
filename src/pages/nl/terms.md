@@ -3,7 +3,7 @@ title: 'Algemene Gebruiksvoorwaarden'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Laatste update: 27 september 2026_
+_Laatste update: 28 september 2026_
 
 Bedankt voor het gebruik van **AeroX**, de oplossing die uw fietstrainer omtovert in een virtuele windtunnel.
 Deze Algemene Gebruiksvoorwaarden (AGV) regelen de toegang tot en het gebruik van de AeroX-dienst.
@@ -60,7 +60,7 @@ Dit artikel geldt voor bike-fitteraccounts. Bij tegenstrijdigheid heeft het voor
 
 - **Formules**: **Essentieel**, € 20 excl. btw per maand plus € 15 excl. btw per analyse, gefactureerd aan het einde van elke maandperiode; **Onbeperkt**, € 99 excl. btw per maand of € 990 excl. btw per jaar. **Lanceringsaanbod**, voorbehouden aan de eerste 20 studio's en uiterlijk op 31 december 2026 afgesloten: Onbeperkt voor € 69 excl. btw per maand tot 31 december 2026, daarna € 99 excl. btw per maand, of € 690 excl. btw het eerste jaar, daarna € 990 excl. btw per jaar. Prijzen zijn exclusief belastingen; btw wordt toegepast volgens de geldende regels.
 - **Analyse**: één klant die met AeroX wordt geanalyseerd, één keer geteld per glijdende periode van 30 dagen. Nieuwe sessies met dezelfde klant in die periode worden niet geteld.
-- **Gratis proefperiode**: het eerste abonnement begint met een **gratis proefperiode van 14 dagen** (verlengd tot 1 november 2026 bij een eerdere afsluiting). Ze is voorbehouden aan bedrijven waarvan de identificatie is gecontroleerd (btw-nummer, Frans SIREN of SIRET, of een door AeroX goedgekeurde website), één proefperiode per bedrijf. Bij de start wordt een geldig betaalmiddel geregistreerd; **tijdens de proefperiode wordt niets afgeschreven** en analyses tijdens de proefperiode worden niet gefactureerd.
+- **Gratis proefperiode**: het eerste abonnement begint met een **gratis proefperiode van 14 dagen** (bij een eerdere afsluiting tellen de 14 dagen pas vanaf de beschikbaarheid van de nieuwe app-versie, op 20 oktober 2026). Ze is voorbehouden aan bedrijven waarvan de identificatie is gecontroleerd (btw-nummer, Frans SIREN of SIRET, of een door AeroX goedgekeurde website), één proefperiode per bedrijf. Bij de start wordt een geldig betaalmiddel geregistreerd; **tijdens de proefperiode wordt niets afgeschreven** en analyses tijdens de proefperiode worden niet gefactureerd.
 - **Einde van de proefperiode**: **tenzij vóór het einde van de proefperiode opgezegd, start het gekozen abonnement automatisch na afloop en wordt de eerste betaling die dag afgeschreven** van het geregistreerde betaalmiddel. De einddatum wordt bij het afsluiten en in de bike-fitterruimte getoond.
 - **Opzeggen tijdens de proefperiode**: op elk moment vóór het einde van de proefperiode, in de bike-fitterruimte („Proefperiode opzeggen”). Er wordt dan niets afgeschreven en de toegang blijft open tot het einde van de proefperiode.
 - **Looptijd en opzegging**: abonnementen hebben geen minimale looptijd en worden stilzwijgend per periode (maand of jaar) verlengd. Ze zijn op elk moment op te zeggen in de bike-fitterruimte; de opzegging gaat in aan het einde van de lopende, al betaalde periode, zonder terugbetaling naar rato.

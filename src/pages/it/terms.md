@@ -3,7 +3,7 @@ title: "Condizioni d'Uso"
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Ultimo aggiornamento: 27 settembre 2026_
+_Ultimo aggiornamento: 28 settembre 2026_
 
 Grazie per usare **AeroX**, la soluzione che trasforma il tuo rullo in una galleria del vento virtuale.  
 Le presenti Condizioni d'Uso disciplinano l'accesso e l'utilizzo del servizio AeroX.  
@@ -60,7 +60,7 @@ Questo articolo si applica agli account bike fitter. In caso di contrasto, preva
 
 - **Piani**: **Essenziale**, 20 € + IVA al mese più 15 € + IVA per analisi, fatturati alla fine di ogni periodo mensile; **Illimitato**, 99 € + IVA al mese o 990 € + IVA all’anno. **Offerta di lancio**, riservata ai primi 20 studi e sottoscritta entro il 31 dicembre 2026: Illimitato a 69 € + IVA al mese fino al 31 dicembre 2026, poi 99 € + IVA al mese, oppure 690 € + IVA il primo anno, poi 990 € + IVA all’anno. I prezzi sono IVA esclusa; l’IVA è applicata secondo la normativa vigente.
 - **Analisi**: un cliente analizzato con AeroX, conteggiato una volta per periodo mobile di 30 giorni. Le nuove sessioni dello stesso cliente in quel periodo non sono conteggiate.
-- **Prova gratuita**: il primo abbonamento inizia con una **prova gratuita di 14 giorni** (estesa fino al 1° novembre 2026 per una sottoscrizione precedente). È riservata alle aziende il cui identificativo è stato verificato (partita IVA intracomunitaria, SIREN o SIRET francese, o sito validato da AeroX), una prova per azienda. All’inizio della prova viene registrato un metodo di pagamento valido; **nulla viene addebitato durante la prova** e le analisi effettuate durante la prova non sono fatturate.
+- **Prova gratuita**: il primo abbonamento inizia con una **prova gratuita di 14 giorni** (per una sottoscrizione precedente, i 14 giorni decorrono solo dalla disponibilità della nuova versione dell’app, il 20 ottobre 2026). È riservata alle aziende il cui identificativo è stato verificato (partita IVA intracomunitaria, SIREN o SIRET francese, o sito validato da AeroX), una prova per azienda. All’inizio della prova viene registrato un metodo di pagamento valido; **nulla viene addebitato durante la prova** e le analisi effettuate durante la prova non sono fatturate.
 - **Fine della prova**: **salvo disdetta prima della fine della prova, l’abbonamento scelto parte automaticamente alla sua scadenza e il primo pagamento viene addebitato quel giorno** sul metodo di pagamento registrato. La data di fine prova è indicata alla sottoscrizione e nello spazio bike fitter.
 - **Disdire durante la prova**: in qualsiasi momento prima della fine della prova, dallo spazio bike fitter («Disdici la prova»). In tal caso nulla viene addebitato e l’accesso resta aperto fino alla fine della prova.
 - **Durata e disdetta**: gli abbonamenti sono senza vincolo di durata e si rinnovano tacitamente per periodi (mese o anno). Si disdicono in qualsiasi momento dallo spazio bike fitter; la disdetta ha effetto alla fine del periodo in corso, già pagato, senza rimborso pro rata.
