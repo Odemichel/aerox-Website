@@ -10,6 +10,7 @@ import BfPricing from '~/components/widgets/BfPricing.astro';
 import Layout from '../../../layouts/PageLayout.astro';
 import { getDict, t, type Locale } from '~/lib/i18n';
 import { DOWNLOADS } from '~/config/downloads';
+import DownloadGate from '~/components/common/DownloadGate.astro';
 // QR code de l'application mobile (webapp companion), généré une fois en SVG
 // statique : même cible que le QR affiché par l'application desktop.
 import companionQr from '~/assets/images/companion-qr.svg?raw';
@@ -208,14 +209,16 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
                       <dd class="acct-row-value acct-muted">{t(dict, 'dash.download.desktopText')}</dd>
                     </div>
                   </dl>
-                  <div class="acct-actions acct-actions--tight">
-                    <a class="acct-btn acct-btn--primary" href={DOWNLOADS.mac}>
-                      {t(dict, 'dash.download.mac')}
-                    </a>
-                    <a class="acct-btn" href={DOWNLOADS.windows}>
-                      {t(dict, 'dash.download.windows')}
-                    </a>
-                  </div>
+                  <DownloadGate lang={lang}>
+                    <div class="acct-actions acct-actions--tight">
+                      <a class="acct-btn acct-btn--primary" href={DOWNLOADS.mac}>
+                        {t(dict, 'dash.download.mac')}
+                      </a>
+                      <a class="acct-btn" href={DOWNLOADS.windows}>
+                        {t(dict, 'dash.download.windows')}
+                      </a>
+                    </div>
+                  </DownloadGate>
                   <div class="acct-mobile">
                     <div
                       class="acct-qr"

@@ -3,6 +3,7 @@ import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/Layout.astro';
 import { getDict, t } from '~/lib/i18n';
 import { DOWNLOADS } from '~/config/downloads';
+import DownloadGate from '~/components/common/DownloadGate.astro';
 import { isDiagnosticAvailable } from '~/config/diagnostic';
 
 const { lang } = Astro.params;
@@ -38,40 +39,44 @@ const metadata = {
     <!-- ✅ Boutons Mac + Windows (absents pendant la pré-réservation) -->
     {
       !isPreorder && (
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-          {/* macOS */}
-          <a
-            href={DOWNLOADS.mac}
-            class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
-            download
-          >
-            <Icon name="tabler:brand-apple-filled" class="w-10 h-10" />
-            <span class="text-left">
-              <span class="block text-xs leading-none pb-1">
-                {t(dict, 'success.download1')}
-                <span class="text-primary font-bold">AeroX</span>
-                {t(dict, 'success.download2mac')}
-              </span>
-              <span class="block text-base font-semibold leading-none">macOS</span>
-            </span>
-          </a>
+        <div class="mb-8">
+          <DownloadGate lang={lang}>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+              {/* macOS */}
+              <a
+                href={DOWNLOADS.mac}
+                class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
+                download
+              >
+                <Icon name="tabler:brand-apple-filled" class="w-10 h-10" />
+                <span class="text-left">
+                  <span class="block text-xs leading-none pb-1">
+                    {t(dict, 'success.download1')}
+                    <span class="text-primary font-bold">AeroX</span>
+                    {t(dict, 'success.download2mac')}
+                  </span>
+                  <span class="block text-base font-semibold leading-none">macOS</span>
+                </span>
+              </a>
 
-          {/* Windows */}
-          <a
-            href={DOWNLOADS.windows}
-            class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
-            download
-          >
-            <Icon name="tabler:brand-windows-filled" class="w-10 h-10" />
-            <span class="text-left">
-              <span class="block text-xs leading-none pb-1">
-                {t(dict, 'success.download1')}
-                <span class="text-primary font-bold">AeroX</span>
-                {t(dict, 'success.download2win')}
-              </span>
-              <span class="block text-base font-semibold leading-none">Windows</span>
-            </span>
-          </a>
+              {/* Windows */}
+              <a
+                href={DOWNLOADS.windows}
+                class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition"
+                download
+              >
+                <Icon name="tabler:brand-windows-filled" class="w-10 h-10" />
+                <span class="text-left">
+                  <span class="block text-xs leading-none pb-1">
+                    {t(dict, 'success.download1')}
+                    <span class="text-primary font-bold">AeroX</span>
+                    {t(dict, 'success.download2win')}
+                  </span>
+                  <span class="block text-base font-semibold leading-none">Windows</span>
+                </span>
+              </a>
+            </div>
+          </DownloadGate>
         </div>
       )
     }

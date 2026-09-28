@@ -62,3 +62,6 @@ export const leadRateLimiter = createRateLimiter({ limit: 5, windowMs: 10 * 60 *
 // Quota séparé : télécharger le livre ne doit pas consommer celui des demandes
 // de démo/devis, et inversement.
 export const bookRateLimiter = createRateLimiter({ limit: 5, windowMs: 10 * 60 * 1000 });
+
+// Inscription à l'annonce de la nouvelle version (/api/release-notify/).
+export const releaseNotifyRateLimiter = createRateLimiter({ limit: 5, windowMs: 10 * 60 * 1000 });

@@ -1,0 +1,146 @@
+---
+// Téléchargements de l'application desktop suspendus jusqu'à la nouvelle
+// version (src/config/downloads.ts) : le message d'attente remplace les
+// boutons passés en slot.
+//
+// Les personnes à prévenir rejoignent le groupe MailerLite de la sortie
+// (/api/release-notify/) : automatiquement quand elles sont connectées (une
+// fois par adresse et par navigateur), sinon avec leur e-mail.
+//
+// La page peut être pré-rendue : l'ouverture (date passée ET liens de la
+// nouvelle version publiés) est vérifiée dans le navigateur, sans rebuild.
+import { getDict, t, type Locale } from '~/lib/i18n';
+import { NEXT_RELEASE, releaseLinksReady } from '~/config/downloads';
+
+interface Props {
+  lang: Locale | string;
+}
+const { lang } = Astro.props;
+const dict = getDict(lang);
+---
+
+<div
+  class="dl-gate"
+  data-opens-at={NEXT_RELEASE.opensAt}
+  data-ready={releaseLinksReady() ? '1' : ''}
+  data-lang={lang}
+  data-done={t(dict, 'dl.gate.done')}
+  data-invalid={t(dict, 'dl.gate.invalid')}
+  data-error={t(dict, 'dl.gate.error')}
+>
+  <div class="dl-gate-closed rounded-xl border border-primary/40 bg-primary/5 p-5 text-left">
+    <p class="font-semibold">{t(dict, 'dl.gate.title')}</p>
+    <p class="mt-1 text-muted">{t(dict, 'dl.gate.text')}</p>
+    <form class="dl-gate-form mt-4 flex flex-wrap items-end gap-3" novalidate>
+      <label class="flex min-w-[14rem] flex-1 flex-col gap-1 text-sm">
+        <span class="text-muted">{t(dict, 'dl.gate.label')}</span>
+        <input
+          type="email"
+          name="email"
+          required
+          autocomplete="email"
+          placeholder={t(dict, 'dl.gate.placeholder')}
+          class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-base text-gray-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+        />
+      </label>
+      <!-- Honeypot : invisible pour un humain -->
+      <input type="text" name="hp" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+      <button type="submit" class="btn-primary px-5 py-2">{t(dict, 'dl.gate.cta')}</button>
+    </form>
+    <p class="dl-gate-status mt-3 hidden text-sm font-semibold" role="status" aria-live="polite"></p>
+  </div>
+  <div class="dl-gate-open hidden">
+    <slot />
+  </div>
+</div>
+
+<script>
+  import { supabase } from '~/config/supabaseClient';
+
+  const remembered = (email: string) => {
+    try {
+      return localStorage.getItem(`aerox-release-notify:${email}`) === '1';
+    } catch {
+      return false;
+    }
+  };
+  const remember = (email: string) => {
+    try {
+      localStorage.setItem(`aerox-release-notify:${email}`, '1');
+    } catch {
+      /* stockage indisponible : on réinscrira, MailerLite dédoublonne */
+    }
+  };
+
+  async function subscribe(email: string, lang: string, hp = '') {
+    const res = await fetch('/api/release-notify/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, lang, hp }),
+    }).catch(() => null);
+    return res?.ok ?? false;
+  }
+
+  function initGates() {
+    document.querySelectorAll<HTMLElement>('.dl-gate').forEach((gate) => {
+      if (gate.dataset.bound === '1') return;
+      gate.dataset.bound = '1';
+      const closed = gate.querySelector<HTMLElement>('.dl-gate-closed')!;
+      const openBox = gate.querySelector<HTMLElement>('.dl-gate-open')!;
+      const form = gate.querySelector<HTMLFormElement>('.dl-gate-form')!;
+      const status = gate.querySelector<HTMLElement>('.dl-gate-status')!;
+      const lang = gate.dataset.lang ?? 'fr';
+
+      if (gate.dataset.ready === '1' && Date.now() >= Number(gate.dataset.opensAt)) {
+        closed.classList.add('hidden');
+        openBox.classList.remove('hidden');
+        return;
+      }
+
+      const show = (text: string, ok: boolean) => {
+        status.textContent = text;
+        status.classList.remove('hidden', 'text-green-600', 'text-red-600');
+        status.classList.add(ok ? 'text-green-600' : 'text-red-600');
+      };
+      const done = (email: string) => {
+        form.classList.add('hidden');
+        show((gate.dataset.done ?? '').replace('{email}', email), true);
+      };
+
+      // Connecté : inscrit d'office, une fois par adresse et par navigateur.
+      supabase.auth.getSession().then(async ({ data }) => {
+        const email = data?.session?.user?.email;
+        if (!email) return;
+        if (remembered(email) || (await subscribe(email, lang))) {
+          remember(email);
+          done(email);
+        }
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const input = form.elements.namedItem('email') as HTMLInputElement;
+        const hp = (form.elements.namedItem('hp') as HTMLInputElement).value;
+        const email = input.value.trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          show(gate.dataset.invalid ?? '', false);
+          input.focus();
+          return;
+        }
+        const button = form.querySelector('button')!;
+        button.disabled = true;
+        const ok = await subscribe(email, lang, hp);
+        button.disabled = false;
+        if (ok) {
+          remember(email);
+          done(email);
+        } else {
+          show(gate.dataset.error ?? '', false);
+        }
+      });
+    });
+  }
+
+  initGates();
+  document.addEventListener('astro:page-load', initGates);
+</script>
