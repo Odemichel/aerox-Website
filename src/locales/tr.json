@@ -772,7 +772,7 @@
   "bfp.perYear": "/yıl",
   "dash.bf.plan.unlimited_annual": "Sınırsız (yıllık)",
   "dash.bf.changeLater": "Değişiklik kaydedildi: ödenen dönemin sonunda, {date} tarihinde geçerli olacak.",
-  "bfp.available": "Planlar 1 Kasım 2026'dan itibaren. Hemen başlayın: 14 günlük denemeniz ancak uygulama 20 Ekim'de yayınlandığında başlar.",
+  "bfp.available": "Planlar 1 Kasım 2026'dan itibaren.",
   "bfp.inc.setup": "Düzeneğinizin bizimle görüntülü görüşmeyle kurulumu",
   "bfp.inc.monthly": "Aylık grup görüntülü görüşmesi: yenilikler ve sorular",
   "bf.cta.trial": "14 günlük ücretsiz deneme",

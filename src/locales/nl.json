@@ -772,7 +772,7 @@
   "bfp.perYear": "/jaar",
   "dash.bf.plan.unlimited_annual": "Onbeperkt (jaarlijks)",
   "dash.bf.changeLater": "Wijziging geregistreerd: gaat in op {date}, aan het einde van de betaalde periode.",
-  "bfp.available": "Formules beschikbaar op 1 november 2026. Begin nu: je proefperiode van 14 dagen start pas bij de release van de app, op 20 oktober.",
+  "bfp.available": "Formules beschikbaar op 1 november 2026.",
   "bfp.inc.setup": "Installatie van je opstelling samen met ons via videogesprek",
   "bfp.inc.monthly": "Maandelijks groepsvideogesprek: nieuwe functies en vragen",
   "bf.cta.trial": "14 dagen gratis proef",
