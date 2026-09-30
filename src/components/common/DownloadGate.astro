@@ -126,15 +126,29 @@ const releaseDay = new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : lang, {
         show((gate.dataset.done ?? '').replace('{email}', email), true);
       };
 
-      // Connecté : inscrit d'office, une fois par adresse et par navigateur.
-      supabase.auth.getSession().then(async ({ data }) => {
-        const email = data?.session?.user?.email;
-        if (!email) return;
-        if (remembered(email) || (await subscribe(email, lang))) {
-          remember(email);
-          done(email);
-        }
-      });
+      // Connecté : inscrit d'office, une fois par adresse et par navigateur,
+      // seulement quand le message est réellement affiché (un onglet masqué
+      // de l'espace compte ne compte pas : la personne n'a rien vu).
+      const autoSubscribe = () =>
+        supabase.auth.getSession().then(async ({ data }) => {
+          const email = data?.session?.user?.email;
+          if (!email) return;
+          if (remembered(email) || (await subscribe(email, lang))) {
+            remember(email);
+            done(email);
+          }
+        });
+      if ('IntersectionObserver' in window) {
+        const seen = new IntersectionObserver((entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            seen.disconnect();
+            autoSubscribe();
+          }
+        });
+        seen.observe(closed);
+      } else {
+        autoSubscribe();
+      }
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();

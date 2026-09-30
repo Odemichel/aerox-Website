@@ -541,7 +541,34 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
           })
         )
       );
+      if (p.role === 'rider') joinNewsletter(user.id);
       return { id: user.id, role: p.role, name };
+    }
+
+    // Cycliste : groupe MailerLite « AeroX Global » de sa langue (e-mail de
+    // bienvenue), une fois par compte et par navigateur. Jamais bloquant.
+    async function joinNewsletter(userId: string) {
+      const key = `aerox-newsletter:${userId}`;
+      try {
+        if (localStorage.getItem(key) === '1') return;
+      } catch {
+        /* stockage indisponible : on appelle, MailerLite dédoublonne */
+      }
+      const { data } = await supabase.auth.getSession();
+      const token = data?.session?.access_token;
+      if (!token) return;
+      const res = await fetch('/api/account/newsletter/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ lang: lang() }),
+      }).catch(() => null);
+      if (res?.ok) {
+        try {
+          localStorage.setItem(key, '1');
+        } catch {
+          /* rien */
+        }
+      }
     }
 
     // ---------------------------------------------------------------------
