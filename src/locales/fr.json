@@ -610,7 +610,7 @@
   "bf.faq.more5": "Pourquoi la répétabilité compte plus que la précision absolue en fitting",
   "bf.faq.a5": "AeroX mesure la surface frontale (A) — la part du CdA (= Cd × A) que la position contrôle — en temps réel via analyse vidéo par intelligence artificielle. L'algorithme analyse la silhouette du cycliste image par image pour calculer la surface projetée face au vent. La précision absolue est de 10 %, avec une répétabilité de 3 % — moins précis qu'une soufflerie en valeur absolue, mais bien plus versatile. AeroX donne une information en direct, n'importe où, et permet de comparer efficacement des changements de position et de fit. Vous ajustez la selle de 5 mm, la surface frontale évolue en direct. C'est exactement ce dont un bike fitter a besoin en séance : pas une valeur absolue de laboratoire, mais un comparatif instantané et visuel entre chaque position testée. En soufflerie professionnelle, une mesure coûte 1 500 à 3 000 € et donne un résultat ponctuel. AeroX offre une mesure continue, directement exploitable pendant le fitting, accessible depuis votre studio.",
 
-  "bf.lastUpdated": "Dernière mise à jour : mars 2026",
+  "bf.lastUpdated": "Dernière mise à jour : octobre 2026",
   "bf.table.title": "AeroX vs Soufflerie vs Fitting classique",
   "bf.table.col1": "Critère",
   "bf.table.col2": "AeroX",
@@ -637,7 +637,7 @@
   "bf.table.followup.tunnel": "Ponctuel",
   "bf.table.followup.classic": "Subjectif",
 
-  "home.lastUpdated": "Dernière mise à jour : mars 2026",
+  "home.lastUpdated": "Dernière mise à jour : octobre 2026",
   "home.table.title": "Gains typiques par profil cycliste",
   "home.table.col1": "Profil",
   "home.table.col2": "Gain vitesse",

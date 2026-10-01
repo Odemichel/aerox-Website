@@ -11,6 +11,8 @@ import Olivier_Tete from '~/assets/images/Olivier_tete2.png';
 import posterPuissanceSrc from '~/assets/images/posterPuissance.jpg';
 import { getImage } from 'astro:assets';
 const posterPuissance = (await getImage({ src: posterPuissanceSrc, width: 800, format: 'webp' })).src;
+// Aperçu de la vidéo pour le schéma VideoObject (JPEG, format le plus accepté).
+const videoThumbnail = (await getImage({ src: posterPuissanceSrc, width: 1200, format: 'jpg' })).src;
 import Ropert_Tete from '~/assets/images/ropert1.jpg';
 import simulationGPX from '~/assets/images/simulationGPX.jpg';
 import Frederic_tete from '~/assets/images/Frederic_tete.jpg';
@@ -39,7 +41,7 @@ import logo_polar from '~/assets/images/logos/polar.png';
 import logo_suunto from '~/assets/images/logos/suunto.png';
 import LogosCarousel from '~/components/widgets/LogosCarousel.astro';
 import { localizedHref } from '~/utils/localize';
-import { phased } from '~/lib/offerPhase';
+import { offerPhase, phased } from '~/lib/offerPhase';
 
 // i18n
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
@@ -63,6 +65,19 @@ const metadata = {
 // pré-réservation du Diagnostic, pas à l'agenda — qui est le tunnel
 // bike-fitter (voir /bike-fitting/).
 const Link_preorder = localizedHref(lang, '/#pricing');
+// Offre du schéma SoftwareApplication, figée au build : Diagnostic en
+// précommande jusqu'au 1er novembre, 49 € jusqu'au 15 novembre puis 79 €.
+const phaseNow = offerPhase();
+const diagnosticOffer = {
+  '@type': 'Offer',
+  name: t(dict, 'pricing.diagnostic.title'),
+  price: phaseNow === 'full' ? '79' : '49',
+  priceCurrency: 'EUR',
+  ...(phaseNow === 'full' ? {} : { priceValidUntil: '2026-11-15' }),
+  availability: phaseNow === 'pre' ? 'https://schema.org/PreOrder' : 'https://schema.org/InStock',
+  ...(phaseNow === 'pre' ? { availabilityStarts: '2026-11-01' } : {}),
+  url: `https://aeroxbefaster.com/${lang}/#pricing`,
+};
 // Libellés qui suivent le calendrier du Diagnostic (voir src/lib/offerPhase.ts).
 const ctaPreorder = phased(t(dict, 'cta.preorder.text'), t(dict, 'cta.preorder.text.live'));
 const ctaPreorderSubtext = phased(t(dict, 'cta.preorder.subtext'), t(dict, 'cta.preorder.subtext.live'), '');
@@ -990,7 +1005,7 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
       '@type': 'WebSite',
       name: 'AeroX',
       url: 'https://aeroxbefaster.com',
-      inLanguage: lang === 'fr' ? 'fr-FR' : 'en-US',
+      inLanguage: lang,
     })}
   />
 
@@ -1004,12 +1019,7 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
       operatingSystem: 'macOS, Windows',
       description: t(dict, 'home.meta.description'),
       url: 'https://aeroxbefaster.com',
-      offers: {
-        '@type': 'Offer',
-        price: '20',
-        priceCurrency: 'EUR',
-        availability: 'https://schema.org/PreOrder',
-      },
+      offers: diagnosticOffer,
     })}
   />
 
@@ -1022,7 +1032,7 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
       description: t(dict, 'home.meta.description'),
       uploadDate: '2025-01-15',
       contentUrl: `https://aeroxbefaster.com${heroVideo}`,
-      thumbnailUrl: 'https://aeroxbefaster.com/favicon.svg',
+      thumbnailUrl: `https://aeroxbefaster.com${videoThumbnail}`,
     })}
   />
 

@@ -593,7 +593,7 @@
   "bf.faq.more5": "Why repeatability matters more than absolute accuracy in fitting",
   "bf.faq.a5": "AeroX measures frontal area (A) — the part of CdA (= Cd × A) that position controls — in real time via AI-powered video analysis. The algorithm analyzes the cyclist's silhouette frame by frame to calculate the projected area facing the wind. Absolute accuracy is 10%, with 3% measurement repeatability — less precise than a wind tunnel in absolute terms, but far more versatile. AeroX provides real-time information anywhere and enables effective comparison of position and fit changes. You adjust the saddle by 5 mm, the frontal area updates live. That's exactly what a bike fitter needs in a session: not an absolute lab value, but an instant, visual comparison between each tested position. In a professional wind tunnel, a measurement costs $1,500 to $3,000 and gives a one-time result. AeroX provides continuous measurement, directly usable during fitting, accessible from your studio.",
 
-  "bf.lastUpdated": "Last updated: March 2026",
+  "bf.lastUpdated": "Last updated: October 2026",
   "bf.table.title": "AeroX vs Wind Tunnel vs Traditional Fitting",
   "bf.table.col1": "Criterion",
   "bf.table.col2": "AeroX",
@@ -620,7 +620,7 @@
   "bf.table.followup.tunnel": "One-time",
   "bf.table.followup.classic": "Subjective",
 
-  "home.lastUpdated": "Last updated: March 2026",
+  "home.lastUpdated": "Last updated: October 2026",
   "home.table.title": "Typical gains by cyclist profile",
   "home.table.col1": "Profile",
   "home.table.col2": "Speed gain",

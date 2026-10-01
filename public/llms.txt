@@ -35,13 +35,15 @@ CdA (Coefficient of Drag × Area) is the primary metric of aerodynamic efficienc
 - Professional bike fitters adding aerodynamic measurement to their services
 - Cycling coaches integrating aero data into training plans
 
-## Availability
-- Launching April 10, 2026
+## Offers and availability
+- **AeroX Diagnostic** (cyclists and triathletes): one-time purchase, no subscription. 2 sessions in the desktop app: compare up to 10 positions live, then hold the best one for at least 20 minutes; you get your recommended position and your time and speed gains. 30 days to complete it; results stay viewable. Available in the app from 1 November 2026 (pre-order before). Launch price €49 instead of €79 until 15 November 2026, then €79. Fully refunded as long as no session has been done, including if your equipment is not compatible.
+- **Bike fitter plans** (prices excl. VAT): Essential €20/month + €15 per analysis; Unlimited €99/month or €990/year. 14-day free trial on every plan. Launch offer for the first 20 studios: Unlimited at €69/month until 31 December 2026, or €690 for the first year. Plans available from 1 November 2026.
+- Requirements: a Mac or Windows computer, a webcam and the bike on a trainer; a Bluetooth FTMS smart trainer is only needed for the Power and Speed modes.
 - Available on macOS and Windows
 
 ## Team
 - **Olivier Demichel** — Founder & Engineer. Former CNRS researcher (French National Centre for Scientific Research), triathlete. Background in fluid dynamics and computational physics.
-- **Milan Larivière** — Co-founder, cycling performance specialist.
+- **Milan Larivière** — Ambassador, elite triathlete (2nd, European Junior Cup 2025); his high-level feedback informs AeroX development.
 
 ## Main pages
 - [Homepage FR](https://aeroxbefaster.com/fr/): Soufflerie virtuelle pour cyclistes indoor — mesure de la surface frontale en temps réel

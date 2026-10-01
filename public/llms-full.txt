@@ -150,15 +150,17 @@ Based on 300+ measurement sessions conducted in 2025–2026:
 - Competitive triathlete with firsthand understanding of aerodynamic optimization needs
 - Published researcher (ResearchGate profile: https://www.researchgate.net/profile/Olivier-Demichel)
 
-### Milan Larivière — Co-founder
-- Cycling performance specialist
-- Hands-on testing and development of measurement protocols
+### Milan Larivière — Ambassador
+- Elite triathlete, 2nd in the European Junior Cup (2025)
+- His high-level feedback informs the development of AeroX
 
 ---
 
 ## 9. Pricing and Availability
 
-- Launching April 10, 2026
+- **AeroX Diagnostic** (cyclists and triathletes): one-time purchase, no subscription. 2 sessions in the desktop app: compare up to 10 positions live, then hold the best one for at least 20 minutes; you get your recommended position and your time and speed gains. 30 days to complete it; results stay viewable. Available in the app from 1 November 2026 (pre-order before). Launch price €49 instead of €79 until 15 November 2026, then €79. Fully refunded as long as no session has been done, including if your equipment is not compatible.
+- **Bike fitter plans** (prices excl. VAT): Essential €20/month + €15 per analysis; Unlimited €99/month or €990/year. 14-day free trial on every plan. Launch offer for the first 20 studios: Unlimited at €69/month until 31 December 2026, or €690 for the first year. Plans available from 1 November 2026.
+- Requirements: a Mac or Windows computer, a webcam and the bike on a trainer; a Bluetooth FTMS smart trainer is only needed for the Power and Speed modes.
 - **Platforms**: macOS and Windows
 - **Languages**: French and English
 
@@ -167,7 +169,7 @@ Based on 300+ measurement sessions conducted in 2025–2026:
 ## 10. Frequently Asked Questions
 
 **Q: Do I need special equipment to use AeroX?**
-A: No. You need a smart trainer with Bluetooth FTMS support and a standard webcam. Most modern trainers (Wahoo, Elite, Tacx, Saris) are compatible.
+A: No. You need a Mac or Windows computer, a standard webcam and your bike on a trainer. A Bluetooth FTMS smart trainer (Wahoo, Elite, Tacx, Saris…) is only required for the Power and Speed modes, not for position analysis or the Diagnostic.
 
 **Q: How accurate is AeroX compared to a wind tunnel?**
 A: AeroX achieves 3% session-to-session repeatability.
