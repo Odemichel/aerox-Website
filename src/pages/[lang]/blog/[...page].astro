@@ -7,7 +7,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import type { Post } from '~/types';
 import { blogListRobots, blogPostsPerPage, fetchPosts } from '~/utils/blog';
 
-import { DEFAULT_LOCALE, getDict, SUPPORTED_LOCALES, type Locale } from '~/lib/i18n';
+import { DEFAULT_LOCALE, getDict, SUPPORTED_LOCALES, t, type Locale } from '~/lib/i18n';
 
 export const prerender = true;
 
@@ -65,6 +65,26 @@ const metadata = {
     <Headline subtitle={dict['blog.subtitle']}>
       {dict['blog.title']}
     </Headline>
+
+    {/* En tête de liste : la page de référence sur le CdA (entonnoir guide + Diagnostic). */}
+    {
+      page.currentPage === 1 && (
+        <a
+          href={`/${lang}/cda/`}
+          class="group mb-10 flex items-center gap-4 rounded-xl border border-primary/30 bg-primary/5 dark:bg-primary/10 px-5 py-4 hover:shadow-[0_10px_40px_hsl(35_95%_58%/0.3)] transition-all"
+        >
+          <span class="flex-1">
+            <span class="block font-semibold text-default group-hover:text-primary transition-colors">
+              {t(dict, 'cda.h1')}
+            </span>
+            <span class="block text-sm text-muted mt-1">{t(dict, 'cda.meta.description')}</span>
+          </span>
+          <span class="text-primary text-xl" aria-hidden="true">
+            →
+          </span>
+        </a>
+      )
+    }
 
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
