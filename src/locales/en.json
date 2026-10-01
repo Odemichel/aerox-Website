@@ -735,7 +735,7 @@
   "cda.calc.gainWatts": "Or, at {current} km/h, you would use about {watts} W less.",
   "cda.calc.gainOptimal": "Your position is already on a par with an optimised position on a {bike} for your build (CdA of about {target} m²). The Diagnostic helps you hold it over time.",
   "cda.calc.gainNote": "Reference calculated as in the AeroX app: frontal area estimated from your height and weight (Du Bois formula), optimised road-bike position = upright-position area reduced by about 15% (S'entraîner à l'aérodynamisme), Cd according to posture, plus 0.035 m² for the bike. The Diagnostic measures your real gain, position by position.",
-  "cda.calc.gainNote.tt": "Reference calculated as in the AeroX app: frontal area estimated from your height and weight (Du Bois formula), optimal aero position on aero bars according to the app's model, Cd according to posture, plus 0.035 m² for the bike. The Diagnostic measures your real gain, position by position.",
+  "cda.calc.gainNote.tt": "Reference computed as in the AeroX app: frontal area estimated from your height and weight (Du Bois formula), optimised position on a time-trial bike = aero bars, head tucked (position 6 in the book S'entraîner à l'aérodynamisme, about 56% of the standing area), Cd by posture, plus 0.035 m² for the bike. The Diagnostic measures your real gain, position by position.",
   "cda.calc.indicative": "Indicative values: the optimised position is estimated from your height and weight with the AeroX app model; your real position may be more or less aero. Only a measurement, such as the Diagnostic, gives your real CdA.",
   "cda.calc.bike": "Bike",
   "cda.calc.bike.road": "Road bike",

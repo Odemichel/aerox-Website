@@ -64,12 +64,17 @@ export function cdaCategory(cda: number): string {
  *    cm), surface relevée = 0,9 × surface debout ;
  *  - Cd interpolé selon le rapport surface / surface relevée ;
  *  - CdA = Cd × surface + 0,035 m² (vélo).
- * Postures cibles : vélo de route = surface relevée −15 % (S'entraîner à
- * l'aérodynamisme) ; vélo de contre-la-montre = position aéro optimale de
- * l'app (coef_optimal_vs_bsa 0,6 / coef_releve_vs_bsa 0,9).
+ * Postures cibles :
+ *  - vélo de route : surface relevée −15 % (S'entraîner à l'aérodynamisme) ;
+ *  - vélo de contre-la-montre : position 6 du livre (prolongateurs, tête
+ *    rentrée, tableau 2.1) : 0,33 m² pour un cycliste dont la surface debout
+ *    du modèle vaut 0,587 m² (1,78 m, 72 kg), soit ≈ 0,56 de la surface
+ *    debout. Le 0,6 de l'app (coef_optimal_vs_bsa) est moins aéro que cette
+ *    position mesurée : ce n'est pas un plancher.
  */
 export type Bike = 'road' | 'tt';
-export const TARGET_POSTURE: Record<Bike, number> = { road: 0.85, tt: 0.6 / 0.9 };
+// Rapports à la surface relevée (= 0,9 × surface debout).
+export const TARGET_POSTURE: Record<Bike, number> = { road: 0.85, tt: 0.56 / 0.9 };
 const POSTURE_COEFS = [0.61, 0.75, 0.85, 1.0];
 const CDS = [0.64, 0.7, 0.76, 0.8];
 const CDA_BIKE = 0.035;

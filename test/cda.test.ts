@@ -70,9 +70,10 @@ describe('modèle morphologique (app AeroX)', () => {
     expect(cdForPosture(0.5)).toBeCloseTo(0.64, 6);
     expect(cdForPosture(0.68)).toBeCloseTo(0.67, 6);
   });
-  it('CdA optimal : route ≈ 0,38 m², contre-la-montre ≈ 0,27 m²', () => {
+  it('CdA optimal : route ≈ 0,38 m², contre-la-montre ≈ 0,25 m² (position 6 du livre)', () => {
     expect(optimalCda('road', 72, 178)).toBeCloseTo(0.376, 2);
-    expect(optimalCda('tt', 72, 178)).toBeCloseTo(0.269, 2);
+    // surface 0,56 × 0,587 ≈ 0,329 m² (livre : 0,33) ; Cd ≈ 0,645 ; + 0,035
+    expect(optimalCda('tt', 72, 178)).toBeCloseTo(0.247, 2);
   });
 });
 
