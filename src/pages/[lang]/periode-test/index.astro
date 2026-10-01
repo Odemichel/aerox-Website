@@ -13,7 +13,8 @@ const dict = getDict(lang);
 const metadata = {
   title: t(dict, 'testPeriod.meta.title'),
   description: t(dict, 'testPeriod.meta.description'),
-  robots: { index: true, follow: true },
+  // Hors index et hors sitemap (astro.config.ts).
+  robots: { index: false, follow: true },
   ignoreTitleTemplate: true,
 };
 
