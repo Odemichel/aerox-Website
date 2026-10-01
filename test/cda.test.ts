@@ -1,5 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { airDensity, cdaCategory, estimateCdA, optimizedGain, powerForSpeed, speedForPower } from '../src/lib/cda';
+import {
+  airDensity,
+  cdaCategory,
+  cdForPosture,
+  estimateCdA,
+  optimalCda,
+  optimizedGain,
+  powerForSpeed,
+  speedForPower,
+  uprightArea,
+} from '../src/lib/cda';
 
 describe('estimateCdA', () => {
   it('200 W à 30 km/h sur le plat, 80 kg : position relevée (~0,46 m²)', () => {
@@ -50,6 +60,22 @@ describe('cdaCategory', () => {
   });
 });
 
+describe('modèle morphologique (app AeroX)', () => {
+  it('surface relevée du cycliste du livre (1,78 m, 72 kg) ≈ 0,53 m² (livre : 0,52)', () => {
+    expect(uprightArea(72, 178)).toBeCloseTo(0.528, 2);
+  });
+  it('Cd interpolé selon la posture (area_Cd_data.json)', () => {
+    expect(cdForPosture(1)).toBeCloseTo(0.8, 6);
+    expect(cdForPosture(0.85)).toBeCloseTo(0.76, 6);
+    expect(cdForPosture(0.5)).toBeCloseTo(0.64, 6);
+    expect(cdForPosture(0.68)).toBeCloseTo(0.67, 6);
+  });
+  it('CdA optimal : route ≈ 0,38 m², contre-la-montre ≈ 0,27 m²', () => {
+    expect(optimalCda('road', 72, 178)).toBeCloseTo(0.376, 2);
+    expect(optimalCda('tt', 72, 178)).toBeCloseTo(0.269, 2);
+  });
+});
+
 describe('optimizedGain', () => {
   const ride = { power: 200, speedKmh: 30, massKg: 80, slopePct: 0 };
   const cda = estimateCdA(ride)!;
@@ -58,17 +84,18 @@ describe('optimizedGain', () => {
     expect(powerForSpeed(cda, 30, ride)).toBeCloseTo(200, 6);
     expect(speedForPower(cda, 200, ride)).toBeCloseTo(30, 4);
   });
-  it('−15 % de CdA : ~+1,4 km/h à 200 W et ~25 W économisés à 30 km/h', () => {
-    // ½ρv³ ≈ 354,4 ; ΔCdA = 0,15 × 0,455 ≈ 0,068 → 24,2 W à la roue, /0,97 ≈ 24,9 W.
-    const g = optimizedGain(cda, ride);
-    expect(g.targetCda).toBeCloseTo(cda * 0.85, 6);
-    expect(g.wattsSaved).toBeCloseTo(24.9, 0);
-    expect(g.gainKmh).toBeGreaterThan(1.2);
-    expect(g.gainKmh).toBeLessThan(1.7);
+  it('position relevée (CdA ≈ 0,455) : gain vers la cible route, plus grand vers la cible CLM', () => {
+    const road = optimizedGain(cda, ride, 'road', 72, 178);
+    const tt = optimizedGain(cda, ride, 'tt', 72, 178);
+    expect(road.alreadyOptimal).toBe(false);
+    expect(road.gainKmh).toBeGreaterThan(1);
+    expect(road.wattsSaved).toBeGreaterThan(20);
+    expect(tt.gainKmh).toBeGreaterThan(road.gainKmh);
   });
-  it('contre-la-montre : référence −8 %, gain plus faible que sur route', () => {
-    const tt = optimizedGain(cda, ride, 'tt');
-    expect(tt.targetCda).toBeCloseTo(cda * 0.92, 6);
-    expect(tt.wattsSaved).toBeLessThan(optimizedGain(cda, ride, 'road').wattsSaved);
+  it('déjà au niveau de la cible : pas de gain annoncé', () => {
+    const fast = { power: 250, speedKmh: 42, massKg: 80, slopePct: 0 };
+    const g = optimizedGain(estimateCdA(fast)!, fast, 'road', 72, 178);
+    expect(g.alreadyOptimal).toBe(true);
+    expect(g.gainKmh).toBe(0);
   });
 });

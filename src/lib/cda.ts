@@ -57,14 +57,47 @@ export function cdaCategory(cda: number): string {
 }
 
 /**
- * Position optimisée de référence sur le même vélo (S'entraîner à
- * l'aérodynamisme, O. Demichel, 2026) :
- *  - vélo de route : environ −15 % de surface frontale (règle du livre) ;
- *  - contre-la-montre / triathlon, sur prolongateurs : tête levée → tête
- *    rentrée, 0,36 → 0,33 m² (tableau 2.1), soit environ −8 %.
+ * CdA d'une position optimisée pour la morphologie du cycliste, calculé comme
+ * dans l'app AeroX (aerox_rust_full/src/core/aero_core/aero_model/
+ * surface_model.rs et assets/area_Cd_data.json) :
+ *  - surface frontale debout = 0,31 × BSA de Du Bois (poids en kg, taille en
+ *    cm), surface relevée = 0,9 × surface debout ;
+ *  - Cd interpolé selon le rapport surface / surface relevée ;
+ *  - CdA = Cd × surface + 0,035 m² (vélo).
+ * Postures cibles : vélo de route = surface relevée −15 % (S'entraîner à
+ * l'aérodynamisme) ; vélo de contre-la-montre = position aéro optimale de
+ * l'app (coef_optimal_vs_bsa 0,6 / coef_releve_vs_bsa 0,9).
  */
 export type Bike = 'road' | 'tt';
-export const OPTIMIZED_AREA_FACTOR: Record<Bike, number> = { road: 0.85, tt: 0.92 };
+export const TARGET_POSTURE: Record<Bike, number> = { road: 0.85, tt: 0.6 / 0.9 };
+const POSTURE_COEFS = [0.61, 0.75, 0.85, 1.0];
+const CDS = [0.64, 0.7, 0.76, 0.8];
+const CDA_BIKE = 0.035;
+
+/** Surface frontale en position relevée (m²), modèle de l'app AeroX. */
+export function uprightArea(riderWeightKg: number, heightCm: number): number {
+  const bsa = 0.007184 * Math.pow(riderWeightKg, 0.425) * Math.pow(heightCm, 0.725);
+  return 0.31 * bsa * 0.9;
+}
+
+/** Cd selon la posture (surface / surface relevée), interpolation linéaire de l'app. */
+export function cdForPosture(ratio: number): number {
+  if (ratio <= POSTURE_COEFS[0]) return CDS[0];
+  if (ratio >= POSTURE_COEFS[POSTURE_COEFS.length - 1]) return CDS[CDS.length - 1];
+  for (let i = 1; i < POSTURE_COEFS.length; i++) {
+    if (ratio <= POSTURE_COEFS[i]) {
+      const f = (ratio - POSTURE_COEFS[i - 1]) / (POSTURE_COEFS[i] - POSTURE_COEFS[i - 1]);
+      return CDS[i - 1] + f * (CDS[i] - CDS[i - 1]);
+    }
+  }
+  return CDS[CDS.length - 1];
+}
+
+/** CdA (m²) d'une position optimisée sur ce type de vélo, pour cette morphologie. */
+export function optimalCda(bike: Bike, riderWeightKg: number, heightCm: number): number {
+  const ratio = TARGET_POSTURE[bike];
+  return cdForPosture(ratio) * uprightArea(riderWeightKg, heightCm) * ratio + CDA_BIKE;
+}
 
 type Ride = { massKg: number; slopePct: number; altitudeM?: number; temperatureC?: number };
 
@@ -90,14 +123,22 @@ export function speedForPower(cda: number, power: number, ride: Ride): number {
 }
 
 /**
- * Ce que coûte la position actuelle face à une position optimisée sur le
- * même vélo : km/h gagnés à la même puissance, watts économisés à la même
- * vitesse.
+ * Ce que coûte la position actuelle face à une position optimisée sur ce type
+ * de vélo, pour cette morphologie : km/h gagnés à la même puissance, watts
+ * économisés à la même vitesse. `alreadyOptimal` si le CdA estimé est déjà au
+ * niveau de la cible.
  */
-export function optimizedGain(cda: number, input: CdaInput, bike: Bike = 'road') {
-  const ride = input;
-  const target = cda * OPTIMIZED_AREA_FACTOR[bike];
-  const speed = speedForPower(target, input.power, ride);
-  const watts = input.power - powerForSpeed(target, input.speedKmh, ride);
-  return { targetCda: target, speedKmh: speed, gainKmh: speed - input.speedKmh, wattsSaved: watts };
+export function optimizedGain(cda: number, input: CdaInput, bike: Bike, riderWeightKg: number, heightCm: number) {
+  const target = optimalCda(bike, riderWeightKg, heightCm);
+  if (target >= cda)
+    return { targetCda: target, alreadyOptimal: true, speedKmh: input.speedKmh, gainKmh: 0, wattsSaved: 0 };
+  const speed = speedForPower(target, input.power, input);
+  const watts = input.power - powerForSpeed(target, input.speedKmh, input);
+  return {
+    targetCda: target,
+    alreadyOptimal: false,
+    speedKmh: speed,
+    gainKmh: speed - input.speedKmh,
+    wattsSaved: watts,
+  };
 }

@@ -3,7 +3,7 @@
 // d'une sortie → CdA estimée (src/lib/cda.ts) et ligne du tableau des valeurs
 // typiques la plus proche, les hypothèses du calcul, puis le pont vers le
 // Diagnostic (le livre offert est sur la page, hors du résultat).
-import { CRR, ETA, OPTIMIZED_AREA_FACTOR } from '~/lib/cda';
+import { CRR, ETA } from '~/lib/cda';
 import { type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
 
@@ -16,7 +16,11 @@ const categories = Object.fromEntries(categoryKeys.map((k) => [k, t(dict, `cda.v
 const fields = [
   { name: 'power', label: t(dict, 'cda.calc.power'), value: 200, min: 1, max: 2000, step: 1 },
   { name: 'speed', label: t(dict, 'cda.calc.speed'), value: 30, min: 1, max: 90, step: 0.1 },
-  { name: 'mass', label: t(dict, 'cda.calc.mass'), value: 80, min: 30, max: 200, step: 0.1 },
+  // Taille et poids : morphologie pour le CdA optimal (modèle de l'app AeroX) ;
+  // poids du cycliste + masse du vélo = masse totale de la formule.
+  { name: 'height', label: t(dict, 'cda.calc.height'), value: 178, min: 120, max: 220, step: 1 },
+  { name: 'riderWeight', label: t(dict, 'cda.calc.riderWeight'), value: 72, min: 30, max: 180, step: 0.1 },
+  { name: 'bikeWeight', label: t(dict, 'cda.calc.bikeWeight'), value: 8, min: 4, max: 25, step: 0.1 },
   { name: 'slope', label: t(dict, 'cda.calc.slope'), value: 0, min: -10, max: 15, step: 0.1 },
 ];
 // Facultatifs : sans saisie, air au niveau de la mer à 15 °C.
@@ -39,7 +43,9 @@ const optionalFields = [
     data-assumptions={t(dict, 'cda.calc.assumptions')}
     data-gain-speed={t(dict, 'cda.calc.gainSpeed')}
     data-gain-watts={t(dict, 'cda.calc.gainWatts')}
-    data-factors={JSON.stringify(OPTIMIZED_AREA_FACTOR)}
+    data-gain-optimal={t(dict, 'cda.calc.gainOptimal')}
+    data-bike-road={t(dict, 'cda.calc.bikeIn.road')}
+    data-bike-tt={t(dict, 'cda.calc.bikeIn.tt')}
     data-crr={CRR}
     data-eta={ETA}
     class="grid grid-cols-1 sm:grid-cols-2 gap-4"
@@ -149,7 +155,7 @@ const optionalFields = [
         const input = {
           power: num('power'),
           speedKmh: num('speed'),
-          massKg: num('mass'),
+          massKg: num('riderWeight') + num('bikeWeight'),
           slopePct: num('slope'),
           altitudeM,
           temperatureC,
@@ -173,21 +179,38 @@ const optionalFields = [
           .replace('{altitude}', String(altitudeM))
           .replace('{temperature}', String(temperatureC));
         const bike: Bike = (form.elements.namedItem('bike') as HTMLSelectElement).value === 'tt' ? 'tt' : 'road';
-        const factors = JSON.parse(form.dataset.factors ?? '{}') as Record<Bike, number>;
-        const gain = optimizedGain(cda, input, bike);
+        const gain = optimizedGain(cda, input, bike, num('riderWeight'), num('height'));
+        // Taille ou poids illisibles : pas de cible, pas d'encadré.
+        if (!Number.isFinite(gain.targetCda) || num('height') <= 0) {
+          gainBox.classList.add('hidden');
+          return;
+        }
+        const bikeLabel = (bike === 'tt' ? form.dataset.bikeTt : form.dataset.bikeRoad) ?? '';
+        const target = new Intl.NumberFormat(form.dataset.lang, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(gain.targetCda);
         gainBox.querySelectorAll<HTMLElement>('[data-gain-note]').forEach((p) => {
           p.classList.toggle('hidden', p.dataset.gainNote !== bike);
         });
-        gainSpeed.textContent = (form.dataset.gainSpeed ?? '')
-          .replace('{pct}', String(Math.round((1 - factors[bike]) * 100)))
-          .replace('{speed}', n1.format(gain.speedKmh))
-          .replace('{gain}', n1.format(gain.gainKmh));
-        gainWatts.textContent = (form.dataset.gainWatts ?? '')
-          .replace(
-            '{current}',
-            new Intl.NumberFormat(form.dataset.lang, { maximumFractionDigits: 1 }).format(input.speedKmh)
-          )
-          .replace('{watts}', n0.format(gain.wattsSaved));
+        if (gain.alreadyOptimal) {
+          gainSpeed.textContent = (form.dataset.gainOptimal ?? '')
+            .replace('{bike}', bikeLabel)
+            .replace('{target}', target);
+          gainWatts.textContent = '';
+        } else {
+          gainSpeed.textContent = (form.dataset.gainSpeed ?? '')
+            .replace('{bike}', bikeLabel)
+            .replace('{target}', target)
+            .replace('{speed}', n1.format(gain.speedKmh))
+            .replace('{gain}', n1.format(gain.gainKmh));
+          gainWatts.textContent = (form.dataset.gainWatts ?? '')
+            .replace(
+              '{current}',
+              new Intl.NumberFormat(form.dataset.lang, { maximumFractionDigits: 1 }).format(input.speedKmh)
+            )
+            .replace('{watts}', n0.format(gain.wattsSaved));
+        }
         gainBox.classList.remove('hidden');
       });
     });
