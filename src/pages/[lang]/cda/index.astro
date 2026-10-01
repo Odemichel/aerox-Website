@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
+import GuideCapture from '~/components/widgets/GuideCapture.astro';
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
 
@@ -16,7 +17,10 @@ const metadata = {
   robots: { index: true, follow: true },
 };
 
-const Link_inscription = localizedHref(lang, '/inscription/inscription/');
+// Page d'entrée SEO : guide « surface frontale » au milieu et en bas, pont
+// vers le Diagnostic (carte tarifaire de l'accueil).
+const Link_diagnostic = localizedHref(lang, '/#pricing');
+const guideTexts = { eyebrow: 'cda.guide.eyebrow', title: 'cda.guide.title', text: 'cda.guide.text' };
 
 const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] as const;
 ---
@@ -35,6 +39,12 @@ const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] 
       </ul>
       <p><strong>{t(dict, 'cda.definition.formula')}</strong></p>
       <p set:html={t(dict, 'cda.definition.p2')} />
+
+      {/* CdA = Cd × A : AeroX mesure A, la part que le cycliste contrôle. */}
+      <aside class="not-prose my-8 rounded-xl border-l-4 border-primary bg-primary/5 dark:bg-primary/10 px-5 py-4">
+        <p class="font-semibold mb-1">{t(dict, 'cda.aerox.title')}</p>
+        <p class="text-base text-muted" set:html={t(dict, 'cda.aerox.text')} />
+      </aside>
 
       <h2>{t(dict, 'cda.why.h2')}</h2>
       <p set:html={t(dict, 'cda.why.p1')} />
@@ -59,6 +69,8 @@ const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] 
           }
         </tbody>
       </table>
+
+      <GuideCapture lang={lang} id="cda-mid" texts={guideTexts} />
 
       <h2>{t(dict, 'cda.impact.h2')}</h2>
       <p set:html={t(dict, 'cda.impact.p1')} />
@@ -93,11 +105,16 @@ const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] 
       <h2>{t(dict, 'cda.conclusion.h2')}</h2>
       <p set:html={t(dict, 'cda.conclusion.p1')} />
 
-      <div class="not-prose mt-8 text-center">
-        <a href={Link_inscription} class="btn-primary inline-block px-8 py-3 text-lg font-semibold rounded-lg">
-          {t(dict, 'cda.cta')}
+      {/* Pont vers le Diagnostic : la mesure de surface frontale, guidée. */}
+      <div class="not-prose mt-10 rounded-2xl border border-gray-200 dark:border-slate-700 px-6 py-8 text-center">
+        <h2 class="text-xl md:text-2xl font-bold mb-2">{t(dict, 'cda.diag.title')}</h2>
+        <p class="text-muted mb-6" set:html={t(dict, 'cda.diag.text')} />
+        <a href={Link_diagnostic} class="btn-primary inline-block px-8 py-3 text-lg font-semibold rounded-lg">
+          {t(dict, 'cda.diag.cta')}
         </a>
       </div>
+
+      <GuideCapture lang={lang} id="cda-bottom" texts={guideTexts} />
 
       <p class="text-xs text-muted/60 mt-8 italic">{t(dict, 'cda.lastUpdated')}</p>
     </article>
@@ -125,9 +142,9 @@ const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] 
         url: 'https://aeroxbefaster.com',
       },
       datePublished: '2026-03-24',
-      dateModified: '2026-03-24',
+      dateModified: '2026-10-01',
       mainEntityOfPage: `https://aeroxbefaster.com/${lang}/cda/`,
-      inLanguage: lang === 'fr' ? 'fr-FR' : 'en-US',
+      inLanguage: lang,
     })}
   />
 </Layout>

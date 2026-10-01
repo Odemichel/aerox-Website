@@ -1,14 +1,14 @@
 # AeroX — Virtual Wind Tunnel for Cyclists
-> AeroX is a desktop application that turns any smart trainer into a virtual wind tunnel. It measures a cyclist's aerodynamic drag area (CdA) in real time using a webcam and computer vision, enabling position optimization without a physical wind tunnel.
+> AeroX is a desktop application that turns any smart trainer into a virtual wind tunnel. It measures a cyclist's frontal area (A) in real time using a webcam and computer vision — the part of aerodynamic drag (CdA = Cd × A) that the rider controls through their position — enabling position optimization without a physical wind tunnel.
 
 ## What AeroX does
-AeroX is the first virtual wind tunnel for indoor cyclists. The application uses artificial intelligence and computer vision to measure CdA (coefficient of drag area, Cx × A) in real time from a simple webcam pointed at a cyclist on a smart trainer. It calculates the aerodynamic impact of every position change instantly, giving cyclists and bike fitters actionable data to reduce drag and ride faster.
+AeroX is the first virtual wind tunnel for indoor cyclists. The application uses artificial intelligence and computer vision to measure the cyclist's frontal area (A, in m²) in real time from a simple webcam pointed at a cyclist on a trainer. CdA = Cd × A: AeroX measures A, the component the rider controls through position; it does not measure the drag coefficient Cd. It calculates the aerodynamic impact of every position change instantly, giving cyclists and bike fitters actionable data to reduce drag and ride faster.
 
 ## Key metrics and results
-- CdA measurement in real time via webcam + smart trainer
+- Frontal area (A) measurement in real time via webcam (no smart trainer required for position analysis)
 - Repeatability: 3%
-- Typical gains: +2 to 3 km/h at same power output
-- Power savings: 30 to 40 watts at 30 km/h
+- Typical gains: +2 to 3 km/h at same power output (+2.3 km/h on average, measured)
+- Power savings: 35 W at 30 km/h
 - 300+ measurement sessions completed (2025–2026)
 - Used by bike fitters on 3 continents (Brazil, USA, Europe)
 
@@ -24,7 +24,7 @@ CdA (Coefficient of Drag × Area) is the primary metric of aerodynamic efficienc
 - AI engine: real-time computer vision for frontal area measurement
 
 ## Use cases
-1. **Self-optimization**: Cyclists test position changes at home on their trainer and measure CdA impact instantly
+1. **Self-optimization**: Cyclists test position changes at home on their trainer and measure the frontal-area impact instantly
 2. **Bike fitting**: Professional bike fitters use AeroX during fitting sessions to quantify aerodynamic gains of each adjustment
 3. **Race simulation**: Import a GPX course profile and simulate race performance with current aerodynamic data
 4. **Time trial ranking**: Compare aerodynamic efficiency against other users on standardized courses
@@ -44,8 +44,8 @@ CdA (Coefficient of Drag × Area) is the primary metric of aerodynamic efficienc
 - **Milan Larivière** — Co-founder, cycling performance specialist.
 
 ## Main pages
-- [Homepage FR](https://aeroxbefaster.com/fr/): Soufflerie virtuelle pour cyclistes indoor — mesure du CdA en temps réel
-- [Homepage EN](https://aeroxbefaster.com/en/): Virtual wind tunnel for indoor cyclists — real-time CdA measurement
+- [Homepage FR](https://aeroxbefaster.com/fr/): Soufflerie virtuelle pour cyclistes indoor — mesure de la surface frontale en temps réel
+- [Homepage EN](https://aeroxbefaster.com/en/): Virtual wind tunnel for indoor cyclists — real-time frontal area measurement
 - [What is CdA? (FR)](https://aeroxbefaster.com/fr/cda/): Définition complète du CdA en cyclisme
 - [What is CdA? (EN)](https://aeroxbefaster.com/en/cda/): Complete CdA definition for cycling
 - [Bike Fitting FR](https://aeroxbefaster.com/fr/bike-fitting/): AeroX pour bike fitters professionnels

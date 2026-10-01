@@ -1,13 +1,16 @@
 ---
-// Capture email : le guide gratuit de 60 pages (extrait du livre « S'entraîner
-// à l'aérodynamisme »), envoyé par la même route que la page Méthode. Placé
-// plusieurs fois sur l'accueil : `id` distingue chaque exemplaire.
+// Capture email : le livre complet « S'entraîner à l'aérodynamisme » (60 pages,
+// offert), envoyé par la même route que la page Méthode. Placé
+// plusieurs fois par page : `id` distingue chaque exemplaire. `texts` remplace
+// les clés i18n du titre et de la promesse (ex. page CdA : surface frontale).
 import { Image } from 'astro:assets';
 import livreCover from '~/assets/images/livre/image_livre_entrainer-aero.png';
 import { type Locale, getDict, t } from '~/lib/i18n';
 
-const { lang, id } = Astro.props as { lang: Locale; id: string };
+type Texts = { eyebrow: string; title: string; text: string };
+const { lang, id, texts } = Astro.props as { lang: Locale; id: string; texts?: Texts };
 const dict = getDict(lang);
+const k: Texts = texts ?? { eyebrow: 'book.hero.title.l1', title: 'book.hero.title.l2', text: 'book.hero.text' };
 ---
 
 <section class="relative not-prose" id={`guide-${id}`}>
@@ -25,10 +28,10 @@ const dict = getDict(lang);
       />
       <div class="w-full text-center md:text-left">
         <p class="text-sm font-semibold uppercase tracking-wide text-primary mb-1">
-          {t(dict, 'book.hero.title.l1')}
+          {t(dict, k.eyebrow)}
         </p>
-        <h2 class="text-xl md:text-2xl font-bold mb-2">{t(dict, 'book.hero.title.l2')}</h2>
-        <p class="text-sm text-muted mb-5" set:html={t(dict, 'book.hero.text')} />
+        <h2 class="text-xl md:text-2xl font-bold mb-2">{t(dict, k.title)}</h2>
+        <p class="text-sm text-muted mb-5" set:html={t(dict, k.text)} />
         <form
           data-guide-capture
           class="flex flex-col sm:flex-row items-center gap-3"
