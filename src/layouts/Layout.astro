@@ -49,6 +49,30 @@ const langOverrides = i18nCfg.metadata_i18n?.[currentLang] ?? {};
 /** Métadonnées finales : defaults → overrides de langue → metadata de la page */
 const effectiveMetadata: MetaDataType = merge({}, i18nCfg.metadata ?? {}, langOverrides, metadata);
 
+/* Open Graph : la langue de la page (I18N ne connaît que le français). */
+const OG_LOCALES: Record<Locale, string> = {
+  fr: 'fr_FR',
+  en: 'en_GB',
+  pt: 'pt_PT',
+  es: 'es_ES',
+  it: 'it_IT',
+  de: 'de_DE',
+  nl: 'nl_NL',
+  ja: 'ja_JP',
+  tr: 'tr_TR',
+};
+effectiveMetadata.openGraph = { ...effectiveMetadata.openGraph, locale: OG_LOCALES[currentLang] };
+
+/* Titre : une seule limite pour tout le site, 60 caractères affichés. Le
+   suffixe « — AeroX » n'est ajouté que s'il tient dans cette limite, et jamais
+   à un titre qui contient déjà la marque. */
+const TITLE_MAX = 60;
+const TITLE_SUFFIX = ' — AeroX';
+if (effectiveMetadata.title && !effectiveMetadata.ignoreTitleTemplate) {
+  const tooLong = effectiveMetadata.title.length + TITLE_SUFFIX.length > TITLE_MAX;
+  if (tooLong || /\bAeroX\b/.test(effectiveMetadata.title)) effectiveMetadata.ignoreTitleTemplate = true;
+}
+
 /* ===== hreflang helpers ===== */
 const ensureTrailingSlash = (p: string) => (!p ? p : p.endsWith('/') || p.includes('.') ? p : p + '/');
 

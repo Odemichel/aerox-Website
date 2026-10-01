@@ -1,10 +1,16 @@
 import { describe, it, expect } from 'vitest';
-import { cdaCategory, estimateCdA } from '../src/lib/cda';
+import { airDensity, cdaCategory, estimateCdA } from '../src/lib/cda';
 
 describe('estimateCdA', () => {
-  it('200 W à 30 km/h sur le plat, 80 kg : position relevée (~0,47 m²)', () => {
-    // roulement 0,005·80·9,81·8,33 ≈ 32,7 W ; aéro ≈ 167,3 W ; ½ρv³ ≈ 354,4
-    expect(estimateCdA({ power: 200, speedKmh: 30, massKg: 80, slopePct: 0 })).toBeCloseTo(0.472, 2);
+  it('200 W à 30 km/h sur le plat, 80 kg : position relevée (~0,46 m²)', () => {
+    // 0,97·200 = 194 W ; roulement 0,005·80·9,81·8,33 ≈ 32,7 W ; aéro ≈ 161,3 W ; ½ρv³ ≈ 354,4
+    expect(estimateCdA({ power: 200, speedKmh: 30, massKg: 80, slopePct: 0 })).toBeCloseTo(0.455, 2);
+  });
+  it("l'air plus léger en altitude ou par temps chaud donne un CdA plus élevé", () => {
+    const base = { power: 200, speedKmh: 30, massKg: 80, slopePct: 0 };
+    const sea = estimateCdA(base)!;
+    expect(estimateCdA({ ...base, altitudeM: 1500 })!).toBeGreaterThan(sea);
+    expect(estimateCdA({ ...base, temperatureC: 30 })!).toBeGreaterThan(sea);
   });
   it('250 W à 40 km/h, 75 kg : position contre-la-montre (~0,23 m²)', () => {
     const cda = estimateCdA({ power: 250, speedKmh: 40, massKg: 75, slopePct: 0 })!;
@@ -20,6 +26,16 @@ describe('estimateCdA', () => {
     expect(estimateCdA({ power: 100, speedKmh: 30, massKg: 80, slopePct: 5 })).toBeNull();
     expect(estimateCdA({ power: 200, speedKmh: 0, massKg: 80, slopePct: 0 })).toBeNull();
     expect(estimateCdA({ power: NaN, speedKmh: 30, massKg: 80, slopePct: 0 })).toBeNull();
+  });
+});
+
+describe('airDensity', () => {
+  it('1,225 kg/m³ au niveau de la mer à 15 °C ; atmosphère standard à 1 500 m', () => {
+    expect(airDensity(0, 15)).toBeCloseTo(1.225, 3);
+    // Atmosphère standard à 1 500 m : 84 556 Pa et 5,25 °C → 1,058 kg/m³.
+    expect(airDensity(1500, 5.25)).toBeCloseTo(1.058, 2);
+    // Même altitude à 15 °C : 84 556 / (287,05 × 288,15) ≈ 1,022 kg/m³.
+    expect(airDensity(1500, 15)).toBeCloseTo(1.022, 2);
   });
 });
 

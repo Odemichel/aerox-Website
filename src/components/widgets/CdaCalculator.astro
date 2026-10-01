@@ -1,7 +1,10 @@
 ---
 // Calculateur de CdA de la page /cda : puissance, vitesse, masse et pente
 // d'une sortie → CdA estimée (src/lib/cda.ts) et ligne du tableau des valeurs
-// typiques la plus proche, puis pont vers le Diagnostic.
+// typiques la plus proche, les hypothèses du calcul, puis le livre offert et le
+// pont vers le Diagnostic.
+import GuideCapture from '~/components/widgets/GuideCapture.astro';
+import { CRR, ETA } from '~/lib/cda';
 import { type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
 
@@ -17,10 +20,16 @@ const fields = [
   { name: 'mass', label: t(dict, 'cda.calc.mass'), value: 80, min: 30, max: 200, step: 0.1 },
   { name: 'slope', label: t(dict, 'cda.calc.slope'), value: 0, min: -10, max: 15, step: 0.1 },
 ];
+// Facultatifs : sans saisie, air au niveau de la mer à 15 °C.
+const optionalFields = [
+  { name: 'altitude', label: t(dict, 'cda.calc.altitude'), placeholder: '0', min: -500, max: 5000, step: 1 },
+  { name: 'temperature', label: t(dict, 'cda.calc.temp'), placeholder: '15', min: -30, max: 50, step: 0.1 },
+];
 ---
 
 <div class="not-prose my-8 rounded-2xl border border-gray-200 dark:border-slate-700 p-5 md:p-6">
-  <p class="text-lg font-bold mb-4">{t(dict, 'cda.calc.title')}</p>
+  <p class="text-lg font-bold mb-2">{t(dict, 'cda.calc.title')}</p>
+  <p class="text-sm text-muted mb-4">{t(dict, 'cda.calc.howto')}</p>
   <form
     data-cda-calc
     data-lang={lang}
@@ -28,6 +37,9 @@ const fields = [
     data-category={t(dict, 'cda.calc.category')}
     data-invalid={t(dict, 'cda.calc.invalid')}
     data-categories={JSON.stringify(categories)}
+    data-assumptions={t(dict, 'cda.calc.assumptions')}
+    data-crr={CRR}
+    data-eta={ETA}
     class="grid grid-cols-1 sm:grid-cols-2 gap-4"
   >
     {
@@ -48,6 +60,23 @@ const fields = [
         </label>
       ))
     }
+    {
+      optionalFields.map((f) => (
+        <label class="flex flex-col gap-1 text-sm font-medium">
+          {f.label}
+          <input
+            type="number"
+            name={f.name}
+            placeholder={f.placeholder}
+            min={f.min}
+            max={f.max}
+            step={f.step}
+            inputmode="decimal"
+            class="border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 text-base text-gray-900 dark:text-white bg-white dark:bg-slate-800"
+          />
+        </label>
+      ))
+    }
     <button type="submit" class="btn-primary sm:col-span-2 px-6 py-2.5 font-semibold rounded-lg">
       {t(dict, 'cda.calc.submit')}
     </button>
@@ -56,18 +85,23 @@ const fields = [
   <div data-cda-output class="mt-5 hidden" aria-live="polite">
     <p data-cda-value class="text-xl font-bold"></p>
     <p data-cda-category class="text-muted mt-1"></p>
+    <p data-cda-assumptions class="text-xs text-muted mt-2"></p>
     <p class="mt-4 text-sm">
       {t(dict, 'cda.calc.bridge')}
       <a href={localizedHref(lang, '/#pricing')} class="text-primary font-semibold underline ml-1">
         {t(dict, 'cda.diag.cta')} →
       </a>
     </p>
+    <GuideCapture
+      lang={lang}
+      id="cda-calc"
+      texts={{ eyebrow: 'cda.guide.eyebrow', title: 'cda.guide.title', text: 'cda.guide.text' }}
+    />
   </div>
-  <p class="text-xs text-muted mt-4">{t(dict, 'cda.calc.note')}</p>
 </div>
 
 <script>
-  import { cdaCategory, estimateCdA } from '~/lib/cda';
+  import { airDensity, cdaCategory, estimateCdA } from '~/lib/cda';
 
   function initCdaCalculators() {
     document.querySelectorAll<HTMLFormElement>('form[data-cda-calc]').forEach((form) => {
@@ -77,26 +111,44 @@ const fields = [
       const out = box.querySelector<HTMLElement>('[data-cda-output]')!;
       const value = box.querySelector<HTMLElement>('[data-cda-value]')!;
       const category = box.querySelector<HTMLElement>('[data-cda-category]')!;
+      const assumptions = box.querySelector<HTMLElement>('[data-cda-assumptions]')!;
       const labels = JSON.parse(form.dataset.categories ?? '{}') as Record<string, string>;
       const fmt = new Intl.NumberFormat(form.dataset.lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       const num = (name: string) => Number((form.elements.namedItem(name) as HTMLInputElement).value);
+      // Champ facultatif vide : valeur par défaut (0 m, 15 °C).
+      const opt = (name: string, fallback: number) => {
+        const raw = (form.elements.namedItem(name) as HTMLInputElement).value.trim();
+        return raw === '' ? fallback : Number(raw);
+      };
 
       form.addEventListener('submit', (e) => {
         e.preventDefault();
+        const altitudeM = opt('altitude', 0);
+        const temperatureC = opt('temperature', 15);
         const cda = estimateCdA({
           power: num('power'),
           speedKmh: num('speed'),
           massKg: num('mass'),
           slopePct: num('slope'),
+          altitudeM,
+          temperatureC,
         });
         out.classList.remove('hidden');
         if (cda === null) {
           value.textContent = form.dataset.invalid ?? '';
           category.textContent = '';
+          assumptions.textContent = '';
           return;
         }
         value.textContent = (form.dataset.result ?? '').replace('{cda}', fmt.format(cda));
         category.textContent = (form.dataset.category ?? '').replace('{category}', labels[cdaCategory(cda)] ?? '');
+        const n3 = new Intl.NumberFormat(form.dataset.lang, { maximumFractionDigits: 3 });
+        assumptions.textContent = (form.dataset.assumptions ?? '')
+          .replace('{crr}', n3.format(Number(form.dataset.crr)))
+          .replace('{eta}', String(Math.round(Number(form.dataset.eta) * 100)))
+          .replace('{rho}', n3.format(airDensity(altitudeM, temperatureC)))
+          .replace('{altitude}', String(altitudeM))
+          .replace('{temperature}', String(temperatureC));
       });
     });
   }
