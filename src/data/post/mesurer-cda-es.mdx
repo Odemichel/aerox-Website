@@ -1,0 +1,106 @@
+---
+publishDate: 2026-10-01T00:00:00Z
+updateDate: 2026-10-01T00:00:00Z
+author: Olivier Demichel
+title: "Cómo medir tu CdA: ¿túnel de viento, pista, carretera o cámara?"
+excerpt: "Túnel de viento, velódromo, método Chung en carretera, sensores embarcados, cálculo a partir de una salida o medición del área frontal con cámara: qué mide cada método, dónde practicarlo y sus limitaciones."
+lang: es
+tags:
+  - CdA
+  - medir el CdA
+  - aerodinámica ciclismo
+  - túnel de viento
+  - área frontal
+metadata:
+  title: "Cómo medir tu CdA: túnel, pista, carretera o cámara"
+  description: "Túnel de viento, pista, método Chung, sensores embarcados o cámara: qué mide realmente cada método de medición del CdA, dónde practicarlo y sus límites."
+---
+
+## Medir tu CdA: ¿de qué hablamos?
+
+El [CdA](/es/cda/) es el producto de dos términos: **Cd**, el coeficiente de arrastre, que depende de tu forma, de tu ropa y del flujo de aire, y **A**, tu área frontal. Es lo que determina cuántos vatios necesitas para vencer al aire a una velocidad dada.
+
+Medirlo no es nada evidente: el arrastre no se ve, se deduce. Según el método, se mide el CdA completo, se estima a partir de la potencia y la velocidad, o solo se mide el área frontal. Ninguno es «el mejor» en términos absolutos: todo depende de lo que quieras saber.
+
+## El túnel de viento
+
+En el túnel de viento, el ciclista se coloca sobre su bici, fijada a una balanza, frente a un flujo de aire controlado. La balanza mide directamente la **fuerza de arrastre**, y de ella se deduce el **CdA completo**.
+
+- **Qué mide**: el CdA (Cd × A), en condiciones controladas.
+- **Dónde**: en un centro especializado, con reserva.
+- **Limitaciones**: el coste de una sesión y el desplazamiento; un número limitado de posiciones probadas en el tiempo disponible; una medición puntual, hecha un día concreto.
+
+Es la referencia para un valor absoluto. Sirve sobre todo para validar un ajuste preciso, como una posición de contrarreloj antes de una temporada.
+
+## El test en pista
+
+En un velódromo, ruedas a varias velocidades estables con un medidor de potencia. Comparando la potencia necesaria a cada velocidad, se separa la parte debida al aire (que crece con el cubo de la velocidad) de la debida a la rodadura, y se obtiene una estimación del CdA.
+
+- **Qué mide**: una estimación del CdA en condiciones reales de pedaleo.
+- **Dónde**: en una pista cubierta, al abrigo del viento.
+- **Limitaciones**: el acceso y el alquiler de la pista; un protocolo riguroso (velocidades estables, varias pasadas); un medidor de potencia bien calibrado.
+
+## El método Chung en carretera
+
+El método de Robert Chung, llamado de la «altitud virtual», utiliza los datos de una salida (potencia, velocidad, altitud) en un circuito o en un recorrido de ida y vuelta. Ajustando el CdA y el coeficiente de rodadura hasta que el perfil calculado coincida con el perfil real, se estima el CdA.
+
+- **Qué mide**: una estimación del CdA en carretera, con tu propio material.
+- **Dónde**: en un tramo de carretera tranquilo, preferiblemente en circuito.
+- **Limitaciones**: muy sensible al viento, al firme y a la precisión de los sensores; se necesitan varias pasadas; un análisis de datos que requiere experiencia.
+
+## Los sensores aerodinámicos embarcados
+
+Sensores montados en la bici miden el flujo de aire (velocidad y dirección del viento aparente) además de la potencia y la velocidad, y estiman el CdA de forma continua durante la salida.
+
+- **Qué miden**: una estimación del CdA en exterior, rodando.
+- **Dónde**: en tus recorridos habituales.
+- **Limitaciones**: el precio del material; una calibración cuidadosa; resultados que siguen siendo sensibles a las condiciones del día.
+
+## El cálculo a partir de una salida
+
+Sin material especial, puedes estimar tu CdA a partir de un tramo llano recorrido a velocidad estable, conociendo tu potencia, tu velocidad y tu masa. Es lo que hace nuestra [calculadora de CdA](/es/cda/calculator/).
+
+- **Qué da**: una estimación global de tu CdA.
+- **Dónde**: en carretera, sin viento, idealmente en ida y vuelta.
+- **Limitaciones**: el resultado depende mucho del viento, del firme y de la precisión de tu medidor de potencia; no te dice qué posición es la mejor.
+
+## La medición del área frontal con cámara
+
+AeroX mide **tu área frontal A**, en tiempo real, con una simple webcam mientras pedaleas en tu rodillo. Es el componente del CdA que controlas directamente con tu posición. AeroX no mide el Cd, que requiere un túnel de viento o pruebas en pista: el CdA que muestra combina el área frontal medida con un Cd estimado.
+
+- **Qué mide**: el área frontal, posición por posición, en directo.
+- **Dónde**: en casa o en el estudio, en el rodillo.
+- **Limitaciones**: no es un valor absoluto de túnel de viento; es una herramienta para comparar posiciones.
+
+Su interés está en el **bucle de feedback**: ajustas la cabeza, los codos o las extensiones y ves al instante si tu área frontal baja. Donde una sesión de túnel de viento prueba unas pocas posiciones, tú puedes probar decenas y aprender a mantener la mejor.
+
+## ¿Qué método elegir?
+
+| Método | Qué mide | Dónde | Para qué |
+|---|---|---|---|
+| Túnel de viento | CdA completo | Centro especializado | Validar una posición precisa |
+| Pista | Estimación del CdA | Velódromo | Probar en condiciones de pedaleo |
+| Método Chung | Estimación del CdA | Carretera | Medir con tu material, en exterior |
+| Sensores embarcados | Estimación del CdA | Carretera | Seguir el CdA rodando |
+| Cálculo a partir de una salida | Estimación global | Carretera | Tener un orden de magnitud |
+| Cámara (AeroX) | Área frontal A | Rodillo | Comparar y trabajar tus posiciones |
+
+Si buscas un **valor absoluto**, el túnel de viento y la pista siguen siendo las referencias. Si quieres **encontrar tu posición más rápida y aprender a mantenerla**, lo que necesitas sobre todo es un retorno inmediato, posición por posición.
+
+💡 **Para ir más lejos**: el **Diagnóstico AeroX** compara hasta 10 posiciones en directo, luego comprueba que mantienes la mejor y te da tu posición recomendada con tus ganancias en tiempo y en km/h. [Descubrir el Diagnóstico](/es/#pricing)
+
+---
+
+<div class="faq-section">
+<h2>Preguntas frecuentes</h2>
+<details><summary>¿Cuál es el método más preciso para medir el CdA?</summary><div>Para un valor absoluto, el túnel de viento, que mide directamente la fuerza de arrastre en condiciones controladas. Para comparar posiciones entre sí, la medición en directo del área frontal es más rápida y permite probar muchas más.</div></details>
+<details><summary>¿Se puede medir el CdA sin medidor de potencia?</summary><div>No el CdA completo: los métodos en pista, en carretera y el cálculo a partir de una salida se basan todos en la potencia. En cambio, el área frontal se mide sin medidor de potencia, con una cámara.</div></details>
+<details><summary>¿AeroX mide el CdA?</summary><div>AeroX mide el área frontal A, la parte del CdA (= Cd × A) que controlas con tu posición. El CdA que muestra combina esta medición con un Cd estimado.</div></details>
+</div>
+
+---
+
+**Lee también:**
+- [¿Qué es el CdA en ciclismo?](/es/cda/)
+- [Calculadora de CdA](/es/cda/calculator/)
+- [Por qué la aerodinámica hace ganar aún más tiempo cuando se rueda más lento](/es/blog/aero-gain-chronometrique-es/)

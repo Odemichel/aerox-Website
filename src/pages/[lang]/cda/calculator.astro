@@ -1,0 +1,70 @@
+---
+// Page du calculateur de CdA : elle reçoit les recherches « cda calculator »,
+// « how to calculate cda », « cda equation ». Même chemin dans les 9 langues
+// (hreflang par simple échange de langue dans Layout). Formulaire du livre et
+// pont vers le Diagnostic toujours visibles, en plus du lien sous le résultat.
+import type { GetStaticPaths } from 'astro';
+import Layout from '~/layouts/PageLayout.astro';
+import CdaCalculator from '~/components/widgets/CdaCalculator.astro';
+import GuideCapture from '~/components/widgets/GuideCapture.astro';
+import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
+import { localizedHref } from '~/utils/localize';
+
+export const prerender = true;
+export const getStaticPaths: GetStaticPaths = async () => SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
+
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
+
+const metadata = {
+  title: t(dict, 'cda.calcPage.meta.title'),
+  description: t(dict, 'cda.calcPage.meta.description'),
+  robots: { index: true, follow: true },
+};
+
+const Link_cda = `/${lang}/cda/`;
+const Link_diagnostic = localizedHref(lang, '/#pricing');
+const guideTexts = { eyebrow: 'cda.guide.eyebrow', title: 'cda.guide.title', text: 'cda.guide.text' };
+---
+
+<Layout metadata={metadata}>
+  <section class="py-12 md:py-16">
+    <article class="mx-auto max-w-3xl px-4 md:px-6 prose prose-lg dark:prose-invert">
+      <h1>{t(dict, 'cda.calcPage.h1')}</h1>
+      <p set:html={t(dict, 'cda.calcPage.intro').replace('{cdaUrl}', Link_cda)} />
+
+      <CdaCalculator lang={lang} />
+
+      <GuideCapture lang={lang} id="calc" texts={guideTexts} />
+
+      <h2>{t(dict, 'cda.formula.h2')}</h2>
+      <p set:html={t(dict, 'cda.formula.p1')} />
+      <p><a href={Link_cda}>{t(dict, 'cda.calcPage.valuesLink')} →</a></p>
+
+      {/* Pont vers le Diagnostic : la mesure de surface frontale, position par position. */}
+      <div class="not-prose mt-10 rounded-2xl border border-gray-200 dark:border-slate-700 px-6 py-8 text-center">
+        <h2 class="text-xl md:text-2xl font-bold mb-2">{t(dict, 'cda.diag.title')}</h2>
+        <p class="text-muted mb-6" set:html={t(dict, 'cda.diag.text')} />
+        <a href={Link_diagnostic} class="btn-primary inline-block px-8 py-3 text-lg font-semibold rounded-lg">
+          {t(dict, 'cda.diag.cta')}
+        </a>
+      </div>
+    </article>
+  </section>
+
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: t(dict, 'cda.calcPage.h1'),
+      description: t(dict, 'cda.calcPage.meta.description'),
+      url: `https://aeroxbefaster.com/${lang}/cda/calculator/`,
+      applicationCategory: 'SportsApplication',
+      operatingSystem: 'Web',
+      inLanguage: lang,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+      publisher: { '@type': 'Organization', name: 'AeroX', url: 'https://aeroxbefaster.com' },
+    })}
+  />
+</Layout>

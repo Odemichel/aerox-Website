@@ -1,9 +1,8 @@
 ---
 // Calculateur de CdA de la page /cda : puissance, vitesse, masse et pente
 // d'une sortie → CdA estimée (src/lib/cda.ts) et ligne du tableau des valeurs
-// typiques la plus proche, les hypothèses du calcul, puis le livre offert et le
-// pont vers le Diagnostic.
-import GuideCapture from '~/components/widgets/GuideCapture.astro';
+// typiques la plus proche, les hypothèses du calcul, puis le pont vers le
+// Diagnostic (le livre offert est sur la page, hors du résultat).
 import { CRR, ETA } from '~/lib/cda';
 import { type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
@@ -92,11 +91,6 @@ const optionalFields = [
         {t(dict, 'cda.diag.cta')} →
       </a>
     </p>
-    <GuideCapture
-      lang={lang}
-      id="cda-calc"
-      texts={{ eyebrow: 'cda.guide.eyebrow', title: 'cda.guide.title', text: 'cda.guide.text' }}
-    />
   </div>
 </div>
 

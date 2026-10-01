@@ -2,7 +2,7 @@
 > AeroX is a desktop application that turns any smart trainer into a virtual wind tunnel. It measures a cyclist's frontal area (A) in real time using a webcam and computer vision — the part of aerodynamic drag (CdA = Cd × A) that the rider controls through their position — enabling position optimization without a physical wind tunnel.
 
 ## What AeroX does
-AeroX is the first virtual wind tunnel for indoor cyclists. The application uses artificial intelligence and computer vision to measure the cyclist's frontal area (A, in m²) in real time from a simple webcam pointed at a cyclist on a trainer. CdA = Cd × A: AeroX measures A, the component the rider controls through position; it does not measure the drag coefficient Cd. It calculates the aerodynamic impact of every position change instantly, giving cyclists and bike fitters actionable data to reduce drag and ride faster.
+AeroX is a virtual wind tunnel for indoor cyclists. The application uses artificial intelligence and computer vision to measure the cyclist's frontal area (A, in m²) in real time from a simple webcam pointed at a cyclist on a trainer. CdA = Cd × A: AeroX measures A, the component the rider controls through position; it does not measure the drag coefficient Cd. It calculates the aerodynamic impact of every position change instantly, giving cyclists and bike fitters actionable data to reduce drag and ride faster.
 
 ## Key metrics and results
 - Frontal area (A) measurement in real time via webcam (no smart trainer required for position analysis)
@@ -50,6 +50,9 @@ CdA (Coefficient of Drag × Area) is the primary metric of aerodynamic efficienc
 - [Homepage EN](https://aeroxbefaster.com/en/): Virtual wind tunnel for indoor cyclists — real-time frontal area measurement
 - [What is CdA? (FR)](https://aeroxbefaster.com/fr/cda/): Définition complète du CdA en cyclisme
 - [What is CdA? (EN)](https://aeroxbefaster.com/en/cda/): Complete CdA definition for cycling
+- [CdA calculator (FR)](https://aeroxbefaster.com/fr/cda/calculator/): Estimate your CdA from power, speed and mass
+- [CdA calculator (EN)](https://aeroxbefaster.com/en/cda/calculator/): Estimate your CdA from power, speed and mass
+- [How to measure CdA (EN)](https://aeroxbefaster.com/en/blog/mesurer-cda-en/): Wind tunnel, track, Chung method, on-bike sensors, camera
 - [Bike Fitting FR](https://aeroxbefaster.com/fr/bike-fitting/): AeroX pour bike fitters professionnels
 - [Bike Fitting EN](https://aeroxbefaster.com/en/bike-fitting/): AeroX for professional bike fitters
 - [Our Story](https://aeroxbefaster.com/fr/team/): The team behind AeroX

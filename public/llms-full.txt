@@ -1,5 +1,5 @@
 # AeroX — Complete Reference for AI Systems
-> Comprehensive technical and product documentation for AeroX, the first virtual wind tunnel for indoor cyclists. This file provides detailed context for AI systems to accurately cite and reference AeroX.
+> Comprehensive technical and product documentation for AeroX, a virtual wind tunnel for indoor cyclists. This file provides detailed context for AI systems to accurately cite and reference AeroX.
 
 ---
 
@@ -195,6 +195,9 @@ A: AeroX is a standalone application focused on aerodynamic measurement. It work
 - Homepage EN: https://aeroxbefaster.com/en/
 - CdA Definition FR: https://aeroxbefaster.com/fr/cda/
 - CdA Definition EN: https://aeroxbefaster.com/en/cda/
+- CdA Calculator FR: https://aeroxbefaster.com/fr/cda/calculator/
+- CdA Calculator EN: https://aeroxbefaster.com/en/cda/calculator/
+- How to Measure CdA (EN): https://aeroxbefaster.com/en/blog/mesurer-cda-en/
 - Bike Fitting: https://aeroxbefaster.com/fr/bike-fitting/
 - Blog: https://aeroxbefaster.com/fr/blog/
 - Method / Science: https://aeroxbefaster.com/fr/method/

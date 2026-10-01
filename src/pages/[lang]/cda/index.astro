@@ -2,7 +2,6 @@
 import type { GetStaticPaths } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
 import GuideCapture from '~/components/widgets/GuideCapture.astro';
-import CdaCalculator from '~/components/widgets/CdaCalculator.astro';
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
 
@@ -18,9 +17,12 @@ const metadata = {
   robots: { index: true, follow: true },
 };
 
-// Page d'entrée SEO : guide « surface frontale » au milieu et en bas, pont
-// vers le Diagnostic (carte tarifaire de l'accueil).
+// Page pilier : définition, Cd vs A, valeurs typiques, formule courte. Le
+// calculateur et la comparaison des méthodes de mesure ont leurs pages ; ici,
+// le livre au milieu et le pont vers le Diagnostic à la fin.
 const Link_diagnostic = localizedHref(lang, '/#pricing');
+const Link_calculator = `/${lang}/cda/calculator/`;
+const Link_measure = `/${lang}/blog/mesurer-cda-${lang}/`;
 const guideTexts = { eyebrow: 'cda.guide.eyebrow', title: 'cda.guide.title', text: 'cda.guide.text' };
 
 const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] as const;
@@ -72,14 +74,15 @@ const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] 
       </table>
       <p>
         {t(dict, 'cda.values.bridge')}
-        <a href={Link_diagnostic}>{t(dict, 'cda.diag.cta')} →</a>
+        <a href={Link_calculator}>{t(dict, 'cda.calcPage.link')} →</a>
+        <a href={Link_diagnostic} class="ml-3">{t(dict, 'cda.diag.cta')} →</a>
       </p>
 
-      <h2>{t(dict, 'cda.formula.h2')}</h2>
-      <p set:html={t(dict, 'cda.formula.p1')} />
-      <CdaCalculator lang={lang} />
-
       <GuideCapture lang={lang} id="cda-mid" texts={guideTexts} />
+
+      <h2>{t(dict, 'cda.formula.h2')}</h2>
+      <p set:html={t(dict, 'cda.formula.short')} />
+      <p><a href={Link_calculator}>{t(dict, 'cda.calcPage.link')} →</a></p>
 
       <h2>{t(dict, 'cda.impact.h2')}</h2>
       <p set:html={t(dict, 'cda.impact.p1')} />
@@ -91,13 +94,10 @@ const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] 
       </ul>
 
       <h2>{t(dict, 'cda.measure.h2')}</h2>
-      <h3>{t(dict, 'cda.measure.methods.h3')}</h3>
-      <ul>
-        <li set:html={t(dict, 'cda.measure.methods.tunnel')} />
-        <li set:html={t(dict, 'cda.measure.methods.velodrome')} />
-        <li set:html={t(dict, 'cda.measure.methods.chung')} />
-        <li set:html={t(dict, 'cda.measure.methods.aerox')} />
-      </ul>
+      <p>
+        {t(dict, 'cda.measure.short')}
+        <a href={Link_measure}>{t(dict, 'cda.measure.articleLink')} →</a>
+      </p>
 
       <h3>{t(dict, 'cda.measure.aerox.h3')}</h3>
       <p set:html={t(dict, 'cda.measure.aerox.p1')} />
@@ -122,8 +122,6 @@ const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] 
           {t(dict, 'cda.diag.cta')}
         </a>
       </div>
-
-      <GuideCapture lang={lang} id="cda-bottom" texts={guideTexts} />
 
       <p class="text-xs text-muted/60 mt-8 italic">{t(dict, 'cda.lastUpdated')}</p>
     </article>

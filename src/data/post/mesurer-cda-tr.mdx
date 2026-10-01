@@ -1,0 +1,106 @@
+---
+publishDate: 2026-10-01T00:00:00Z
+updateDate: 2026-10-01T00:00:00Z
+author: Olivier Demichel
+title: "CdA nasıl ölçülür: rüzgâr tüneli, pist, yol mu, kamera mı?"
+excerpt: "Rüzgâr tüneli, velodrom, yolda Chung yöntemi, bisiklete takılan sensörler, bir sürüşten hesaplama veya kamerayla ön yüzey alanı ölçümü: her yöntemin neyi ölçtüğü, nerede uygulanabileceği ve kısıtları."
+lang: tr
+tags:
+  - CdA
+  - CdA ölçümü
+  - bisiklet aerodinamik
+  - rüzgâr tüneli
+  - ön yüzey alanı
+metadata:
+  title: "CdA nasıl ölçülür: rüzgâr tüneli, pist, yol veya kamera"
+  description: "Rüzgâr tüneli, pist, Chung yöntemi, bisiklet sensörleri veya kamera: her CdA ölçüm yönteminin gerçekte neyi ölçtüğü, nerede uygulandığı ve sınırları nelerdir."
+---
+
+## CdA'nızı ölçmek: neden söz ediyoruz?
+
+[CdA](/tr/cda/), iki terimin çarpımıdır: şeklinize, kıyafetinize ve hava akışına bağlı olan sürtünme katsayısı **Cd** ve ön yüzey alanınız **A**. Belirli bir hızda havayı yenmek için kaç watt gerektiğini belirleyen değer budur.
+
+Onu ölçmek hiç de kolay değildir: sürtünme görünmez, ancak çıkarım yoluyla bulunur. Yönteme göre ya CdA'nın tamamı ölçülür, ya güç ve hızdan tahmin edilir, ya da yalnızca ön yüzey alanı ölçülür. Hiçbiri mutlak anlamda "en iyisi" değildir: her şey neyi öğrenmek istediğinize bağlıdır.
+
+## Rüzgâr tüneli
+
+Rüzgâr tünelinde bisikletçi, bir kuvvet terazisine sabitlenmiş bisikletinin üzerinde, kontrollü bir hava akışının karşısında yer alır. Terazi doğrudan **sürtünme kuvvetini** ölçer ve buradan **CdA'nın tamamı** hesaplanır.
+
+- **Neyi ölçer**: kontrollü koşullarda CdA'yı (Cd × A).
+- **Nerede**: uzman bir merkezde, rezervasyonla.
+- **Kısıtlar**: bir seansın maliyeti ve ulaşım; ayrılan sürede test edilebilen sınırlı sayıda pozisyon; belirli bir günde yapılan tek seferlik bir ölçüm.
+
+Mutlak bir değer için referanstır. Özellikle sezon öncesi bir zamana karşı pozisyonu gibi belirli bir ayarı doğrulamak için kullanılır.
+
+## Pist testi
+
+Bir velodromda, güç ölçerle birkaç sabit hızda sürersiniz. Her hızda gereken gücü karşılaştırarak havadan kaynaklanan payı (hızın küpüyle artar) yuvarlanmadan kaynaklanan paydan ayırır ve CdA'nın bir tahminini elde edersiniz.
+
+- **Neyi ölçer**: gerçek pedallama koşullarında CdA'nın bir tahmini.
+- **Nerede**: rüzgârdan korunan kapalı bir pistte.
+- **Kısıtlar**: piste erişim ve pist kirası; titiz bir protokol (sabit hızlar, birkaç tur); iyi kalibre edilmiş bir güç ölçer.
+
+## Yolda Chung yöntemi
+
+Robert Chung'ın "sanal irtifa" olarak bilinen yöntemi, bir tur ya da gidiş-dönüş parkurundaki sürüş verilerini (güç, hız, irtifa) kullanır. Hesaplanan profil gerçek profille örtüşene kadar CdA ve yuvarlanma katsayısı ayarlanarak CdA tahmin edilir.
+
+- **Neyi ölçer**: kendi ekipmanınızla, yolda CdA'nın bir tahmini.
+- **Nerede**: sakin bir yol kesiminde, tercihen tur şeklinde.
+- **Kısıtlar**: rüzgâra, yol yüzeyine ve sensörlerin hassasiyetine karşı çok duyarlıdır; birkaç tur gerekir; deneyim isteyen bir veri analizi gerektirir.
+
+## Bisiklete takılan aero sensörler
+
+Bisiklete monte edilen sensörler, güç ve hıza ek olarak hava akışını (görünür rüzgârın hızı ve yönü) ölçer ve sürüş boyunca CdA'yı sürekli olarak tahmin eder.
+
+- **Neyi ölçerler**: dışarıda, sürüş sırasında CdA'nın bir tahmini.
+- **Nerede**: alışık olduğunuz parkurlarda.
+- **Kısıtlar**: ekipmanın fiyatı; özenli bir kalibrasyon; günün koşullarına duyarlı kalan sonuçlar.
+
+## Bir sürüşten hesaplama
+
+Özel bir ekipman olmadan, gücünüzü, hızınızı ve kütlenizi bilerek sabit hızla gidilen düz bir kesimden CdA'nızı tahmin edebilirsiniz. [CdA hesaplayıcımız](/tr/cda/calculator/) tam olarak bunu yapar.
+
+- **Ne verir**: CdA'nızın genel bir tahmini.
+- **Nerede**: yolda, rüzgârsız havada, ideal olarak gidiş-dönüş şeklinde.
+- **Kısıtlar**: sonuç büyük ölçüde rüzgâra, yol yüzeyine ve güç ölçerinizin hassasiyetine bağlıdır; hangi pozisyonun en iyi olduğunu söylemez.
+
+## Kamerayla ön yüzey alanı ölçümü
+
+AeroX, akıllı bisiklet rulonuzda pedal çevirirken basit bir web kamerasıyla **ön yüzey alanınızı (A)** gerçek zamanlı olarak ölçer. Bu, CdA'nın pozisyonunuzla doğrudan kontrol ettiğiniz bileşenidir. AeroX, rüzgâr tüneli veya pist testi gerektiren Cd'yi ölçmez: gösterdiği CdA, ölçülen ön yüzey alanını tahmini bir Cd ile birleştirir.
+
+- **Neyi ölçer**: ön yüzey alanını, pozisyon pozisyon, canlı olarak.
+- **Nerede**: evde veya stüdyoda, akıllı bisiklet rulosunda.
+- **Kısıtlar**: mutlak bir rüzgâr tüneli değeri değildir; pozisyonları karşılaştırmaya yarayan bir araçtır.
+
+Asıl değeri **geri bildirim döngüsündedir**: başınızı, dirseklerinizi veya aero barlarınızı ayarlarsınız ve ön yüzey alanınızın azalıp azalmadığını anında görürsünüz. Bir rüzgâr tüneli seansı birkaç pozisyonu test ederken, siz onlarcasını deneyebilir ve en iyisini korumayı öğrenebilirsiniz.
+
+## Hangi yöntemi seçmeli?
+
+| Yöntem | Neyi ölçer | Nerede | Ne için |
+|---|---|---|---|
+| Rüzgâr tüneli | CdA'nın tamamı | Uzman merkez | Belirli bir pozisyonu doğrulamak |
+| Pist | CdA tahmini | Velodrom | Pedallama koşullarında test etmek |
+| Chung yöntemi | CdA tahmini | Yol | Kendi ekipmanınızla dışarıda ölçmek |
+| Bisiklete takılan sensörler | CdA tahmini | Yol | Sürerken CdA'yı izlemek |
+| Bir sürüşten hesaplama | Genel tahmin | Yol | Bir büyüklük mertebesi elde etmek |
+| Kamera (AeroX) | Ön yüzey alanı A | Akıllı bisiklet rulosu | Pozisyonlarınızı karşılaştırmak ve çalışmak |
+
+**Mutlak bir değer** arıyorsanız, rüzgâr tüneli ve pist referans olmaya devam ediyor. **En hızlı pozisyonunuzu bulmak ve onu korumayı öğrenmek** istiyorsanız, her şeyden önce pozisyon pozisyon anında geri bildirime ihtiyacınız var.
+
+💡 **Daha fazlası için**: **AeroX Diagnostik**, 10'a kadar pozisyonu canlı olarak karşılaştırır, ardından en iyisini koruyup korumadığınızı kontrol eder ve size zaman ve km/s cinsinden kazançlarınızla birlikte önerilen pozisyonunuzu verir. [Diagnostik'i keşfedin](/tr/#pricing)
+
+---
+
+<div class="faq-section">
+<h2>Sıkça sorulan sorular</h2>
+<details><summary>CdA'yı ölçmenin en hassas yöntemi hangisidir?</summary><div>Mutlak bir değer için, sürtünme kuvvetini kontrollü koşullarda doğrudan ölçen rüzgâr tüneli. Pozisyonları birbiriyle karşılaştırmak için ise ön yüzey alanının canlı ölçümü daha hızlıdır ve çok daha fazla pozisyon test etmeyi sağlar.</div></details>
+<details><summary>CdA güç ölçer olmadan ölçülebilir mi?</summary><div>CdA'nın tamamı ölçülemez: pist ve yol yöntemleri ile bir sürüşten hesaplama, hepsi güce dayanır. Buna karşılık ön yüzey alanı, güç ölçer olmadan bir kamerayla ölçülebilir.</div></details>
+<details><summary>AeroX CdA'yı ölçer mi?</summary><div>AeroX, CdA'nın (= Cd × A) pozisyonunuzla kontrol ettiğiniz kısmı olan ön yüzey alanı A'yı ölçer. Gösterdiği CdA, bu ölçümü tahmini bir Cd ile birleştirir.</div></details>
+</div>
+
+---
+
+**Ayrıca okuyun:**
+- [Bisiklette CdA nedir?](/tr/cda/)
+- [CdA hesaplayıcı](/tr/cda/calculator/)
+- [Yavaş sürdüğünüzde aerodinamik neden daha fazla zaman kazandırır](/tr/blog/aero-gain-chronometrique-tr/)
