@@ -2,7 +2,6 @@
 import Announcement from '~/components/widgets/Announcement.astro';
 import Footer from '~/components/widgets/Footer.astro';
 import Header from '~/components/widgets/Header.astro';
-import OfferBar from '~/components/widgets/OfferBar.astro';
 import Layout from '~/layouts/Layout.astro';
 
 import type { MetaData } from '~/types';
@@ -35,13 +34,16 @@ const { headerData, footerData } = makeNavigation(lang, audience);
 ---
 
 <Layout metadata={metadata}>
-  <slot name="announcement">
-    {audience === 'rider' && <Announcement />}
-  </slot>
+  {/* Bandeau du Diagnostic et header collés ensemble en haut de l'écran. */}
+  <div class="sticky top-0 z-40">
+    <slot name="announcement">
+      {audience === 'rider' && <Announcement />}
+    </slot>
 
-  <slot name="header">
-    <Header {...headerData} isSticky showToggleTheme currentLang={lang} />
-  </slot>
+    <slot name="header">
+      <Header {...headerData} isSticky showToggleTheme currentLang={lang} />
+    </slot>
+  </div>
 
   <main>
     <slot />
@@ -50,6 +52,4 @@ const { headerData, footerData } = makeNavigation(lang, audience);
   <slot name="footer">
     <Footer {...footerData} />
   </slot>
-
-  {audience === 'rider' && <OfferBar lang={lang} />}
 </Layout>

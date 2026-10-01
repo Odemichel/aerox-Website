@@ -98,9 +98,9 @@ export function makeNavigation(langInput?: string, audience: Audience = 'rider')
           }
         : {
             variant: 'primary',
-            // Libellé court sur mobile : la réduction est portée par le
-            // bandeau au-dessus, le bouton complet débordait de l'écran.
-            text: `<span class="sm:hidden">${t('cta.preorder.short')}</span><span class="hidden sm:inline">${phased(t('cta.preorder.text'), t('cta.preorder.text.live'))}</span>`,
+            // Libellé court sur mobile (le bouton complet débordait de
+            // l'écran) : le produit et son prix, jamais un « J'en profite » vague.
+            text: `<span class="sm:hidden">${phased(t('cta.preorder.short.price'), t('cta.preorder.short.price'), t('cta.preorder.short.full'))}</span><span class="hidden sm:inline">${phased(t('cta.preorder.text'), t('cta.preorder.text.live'))}</span>`,
             icon: 'tabler:discount-2',
             href: withLang(lang, '#pricing'),
             target: '',

@@ -1,22 +1,37 @@
 ---
 import { type Locale, getDict, t } from '~/lib/i18n';
+import { phased } from '~/lib/offerPhase';
 
 const lang = (Astro.params.lang as Locale) ?? 'fr';
 const dict = getDict(lang);
+
+// Le produit et son prix, lisibles en 5 secondes. Offre de lancement jusqu'au
+// 15 novembre, puis prix plein (voir src/lib/offerPhase.ts).
+const fullPrice = t(dict, 'offer.fullPrice');
+const desktop = phased(
+  `${t(dict, 'home.offer.title')} — ${t(dict, 'home.offer.price')}`,
+  `${t(dict, 'home.offer.title')} — ${t(dict, 'home.offer.price')}`,
+  `${t(dict, 'home.offer.title')} — ${fullPrice}`
+);
+const mobile = phased(
+  t(dict, 'offerBar.text'),
+  t(dict, 'offerBar.text'),
+  `${t(dict, 'pricing.diagnostic.title')} · ${fullPrice}`
+);
 ---
 
 {
   /*
-  Bandeau de l'offre de lancement, au-dessus du header, sur toutes les tailles
-  d'écran : c'est lui qui porte la réduction, ce qui permet au bouton du
-  header de rester court sur mobile.
+  Bandeau du Diagnostic, au-dessus du header et collé avec lui en haut de
+  l'écran (PageLayout), sur toutes les tailles d'écran. Version courte sur
+  smartphone.
 */
 }
 <a
   data-rider-promo
-  data-launch-offer
   href={`/${lang}/#pricing`}
-  class="block bg-primary px-3 py-2 text-center text-sm font-semibold text-black hover:underline"
+  class="block bg-primary px-3 py-2 text-center text-xs sm:text-sm font-semibold text-black hover:underline"
 >
-  {t(dict, 'announcement.text')}
+  <span class="sm:hidden" set:html={mobile} />
+  <span class="hidden sm:inline" set:html={desktop} />
 </a>
