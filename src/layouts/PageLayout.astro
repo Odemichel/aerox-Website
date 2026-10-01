@@ -2,6 +2,7 @@
 import Announcement from '~/components/widgets/Announcement.astro';
 import Footer from '~/components/widgets/Footer.astro';
 import Header from '~/components/widgets/Header.astro';
+import OfferBar from '~/components/widgets/OfferBar.astro';
 import Layout from '~/layouts/Layout.astro';
 
 import type { MetaData } from '~/types';
@@ -49,4 +50,6 @@ const { headerData, footerData } = makeNavigation(lang, audience);
   <slot name="footer">
     <Footer {...footerData} />
   </slot>
+
+  {audience === 'rider' && <OfferBar lang={lang} />}
 </Layout>

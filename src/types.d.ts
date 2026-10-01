@@ -186,8 +186,12 @@ export interface Price {
   price?: number | string;
   /** Prix barré affiché à côté du prix courant (offre de lancement). */
   priceBefore?: number | string;
+  /** Prix plein, affiché à la place de `price` une fois l'offre de lancement terminée. */
+  priceFull?: number | string;
   /** Ligne libre sous la période — pas de mise en minuscules, contrairement à `period`. */
   note?: string;
+  /** Garantie de remboursement, sous la note. */
+  guarantee?: string;
   priceLabel?: string;
   price1?: number | string;
   price2?: number | string;

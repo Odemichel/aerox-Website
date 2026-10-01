@@ -52,7 +52,9 @@ const variants = {
           {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
         </a>
       )}
-      <small class={twMerge('mt-1 text-xs md:text-sm text-accent', subtextClass)}>{subtext}</small>
+      <small class={twMerge('mt-1 text-xs md:text-sm text-accent', subtextClass)}>
+        <Fragment set:html={subtext} />
+      </small>
     </div>
   ) : // Comportement inchangé si pas de subtext
   type === 'button' || type === 'submit' || type === 'reset' ? (

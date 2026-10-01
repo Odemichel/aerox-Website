@@ -2,6 +2,7 @@
 import type { HeaderProps } from './components/widgets/Header.astro';
 import { DEFAULT_LOCALE, getDict, SUPPORTED_LOCALES, type Locale } from './lib/i18n';
 import { getPermalink } from './utils/permalinks';
+import { phased } from './lib/offerPhase';
 
 const isLocale = (v: unknown): v is Locale =>
   typeof v === 'string' && (SUPPORTED_LOCALES as readonly string[]).includes(v);
@@ -99,11 +100,12 @@ export function makeNavigation(langInput?: string, audience: Audience = 'rider')
             variant: 'primary',
             // Libellé court sur mobile : la réduction est portée par le
             // bandeau au-dessus, le bouton complet débordait de l'écran.
-            text: `<span class="sm:hidden">${t('cta.preorder.short')}</span><span class="hidden sm:inline">${t('cta.preorder.text')}</span>`,
+            text: `<span class="sm:hidden">${t('cta.preorder.short')}</span><span class="hidden sm:inline">${phased(t('cta.preorder.text'), t('cta.preorder.text.live'))}</span>`,
             icon: 'tabler:discount-2',
             href: withLang(lang, '#pricing'),
             target: '',
-            subtext: t('cta.preorder.subtext'),
+            // Plus de sous-texte une fois l'offre de lancement terminée.
+            subtext: phased(t('cta.preorder.subtext'), t('cta.preorder.subtext.live'), ''),
             subtextClass: 'hidden sm:block',
           },
     ],

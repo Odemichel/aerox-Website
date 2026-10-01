@@ -3,7 +3,7 @@ title: 'Condiciones de Uso'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Última actualización: 28 de septiembre de 2026_
+_Última actualización: 1 de octubre de 2026_
 
 Gracias por usar **AeroX**, la solución que convierte tu rodillo en un túnel de viento virtual.  
 Estas Condiciones de Uso regulan el acceso y el uso del servicio AeroX.  
@@ -50,6 +50,7 @@ Estas Condiciones de Uso definen los derechos y obligaciones de AeroX y del Usua
 - **Duración**: una compra da derecho a un diagnóstico, que puede usarse durante **30 días desde su inicio** en la aplicación. Termina al vencer ese plazo o cuando el Usuario declara haberlo finalizado; sus resultados siguen disponibles. Reiniciar un diagnóstico en curso no amplía ese plazo.
 - **Derecho de desistimiento**: el Usuario que actúa como consumidor dispone de **14 días desde la compra** para desistir, sin necesidad de justificación, escribiendo a contact@aeroxbefaster.com. AeroX reembolsa entonces la totalidad de los importes pagados, por el mismo medio de pago, en un plazo máximo de 14 días desde la solicitud.
 - **Renuncia**: al pagar, el Usuario solicita expresamente el acceso inmediato al diagnóstico y reconoce que pierde su derecho de desistimiento en cuanto realiza su primera sesión (Código de Consumo francés, art. L221-28, 13°). Una vez realizada una sesión, el diagnóstico deja de ser reembolsable.
+- **Garantía AeroX**: además del derecho de desistimiento, AeroX reembolsa íntegramente el diagnóstico, con una simple solicitud a contact@aeroxbefaster.com, mientras no se haya realizado ninguna sesión, cualquiera que sea la fecha de compra, en particular si el equipo del Usuario no es compatible. Desde la realización de la primera sesión, el diagnóstico se considera consumido y deja de ser reembolsable.
 - **Efecto de un reembolso**: todo reembolso pone fin al acceso al diagnóstico correspondiente.
 
 ---

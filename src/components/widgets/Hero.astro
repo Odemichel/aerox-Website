@@ -25,6 +25,8 @@ const {
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
     <div class="pt-0 pointer-events-none"></div>
     <div class="text-center pb-18 md:pb-16 max-w-5xl mx-auto">
+      {/* Offre mise en avant au-dessus du titre (produit + prix, lisible en 5 s). */}
+      <slot name="offer" />
       {
         tagline && (
           <p

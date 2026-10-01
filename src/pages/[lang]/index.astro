@@ -39,6 +39,7 @@ import logo_polar from '~/assets/images/logos/polar.png';
 import logo_suunto from '~/assets/images/logos/suunto.png';
 import LogosCarousel from '~/components/widgets/LogosCarousel.astro';
 import { localizedHref } from '~/utils/localize';
+import { phased } from '~/lib/offerPhase';
 
 // i18n
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
@@ -62,6 +63,9 @@ const metadata = {
 // pré-réservation du Diagnostic, pas à l'agenda — qui est le tunnel
 // bike-fitter (voir /bike-fitting/).
 const Link_preorder = localizedHref(lang, '/#pricing');
+// Libellés qui suivent le calendrier du Diagnostic (voir src/lib/offerPhase.ts).
+const ctaPreorder = phased(t(dict, 'cta.preorder.text'), t(dict, 'cta.preorder.text.live'));
+const ctaPreorderSubtext = phased(t(dict, 'cta.preorder.subtext'), t(dict, 'cta.preorder.subtext.live'), '');
 const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
 ---
 
@@ -73,9 +77,9 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
     actions={[
       {
         variant: 'primary',
-        text: t(dict, 'cta.preorder.text'),
+        text: ctaPreorder,
         icon: 'tabler:discount-2',
-        subtext: t(dict, 'cta.preorder.subtext'),
+        subtext: ctaPreorderSubtext,
         href: Link_preorder,
         target: '',
         seo: t(dict, 'home.hero.cta.seo'),
@@ -89,6 +93,21 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
       },
     ]}
   >
+    <Fragment slot="offer">
+      <a
+        href={Link_preorder}
+        class="group mb-6 md:mb-8 inline-flex flex-col items-center gap-1 rounded-2xl border border-primary/40 bg-primary/10 px-5 py-3 hover:bg-primary/15 transition-colors"
+      >
+        <span class="text-base md:text-lg font-bold text-default">{t(dict, 'home.offer.title')}</span>
+        <span data-launch-offer class="text-sm md:text-base">
+          <span class="font-bold text-primary">{t(dict, 'home.offer.price')}</span>
+          <span class="text-muted"> · </span>
+          <span class="underline group-hover:text-primary">{t(dict, 'home.offer.cta')} →</span>
+        </span>
+        <span class="text-xs text-muted">{t(dict, 'pricing.diagnostic.guarantee')}</span>
+      </a>
+    </Fragment>
+
     <Fragment slot="title">
       <span class="font-bold">
         {t(dict, 'home.hero.title.l1')}
@@ -507,7 +526,7 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
     ]}
     callToAction={{
       variant: 'primary',
-      text: t(dict, 'cta.preorder.text'),
+      text: ctaPreorder,
       href: Link_preorder,
       target: '',
       icon: 'tabler:calendar-event',
@@ -681,7 +700,7 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
     actions={[
       {
         variant: 'primary',
-        text: t(dict, 'cta.preorder.text'),
+        text: ctaPreorder,
         href: Link_preorder,
         target: '',
         icon: 'tabler:calendar-event',
@@ -782,7 +801,7 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
     subtitle={t(dict, 'home.faq.subtitle')}
     tagline="FAQs"
     classes={{ container: 'max-w-6xl' }}
-    actions={[{ variant: 'primary', text: t(dict, 'cta.preorder.text'), href: Link_preorder, target: '' }]}
+    actions={[{ variant: 'primary', text: ctaPreorder, href: Link_preorder, target: '' }]}
     items={[
       {
         title: t(dict, 'home.faq.items.1.title'),

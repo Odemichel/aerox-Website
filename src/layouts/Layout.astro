@@ -12,6 +12,7 @@ import SiteVerification from '~/components/common/SiteVerification.astro';
 import CustomStyles from '~/components/CustomStyles.astro';
 import Favicons from '~/components/Favicons.astro';
 import StickyBar from '~/components/common/StickyBar.astro';
+import OfferPhases from '~/components/common/OfferPhases.astro';
 
 import SpeedInsights from '@vercel/speed-insights/astro';
 import { ClientRouter } from 'astro:transitions';
@@ -227,5 +228,6 @@ const breadcrumbSchema =
     <SpeedInsights />
     <BasicScripts />
     <VercelAnalytics />
+    <OfferPhases />
   </body>
 </html>

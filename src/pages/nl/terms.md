@@ -3,7 +3,7 @@ title: 'Algemene Gebruiksvoorwaarden'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Laatste update: 28 september 2026_
+_Laatste update: 1 oktober 2026_
 
 Bedankt voor het gebruik van **AeroX**, de oplossing die uw fietstrainer omtovert in een virtuele windtunnel.
 Deze Algemene Gebruiksvoorwaarden (AGV) regelen de toegang tot en het gebruik van de AeroX-dienst.
@@ -50,6 +50,7 @@ Deze AGV bepalen de rechten en plichten van AeroX en de Gebruiker in het kader v
 - **Duur**: één aankoop geeft recht op één diagnose, te gebruiken gedurende **30 dagen vanaf de start** in de applicatie. Ze eindigt na afloop van deze termijn of wanneer de gebruiker aangeeft dat ze klaar is; de resultaten blijven raadpleegbaar. Een lopende diagnose opnieuw beginnen verlengt deze termijn niet.
 - **Herroepingsrecht**: een gebruiker die als consument handelt, heeft **14 dagen vanaf de aankoop** om zonder opgave van redenen te herroepen, door te schrijven naar contact@aeroxbefaster.com. AeroX betaalt dan alle betaalde bedragen terug via hetzelfde betaalmiddel, uiterlijk 14 dagen na het verzoek.
 - **Afstand**: bij het betalen vraagt de gebruiker uitdrukkelijk om onmiddellijke toegang tot de diagnose en erkent hij zijn herroepingsrecht te verliezen zodra zijn eerste sessie is uitgevoerd (Franse consumentenwet, art. L221-28 13°). Na een uitgevoerde sessie wordt de diagnose niet meer terugbetaald.
+- **AeroX-garantie**: naast het herroepingsrecht betaalt AeroX de diagnose volledig terug, op eenvoudig verzoek via contact@aeroxbefaster.com, zolang er nog geen sessie is uitgevoerd, ongeacht de aankoopdatum, met name als de apparatuur van de gebruiker niet compatibel is. Vanaf de eerste uitgevoerde sessie is de diagnose verbruikt en wordt ze niet meer terugbetaald.
 - **Gevolg van een terugbetaling**: elke terugbetaling beëindigt de toegang tot de betreffende diagnose.
 
 ---

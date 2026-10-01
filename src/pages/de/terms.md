@@ -3,7 +3,7 @@ title: 'Allgemeine Nutzungsbedingungen'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Letzte Aktualisierung: 28. September 2026_
+_Letzte Aktualisierung: 1. Oktober 2026_
 
 Vielen Dank, dass Sie **AeroX** nutzen – die Lösung, die Ihren Rollentrainer in einen virtuellen Windkanal verwandelt.
 Diese Allgemeinen Nutzungsbedingungen (ANB) regeln den Zugang zu und die Nutzung des AeroX-Dienstes.
@@ -50,6 +50,7 @@ Diese ANB legen die Rechte und Pflichten von AeroX und dem Nutzer im Rahmen der 
 - **Dauer**: Ein Kauf berechtigt zu einer Diagnose, die **30 Tage ab ihrem Start** in der Anwendung genutzt werden kann. Sie endet nach Ablauf dieser Frist oder wenn der Nutzer sie für abgeschlossen erklärt; ihre Ergebnisse bleiben einsehbar. Ein Neustart einer laufenden Diagnose verlängert diese Frist nicht.
 - **Widerrufsrecht**: Ein Nutzer, der als Verbraucher handelt, kann **innerhalb von 14 Tagen ab dem Kauf** ohne Angabe von Gründen widerrufen, indem er an contact@aeroxbefaster.com schreibt. AeroX erstattet dann alle geleisteten Zahlungen über dasselbe Zahlungsmittel spätestens 14 Tage nach dem Widerruf.
 - **Verzicht**: Beim Bezahlen verlangt der Nutzer ausdrücklich den sofortigen Zugang zur Diagnose und bestätigt, dass er sein Widerrufsrecht mit Abschluss seiner ersten Einheit verliert (französisches Verbrauchergesetzbuch, Art. L221-28 Nr. 13). Nach einer abgeschlossenen Einheit ist die Diagnose nicht mehr erstattungsfähig.
+- **AeroX-Garantie**: Zusätzlich zum Widerrufsrecht erstattet AeroX die Diagnose auf einfache Anfrage an contact@aeroxbefaster.com vollständig, solange noch keine Einheit abgeschlossen wurde, unabhängig vom Kaufdatum, insbesondere wenn die Ausrüstung des Nutzers nicht kompatibel ist. Ab Abschluss der ersten Einheit gilt die Diagnose als verbraucht und ist nicht mehr erstattungsfähig.
 - **Wirkung einer Erstattung**: Jede Erstattung beendet den Zugang zur betreffenden Diagnose.
 
 ---

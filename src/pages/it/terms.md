@@ -3,7 +3,7 @@ title: "Condizioni d'Uso"
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Ultimo aggiornamento: 28 settembre 2026_
+_Ultimo aggiornamento: 1° ottobre 2026_
 
 Grazie per usare **AeroX**, la soluzione che trasforma il tuo rullo in una galleria del vento virtuale.  
 Le presenti Condizioni d'Uso disciplinano l'accesso e l'utilizzo del servizio AeroX.  
@@ -50,6 +50,7 @@ Le presenti Condizioni d'Uso definiscono i diritti e gli obblighi di AeroX e del
 - **Durata**: un acquisto dà diritto a una diagnosi, utilizzabile per **30 giorni dal suo avvio** nell'applicazione. Termina alla scadenza di questo periodo o quando l'Utente dichiara di averla conclusa; i risultati restano consultabili. Ricominciare una diagnosi in corso non proroga questo periodo.
 - **Diritto di recesso**: l'Utente che agisce come consumatore dispone di **14 giorni dall'acquisto** per recedere, senza doverne indicare il motivo, scrivendo a contact@aeroxbefaster.com. AeroX rimborsa allora l'intero importo pagato, con lo stesso mezzo di pagamento, entro 14 giorni dalla richiesta.
 - **Rinuncia**: al momento del pagamento, l'Utente richiede espressamente l'accesso immediato alla diagnosi e riconosce di perdere il diritto di recesso non appena svolge la prima sessione (Codice del consumo francese, art. L221-28, 13°). Dopo una sessione svolta, la diagnosi non è più rimborsabile.
+- **Garanzia AeroX**: in aggiunta al diritto di recesso, AeroX rimborsa integralmente la diagnosi, su semplice richiesta a contact@aeroxbefaster.com, finché non è stata svolta alcuna sessione, indipendentemente dalla data di acquisto, in particolare se l'attrezzatura dell'Utente non è compatibile. Dalla prima sessione svolta, la diagnosi si considera consumata e non è più rimborsabile.
 - **Effetto di un rimborso**: ogni rimborso pone fine all'accesso alla diagnosi corrispondente.
 
 ---

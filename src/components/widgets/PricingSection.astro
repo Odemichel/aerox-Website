@@ -2,6 +2,7 @@
 import Prices from '~/components/widgets/Pricing.astro';
 import { type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
+import { offerPhase, phased } from '~/lib/offerPhase';
 
 // Section tarifs partagée par l'accueil et le dashboard : les deux rendaient
 // jusqu'ici la même grille, dupliquée props par props. Elle porte l'ancre
@@ -10,6 +11,9 @@ const lang = (Astro.params.lang as Locale) ?? 'fr';
 const dict = getDict(lang);
 // Espace compte d'un cycliste : seules ses offres, sans la carte bike fitter.
 const { riderOnly = false } = Astro.props as { riderOnly?: boolean };
+// Offre de lancement terminée au moment du rendu : prix plein, sans prix barré
+// ni ruban. Sinon, OfferPhases fait la bascule dans le navigateur.
+const launchOver = offerPhase() === 'full';
 ---
 
 <Prices
@@ -21,10 +25,12 @@ const { riderOnly = false } = Astro.props as { riderOnly?: boolean };
     {
       title: t(dict, 'pricing.diagnostic.title'),
       subtitle: t(dict, 'pricing.diagnostic.subtitle'),
-      price: '49',
-      priceBefore: '79',
+      price: launchOver ? '79' : '49',
+      priceBefore: launchOver ? '' : '79',
+      priceFull: '79',
       period: t(dict, 'pricing.diagnostic.period'),
-      note: t(dict, 'pricing.diagnostic.note'),
+      note: phased(t(dict, 'pricing.diagnostic.note'), t(dict, 'pricing.diagnostic.note.live')),
+      guarantee: t(dict, 'pricing.diagnostic.guarantee'),
       items: [
         // Ce que tu fais, ce que tu reçois, ce qu'il te faut.
         { description: t(dict, 'pricing.diagnostic.items.1'), icon: 'tabler:ruler-measure' },
@@ -32,11 +38,15 @@ const { riderOnly = false } = Astro.props as { riderOnly?: boolean };
         { description: t(dict, 'pricing.diagnostic.items.3'), icon: 'tabler:device-desktop' },
       ],
       callToAction: {
-        text: t(dict, 'pricing.diagnostic.cta'),
+        text: phased(
+          t(dict, 'pricing.diagnostic.cta'),
+          t(dict, 'pricing.diagnostic.cta.live'),
+          t(dict, 'pricing.diagnostic.cta.full')
+        ),
         id: 'btn-buy-diagnostic',
         type: 'button',
       },
-      hasRibbon: true,
+      hasRibbon: !launchOver,
       ribbonTitle: t(dict, 'pricing.diagnostic.ribbon'),
     },
     ...(riderOnly

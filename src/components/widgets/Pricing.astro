@@ -38,7 +38,9 @@ const single = prices.length === 1;
               subtitle,
               price,
               priceBefore,
+              priceFull,
               note,
+              guarantee,
               priceLabel,
               period,
               items,
@@ -75,7 +77,10 @@ const single = prices.length === 1;
                 >
                   {/* Ruban */}
                   {hasRibbon && ribbonTitle && (
-                    <div class="absolute right-[-5px] top-[-5px] z-[1] h-[100px] w-[100px] overflow-hidden text-right">
+                    <div
+                      data-launch-offer
+                      class="absolute right-[-5px] top-[-5px] z-[1] h-[100px] w-[100px] overflow-hidden text-right"
+                    >
                       <span class="absolute top-[19px] right-[-21px] block w-full rotate-45 bg-green-700 text-center text-[14px] font-bold uppercase leading-5 text-white shadow-[0_3px_10px_-5px_rgba(0,0,0,0.3)]">
                         {ribbonTitle}
                       </span>
@@ -151,13 +156,18 @@ const single = prices.length === 1;
                           {price !== undefined && price !== '' ? (
                             <div class="flex items-baseline justify-center gap-2">
                               {priceBefore !== undefined && priceBefore !== '' && (
-                                <span class="text-3xl font-semibold text-gray-500 line-through dark:text-slate-500">
+                                <span
+                                  data-launch-offer
+                                  class="text-3xl font-semibold text-gray-500 line-through dark:text-slate-500"
+                                >
                                   {priceBefore}&nbsp;€
                                 </span>
                               )}
                               <span class="flex items-center">
                                 <span class="text-5xl">€</span>
-                                <span class="text-6xl font-extrabold">{price}</span>
+                                <span class="text-6xl font-extrabold" data-full-price={priceFull}>
+                                  {price}
+                                </span>
                               </span>
                             </div>
                           ) : (
@@ -168,7 +178,13 @@ const single = prices.length === 1;
                           <span class="text-base leading-6 lowercase text-gray-600 dark:text-slate-400">{period}</span>
                           {/* `note` échappe au `lowercase` ci-dessus : une date y perdrait ses
                               majuscules (« 1. November » deviendrait « 1. november » en allemand). */}
-                          {note && <span class="mt-1 text-sm font-medium text-primary">{note}</span>}
+                          {note && <span class="mt-1 text-sm font-medium text-primary" set:html={note} />}
+                          {guarantee && (
+                            <span class="mt-3 flex items-start gap-1.5 text-sm text-muted max-w-xs">
+                              <Icon name="tabler:shield-check" class="w-5 h-5 shrink-0 text-green-600" />
+                              <span class="text-left">{guarantee}</span>
+                            </span>
+                          )}
                         </div>
                       ) : (
                         <>

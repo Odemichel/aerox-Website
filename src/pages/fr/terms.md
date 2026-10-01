@@ -3,7 +3,7 @@ title: 'Conditions Générales d’Utilisation'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Dernière mise à jour : 28 septembre 2026_
+_Dernière mise à jour : 1er octobre 2026_
 
 Merci d’utiliser **AeroX**, la solution qui transforme ton home-trainer en soufflerie virtuelle.  
 Ces Conditions Générales d’Utilisation (CGU) encadrent l’accès et l’usage du service AeroX.  
@@ -50,6 +50,7 @@ Les présentes CGU définissent les droits et obligations d’AeroX et de l’Ut
 - **Durée** : un achat donne droit à un diagnostic, utilisable pendant **30 jours à compter de son démarrage** dans l’application. Il prend fin à l’issue de ce délai ou lorsque l’Utilisateur déclare l’avoir terminé ; ses résultats restent consultables. Recommencer un diagnostic en cours ne prolonge pas ce délai.
 - **Droit de rétractation** : l’Utilisateur consommateur dispose de **14 jours à compter de l’achat** pour se rétracter, sans avoir à se justifier, en écrivant à contact@aeroxbefaster.com. AeroX rembourse alors l’intégralité des sommes versées, par le même moyen de paiement, au plus tard 14 jours après la demande.
 - **Renonciation** : lors du paiement, l’Utilisateur demande expressément l’accès immédiat au diagnostic et reconnaît perdre son droit de rétractation dès la réalisation de sa première séance (article L221-28 13° du Code de la consommation). Une fois une séance réalisée, le diagnostic n’est plus remboursable.
+- **Garantie AeroX** : en plus du droit de rétractation, AeroX rembourse intégralement le diagnostic, sur simple demande à contact@aeroxbefaster.com, tant qu’aucune séance n’a été réalisée, quelle que soit la date d’achat, notamment si le matériel de l’Utilisateur n’est pas compatible. Dès la première séance réalisée, le diagnostic est consommé et n’est plus remboursable.
 - **Effet d’un remboursement** : tout remboursement met fin à l’accès au diagnostic correspondant.
 
 ---

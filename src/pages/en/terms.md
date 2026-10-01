@@ -3,7 +3,7 @@ title: 'Terms of Use'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Last updated: September 28, 2026_
+_Last updated: October 1, 2026_
 
 Thank you for using **AeroX**, the solution that turns your home trainer into a virtual wind tunnel.  
 These Terms of Use govern access to and use of the AeroX service.  
@@ -50,6 +50,7 @@ These Terms of Use define the rights and obligations of AeroX and the User regar
 - **Duration**: one purchase entitles the User to one diagnostic, usable for **30 days from the moment it is started** in the application. It ends at the end of this period or when the User declares it finished; its results remain available. Restarting a diagnostic in progress does not extend this period.
 - **Right of withdrawal**: a User acting as a consumer has **14 days from the purchase** to withdraw, without giving any reason, by writing to contact@aeroxbefaster.com. AeroX then refunds all sums paid, using the same payment method, no later than 14 days after the request.
 - **Waiver**: at checkout, the User expressly requests immediate access to the diagnostic and acknowledges losing the right of withdrawal as soon as the first session is completed (French Consumer Code, Article L221-28 13°). Once a session has been completed, the diagnostic is no longer refundable.
+- **AeroX guarantee**: in addition to the right of withdrawal, AeroX fully refunds the diagnostic, upon simple request to contact@aeroxbefaster.com, as long as no session has been completed, regardless of the purchase date, in particular if the User's equipment is not compatible. As soon as the first session has been completed, the diagnostic is consumed and is no longer refundable.
 - **Effect of a refund**: any refund ends access to the corresponding diagnostic.
 
 ---

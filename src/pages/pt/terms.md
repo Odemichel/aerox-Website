@@ -3,7 +3,7 @@ title: 'Termos de Uso'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Última atualização: 28 de setembro de 2026_
+_Última atualização: 1º de outubro de 2026_
 
 Obrigado por usar o **AeroX**, a solução que transforma o seu rolo de treino em um túnel de vento virtual.  
 Estes Termos de Uso regem o acesso e o uso do serviço AeroX.  
@@ -50,6 +50,7 @@ Estes Termos de Uso definem os direitos e obrigações do AeroX e do Usuário no
 - **Duração**: uma compra dá direito a um diagnóstico, que pode ser usado durante **30 dias a partir do seu início** no aplicativo. Ele termina ao fim desse prazo ou quando o Usuário declara tê-lo concluído; os resultados continuam disponíveis. Recomeçar um diagnóstico em andamento não prorroga esse prazo.
 - **Direito de arrependimento**: o Usuário consumidor tem **14 dias a partir da compra** para desistir, sem precisar justificar, escrevendo para contact@aeroxbefaster.com. O AeroX reembolsa então a totalidade dos valores pagos, pelo mesmo meio de pagamento, em até 14 dias após o pedido.
 - **Renúncia**: no pagamento, o Usuário solicita expressamente o acesso imediato ao diagnóstico e reconhece que perde o direito de arrependimento assim que realizar a primeira sessão (Código do Consumidor francês, art. L221-28, 13°). Após a realização de uma sessão, o diagnóstico não é mais reembolsável.
+- **Garantia AeroX**: além do direito de arrependimento, o AeroX reembolsa integralmente o diagnóstico, mediante simples pedido para contact@aeroxbefaster.com, enquanto nenhuma sessão tiver sido realizada, qualquer que seja a data da compra, em especial se o equipamento do Usuário não for compatível. A partir da realização da primeira sessão, o diagnóstico é considerado consumido e não é mais reembolsável.
 - **Efeito de um reembolso**: todo reembolso encerra o acesso ao diagnóstico correspondente.
 
 ---

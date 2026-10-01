@@ -26,6 +26,7 @@ import { SUPPORTED_LOCALES } from '~/lib/i18n';
 import { authenticatedUser } from '~/lib/serverAuth';
 import { supabaseAdmin } from '~/lib/billing/server';
 import { hasActiveDiagnostic } from '~/lib/diagnostic/entitlement';
+import { LAUNCH_OFFER_END } from '~/config/offer';
 
 const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY as string);
 
@@ -34,11 +35,13 @@ const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY as string);
 // Les `lookup_key` sont des étiquettes Stripe, pas des identifiants de prix :
 // aucun `price_…` n'est écrit en dur, le montant reste piloté depuis le
 // tableau de bord Stripe.
-const PRODUCT_PRICE_LOOKUP_KEYS: Record<string, string> = {
-  // Offre de lancement à 49 € (−38 %) jusqu'au 31/10/2026, livraison le 01/11.
-  // Le prix plein (`diagnostic_basic`, 79 €) reste actif chez Stripe : il
-  // suffira de revenir dessus le 1er novembre, sans rien créer.
-  diagnostic: 'diagnostic_preorder',
+//
+// Le Diagnostic suit le calendrier de l'offre de lancement : 49 € (−38 %,
+// `diagnostic_preorder`) jusqu'au 15/11/2026 inclus, puis le prix plein
+// (`diagnostic_basic`, 79 €, déjà actif chez Stripe) à partir de
+// LAUNCH_OFFER_END — la même date qui retire l'offre des pages du site.
+const PRODUCT_PRICE_LOOKUP_KEYS: Record<string, (now: number) => string> = {
+  diagnostic: (now) => (now < Date.parse(LAUNCH_OFFER_END) ? 'diagnostic_preorder' : 'diagnostic_basic'),
 };
 
 type Body = {
@@ -118,7 +121,7 @@ export const POST: APIRoute = async ({ request, site }) => {
         console.error('create-api-checkout: produit inconnu —', body.product);
         return fail(400, 'E_PRODUCT');
       }
-      const lookupKey = PRODUCT_PRICE_LOOKUP_KEYS[body.product];
+      const lookupKey = PRODUCT_PRICE_LOOKUP_KEYS[body.product](Date.now());
 
       const user = await authenticatedUser(request, 'create-api-checkout');
       if (!user) return fail(401, 'E_AUTH');

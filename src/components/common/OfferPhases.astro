@@ -1,0 +1,35 @@
+---
+// Applique dans le navigateur la phase de l'offre Diagnostic (voir
+// src/lib/offerPhase.ts) : une page statique construite avant une date bascule
+// d'elle-même une fois la date passée.
+//  - `[data-phase]` : contenu remplacé par data-pre / data-live / data-full ;
+//  - `[data-launch-offer]` : retiré une fois l'offre de lancement terminée ;
+//  - `[data-full-price]` : texte remplacé par le prix plein, offre terminée.
+import { DIAGNOSTIC_AVAILABLE_AT } from '~/config/diagnostic';
+import { LAUNCH_OFFER_END } from '~/config/offer';
+
+const avail = DIAGNOSTIC_AVAILABLE_AT.toISOString();
+const end = LAUNCH_OFFER_END;
+---
+
+<script is:inline define:vars={{ avail, end }}>
+  function applyOfferPhase() {
+    const now = Date.now();
+    const phase = now >= Date.parse(end) ? 'full' : now >= Date.parse(avail) ? 'live' : 'pre';
+    document.querySelectorAll('[data-phase]').forEach((el) => {
+      const html = el.dataset[phase];
+      if (html !== undefined && el.innerHTML !== html) el.innerHTML = html;
+    });
+    if (phase === 'full') {
+      document.querySelectorAll('[data-launch-offer]').forEach((el) => el.remove());
+      document.querySelectorAll('[data-full-price]').forEach((el) => {
+        el.textContent = el.dataset.fullPrice;
+      });
+    }
+  }
+  applyOfferPhase();
+  if (!window.__offerPhaseBound) {
+    window.__offerPhaseBound = true;
+    document.addEventListener('astro:page-load', applyOfferPhase);
+  }
+</script>

@@ -3,7 +3,7 @@ title: 'Genel Kullanım Koşulları'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Son güncelleme: 28 Eylül 2026_
+_Son güncelleme: 1 Ekim 2026_
 
 **AeroX**'u kullandığınız için teşekkür ederiz. AeroX, ev bisiklet antrenörünüzü sanal bir rüzgar tüneline dönüştüren çözümdür.
 Bu Genel Kullanım Koşulları (GKK), AeroX hizmetine erişimi ve kullanımını düzenlemektedir.
@@ -50,6 +50,7 @@ Bu GKK, Hizmetin kullanımı kapsamında AeroX ile Kullanıcı arasındaki hak v
 - **Süre**: bir satın alma, uygulamada **başlatıldığı andan itibaren 30 gün** kullanılabilen bir diagnostik hakkı verir. Bu süre sona erdiğinde veya Kullanıcı bitirdiğini bildirdiğinde diagnostik sona erer; sonuçları görüntülenebilir kalır. Devam eden bir diagnostiği yeniden başlatmak bu süreyi uzatmaz.
 - **Cayma hakkı**: tüketici sıfatıyla hareket eden Kullanıcı, **satın alma tarihinden itibaren 14 gün** içinde gerekçe göstermeden contact@aeroxbefaster.com adresine yazarak cayabilir. AeroX bu durumda ödenen tüm tutarı, aynı ödeme yöntemiyle, talepten en geç 14 gün sonra iade eder.
 - **Feragat**: Kullanıcı ödeme sırasında diagnostiğe hemen erişim talep eder ve ilk seansını tamamladığı anda cayma hakkını kaybedeceğini kabul eder (Fransız Tüketici Kanunu, madde L221-28 13°). Bir seans tamamlandıktan sonra diagnostik iade edilmez.
+- **AeroX Garantisi**: cayma hakkına ek olarak AeroX, hiçbir seans tamamlanmadığı sürece, satın alma tarihinden bağımsız olarak ve özellikle Kullanıcının ekipmanı uyumlu değilse, contact@aeroxbefaster.com adresine basit bir talep üzerine diagnostiğin tamamını iade eder. İlk seans tamamlandığı anda diagnostik kullanılmış sayılır ve artık iade edilmez.
 - **İadenin sonucu**: her iade, ilgili diagnostiğe erişimi sona erdirir.
 
 ---
