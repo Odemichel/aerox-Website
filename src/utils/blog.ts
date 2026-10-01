@@ -81,7 +81,7 @@ const generatePermalink = ({
 
 const getNormalizedPost = async (entry: CollectionEntry<'post'>): Promise<Post> => {
   const { id, data } = entry;
-  const { Content, remarkPluginFrontmatter } = await render(entry);
+  const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 
   const {
     publishDate: rawPublishDate = new Date(),
@@ -133,6 +133,8 @@ const getNormalizedPost = async (entry: CollectionEntry<'post'>): Promise<Post> 
     // metadata: sanitizeMetaData(metadata),
     metadata: metadata as unknown, // sinon, garde tel quel (si déjà propre)
     Content, // rendu Astro
+    // H2 de l'article, pour le sommaire (≥ 1 200 px).
+    headings: headings.filter((h) => h.depth === 2).map(({ slug, text }) => ({ slug, text })),
     readingTime: remarkPluginFrontmatter?.readingTime,
     lang, // ⬅️ stocké dans le Post
   };

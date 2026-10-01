@@ -6,7 +6,7 @@ describe('validateBookSubscriber', () => {
     expect(validateBookSubscriber({ email: 'o@example.com' })).toEqual({
       ok: true,
       honeypot: false,
-      subscriber: { email: 'o@example.com', name: '', phone: '' },
+      subscriber: { email: 'o@example.com', name: '', phone: '', source: '' },
     });
   });
 
@@ -15,7 +15,7 @@ describe('validateBookSubscriber', () => {
     expect(r).toEqual({
       ok: true,
       honeypot: false,
-      subscriber: { email: 'o@example.com', name: 'Olivier', phone: '0600000000' },
+      subscriber: { email: 'o@example.com', name: 'Olivier', phone: '0600000000', source: '' },
     });
   });
 
@@ -47,5 +47,13 @@ describe('validateBookSubscriber', () => {
   it('ignore un honeypot vide', () => {
     const r = validateBookSubscriber({ email: 'a@b.fr', hp: '' });
     expect(r.ok && r.honeypot).toBe(false);
+  });
+  it("garde l'origine du formulaire si elle est connue, l'ignore sinon", () => {
+    const ok = validateBookSubscriber({ email: 'a@b.fr', source: 'sidebar' });
+    expect(ok.ok && ok.subscriber.source).toBe('sidebar');
+    const unknown = validateBookSubscriber({ email: 'a@b.fr', source: 'hack<script>' });
+    expect(unknown.ok && unknown.subscriber.source).toBe('');
+    const absent = validateBookSubscriber({ email: 'a@b.fr' });
+    expect(absent.ok && absent.subscriber.source).toBe('');
   });
 });

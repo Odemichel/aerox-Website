@@ -8,9 +8,10 @@ import livreCover from '~/assets/images/livre/image_livre_entrainer-aero.png';
 import { type Locale, getDict, t } from '~/lib/i18n';
 
 type Texts = { eyebrow: string; title: string; text: string };
-const { lang, id, texts } = Astro.props as { lang: Locale; id: string; texts?: Texts };
+// `source` : origine transmise à MailerLite (champ signup_source).
+const { lang, id, texts, source } = Astro.props as { lang: Locale; id: string; texts?: Texts; source: string };
 const dict = getDict(lang);
-const k: Texts = texts ?? { eyebrow: 'book.hero.title.l1', title: 'book.hero.title.l2', text: 'book.hero.text' };
+const k: Texts = texts ?? { eyebrow: 'home.guide.eyebrow', title: 'home.guide.title', text: 'book.hero.text' };
 ---
 
 <section class="relative not-prose" id={`guide-${id}`}>
@@ -34,6 +35,7 @@ const k: Texts = texts ?? { eyebrow: 'book.hero.title.l1', title: 'book.hero.tit
         <p class="text-sm text-muted mb-5" set:html={t(dict, k.text)} />
         <form
           data-guide-capture
+          data-source={source}
           class="flex flex-col sm:flex-row items-center gap-3"
           data-success={t(dict, 'book.form.success')}
           data-error={t(dict, 'book.form.error')}
@@ -67,51 +69,7 @@ const k: Texts = texts ?? { eyebrow: 'book.hero.title.l1', title: 'book.hero.tit
 </section>
 
 <script>
-  // Attache en deux temps, et idempotente :
-  //  - appel à la racine du script -> couvre le premier rendu. `astro:page-load`
-  //    ne suffit pas : il est câblé sur le `load` de window (voir
-  //    astro/dist/transitions/router.js), donc il attend toutes les
-  //    sous-ressources de la page (scripts tiers différés, images, vidéos) —
-  //    plusieurs secondes pendant lesquelles aucun `preventDefault` ne serait
-  //    posé et où ClientRouter récupérerait la soumission ;
-  //  - écouteur `astro:page-load` -> couvre les navigations ClientRouter, un
-  //    script module ne se ré-exécutant jamais après sa première exécution
-  //    dans la session (cache `scriptsAlreadyRan` d'Astro).
-  // Le marqueur `dataset.leadFormBound` rend le double appel sans effet : un
-  // formulaire déjà lié n'est jamais ré-attaché.
-  function initGuideCaptureForms() {
-    document.querySelectorAll<HTMLFormElement>('form[data-guide-capture]').forEach((form) => {
-      if (form.dataset.leadFormBound === '1') return;
-      form.dataset.leadFormBound = '1';
-      const msg = form.parentElement?.querySelector<HTMLElement>('[data-guide-msg]');
-
-      const show = (ok: boolean) => {
-        if (!msg) return;
-        msg.textContent = (ok ? form.dataset.success : form.dataset.error) ?? '';
-        msg.classList.remove('hidden', 'text-red-600', 'text-green-600');
-        msg.classList.add(ok ? 'text-green-600' : 'text-red-600');
-      };
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
-        const hp = (form.elements.namedItem('hp') as HTMLInputElement | null)?.value ?? '';
-        const lang = window.location.pathname.split('/')[1] || 'fr';
-        try {
-          const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, hp }),
-          });
-          const data = await res.json();
-          show(Boolean(data.success));
-          if (data.success) form.reset();
-        } catch {
-          show(false);
-        }
-      });
-    });
-  }
+  import { initGuideCaptureForms } from '~/lib/guideCaptureForm';
 
   initGuideCaptureForms();
   document.addEventListener('astro:page-load', initGuideCaptureForms);

@@ -30,6 +30,7 @@ export type LeadInput = {
   webcam?: unknown;
   intent?: unknown;
   phone?: unknown;
+  source?: unknown;
   hp?: unknown;
 };
 
@@ -145,7 +146,14 @@ export function validateLead(input: LeadInput): LeadResult {
   };
 }
 
-export type BookSubscriber = { email: string; name: string; phone: string };
+/**
+ * Formulaire d'où vient l'inscription au livre (champ MailerLite
+ * `signup_source`). Valeur hors liste : ignorée, jamais un motif de rejet.
+ */
+export const SIGNUP_SOURCES = ['home', 'sidebar', 'article_end', 'calculator', 'cda', 'method'] as const;
+export type SignupSource = (typeof SIGNUP_SOURCES)[number];
+
+export type BookSubscriber = { email: string; name: string; phone: string; source: SignupSource | '' };
 
 export type BookSubscriberResult =
   | { ok: true; honeypot: boolean; subscriber: BookSubscriber }
@@ -174,5 +182,7 @@ export function validateBookSubscriber(input: LeadInput): BookSubscriberResult {
     return { ok: false, error: 'field_too_long' };
   }
 
-  return { ok: true, honeypot: isHoneypotFilled(input.hp), subscriber: { email, name, phone } };
+  const source = (SIGNUP_SOURCES as readonly unknown[]).includes(input.source) ? (input.source as SignupSource) : '';
+
+  return { ok: true, honeypot: isHoneypotFilled(input.hp), subscriber: { email, name, phone, source } };
 }

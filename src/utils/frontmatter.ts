@@ -25,8 +25,10 @@ export const responsiveTablesRehypePlugin: RehypePlugin = () => {
         tree.children[i] = {
           type: 'element',
           tagName: 'div',
+          // Défilement dans le cadre du tableau (horizontal sur mobile, vertical
+          // au-delà de 70 % de l'écran) : l'en-tête reste visible (CSS .table-scroll).
           properties: {
-            style: 'overflow:auto',
+            className: ['table-scroll'],
           },
           children: [child],
         };

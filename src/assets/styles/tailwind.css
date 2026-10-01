@@ -379,3 +379,84 @@
   font-size: 1rem;
   margin: 0;
 }
+
+/* ── Articles de blog (SinglePost) ── */
+/* Corps 18 px, interligne 1,7 identique pour paragraphes et listes,
+   espacements verticaux homogènes entre sections. */
+.post-body {
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+.post-body :where(p, li, td, th, blockquote) {
+  line-height: 1.7;
+}
+.post-body :where(p, ul, ol, table, blockquote, .table-scroll) {
+  margin-top: 0;
+  margin-bottom: 1.25em;
+}
+.post-body :where(li) {
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+}
+.post-body :where(h2) {
+  margin-top: 2.25em;
+  margin-bottom: 0.75em;
+}
+.post-body :where(h3) {
+  margin-top: 1.75em;
+  margin-bottom: 0.6em;
+}
+.post-body :where(a) {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Définitions : les citations qui commencent par un terme en gras
+   (« > **Terme** : … ») deviennent un encadré « Définition ». */
+.post-body blockquote:has(> p:first-child > strong:first-child) {
+  font-style: normal;
+  quotes: none;
+  border-left: 4px solid var(--aw-color-primary);
+  background: color-mix(in srgb, var(--aw-color-primary) 8%, transparent);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+}
+.post-body blockquote:has(> p:first-child > strong:first-child)::before {
+  content: var(--def-label, 'Définition');
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--aw-color-primary);
+  margin-bottom: 0.35rem;
+}
+.post-body blockquote:has(> p:first-child > strong:first-child) p::before,
+.post-body blockquote:has(> p:first-child > strong:first-child) p::after {
+  content: none;
+}
+.post-body blockquote:has(> p:first-child > strong:first-child) p {
+  margin: 0;
+}
+
+/* FAQ des articles : questions et réponses à la taille du corps de texte. */
+.post-body .faq-section details summary {
+  font-size: 1.125rem;
+}
+.post-body .faq-section details > div,
+.post-body .faq-section details > p {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+/* Tableaux : cadre défilant, en-tête collant (utile sur mobile). */
+.table-scroll {
+  overflow: auto;
+  max-height: 70vh;
+}
+.table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--aw-color-bg-page, #fff);
+}

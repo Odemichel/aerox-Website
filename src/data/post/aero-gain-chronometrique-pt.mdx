@@ -18,15 +18,14 @@ metadata:
   title: "Aerodinâmica: mais tempo ganho quando se pedala devagar"
   description: "Descubra por que a aerodinâmica é ainda mais estratégica para ciclistas e triatletas amadores pedalando entre 25 e 35 km/h. Análise científica dos ganhos reais em 40 km e 90 km."
 ---
-import Image from '~/components/common/Image.astro';
-import gainAero from '~/assets/images/blog/time_saved_per_km.png';
+import TimeSavedChart from '~/components/blog/TimeSavedChart.astro';
 
 ## Introdução
 
 Muitos ciclistas pensam:
 
-**"Aerodinâmica é coisa de profissional."**
-**"Abaixo de 40 km/h, não muda muita coisa."**
+"Aerodinâmica é coisa de profissional."
+"Abaixo de 40 km/h, não muda muita coisa."
 
 Isso é falso.
 
@@ -42,18 +41,18 @@ Vamos te explicar!
 > **Arrasto aerodinâmico**: força de resistência exercida pelo ar sobre o ciclista em movimento. Depende da área frontal (A), do coeficiente de forma (Cd) e do quadrado da velocidade. O produto [CdA](/pt/cda/) (Cd × A) é o indicador-chave: mede-se em m² e varia de ~0,20 m² (posição CRR otimizada) a ~0,40 m² (posição de estrada ereta).
 
 Em outras palavras:
-Mesmo em velocidade "moderada", **o ar já é seu principal adversário**.
+Mesmo em velocidade "moderada", o ar já é seu principal adversário.
 
 
 ## Por que os amadores ganham mais tempo do que os profissionais ao otimizar sua aero?
 
 Ouve-se frequentemente:
 
-**"Os profissionais pedalam mais rápido, então a aero conta mais para eles."**
+"Os profissionais pedalam mais rápido, então a aero conta mais para eles."
 
 É parcialmente verdade… mas incompleto.
 
-A realidade é que quando se reduz as resistências aerodinâmicas em 10%, a potência economizada também é próxima de 10% a partir de 20 km/h. Isso leva a um aumento de velocidade de cerca de 3% com potência constante.
+A realidade é que quando se reduzem as resistências aerodinâmicas em 10%, a potência economizada também é próxima de 10% a partir de 20 km/h. Isso leva a um aumento de velocidade de cerca de 3% com potência constante.
 Essa realidade vale para todo mundo.
 
 Concretamente, isso faz passar de 40 km/h para 41,2 km/h e de 20 km/h para 20,6 km/h.
@@ -62,7 +61,7 @@ Portanto, sim, quanto mais rápido você pedala, mais a aero tem impacto alto no
 
 E é aí que existe uma confusão enorme que leva os amadores a perder muito tempo em seus cronos...
 
-👉 **Vamos falar de ganho cronométrico**
+👉 Vamos falar de ganho cronométrico
 
 Quando você pedala a 40 km/h, 1 km leva 1min30s. A 41,2 km/h, são 1min27s.
 
@@ -73,21 +72,11 @@ Ou seja, quando um ciclista rápido otimiza sua aero em 10%, ganha 3s por km. Pa
 **Os amadores têm, portanto, muito mais a ganhar em seus cronos otimizando sua aerodinâmica.**
 
 
-<div class="flex justify-center my-10">
-  <div class="w-[50%] md:w-[80%]">
-    <Image
-      src={gainAero}
-      alt="Ganho cronométrico segundo a velocidade inicial"
-      class="rounded-lg shadow-lg w-full h-auto"
-      widths={[600, 1000, 1400]}
-      sizes="(max-width: 768px) 60vw, 80vw"
-    />
-  </div>
-</div>
+<TimeSavedChart lang="pt" />
 
-A imagem acima mostra os ganhos que você pode visar ao passar de uma posição ereta para uma posição aerodinâmica otimizada em bicicleta de estrada ou de contrarrelógio (ou triatlo).
+O gráfico acima mostra os ganhos que você pode visar ao passar de uma posição ereta para uma posição aerodinâmica otimizada em bicicleta de estrada ou de contrarrelógio (ou triatlo).
 
-E sim, **sua posição permite ganhar até 20s/km quando você pedala a 20 km/h...**
+E sim, sua posição permite ganhar até 20s/km quando você pedala a 20 km/h...
 
 O efeito é amplificado em longa distância e no Ironman (180 km), o efeito será ainda mais espetacular. Quando o amador visa as barreiras horárias, a posição se torna primordial...
 
@@ -96,19 +85,19 @@ O efeito é amplificado em longa distância e no Ironman (180 km), o efeito ser�
 
 Imaginemos dois ciclistas que melhoram sua aerodinâmica em 10%. Um pedala inicialmente a 45 km/h, o outro a 32 km/h.
 
-- A 45 km/h → **- 1 minuto e 40 segundos** em 40 km
-- A 32 km/h → **- 2 minutos e 20 segundos** em 40 km
+- A 45 km/h → - 1 minuto e 40 segundos em 40 km
+- A 32 km/h → - 2 minutos e 20 segundos em 40 km
 
 O ganho cronométrico é, portanto, **sempre maior para o ciclista mais lento**.
 
-Em um Ironman (180 km), uma melhoria de 10% do CdA permite a um amador pedalando a 30 km/h ganhar **mais de 10 minutos** na parte de bike — sem produzir um único watt a mais.
+Em um Ironman (180 km), uma melhoria de 10% do CdA permite a um amador pedalando a 30 km/h ganhar mais de 10 minutos na parte de bike — sem produzir um único watt a mais.
 
 ## Posição aero vs potência: qual é o melhor investimento?
 
 Para um amador:
 
 - Aumentar seu FTP em 20 watts exige meses de treino.
-- Reduzir seu CdA de 8 a 12% pode ser feito em poucas semanas.
+- Reduzir seu CdA em 8 a 12% pode ser feito em poucas semanas.
 
 E sobretudo:
 
@@ -119,9 +108,9 @@ Não precisa de sensor exótico.
 
 Trata-se de aprender a:
 
-- **Otimizar sua posição**
-- **Mantê-la**
-- **Ser potente nessa posição**
+- Otimizar sua posição
+- Mantê-la
+- Ser potente nessa posição
 
 
 ## Por que os ciclistas negligenciam a aerodinâmica?
@@ -146,11 +135,11 @@ Ela é mesmo **mais rentável para os amadores**.
 
 A questão não é, portanto:
 
-**"Será que pedalo rápido o suficiente para que a aero importe?"**
+"Será que pedalo rápido o suficiente para que a aero importe?"
 
 Mas sim:
 
-**"Quantos minutos estou disposto a deixar na estrada?"**
+"Quantos minutos estou disposto a deixar na estrada?"
 
 ---
 
@@ -165,7 +154,7 @@ Mas sim:
 
 ---
 
-**Para ir mais longe:**
+Para ir mais longe:
 - [Como o feedback em tempo real transforma sua performance](/pt/blog/aero-feedbacks-pt/)
 - [Amstel Gold Race 2025: a aerodinâmica como alavanca decisiva](/pt/blog/amstel-gold-race-2025-pt/)
 - [O Bike Fit: rumo à otimização da performance](/pt/blog/BF-mesurer-pt/)

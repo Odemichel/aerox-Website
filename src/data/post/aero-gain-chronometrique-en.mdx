@@ -18,15 +18,14 @@ metadata:
   description: "Discover why aerodynamics is even more strategic for amateur cyclists and triathletes riding between 25 and 35 km/h. Scientific analysis of real gains over 40 km and 90 km."
 ---
 
-import Image from '~/components/common/Image.astro';
-import gainAero from '~/assets/images/blog/time_saved_per_km.png';
+import TimeSavedChart from '~/components/blog/TimeSavedChart.astro';
 
 ## Introduction
 
 Many cyclists think:
 
-**“Aerodynamics is for the pros.”**  
-**“Below 40 km/h, it doesn’t make much difference.”**
+“Aerodynamics is for the pros.”  
+“Below 40 km/h, it doesn’t make much difference.”
 
 That’s wrong.
 
@@ -42,7 +41,7 @@ Let us explain.
 > **Aerodynamic drag ([CdA](/en/cda/))**: the resistance force exerted by air on a moving cyclist. It depends on the frontal area (A), the drag coefficient (Cd), and the square of speed. The product CdA (Cd × A) is the key metric: measured in m², it typically ranges from ~0.20 m² (optimized TT position) to ~0.40 m² (upright road position).
 
 In other words:
-Even at “moderate” speed, **air is already your main opponent**.
+Even at “moderate” speed, air is already your main opponent.
 
 ---
 
@@ -50,7 +49,7 @@ Even at “moderate” speed, **air is already your main opponent**.
 
 We often hear:
 
-**“Pros ride faster, so aerodynamics matters more for them.”**
+“Pros ride faster, so aerodynamics matters more for them.”
 
 That is partially true… but incomplete.
 
@@ -63,7 +62,7 @@ So yes, the faster you ride, the greater the impact aerodynamics has on your spe
 
 And this is where a huge misunderstanding causes amateurs to lose a lot of time on their results…
 
-👉 **Let’s talk about time gains**
+👉 Let’s talk about time gains
 
 When you ride at 40 km/h, 1 km takes 1 minute 30 seconds. At 41.2 km/h, it takes 1 minute 27 seconds.
 
@@ -75,19 +74,9 @@ In other words, when a fast cyclist improves aerodynamics by 10%, that’s 3 sec
 
 
 
-<div class="flex justify-center my-10">
-  <div class="w-[50%] md:w-[80%]">
-    <Image
-      src={gainAero}
-      alt="Time saved per kilometer based on initial riding speed — aerodynamic optimization gains"
-      class="rounded-lg shadow-lg w-full h-auto"
-      widths={[600, 1000, 1400]}
-      sizes="(max-width: 768px) 60vw, 80vw"
-    />
-  </div>
-</div>
+<TimeSavedChart lang="en" />
 
-The image above shows the gains you can target when moving from an upright position to an optimized aerodynamic position on a road bike or on a time trial (or triathlon) bike.
+The chart above shows the gains you can target when moving from an upright position to an optimized aerodynamic position on a road bike or on a time trial (or triathlon) bike.
 And yes, your position can help you gain up to 20 seconds per kilometer when riding at 20 km/h…
 The effect is amplified over long distances, and on an Ironman (180 km), the impact becomes even more spectacular. When an amateur is aiming to beat cut-off times, position therefore becomes crucial.
 
@@ -99,12 +88,12 @@ Let’s imagine two cyclists who both improve their aerodynamics by 10%. One ini
 
 Estimated gain:
 
-- At 45 km/h → about **1 minute 40 seconds** over 40 km  
-- At 32 km/h → about **2 minutes 20 seconds** over 40 km  
+- At 45 km/h → about 1 minute 40 seconds over 40 km  
+- At 32 km/h → about 2 minutes 20 seconds over 40 km  
 
-The time gain is therefore **always greater for the slower cyclist**.
+The time gain is therefore always greater for the slower cyclist.
 
-Over an Ironman distance (180 km), a 10% CdA improvement allows an amateur riding at 30 km/h to save **more than 10 minutes** on the bike leg — without producing a single extra watt.
+Over an Ironman distance (180 km), a 10% CdA improvement allows an amateur riding at 30 km/h to save more than 10 minutes on the bike leg — without producing a single extra watt.
 
 ## Aero position vs. power: which is the better investment?
 
@@ -122,9 +111,9 @@ No need for exotic sensors.
 
 It is about learning to:
 
-- **Optimize your position**
-- **Hold that position**
-- **Be powerful in that position**
+- Optimize your position
+- Hold that position
+- Be powerful in that position
 
 ---
 
@@ -137,7 +126,7 @@ It is about learning to:
 3. Excessive focus on power  
 
 Power is visible.  
-Aerodynamics is invisible. But AeroX definitively changes that !
+Aerodynamics is invisible. But AeroX definitively changes that!
 
 Therefore, it is neglected.
 
@@ -151,11 +140,11 @@ It is even **more profitable for amateurs**.
 
 The real question is not:
 
-**“Do I ride fast enough for aerodynamics to matter?”**
+“Do I ride fast enough for aerodynamics to matter?”
 
 But rather:
 
-**”How many minutes am I willing to leave on the road?”**
+“How many minutes am I willing to leave on the road?”
 
 ---
 
@@ -170,7 +159,7 @@ But rather:
 
 ---
 
-**Read more:**
+Read more:
 - [How Real-Time Aero Feedback Makes You Faster](/en/blog/aero-feedbacks-en/)
 - [Amstel Gold Race 2025: How Aerodynamics Helped Evenepoel Catch Pogačar](/en/blog/amstel-gold-race-2025-en/)
 - [Bike Fitting: Toward Performance Optimization](/en/blog/BF-mesurer-en/)

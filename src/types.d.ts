@@ -38,6 +38,8 @@ export interface Post {
 
   /**  */
   Content?: AstroComponentFactory;
+  /** H2 de l'article (ancre et texte), pour le sommaire. */
+  headings?: { slug: string; text: string }[];
   content?: string;
 
   /**  */

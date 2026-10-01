@@ -125,7 +125,7 @@ const metadata = {
         const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, phone, hp }),
+          body: JSON.stringify({ name, email, phone, hp, source: 'method' }),
         });
 
         const data = await res.json();

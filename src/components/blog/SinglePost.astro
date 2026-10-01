@@ -2,14 +2,11 @@
 import type { GetStaticPaths } from 'astro';
 import { Icon } from 'astro-icon/components';
 import PostTags from '~/components/blog/Tags.astro';
+import PostConversion from '~/components/blog/PostConversion.astro';
+import PostSidebarBook from '~/components/blog/PostSidebarBook.astro';
 import SocialShare from '~/components/common/SocialShare.astro';
-import { phased } from '~/lib/offerPhase';
-import GuideCapture from '~/components/widgets/GuideCapture.astro';
 import type { Post } from '~/types';
-import { getPermalink } from '~/utils/permalinks';
-import { getFormattedDate } from '~/utils/utils';
 import { blogImages } from '../../data/blogImages';
-import Button from '../ui/Button.astro';
 
 import { Image } from 'astro:assets';
 import { getDict, SUPPORTED_LOCALES, t, type Locale } from '~/lib/i18n';
@@ -42,58 +39,62 @@ export interface Props {
 
 const { post, url } = Astro.props;
 const image = post.imageKey ? blogImages[post.imageKey] : undefined;
+
+// Une seule colonne pour l'en-tête, le corps et la fin d'article : le titre et
+// le chapô s'alignent sur le texte, y compris sur mobile.
+const col = 'mx-auto w-full max-w-[42rem] px-5 sm:px-6';
+// Corps et fin d'article : même colonne en dessous de 1 200 px ; au-delà, la
+// grille fixe la largeur (42rem) et la marge intérieure reste la même.
+const colInner = 'mx-auto w-full max-w-[42rem] px-5 sm:px-6 min-[1200px]:px-0';
+const headings = post.headings ?? [];
+const dateFormat = new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'long', year: 'numeric' });
+const formatDate = (d: Date) => dateFormat.format(d);
+// « Mis à jour le » seulement si la mise à jour est postérieure à la publication.
+const updated = post.updateDate && post.updateDate.getTime() > post.publishDate.getTime() ? post.updateDate : undefined;
 ---
 
 <section class="py-8 sm:py-16 lg:py-20 mx-auto">
   <article>
-    <header class="intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+    {/* Pas d'animation d'apparition : le titre et l'image s'affichent tout de suite. */}
+    <header>
       <!-- ✅ Meta infos -->
-      <div class="flex justify-between flex-col sm:flex-row max-w-3xl mx-auto mt-0 mb-2 px-4 sm:px-6 sm:items-center">
-        <p>
-          <Icon name="tabler:clock" class="w-4 h-4 inline-block -mt-0.5 dark:text-gray-400" />
-          <time datetime={String(post.publishDate)} class="inline-block">{getFormattedDate(post.publishDate)}</time>
-          {
-            post.author && (
-              <>
-                {' '}
-                · <Icon name="tabler:user" class="w-4 h-4 inline-block -mt-0.5 dark:text-gray-400" />
-                <span class="inline-block">{post.author}</span>
-              </>
-            )
-          }
-          {
-            post.category && (
-              <>
-                {' '}
-                ·{' '}
-                <a class="hover:underline inline-block" href={getPermalink(post.category.slug, 'category')}>
-                  {post.category.title}
-                </a>
-              </>
-            )
-          }
-          {
-            post.readingTime && (
-              <>
-                {' '}
-                &nbsp;· <span>{post.readingTime}</span> min read
-              </>
-            )
-          }
-        </p>
-      </div>
+      <p class={`${col} mb-3 text-sm text-muted dark:text-slate-400`}>
+        <Icon name="tabler:clock" class="w-4 h-4 inline-block -mt-0.5" />
+        <time datetime={post.publishDate.toISOString()} class="inline-block">{formatDate(post.publishDate)}</time>
+        {
+          post.author && (
+            <>
+              {' '}
+              · <Icon name="tabler:user" class="w-4 h-4 inline-block -mt-0.5" />
+              <span class="inline-block">{post.author}</span>
+            </>
+          )
+        }
+        {
+          post.readingTime && (
+            <>
+              {' '}
+              · <span>{post.readingTime}</span> {t(dict, 'blog.minRead')}
+            </>
+          )
+        }
+        {
+          updated && (
+            <>
+              <br />
+              {t(dict, 'blog.updated')} <time datetime={updated.toISOString()}>{formatDate(updated)}</time>
+            </>
+          )
+        }
+      </p>
 
-      <!-- ✅ Titre + excerpt -->
-      <h1
-        class="px-4 sm:px-6 max-w-3xl mx-auto text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading"
-      >
+      <!-- ✅ Titre + chapô, alignés sur le corps de texte -->
+      <h1 class={`${col} text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading`}>
         {post.title}
       </h1>
       {
         post.excerpt && (
-          <p class="max-w-3xl mx-auto mt-4 mb-8 px-4 sm:px-6 text-xl md:text-2xl text-muted dark:text-slate-400 text-justify">
-            {post.excerpt}
-          </p>
+          <p class={`${col} mt-4 mb-8 text-xl md:text-2xl text-muted dark:text-slate-400`}>{post.excerpt}</p>
         )
       }
 
@@ -109,53 +110,75 @@ const image = post.imageKey ? blogImages[post.imageKey] : undefined;
             decoding="async"
           />
         ) : (
-          <div class="max-w-3xl mx-auto px-4 sm:px-6">
+          <div class={col}>
             <div class="border-t dark:border-slate-700" />
           </div>
         )
       }
     </header>
 
-    <!-- ✅ Contenu de l'article -->
+    <!-- ✅ ≥ 1 200 px : sommaire collant à gauche, livre compact collant à droite.
+         En dessous : une seule colonne, livre en fin d'article uniquement. -->
     <div
-      class="mx-auto px-6 sm:px-6 max-w-3xl prose prose-md lg:prose-xl dark:prose-invert prose-headings:font-heading prose-headings:font-bold prose-headings:text-primary prose-headings:leading-tighter prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px]"
+      class="mt-8 min-[1200px]:grid min-[1200px]:grid-cols-[15rem_minmax(0,42rem)_15rem] min-[1200px]:justify-center min-[1200px]:gap-8"
     >
-      <slot />
-    </div>
+      <aside class="hidden min-[1200px]:block">
+        {
+          headings.length > 0 && (
+            <nav class="sticky top-[140px] text-sm" aria-label={t(dict, 'blog.toc')}>
+              <p class="font-semibold uppercase tracking-wide text-xs text-muted mb-3">{t(dict, 'blog.toc')}</p>
+              <ol class="space-y-2 border-l border-gray-200 dark:border-slate-700">
+                {headings.map((h) => (
+                  <li>
+                    <a
+                      href={`#${h.slug}`}
+                      class="block -ml-px pl-3 border-l-2 border-transparent hover:border-primary hover:text-primary text-muted"
+                    >
+                      {h.text}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )
+        }
+      </aside>
 
-    <!-- Fin d'article : pont vers le Diagnostic, puis le livre offert. -->
-    <div class="mx-auto px-6 sm:px-6 max-w-3xl mt-10">
-      <div class="rounded-2xl border border-gray-200 dark:border-slate-700 px-6 py-8 text-center">
-        <p class="text-xl md:text-2xl font-bold mb-2">{t(dict, 'home.offer.title')}</p>
-        <p
-          class="text-primary font-semibold mb-6"
-          set:html={phased(t(dict, 'home.offer.price'), t(dict, 'home.offer.price'), t(dict, 'offer.fullPrice'))}
-        />
-        <Button variant="primary" class="px-6 items-center" href={withLang(lang, '#pricing')}>
-          {t(dict, 'cda.diag.cta')}
-          <Icon name="tabler:chevron-right" class="w-5 h-5 ml-1.5" />
-        </Button>
+      <div class="min-w-0">
+        <div
+          class={`${colInner} post-body prose prose-lg dark:prose-invert max-w-none mt-8 prose-headings:font-heading prose-headings:font-bold prose-headings:text-primary prose-headings:leading-tighter prose-headings:scroll-mt-[120px] prose-a:text-primary dark:prose-a:text-primary prose-img:rounded-md prose-img:shadow-lg`}
+          style={`--def-label: '${t(dict, 'blog.definition').replace(/'/g, "\\'")}'`}
+        >
+          <slot />
+        </div>
+
+        <!-- Fin d'article : un seul bloc de conversion, puis tags, partage et auteur. -->
+        <div class={`${colInner} mt-12`}>
+          <PostConversion lang={lang} />
+        </div>
       </div>
+
+      <aside class="hidden min-[1200px]:block">
+        <div class="sticky top-[140px]">
+          <PostSidebarBook lang={lang} />
+        </div>
+      </aside>
     </div>
-    <GuideCapture
-      lang={lang}
-      id="post-end"
-      texts={{ eyebrow: 'home.guide.eyebrow', title: 'book.hero.title.l2', text: 'book.hero.text' }}
-    />
 
     <!-- ✅ Tags + Social -->
-    <div class="mx-auto px-6 sm:px-6 max-w-3xl mt-8 flex justify-between flex-col sm:flex-row">
+    <div class={`${col} mt-8 flex justify-between flex-col sm:flex-row`}>
       <PostTags tags={post.tags} class="mr-5 rtl:mr-0 rtl:ml-5" />
       <SocialShare
         url={url}
         text={post.title}
         image={image?.src}
+        label={t(dict, 'blog.share')}
         class="mt-5 sm:mt-1 align-middle text-gray-500 dark:text-slate-600"
       />
     </div>
 
     <!-- ✅ Author block -->
-    <div class="mx-auto px-6 sm:px-6 max-w-3xl mt-10 border-t dark:border-slate-700 pt-8">
+    <div class={`${col} mt-10 border-t dark:border-slate-700 pt-8`}>
       <div class="flex items-start gap-4">
         <a href={withLang(lang, '/team/')} class="shrink-0">
           <Image

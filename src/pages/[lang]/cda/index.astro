@@ -78,7 +78,7 @@ const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] 
         <a href={Link_diagnostic} class="ml-3">{t(dict, 'cda.diag.cta')} →</a>
       </p>
 
-      <GuideCapture lang={lang} id="cda-mid" texts={guideTexts} />
+      <GuideCapture lang={lang} id="cda-mid" texts={guideTexts} source="cda" />
 
       <h2>{t(dict, 'cda.formula.h2')}</h2>
       <p set:html={t(dict, 'cda.formula.short')} />

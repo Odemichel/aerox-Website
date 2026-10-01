@@ -6,9 +6,11 @@ export interface Props {
   url: string | URL;
   image?: string;
   class?: string;
+  /** Libellé traduit (« Partager », « Share »…). */
+  label?: string;
 }
 
-const { text, url, image, class: className = 'inline-block' } = Astro.props;
+const { text, url, image, class: className = 'inline-block', label = 'Share' } = Astro.props;
 ---
 
 <div class={className}>
@@ -17,7 +19,7 @@ const { text, url, image, class: className = 'inline-block' } = Astro.props;
       <img src={image} alt={text} width="64" height="64" class="w-16 h-16 object-cover rounded-md inline-block mr-2" />
     )
   }
-  <span class="align-super font-bold text-slate-500 dark:text-slate-400">Share:</span>
+  <span class="align-super font-bold text-slate-500 dark:text-slate-400">{label}</span>
   <button
     class="ml-2 rtl:ml-0 rtl:mr-2"
     title="Twitter Share"

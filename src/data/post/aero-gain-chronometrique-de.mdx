@@ -18,15 +18,14 @@ metadata:
   title: "Aerodynamik: mehr Zeitgewinn, wenn man langsamer fährt"
   description: "Erfahre, warum Aerodynamik für Amateur-Radsportler und -Triathleten zwischen 25 und 35 km/h noch strategischer ist. Wissenschaftliche Analyse der realen Gewinne über 40 km und 90 km."
 ---
-import Image from '~/components/common/Image.astro';
-import gainAero from '~/assets/images/blog/time_saved_per_km.png';
+import TimeSavedChart from '~/components/blog/TimeSavedChart.astro';
 
 ## Einleitung
 
 Viele Radsportler denken:
 
-**"Aerodynamik ist für Profis."**
-**"Unter 40 km/h ändert sich nicht viel."**
+"Aerodynamik ist für Profis."
+"Unter 40 km/h ändert sich nicht viel."
 
 Das ist falsch.
 
@@ -42,13 +41,13 @@ Wir erklären es dir!
 > **Luftwiderstand**: Widerstandskraft der Luft auf den fahrenden Radfahrer. Sie hängt von der Stirnfläche (A), dem Formbeiwert (Cd) und dem Quadrat der Geschwindigkeit ab. Das Produkt [CdA](/de/cda/) (Cd × A) ist der Schlüsselindikator: Er wird in m² gemessen und variiert von ~0,20 m² (optimierte Zeitfahrposition) bis ~0,40 m² (aufrechte Straßenposition).
 
 Anders gesagt:
-Selbst bei "moderater" Geschwindigkeit ist **die Luft bereits dein Hauptgegner**.
+Selbst bei "moderater" Geschwindigkeit ist die Luft bereits dein Hauptgegner.
 
 ## Warum gewinnen Amateure mehr Zeit als Profis durch Aero-Optimierung?
 
 Man hört oft:
 
-**"Profis fahren schneller, also zählt Aero mehr für sie."**
+"Profis fahren schneller, also zählt Aero mehr für sie."
 
 Das ist teilweise richtig… aber unvollständig.
 
@@ -61,7 +60,7 @@ Also ja, je schneller du fährst, desto größer ist der Aero-Effekt auf deinem 
 
 Und genau hier gibt es eine riesige Verwechslung, die Amateure viel Zeit bei ihren Chronos kostet…
 
-👉 **Sprechen wir über Zeitgewinne**
+👉 Sprechen wir über Zeitgewinne
 
 Wenn du mit 40 km/h fährst, brauchst du 1 Min. 30 Sek. pro km. Bei 41,2 km/h sind es 1 Min. 27 Sek.
 
@@ -71,21 +70,11 @@ Anders ausgedrückt: Wenn ein schneller Radfahrer seine Aero um 10 % optimiert, 
 
 **Amateure haben also deutlich mehr Zeitgewinn bei der Optimierung ihrer Aerodynamik.**
 
-<div class="flex justify-center my-10">
-  <div class="w-[50%] md:w-[80%]">
-    <Image
-      src={gainAero}
-      alt="Zeitgewinn abhängig von der Ausgangsgeschwindigkeit"
-      class="rounded-lg shadow-lg w-full h-auto"
-      widths={[600, 1000, 1400]}
-      sizes="(max-width: 768px) 60vw, 80vw"
-    />
-  </div>
-</div>
+<TimeSavedChart lang="de" />
 
-Das Bild oben zeigt die Gewinne, die du erzielen kannst, wenn du von einer aufrechten Position zu einer optimierten aerodynamischen Position auf dem Rennrad oder Zeitfahrrad (oder Triathlon) wechselst.
+Die Grafik oben zeigt die Gewinne, die du erzielen kannst, wenn du von einer aufrechten Position zu einer optimierten aerodynamischen Position auf dem Rennrad oder Zeitfahrrad (oder Triathlon) wechselst.
 
-Und ja, **deine Position ermöglicht dir einen Gewinn von bis zu 20 Sek./km, wenn du mit 20 km/h fährst...**
+Und ja, deine Position ermöglicht dir einen Gewinn von bis zu 20 Sek./km, wenn du mit 20 km/h fährst...
 
 Der Effekt verstärkt sich auf langen Distanzen, und auf dem Ironman (180 km) wird der Effekt noch spektakulärer. Wenn der Amateur die Zeitbarrieren anvisiert, wird die Position entscheidend…
 
@@ -93,12 +82,12 @@ Der Effekt verstärkt sich auf langen Distanzen, und auf dem Ironman (180 km) wi
 
 Stellen wir uns zwei Radfahrer vor, die ihre Aerodynamik um 10 % verbessern. Der eine fährt anfangs 45 km/h, der andere 32 km/h.
 
-- Bei 45 km/h → **- 1 Minute 40 Sekunden** auf 40 km
-- Bei 32 km/h → **- 2 Minuten 20 Sekunden** auf 40 km
+- Bei 45 km/h → - 1 Minute 40 Sekunden auf 40 km
+- Bei 32 km/h → - 2 Minuten 20 Sekunden auf 40 km
 
 Der Zeitgewinn ist also **immer größer für den langsameren Radfahrer**.
 
-Auf einem Ironman (180 km) ermöglicht eine 10%ige CdA-Verbesserung einem Amateur bei 30 km/h einen Gewinn von **mehr als 10 Minuten** auf dem Radteil — ohne ein einziges zusätzliches Watt zu erzeugen.
+Auf einem Ironman (180 km) ermöglicht eine 10%ige CdA-Verbesserung einem Amateur bei 30 km/h einen Gewinn von mehr als 10 Minuten auf dem Radteil — ohne ein einziges zusätzliches Watt zu erzeugen.
 
 ## Aeroposition vs. Leistung: Was ist die bessere Investition?
 
@@ -116,9 +105,9 @@ Kein exotischer Sensor nötig.
 
 Es geht darum zu lernen:
 
-- **Seine Position zu optimieren**
-- **Sie zu halten**
-- **In dieser Position leistungsstark zu sein**
+- Seine Position zu optimieren
+- Sie zu halten
+- In dieser Position leistungsstark zu sein
 
 ## Warum vernachlässigen Radsportler die Aerodynamik?
 
@@ -141,11 +130,11 @@ Sie ist sogar **rentabler für Amateure**.
 
 Die Frage lautet also nicht:
 
-**"Fahre ich schnell genug, damit Aero zählt?"**
+"Fahre ich schnell genug, damit Aero zählt?"
 
 Sondern eher:
 
-**"Wie viele Minuten bin ich bereit, auf der Strecke liegen zu lassen?"**
+"Wie viele Minuten bin ich bereit, auf der Strecke liegen zu lassen?"
 
 ---
 
@@ -160,7 +149,7 @@ Sondern eher:
 
 ---
 
-**Weiterführende Artikel:**
+Weiterführende Artikel:
 - [Wie Echtzeit-Feedback deine Leistung transformiert](/de/blog/aero-feedbacks-de/)
 - [Amstel Gold Race 2025: Aerodynamik als entscheidender Hebel](/de/blog/amstel-gold-race-2025-de/)
 - [Bike Fitting: Auf dem Weg zur Leistungsoptimierung](/de/blog/BF-mesurer-de/)

@@ -52,7 +52,7 @@ export const getStaticPaths: GetStaticPaths = async () => SUPPORTED_LOCALES.map(
 const lang = (Astro.params.lang as Locale) ?? 'fr';
 // Blocs guide : le livre complet est offert (titre propre à l'accueil, la page
 // Méthode garde le sien).
-const guideTexts = { eyebrow: 'home.guide.eyebrow', title: 'book.hero.title.l2', text: 'book.hero.text' };
+const guideTexts = { eyebrow: 'home.guide.eyebrow', title: 'home.guide.title', text: 'book.hero.text' };
 const dict = getDict(lang);
 
 const metadata = {
@@ -372,7 +372,7 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
   </section>
 
   <!-- Guide gratuit — capture email au-dessus du fold -->
-  <GuideCapture lang={lang} id="top" texts={guideTexts} />
+  <GuideCapture lang={lang} id="top" texts={guideTexts} source="home" />
 
   <LogosCarousel
     title={t(dict, 'home.compat.title')}
@@ -878,7 +878,7 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
   />
 
   <!-- Second point de capture, après la FAQ -->
-  <GuideCapture lang={lang} id="faq" texts={guideTexts} />
+  <GuideCapture lang={lang} id="faq" texts={guideTexts} source="home" />
 
   <script
     type="application/ld+json"

@@ -1,5 +1,6 @@
 export const prerender = false;
 
+import { SUPPORTED_LOCALES } from '~/lib/i18n';
 import type { APIRoute } from 'astro';
 import { validateBookSubscriber } from '~/lib/leadValidation';
 import { bookRateLimiter } from '~/lib/rateLimit';
@@ -48,7 +49,7 @@ export const POST: APIRoute = async (context) => {
     return json({ success: true }, 200);
   }
 
-  const { email, name, phone } = result.subscriber;
+  const { email, name, phone, source } = result.subscriber;
 
   // `[lang]` accepte n'importe quel segment (route SSR). Seul `fr` va vers les
   // listes françaises ; toute autre langue reçoit le livre et les emails en
@@ -61,6 +62,10 @@ export const POST: APIRoute = async (context) => {
   const fields: Record<string, string> = {};
   if (name) fields.name = name;
   if (phone) fields.phone = phone;
+  // Formulaire d'origine (sidebar, article_end, calculator, home…) et langue de
+  // la page : `[lang]` n'est retenu que s'il fait partie des langues du site.
+  if (source) fields.signup_source = source;
+  if ((SUPPORTED_LOCALES as readonly string[]).includes(params.lang ?? '')) fields.lang = params.lang as string;
 
   let mlRes: Response;
   try {

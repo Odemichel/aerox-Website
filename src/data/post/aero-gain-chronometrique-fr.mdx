@@ -3,7 +3,7 @@ publishDate: 2026-02-12T00:00:00Z
 updateDate: 2026-03-10T00:00:00Z
 author: "Olivier Demichel"
 title: "Pourquoi l’aérodynamique fait gagner encore plus de temps quand on roule moins vite"
-excerpt: "Contrairement aux idées reçues, l’aérodynamique ne concerne pas seulement les professionnels à 50 km/h. Plus vous roulez lentement, plus l’optimisation de votre position peut transformer votre temps final. Analyse scientifique et exemples concrets."
+excerpt: "Contrairement aux idées reçues, l’aérodynamique ne concerne pas seulement les professionnels à 50 km/h. Plus tu roules lentement, plus l’optimisation de ta position peut transformer ton temps final. Analyse scientifique et exemples concrets."
 lang: "fr"
 imageKey: "gain-chrono-aero-fr"
 tags:
@@ -16,24 +16,23 @@ tags:
   - "cyclisme scientifique"
 metadata:
   title: "Aérodynamique : plus de temps gagné en roulant moins vite"
-  description: "Découvrez pourquoi l’aérodynamique est encore plus stratégique pour les cyclistes et triathlètes amateurs roulant entre 25 et 35 km/h. Analyse scientifique des gains réels sur 40 km et 90 km."
+  description: "Découvre pourquoi l’aérodynamique est encore plus stratégique pour les cyclistes et triathlètes amateurs roulant entre 25 et 35 km/h. Analyse scientifique des gains réels sur 40 km et 90 km."
 ---
-import Image from '~/components/common/Image.astro';
-import gainAero from '~/assets/images/blog/time_saved_per_km.png';
+import TimeSavedChart from '~/components/blog/TimeSavedChart.astro';
 
 ## Introduction
 
 Beaucoup de cyclistes pensent :
 
-**“L’aérodynamique, c’est pour les pros.”**  
-**“En dessous de 40 km/h, ça ne change pas grand-chose.”**
+“L’aérodynamique, c’est pour les pros.”  
+“En dessous de 40 km/h, ça ne change pas grand-chose.”
 
 C’est faux.
 
 Les lois physiques sont identiques pour tous.  
 Et en réalité, l’aérodynamique peut représenter **un levier chronométrique beaucoup plus déterminant pour les amateurs** que pour les professionnels.
 
-On vous explique !
+On t’explique !
 
 ## À partir de quelle vitesse l’aérodynamique compte-t-elle en cyclisme ?
 
@@ -42,14 +41,14 @@ On vous explique !
 > **Traînée aérodynamique** : force de résistance exercée par l’air sur le cycliste en mouvement. Elle dépend de la surface frontale (A), du coefficient de forme (Cd) et du carré de la vitesse. Le produit [CdA](/fr/cda/) (Cd × A) est l’indicateur clé : il se mesure en m² et varie de ~0.20 m² (position CLM optimisée) à ~0.40 m² (position route relevée).
 
 Autrement dit :
-Même à vitesse “modérée”, **l’air est déjà votre principal adversaire**.
+Même à vitesse “modérée”, l’air est déjà ton principal adversaire.
 
 
 ## Pourquoi les amateurs gagnent-ils plus de temps que les pros en optimisant leur aéro ?
 
 On entend souvent :
 
-**“Les pros roulent plus vite, donc l’aéro compte plus pour eux.”**
+“Les pros roulent plus vite, donc l’aéro compte plus pour eux.”
 
 C’est partiellement vrai… mais incomplet.
 
@@ -58,36 +57,26 @@ Cette réalité est vraie pour tout le monde.
 
 Concrètement, cela fait passer de 40km/h à 41,2 km/h et de 20 km/h à 20.6 km/h. 
 
-Donc, oui, plus tu roules vite, plus l'aéro a un impact élevé sur ton compteur ! Et gagner des dizièmes de km/h semble a priori négligeable...
+Donc, oui, plus tu roules vite, plus l'aéro a un impact élevé sur ton compteur ! Et gagner des dixièmes de km/h semble a priori négligeable...
 
 Et c'est là qu'il y a une confusion énorme qui conduit les amateurs à perdre beaucoup de temps sur leurs chronos...
 
-👉 **Parlons de gain chronométrique**
+👉 Parlons de gain chronométrique
 
-Quand tu roules à 40 km/h, 1 km te prend 1min30s. À 41.2 km/h, c'est c'est 1min27s. 
+Quand tu roules à 40 km/h, 1 km te prend 1min30s. À 41.2 km/h, c'est 1min27s. 
 
-Quand tu roules à 20 km/h, 1km te prends 3min. À 20.6 km/h, c'est 2min55s. 
+Quand tu roules à 20 km/h, 1km te prend 3min. À 20.6 km/h, c'est 2min55s. 
 
 Autrement dit, quand un cycliste rapide optimise son aéro de 10%, c'est 3s de gagné par km. Pour l'amateur deux fois moins rapide, c'est plus de 5 secondes gagnées par km !
 
 **Les amateurs ont donc beaucoup plus à gagner sur leurs chronos en optimisant leur aérodynamisme.**
 
 
-<div class="flex justify-center my-10">
-  <div class="w-[50%] md:w-[80%]">
-    <Image
-      src={gainAero}
-      alt="Gain chronométrique selon la vitesse initiale"
-      class="rounded-lg shadow-lg w-full h-auto"
-      widths={[600, 1000, 1400]}
-      sizes="(max-width: 768px) 60vw, 80vw"
-    />
-  </div>
-</div>
+<TimeSavedChart lang="fr" />
 
-L'image ci-dessus te montre les gains que tu peux viser quand tu passes d'une position relevée à une position aérodynamique optimisée sur vélo de route ou sur vélo de contre-la-montre (ou triathlon). 
+Le graphique ci-dessus te montre les gains que tu peux viser quand tu passes d'une position relevée à une position aérodynamique optimisée sur vélo de route ou sur vélo de contre-la-montre (ou triathlon). 
 
-et oui, **ta position te permet de gagner jusqu'à 20s/km quand tu roules à 20km/h...** 
+et oui, ta position te permet de gagner jusqu'à 20s/km quand tu roules à 20km/h... 
 
 L’effet est amplifié sur longue distance et sur Ironman (180 km), l’effet sera encore plus spectaculaire. Quand l'amateur vise les barrières horaires, la position devient donc primordiale...
 
@@ -96,12 +85,12 @@ L’effet est amplifié sur longue distance et sur Ironman (180 km), l’effet s
 
 Imaginons deux cyclistes qui améliorent leur aérodynamisme de 10 %. L'un roule initialement à 45 km/h, l'autre à 32 km/h. 
 
-- À 45 km/h → **- 1 minute 40 secondes** sur 40 km  
-- À 32 km/h → **- 2 minutes 20 secondes** sur 40 km  
+- À 45 km/h → - 1 minute 40 secondes sur 40 km  
+- À 32 km/h → - 2 minutes 20 secondes sur 40 km  
 
 Le gain chronométrique est donc **toujours plus important pour le cycliste plus lent**.
 
-Sur un Ironman (180 km), une amélioration de 10 % du CdA permet à un amateur roulant à 30 km/h de gagner **plus de 10 minutes** sur la partie vélo — sans produire un seul watt supplémentaire.
+Sur un Ironman (180 km), une amélioration de 10 % du CdA permet à un amateur roulant à 30 km/h de gagner plus de 10 minutes sur la partie vélo — sans produire un seul watt supplémentaire.
 
 ## Position aéro vs puissance : quel est le meilleur investissement ?
 
@@ -119,9 +108,9 @@ Pas besoin de capteur exotique.
 
 Il s’agit d’apprendre à :
 
-- **Optimiser sa position**
-- **La tenir**
-- **Être puissant dans cette position**
+- Optimiser sa position
+- La tenir
+- Être puissant dans cette position
 
 
 ## Pourquoi les cyclistes négligent-ils l'aérodynamique ?
@@ -142,11 +131,11 @@ Donc elle est négligée.
 
 L’aérodynamique n’est pas réservée aux élites.
 
-Elle est même **plus rentable pour les amateurs**.
+Elle est même plus rentable pour les amateurs.
 
 La question n’est donc pas :
 
-**“Est-ce que je roule assez vite pour que l’aéro compte ?”**
+“Est-ce que je roule assez vite pour que l’aéro compte ?”
 
 Mais plutôt :
 
@@ -156,7 +145,7 @@ Mais plutôt :
 
 <div class="faq-section">
 <h2>Questions fréquentes</h2>
-<details><summary>L'aérodynamique sert-elle à quelque chose en dessous de 30 km/h ?</summary><div>Oui. Dès 15 km/h, la résistance de l'air représente plus de 50 % de ce qui vous freine sur le plat. À 25 km/h, elle dépasse 70 %. Optimiser sa position est donc pertinent pour tous les cyclistes, pas seulement ceux qui roulent vite.</div></details>
+<details><summary>L'aérodynamique sert-elle à quelque chose en dessous de 30 km/h ?</summary><div>Oui. Dès 15 km/h, la résistance de l'air représente plus de 50 % de ce qui te freine sur le plat. À 25 km/h, elle dépasse 70 %. Optimiser sa position est donc pertinent pour tous les cyclistes, pas seulement ceux qui roulent vite.</div></details>
 <details><summary>Combien de temps gagne-t-on sur un Ironman en améliorant sa position ?</summary><div>Une amélioration de 10 % du CdA permet à un amateur roulant à 30 km/h de gagner plus de 10 minutes sur les 180 km vélo d'un Ironman, sans pédaler plus fort. Pour un triathlète qui vise les barrières horaires, c'est un levier décisif.</div></details>
 <details><summary>C'est quoi le CdA en cyclisme ?</summary><div>Le CdA (Coefficient de traînée × Surface frontale) est le chiffre qui résume ta résistance à l'air. Il se mesure en m² et va de 0.20 m² en position contre-la-montre optimisée à 0.40 m² en position route relevée. Réduire son CdA de 10 % fait gagner environ 3 % de vitesse à puissance constante.</div></details>
 <details><summary>Vaut-il mieux s'entraîner plus dur ou améliorer sa position ?</summary><div>Pour la majorité des amateurs, améliorer sa position est plus rapide et plus rentable. Gagner 20 watts de FTP demande des mois d'entraînement. Réduire son CdA de 10 % peut se faire en quelques semaines de travail sur la position, et le gain chronométrique est souvent supérieur.</div></details>
@@ -165,7 +154,7 @@ Mais plutôt :
 
 ---
 
-**Pour aller plus loin :**
+Pour aller plus loin :
 - [Comment le feedback en temps réel transforme ta performance](/fr/blog/aero-feedbacks-fr/)
 - [Amstel Gold Race 2025 : l'aérodynamique comme levier décisif](/fr/blog/amstel-gold-race-2025-fr/)
 - [Le Bike Fit : vers l'optimisation de la performance](/fr/blog/BF-mesurer-fr/)
