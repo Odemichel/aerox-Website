@@ -27,6 +27,8 @@ import PricingSection from '~/components/widgets/PricingSection.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import StepsSansImage from '~/components/widgets/StepsSansImage.astro';
 import Testimonials from '~/components/widgets/Testimonials.astro';
+import GuideCapture from '~/components/widgets/GuideCapture.astro';
+import BikeFitterTestimonials from '~/components/widgets/BikeFitterTestimonials.astro';
 import logo_elite from '~/assets/images/logos/elite.png';
 import logo_saris from '~/assets/images/logos/saris.png';
 import logo_tacx from '~/assets/images/logos/tacx.jpg';
@@ -332,44 +334,8 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
     </div>
   </section>
 
-  <!-- Lead Magnet — capture email au-dessus du fold -->
-  <section class="relative not-prose">
-    <div class="mx-auto max-w-4xl px-4 md:px-6 py-8 md:py-10">
-      <div
-        class="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 dark:from-primary/10 dark:via-primary/20 dark:to-primary/10 rounded-2xl px-6 py-8 md:px-10 md:py-10 text-center border border-primary/15"
-      >
-        <h2 class="text-xl md:text-2xl font-bold mb-2">{t(dict, 'home.leadmagnet.title')}</h2>
-        <p class="text-sm text-muted mb-5">{t(dict, 'home.leadmagnet.subtitle')}</p>
-        <form
-          id="form-leadmagnet"
-          class="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto"
-          data-success={t(dict, 'home.leadmagnet.success')}
-          data-error={t(dict, 'home.leadmagnet.error')}
-        >
-          <input
-            type="email"
-            id="email-leadmagnet"
-            placeholder={t(dict, 'home.leadmagnet.placeholder')}
-            required
-            class="w-full sm:flex-1 border border-gray-300 dark:border-slate-600 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white bg-white dark:bg-slate-800 placeholder:text-gray-500 dark:placeholder:text-slate-400"
-          />
-          {/* Honeypot : invisible pour l'humain, rempli par les bots. Jamais de label. */}
-          <input
-            type="text"
-            name="hp"
-            tabindex="-1"
-            autocomplete="off"
-            aria-hidden="true"
-            class="absolute left-[-9999px] w-px h-px opacity-0"
-          />
-          <button type="submit" class="btn-primary px-6 py-2.5 text-sm font-semibold whitespace-nowrap rounded-lg">
-            {t(dict, 'home.leadmagnet.cta')}
-          </button>
-        </form>
-        <p id="msg-leadmagnet" class="text-sm mt-3 hidden"></p>
-      </div>
-    </div>
-  </section>
+  <!-- Guide gratuit — capture email au-dessus du fold -->
+  <GuideCapture lang={lang} id="top" />
 
   <LogosCarousel
     title={t(dict, 'home.compat.title')}
@@ -544,6 +510,19 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
       icon: 'tabler:calendar-event',
     }}
   />
+
+  <!-- Bike fitters sur 3 continents : crédibilité pro côté cycliste -->
+  <section class="relative not-prose">
+    <div class="mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16">
+      <p class="text-lg md:text-xl text-center text-muted mb-8" set:html={t(dict, 'bf.social.subtitle')} />
+      <BikeFitterTestimonials lang={lang} />
+      <p class="text-center mt-8">
+        <a href={`/${lang}/bike-fitting/`} class="text-primary font-medium hover:underline"
+          >{t(dict, 'home.explore.bf.title')} →</a
+        >
+      </p>
+    </div>
+  </section>
 
   <Note title={t(dict, 'home.note3.title')} description={t(dict, 'home.note3.desc')} />
 
@@ -861,56 +840,8 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
     ]}
   />
 
-  <script>
-    // Attache en deux temps, et idempotente :
-    //  - appel à la racine du script -> couvre le premier rendu. `astro:page-load`
-    //    ne suffit pas : il est câblé sur le `load` de window (voir
-    //    astro/dist/transitions/router.js), donc il attend toutes les
-    //    sous-ressources de la page (scripts tiers différés, images, vidéos) —
-    //    plusieurs secondes pendant lesquelles aucun `preventDefault` ne serait
-    //    posé et où ClientRouter récupérerait la soumission ;
-    //  - écouteur `astro:page-load` -> couvre les navigations ClientRouter, un
-    //    script module ne se ré-exécutant jamais après sa première exécution
-    //    dans la session (cache `scriptsAlreadyRan` d'Astro).
-    // Le marqueur `dataset.leadFormBound` posé plus bas rend le double appel sans
-    // effet : un formulaire déjà lié n'est jamais ré-attaché.
-    function initLeadMagnetForm() {
-      const formLM = document.getElementById('form-leadmagnet') as HTMLFormElement | null;
-      if (!formLM || formLM.dataset.leadFormBound === '1') return;
-      formLM.dataset.leadFormBound = '1';
-
-      const msgLM = document.getElementById('msg-leadmagnet');
-
-      formLM.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = (document.getElementById('email-leadmagnet') as HTMLInputElement).value.trim();
-        const hp = (formLM.elements.namedItem('hp') as HTMLInputElement | null)?.value ?? '';
-        const lang = window.location.pathname.split('/')[1] || 'fr';
-
-        const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, hp }),
-        });
-
-        const data = await res.json();
-        msgLM?.classList.remove('hidden', 'text-red-600', 'text-green-600');
-
-        if (data.success) {
-          msgLM!.textContent = formLM?.dataset.success ?? '';
-          msgLM?.classList.add('text-green-600');
-          formLM.reset();
-        } else {
-          msgLM!.textContent = formLM?.dataset.error ?? '';
-          msgLM?.classList.add('text-red-600');
-        }
-        msgLM?.classList.remove('hidden');
-      });
-    }
-
-    initLeadMagnetForm();
-    document.addEventListener('astro:page-load', initLeadMagnetForm);
-  </script>
+  <!-- Second point de capture, après la FAQ -->
+  <GuideCapture lang={lang} id="faq" />
 
   <script
     type="application/ld+json"

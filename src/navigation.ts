@@ -49,7 +49,9 @@ export function makeNavigation(langInput?: string, audience: Audience = 'rider')
           }, // => "/fr/"
           {
             text: t('nav.pricing'),
-            href: withLang(lang, '#pricing'),
+            // Visiteur bike fitter : ses tarifs, pas la grille cycliste de
+            // l'accueil. Écrit en entier : withLang ajouterait un « / » après l'ancre.
+            href: audience === 'bike-fitter' ? `/${lang}/bike-fitting/#tarifs` : withLang(lang, '#pricing'),
             icon: 'tabler:currency-dollar',
           }, // => "/fr/#pricing"
           {

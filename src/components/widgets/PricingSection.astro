@@ -26,10 +26,10 @@ const { riderOnly = false } = Astro.props as { riderOnly?: boolean };
       period: t(dict, 'pricing.diagnostic.period'),
       note: t(dict, 'pricing.diagnostic.note'),
       items: [
+        // Ce que tu fais, ce que tu reçois, ce qu'il te faut.
         { description: t(dict, 'pricing.diagnostic.items.1'), icon: 'tabler:ruler-measure' },
-        { description: t(dict, 'pricing.diagnostic.items.2'), icon: 'tabler:trending-up' },
-        { description: t(dict, 'pricing.diagnostic.items.3'), icon: 'tabler:heartbeat' },
-        { description: t(dict, 'pricing.diagnostic.items.4'), icon: 'tabler:bulb' },
+        { description: t(dict, 'pricing.diagnostic.items.2'), icon: 'tabler:report-analytics' },
+        { description: t(dict, 'pricing.diagnostic.items.3'), icon: 'tabler:device-desktop' },
       ],
       callToAction: {
         text: t(dict, 'pricing.diagnostic.cta'),

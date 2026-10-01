@@ -1,0 +1,74 @@
+---
+// Témoignages des bike fitters (Brésil, États-Unis) : page bike fitter et
+// bandeau de l'accueil. Les citations viennent des clés `bf.social.*`.
+import { type Locale, getDict, t } from '~/lib/i18n';
+
+const { lang } = Astro.props as { lang: Locale };
+const dict = getDict(lang);
+---
+
+<div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+  {
+    [
+      {
+        name: 'Marcelo Rocha',
+        initials: 'MR',
+        role: t(dict, 'bf.social.rocha.role'),
+        location: t(dict, 'bf.social.rocha.location'),
+        quote: t(dict, 'bf.social.rocha.quote'),
+        url: 'https://marcelorocha.com/',
+        domain: 'marcelorocha.com',
+      },
+      {
+        name: 'Marcelo Muniz Machado',
+        initials: 'MM',
+        role: t(dict, 'bf.social.muniz.role'),
+        location: t(dict, 'bf.social.muniz.location'),
+        quote: t(dict, 'bf.social.muniz.quote'),
+        url: 'https://saudem3bikefit.com.br/',
+        domain: 'saudem3bikefit.com.br',
+      },
+      {
+        name: 'Mark Gerlando',
+        initials: 'MG',
+        role: t(dict, 'bf.social.gerlando.role'),
+        location: t(dict, 'bf.social.gerlando.location'),
+        quote: t(dict, 'bf.social.gerlando.quote'),
+        url: 'https://www.ridescience.com/',
+        domain: 'ridescience.com',
+      },
+    ].map((fitter) => (
+      <article class="flex flex-col rounded-2xl shadow-xl dark:shadow-none dark:border dark:border-slate-600 bg-white dark:bg-slate-800/50 p-5 md:p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+            <span class="text-primary text-lg font-bold">{fitter.initials}</span>
+          </div>
+          <div>
+            <p class="font-semibold text-base">{fitter.name}</p>
+            <p class="text-xs text-muted">{fitter.location}</p>
+          </div>
+        </div>
+        <hr class="border-slate-200 dark:border-slate-600 mb-4" />
+        <blockquote class="text-sm text-muted italic mb-4 border-l-2 border-primary/30 pl-3">
+          "{fitter.quote}"
+        </blockquote>
+        <p class="text-xs text-accent mb-4">{fitter.role}</p>
+        <a
+          href={fitter.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-auto inline-flex items-center gap-1 text-primary text-sm font-medium hover:underline"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+            />
+          </svg>
+          {fitter.domain}
+        </a>
+      </article>
+    ))
+  }
+</div>
