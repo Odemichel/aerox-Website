@@ -55,3 +55,49 @@ export function cdaCategory(cda: number): string {
   if (cda >= 0.18) return 'pro_tt';
   return 'track';
 }
+
+/**
+ * Position optimisée de référence sur le même vélo (S'entraîner à
+ * l'aérodynamisme, O. Demichel, 2026) :
+ *  - vélo de route : environ −15 % de surface frontale (règle du livre) ;
+ *  - contre-la-montre / triathlon, sur prolongateurs : tête levée → tête
+ *    rentrée, 0,36 → 0,33 m² (tableau 2.1), soit environ −8 %.
+ */
+export type Bike = 'road' | 'tt';
+export const OPTIMIZED_AREA_FACTOR: Record<Bike, number> = { road: 0.85, tt: 0.92 };
+
+type Ride = { massKg: number; slopePct: number; altitudeM?: number; temperatureC?: number };
+
+/** Puissance aux pédales (W) nécessaire pour rouler à `speedKmh` avec `cda`. */
+export function powerForSpeed(cda: number, speedKmh: number, ride: Ride): number {
+  const v = speedKmh / 3.6;
+  const theta = Math.atan(ride.slopePct / 100);
+  const rho = airDensity(ride.altitudeM ?? 0, ride.temperatureC ?? 15);
+  const wheel = 0.5 * rho * cda * v ** 3 + CRR * ride.massKg * G * v + ride.massKg * G * Math.sin(theta) * v;
+  return wheel / ETA;
+}
+
+/** Vitesse (km/h) atteinte avec `power` et `cda` : la puissance croît avec la vitesse, dichotomie. */
+export function speedForPower(cda: number, power: number, ride: Ride): number {
+  let lo = 0.1;
+  let hi = 150;
+  for (let i = 0; i < 60; i++) {
+    const mid = (lo + hi) / 2;
+    if (powerForSpeed(cda, mid, ride) > power) hi = mid;
+    else lo = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+/**
+ * Ce que coûte la position actuelle face à une position optimisée sur le
+ * même vélo : km/h gagnés à la même puissance, watts économisés à la même
+ * vitesse.
+ */
+export function optimizedGain(cda: number, input: CdaInput, bike: Bike = 'road') {
+  const ride = input;
+  const target = cda * OPTIMIZED_AREA_FACTOR[bike];
+  const speed = speedForPower(target, input.power, ride);
+  const watts = input.power - powerForSpeed(target, input.speedKmh, ride);
+  return { targetCda: target, speedKmh: speed, gainKmh: speed - input.speedKmh, wattsSaved: watts };
+}
