@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
 import GuideCapture from '~/components/widgets/GuideCapture.astro';
+import CdaCalculator from '~/components/widgets/CdaCalculator.astro';
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
 
@@ -69,6 +70,14 @@ const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] 
           }
         </tbody>
       </table>
+      <p>
+        {t(dict, 'cda.values.bridge')}
+        <a href={Link_diagnostic}>{t(dict, 'cda.diag.cta')} →</a>
+      </p>
+
+      <h2>{t(dict, 'cda.formula.h2')}</h2>
+      <p set:html={t(dict, 'cda.formula.p1')} />
+      <CdaCalculator lang={lang} />
 
       <GuideCapture lang={lang} id="cda-mid" texts={guideTexts} />
 
