@@ -23,7 +23,7 @@
   "ourStory.cta.sub": "Deviens l’un des premiers à transformer ton entraînement indoor avec l’analyse en temps réel de ton aérodynamisme.",
 
   "home.meta.title": "Optimise ton aérodynamisme, roule plus vite",
-  "home.meta.description": "AeroX transforme ton home trainer en soufflerie virtuelle. Mesure ta position avec une webcam, gagne 3 km/h et économise 40 W. Essaie maintenant.",
+  "home.meta.description": "AeroX transforme ton home trainer en soufflerie virtuelle. Mesure ta position avec une webcam, gagne 2 à 3 km/h et économise 35 W. Essaie maintenant.",
 
   "home.hero.tagline": "Mesure ton aéro chez toi",
   "home.hero.title.l1": "Ton home trainer",
@@ -135,12 +135,12 @@
   "home.features.subtitle": "Parce que chaque watt compte, ton budget aussi !",
   "home.features.ctaDetails": "Mesure tes positions et découvre <span class=\"font-bold text-accent\">combien de watts tu laisses dans le vent.</span>",
 
-  "home.features.items.gain.title": "Gagne de 1 à 5 km/h sans plus d’effort",
-  "home.features.items.gain.desc": "AeroX révèle en temps réel les km/h que ta position te fait perdre. Même à 25&#8239;km/h tu peux gagner 1km/h ! À 45&#8239;km/h, +5km/h. Mieux qu'un vélo à 5000&#8239;€.",
-  "home.features.items.gain.education": "Dès 25&#8239;km/h, l’air absorbe ~70&#8239;% de ta puissance, et à 45&#8239;km/h, jusqu’à 95&#8239;%. Ton corps agit comme un parachute : AeroX mesure sa taille (surface frontale) et calcule ton gain quand tu le refermes. Résultat : +1&#8239;km/h à 25, jusqu’à +5&#8239;km/h à 45. Plie les coudes, rentre la tête, rapproche tes prolongateurs : chaque détail devient de la vitesse gratuite. AeroX te le montre.<br /><br />👉 Imagine finir ta sortie en rentrant plus vite que d’habitude, sans forcer plus. Juste la sensation de fendre l'air… plus que de la performance, du plaisir.",
+  "home.features.items.gain.title": "Gagne de 2 à 3 km/h sans plus d’effort",
+  "home.features.items.gain.desc": "AeroX révèle en temps réel les km/h que ta position te fait perdre. Même à 25&#8239;km/h tu peux gagner près de 2&#8239;km/h ! À 45&#8239;km/h, plus de 3&#8239;km/h. Mieux qu'un vélo à 5000&#8239;€.",
+  "home.features.items.gain.education": "Dès 25&#8239;km/h, l’air absorbe environ 80&#8239;% de ta puissance, et à 45&#8239;km/h, plus de 90&#8239;%. Ton corps agit comme un parachute : AeroX mesure sa taille (surface frontale) et calcule ton gain quand tu le refermes. Résultat : près de +2&#8239;km/h à 25, plus de +3&#8239;km/h à 45. Plie les coudes, rentre la tête, rapproche tes prolongateurs : chaque détail devient de la vitesse gratuite. AeroX te le montre.<br /><br />👉 Imagine finir ta sortie en rentrant plus vite que d’habitude, sans forcer plus. Juste la sensation de fendre l'air… plus que de la performance, du plaisir.",
   "home.features.items.gain.more": "On t'explique les chiffres…",
-  "home.features.items.gain.cta": "Commence AeroX, gagne 1-5&#8239;km/h",
-  "home.features.items.gain.aria": "Télécharger AeroX, application de cyclisme indoor pour gagner 1-5 km/h grâce à ton aérodynamisme",
+  "home.features.items.gain.cta": "Commence AeroX, gagne 2-3&#8239;km/h",
+  "home.features.items.gain.aria": "Télécharger AeroX, application de cyclisme indoor pour gagner 2-3 km/h grâce à ton aérodynamisme",
 
   "home.features.items.real.title": "Gagne en vitesse réelle, pas en puissance virtuelle",
   "home.features.items.real.desc": "Sur home-trainer, tu progresses dans un monde virtuel.<br />Avec AeroX, c'est toi qui économises 40&#8239;W. Tu deviens plus rapide dans la vraie vie.",
@@ -182,7 +182,7 @@
 
   "home.faq.items.1.title": "Pourquoi AeroX ?",
   "home.faq.items.1.more": "80 % de ton effort combat l'air — AeroX te montre où le récupérer",
-  "home.faq.items.1.education": "À partir de 25 km/h, l’aérodynamisme représente 70 à 95 % de la résistance totale — c’est le facteur numéro un qui te ralentit, bien avant le poids ou le matériel. Pourtant, aucun home trainer classique ne mesure ta position aéro. Sur Zwift, MyWhoosh ou Kinomap, tu pédales plus fort sans jamais savoir si ta position te coûte 30 ou 50 watts inutiles. AeroX change la donne : grâce à une simple webcam, l’application analyse ta silhouette en temps réel et calcule ta surface frontale (CdA). Tu vois instantanément combien de km/h et de watts chaque ajustement te fait gagner. Résultat mesuré sur 300+ sessions : +2 à 3 km/h de vitesse et 30 à 40 W économisés à effort identique. C’est l’équivalent d’un gain de 30 à 45 minutes sur un Ironman — sans pédaler plus fort, juste en optimisant ta position.",
+  "home.faq.items.1.education": "À partir de 25 km/h, l’aérodynamisme représente environ 80 % de la résistance totale, et plus de 90 % au-delà de 40 km/h — c’est le facteur numéro un qui te ralentit, bien avant le poids ou le matériel. Pourtant, aucun home trainer classique ne mesure ta position aéro. Sur Zwift, MyWhoosh ou Kinomap, tu pédales plus fort sans jamais savoir si ta position te coûte 30 ou 50 watts inutiles. AeroX change la donne : grâce à une simple webcam, l’application analyse ta silhouette en temps réel et calcule ta surface frontale (CdA). Tu vois instantanément combien de km/h et de watts chaque ajustement te fait gagner. Résultat mesuré sur 300+ sessions : +2,3 km/h en moyenne à effort identique et 35 W économisés à 30 km/h. C’est l’équivalent d’un gain de 30 à 45 minutes sur un Ironman — sans pédaler plus fort, juste en optimisant ta position.",
 
   "home.faq.items.2.title": "De quels outils ai-je besoin ?",
   "home.faq.items.2.education": "Pour utiliser AeroX, il te faut un ordinateur (macOS ou Windows), ton vélo sur un support, et une caméra — la webcam intégrée de ton ordinateur, une webcam USB ou même ton smartphone en Wi-Fi. C'est tout pour l'analyse aérodynamique de base : AeroX mesure ta surface frontale (CdA) en temps réel sans aucun capteur supplémentaire. Pour le mode Puissance (lien position/watts) et le mode Vitesse (résistance asservie à ta position), un home trainer connecté Bluetooth FTMS est nécessaire : Wahoo Kickr, Elite Direto, Tacx Neo, Saris H3 et la plupart des modèles récents sont compatibles. Les capteurs de fréquence cardiaque Garmin, Polar et Suunto sont également pris en charge. L'installation prend 2 minutes : place la caméra à environ 1,30 m face au trainer, lance AeroX, calibre en deux clics — et tu es prêt.",
@@ -198,7 +198,7 @@
 
   "home.faq.items.5.title": "Innovation ou gadget ?",
   "home.faq.items.5.more": "Ni l'un ni l'autre, AeroX est un changement de paradigme dans l'entraînement : ta vitesse devient ta priorité",
-  "home.faq.items.5.education": "Il y a 20 ans, le cardiofréquencemètre était un gadget. Aujourd’hui, personne ne s’entraîne sans. Il y a 10 ans, le capteur de puissance était réservé aux pros. Aujourd’hui, il équipe la majorité des cyclistes sérieux. L’aérodynamisme est le prochain levier à démocratiser — et c’est exactement ce que fait AeroX. Développé par Olivier Demichel, ancien chercheur au CNRS et triathlète, AeroX s’appuie sur l’analyse vidéo par intelligence artificielle pour mesurer ta surface frontale en temps réel. Ce n’est pas une estimation théorique : c’est une mesure physique de ta silhouette, image par image, avec une répétabilité de 3 %. Les gains sont concrets et mesurés : +2 à 3 km/h en moyenne sur 300+ sessions. AeroX ne remplace pas ton capteur de puissance — il le complète en ajoutant la dimension aérodynamique que personne ne mesurait jusqu’ici sur home trainer.",
+  "home.faq.items.5.education": "Il y a 20 ans, le cardiofréquencemètre était un gadget. Aujourd’hui, personne ne s’entraîne sans. Il y a 10 ans, le capteur de puissance était réservé aux pros. Aujourd’hui, il équipe la majorité des cyclistes sérieux. L’aérodynamisme est le prochain levier à démocratiser — et c’est exactement ce que fait AeroX. Développé par Olivier Demichel, ancien chercheur au CNRS et triathlète, AeroX s’appuie sur l’analyse vidéo par intelligence artificielle pour mesurer ta surface frontale en temps réel. Ce n’est pas une estimation théorique : c’est une mesure physique de ta silhouette, image par image, avec une répétabilité de 3 %. Les gains sont concrets et mesurés : +2,3 km/h en moyenne sur 300+ sessions. AeroX ne remplace pas ton capteur de puissance — il le complète en ajoutant la dimension aérodynamique que personne ne mesurait jusqu’ici sur home trainer.",
 
   "home.faq.items.6.title": "Je suis cycliste, est-ce vraiment utile quand on roule en peloton ?",
   "home.faq.items.6.education": "Soyons franc, rester au milieu du peloton n'est pas la réalité du cyclisme. Effet de bordures, échappées ou rythmer le peloton sont des situations où ton aérodynamisme fera la différence. Et qui sait, avec 3km/h de plus, tu pourrais prendre plaisir à t'échapper.",
@@ -213,7 +213,7 @@
   "home.faq.items.8.education": "Être en position ne suffit pas — encore faut-il que cette position soit efficace. La plupart des cyclistes pensent être aérodynamiques alors que des détails invisibles leur coûtent 10 à 30 watts : tête trop haute de 3 cm, coudes trop écartés de 5 cm, épaules non rentrées. Sans mesure objective, tu ne peux pas le savoir. AeroX rend ces détails visibles en temps réel : tu ajustes ta tête, ton CdA baisse de 2 % — tu le vois instantanément à l’écran. Nos mesures montrent que même des cyclistes expérimentés gagnent encore 1 à 2 km/h en affinant leur position avec un feedback objectif. De plus, ta position se dégrade avec la fatigue : AeroX te montre comment ton CdA évolue au fil de la séance, pour que tu apprennes à maintenir une position efficace même après 2 heures d’effort. C’est la différence entre croire qu’on est aéro et le mesurer.",
 
   "home.faq.schema.q1": "Pourquoi AeroX ?",
-  "home.faq.schema.a1": "À partir de 25 km/h, l’aérodynamisme représente entre 70 et 95 % de la résistance. AeroX te permet de visualiser et d’optimiser ta position pour gagner en vitesse et économiser des watts.",
+  "home.faq.schema.a1": "À partir de 25 km/h, l’aérodynamisme représente environ 80 % de la résistance, et plus de 90 % au-delà de 40 km/h. AeroX te permet de visualiser et d’optimiser ta position pour gagner en vitesse et économiser des watts.",
   "home.faq.schema.q2": "Quels outils et matériel sont nécessaires pour utiliser AeroX ?",
   "home.faq.schema.a2": "Il suffit d’un home trainer connecté (Bluetooth FTMS), d’un vélo, d’un ordinateur Mac ou Windows, et d’une simple caméra (webcam, smartphone ou USB).",
   "home.faq.schema.q3": "Combien de temps faut-il pour mettre AeroX en place ?",
@@ -362,7 +362,7 @@
 
   "hero.video.title": "Démonstration AeroX en vidéo : cyclisme indoor avec aérodynamisme en temps réel. Au-delà de Zwift, MyWhoosh et Kinomap, deviens plus rapide.",
   "hero.video.caption": "AeroX transforme ton home trainer en soufflerie : ta position traduite en gain de puissance en temps réel.",
-  "hero.video.aria": "Vidéo AeroX : gagne 2–3 km/h et économise 40 W sur home trainer grâce à l’aérodynamisme en temps réel.",
+  "hero.video.aria": "Vidéo AeroX : gagne 2–3 km/h et économise 35 W sur home trainer grâce à l’aérodynamisme en temps réel.",
 
   "pricing.remaining": "Plus que",
   "pricing.offer": "pour profiter de l’offre",
@@ -671,7 +671,7 @@
   "cda.definition.formula": "CdA = Cx × A, exprimé en m².",
   "cda.definition.p2": "La puissance nécessaire pour vaincre la traînée aérodynamique suit l'équation : <strong>P<sub>aéro</sub> = 0,5 × ρ × CdA × v³</strong>, où ρ est la masse volumique de l'air (~1,225 kg/m³ au niveau de la mer) et v la vitesse. La puissance aéro croît avec le <strong>cube</strong> de la vitesse : doubler sa vitesse demande 8× plus de watts pour vaincre l'air. Inversement, réduire son CdA même légèrement libère des watts à toutes les vitesses.",
   "cda.why.h2": "Pourquoi le CdA est-il si important ?",
-  "cda.why.p1": "Au-delà de 25 km/h, la résistance aérodynamique représente <strong>plus de 80 % de la résistance totale</strong> que combat un cycliste. En contre-la-montre à 45 km/h, ce chiffre atteint 90-95 %. Réduire son CdA est donc le levier de performance le plus puissant, bien plus que d'ajouter des watts.",
+  "cda.why.p1": "Au-delà de 25 km/h, la résistance aérodynamique représente <strong>plus de 80 % de la résistance totale</strong> que combat un cycliste. En contre-la-montre à 45 km/h, ce chiffre dépasse 90 %. Réduire son CdA est donc le levier de performance le plus puissant, bien plus que d'ajouter des watts.",
   "cda.why.p2": "Un cycliste qui passe d'une position relevée (surface frontale ~0,50 m²) à une position compacte optimisée (~0,42 m²) peut <strong>gagner 2 à 3 km/h à puissance identique</strong>. Avec des prolongateurs (~0,33 m²), le gain atteint 4 à 5 km/h. Plus le delta est important, plus le gain est marqué — et c'est la position du corps qui offre les plus gros leviers, pas le matériel.",
   "cda.values.h2": "Valeurs typiques de CdA par catégorie",
   "cda.values.header1": "Position / Catégorie",

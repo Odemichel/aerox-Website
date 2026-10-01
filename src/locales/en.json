@@ -23,7 +23,7 @@
   "ourStory.cta.sub": "Be among the first to transform your indoor training with real-time aero analysis.",
 
   "home.meta.title": "Optimize your aerodynamics, ride faster",
-  "home.meta.description": "AeroX turns your smart trainer into a virtual wind tunnel. Measure your position with a webcam, gain 3 km/h and save 40 W. Try it now.",
+  "home.meta.description": "AeroX turns your smart trainer into a virtual wind tunnel. Measure your position with a webcam, gain 2 to 3 km/h and save 35 W. Try it now.",
 
   "home.hero.tagline": "Measure your aero at home",
   "home.hero.title.l1": "Your smart trainer",
@@ -133,12 +133,12 @@
   "home.features.subtitle": "Every watt counts — and so does your budget.",
   "home.features.ctaDetails": "Measure your positions and find out <span class=\"font-bold text-accent\">how many watts you are leaving in the wind.</span>",
 
-  "home.features.items.gain.title": "Gain 1 to 5 km/h with no extra effort",
-  "home.features.items.gain.desc": "See, in real time, how many km/h your position is costing you. +1 km/h at 25&#8239;km/h; up to +5 km/h at 45&#8239;km/h. Better than a €5000 bike.",
-  "home.features.items.gain.education": "From 25&#8239;km/h, air eats ~70&#8239;% of your power (up to 95&#8239;% at 45). Shrink frontal area, get speed back. Elbows in, head low, narrow bars — AeroX shows the gains as you move.<br /><br />👉 Finish rides getting home faster without pushing harder — slicing through air. That’s performance and fun.",
+  "home.features.items.gain.title": "Gain 2 to 3 km/h with no extra effort",
+  "home.features.items.gain.desc": "See, in real time, how many km/h your position is costing you. Close to +2 km/h at 25&#8239;km/h; more than +3 km/h at 45&#8239;km/h. Better than a €5000 bike.",
+  "home.features.items.gain.education": "From 25&#8239;km/h, air eats about 80&#8239;% of your power (more than 90&#8239;% at 45). Shrink frontal area, get speed back. Elbows in, head low, narrow bars — AeroX shows the gains as you move.<br /><br />👉 Finish rides getting home faster without pushing harder — slicing through air. That’s performance and fun.",
   "home.features.items.gain.more": "We’ll show you the numbers…",
-  "home.features.items.gain.cta": "Start AeroX, gain 1–5&#8239;km/h",
-  "home.features.items.gain.aria": "Download AeroX, indoor-cycling app to gain 1–5 km/h with your aerodynamics",
+  "home.features.items.gain.cta": "Start AeroX, gain 2–3&#8239;km/h",
+  "home.features.items.gain.aria": "Download AeroX, indoor-cycling app to gain 2–3 km/h with your aerodynamics",
 
   "home.features.items.real.title": "Gain real speed, not virtual power",
   "home.features.items.real.desc": "On a trainer you progress in a virtual world. With AeroX, you save 40&#8239;W — and get faster outside.",
@@ -180,7 +180,7 @@
 
   "home.faq.items.1.title": "Why AeroX?",
   "home.faq.items.1.more": "80% of your effort fights the air — AeroX shows you where to get it back",
-  "home.faq.items.1.education": "From 25 km/h, aerodynamics accounts for 70 to 95% of total resistance — it’s the number one factor slowing you down, far more than weight or equipment. Yet no standard smart trainer measures your aero position. On Zwift, MyWhoosh or Kinomap, you push harder without ever knowing if your position is costing you 30 or 50 wasted watts. AeroX changes the game: using a simple webcam, the app analyzes your silhouette in real time and calculates your frontal area (CdA). You instantly see how many km/h and watts each adjustment gains you. Results measured across 300+ sessions: +2 to 3 km/h of speed and 30 to 40 W saved at the same effort. That’s the equivalent of 30 to 45 minutes gained on an Ironman — without pedaling harder, just by optimizing your position.",
+  "home.faq.items.1.education": "From 25 km/h, aerodynamics accounts for about 80% of total resistance, and more than 90% beyond 40 km/h — it’s the number one factor slowing you down, far more than weight or equipment. Yet no standard smart trainer measures your aero position. On Zwift, MyWhoosh or Kinomap, you push harder without ever knowing if your position is costing you 30 or 50 wasted watts. AeroX changes the game: using a simple webcam, the app analyzes your silhouette in real time and calculates your frontal area (CdA). You instantly see how many km/h and watts each adjustment gains you. Results measured across 300+ sessions: +2.3 km/h on average at the same effort and 35 W saved at 30 km/h. That’s the equivalent of 30 to 45 minutes gained on an Ironman — without pedaling harder, just by optimizing your position.",
 
   "home.faq.items.2.title": "What gear do I need?",
   "home.faq.items.2.education": "To use AeroX, you need a computer (macOS or Windows), your bike on a support, and a camera — your laptop's built-in webcam, a USB webcam, or even your smartphone over Wi-Fi. That's all you need for basic aero analysis: AeroX measures your frontal area (CdA) in real time with no additional sensors. For Power Mode (position/watts link) and Speed Mode (resistance linked to your position), a Bluetooth FTMS smart trainer is required: Wahoo Kickr, Elite Direto, Tacx Neo, Saris H3 and most recent models are compatible. Heart rate monitors from Garmin, Polar and Suunto are also supported. Setup takes 2 minutes: place the camera about 1.3 m in front of the trainer, launch AeroX, calibrate in two clicks — and you're ready to ride.",
@@ -196,7 +196,7 @@
 
   "home.faq.items.5.title": "Innovation or gadget?",
   "home.faq.items.5.more": "Neither — AeroX is a paradigm shift in training: your speed becomes your priority",
-  "home.faq.items.5.education": "20 years ago, the heart rate monitor was a gadget. Today, no one trains without one. 10 years ago, the power meter was reserved for pros. Today, most serious cyclists use one. Aerodynamics is the next lever to democratize — and that's exactly what AeroX does. Built by Olivier Demichel, former CNRS researcher and triathlete, AeroX uses AI-powered video analysis to measure your frontal area in real time. This isn't a theoretical estimate: it's a physical measurement of your silhouette, frame by frame, with 3% repeatability. The gains are concrete and measured: +2 to 3 km/h on average across 300+ sessions. AeroX doesn't replace your power meter — it complements it by adding the aerodynamic dimension that no one was measuring on a smart trainer until now.",
+  "home.faq.items.5.education": "20 years ago, the heart rate monitor was a gadget. Today, no one trains without one. 10 years ago, the power meter was reserved for pros. Today, most serious cyclists use one. Aerodynamics is the next lever to democratize — and that's exactly what AeroX does. Built by Olivier Demichel, former CNRS researcher and triathlete, AeroX uses AI-powered video analysis to measure your frontal area in real time. This isn't a theoretical estimate: it's a physical measurement of your silhouette, frame by frame, with 3% repeatability. The gains are concrete and measured: +2.3 km/h on average across 300+ sessions. AeroX doesn't replace your power meter — it complements it by adding the aerodynamic dimension that no one was measuring on a smart trainer until now.",
 
   "home.faq.items.6.title": "I ride in a bunch — is this still useful?",
   "home.faq.items.6.education": "Cycling isn’t just sitting in the bunch. Echelons, breakaways, pulling — aero makes the difference. With +3 km/h, you might enjoy attacking.",
@@ -211,7 +211,7 @@
   "home.faq.items.8.education": "Being in position isn't enough — it also needs to be effective. Most cyclists think they're aerodynamic while invisible details cost them 10 to 30 watts: head 3 cm too high, elbows 5 cm too wide, shoulders not tucked in. Without objective measurement, you can't know. AeroX makes these details visible in real time: you adjust your head, your CdA drops 2% — you see it instantly on screen. Our measurements show that even experienced cyclists still gain 1 to 2 km/h by refining their position with objective feedback. Moreover, your position degrades with fatigue: AeroX shows you how your CdA evolves throughout the session, so you learn to hold an efficient position even after 2 hours of effort. It's the difference between thinking you're aero and measuring it.",
 
   "home.faq.schema.q1": "Why AeroX?",
-  "home.faq.schema.a1": "From 25 km/h, aerodynamics accounts for 70 to 95% of resistance. AeroX lets you visualize and optimize your position to ride faster and save watts.",
+  "home.faq.schema.a1": "From 25 km/h, aerodynamics accounts for about 80% of resistance, and more than 90% beyond 40 km/h. AeroX lets you visualize and optimize your position to ride faster and save watts.",
   "home.faq.schema.q2": "What tools and equipment do I need to use AeroX?",
   "home.faq.schema.a2": "All you need is a smart trainer (Bluetooth FTMS), your bike, a Mac or Windows computer, and a simple camera (webcam, smartphone, or USB).",
   "home.faq.schema.q3": "How long does it take to set up AeroX?",
@@ -356,7 +356,7 @@
 
   "hero.video.title": "AeroX demo video: indoor cycling with real-time aerodynamics. Go beyond Zwift, MyWhoosh, and Kinomap to get faster.",
   "hero.video.caption": "AeroX turns your smart trainer into a wind tunnel: your position translated into real-time power gains.",
-  "hero.video.aria": "AeroX video: gain 2–3 km/h and save 40 W on your smart trainer thanks to real-time aerodynamics.",
+  "hero.video.aria": "AeroX video: gain 2–3 km/h and save 35 W on your smart trainer thanks to real-time aerodynamics.",
 
   "pricing.remaining": "Only",
   "pricing.offer": "left to enjoy the offer",
@@ -654,7 +654,7 @@
   "cda.definition.formula": "CdA = Cx × A, expressed in m².",
   "cda.definition.p2": "The power required to overcome aerodynamic drag follows the equation: <strong>P<sub>aero</sub> = 0.5 × ρ × CdA × v³</strong>, where ρ is air density (~1.225 kg/m³ at sea level) and v is velocity. Aero power scales with the <strong>cube</strong> of speed: doubling your speed requires 8× more watts to fight the air. Conversely, even a small CdA reduction frees up watts at every speed.",
   "cda.why.h2": "Why does CdA matter so much?",
-  "cda.why.p1": "Above 25 km/h, aerodynamic drag accounts for <strong>over 80% of the total resistance</strong> a cyclist fights. In a time trial at 45 km/h, this reaches 90-95%. Reducing CdA is therefore the most powerful performance lever — far more impactful than adding watts.",
+  "cda.why.p1": "Above 25 km/h, aerodynamic drag accounts for <strong>over 80% of the total resistance</strong> a cyclist fights. In a time trial at 45 km/h, this exceeds 90%. Reducing CdA is therefore the most powerful performance lever — far more impactful than adding watts.",
   "cda.why.p2": "A cyclist who goes from an upright position (frontal area ~0.50 m²) to an optimized compact position (~0.42 m²) can <strong>gain 2-3 km/h at the same power</strong>. With aerobars (~0.33 m²), gains reach 4-5 km/h. The bigger the reduction, the bigger the gain — and body position offers far larger gains than equipment.",
   "cda.values.h2": "Typical CdA values by category",
   "cda.values.header1": "Position / Category",
