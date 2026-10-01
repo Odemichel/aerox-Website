@@ -66,6 +66,16 @@ export function makeNavigation(langInput?: string, audience: Audience = 'rider')
             icon: 'tabler:article',
           },
           {
+            text: t('footer.cda'),
+            href: withLang(lang, '/cda'),
+            icon: 'tabler:wind',
+          },
+          {
+            text: t('footer.cdaCalc'),
+            href: withLang(lang, '/cda/calculator'),
+            icon: 'tabler:calculator',
+          },
+          {
             text: t('nav.bikeFitting'),
             href: withLang(lang, '/bike-fitting/'),
             icon: 'tabler:bike',
@@ -122,6 +132,7 @@ export function makeNavigation(langInput?: string, audience: Audience = 'rider')
           { text: t('footer.contactUs'), href: withLang(lang, '/contact') },
           { text: t('footer.bikeFitting'), href: withLang(lang, '/bike-fitting') },
           { text: t('footer.cda'), href: withLang(lang, '/cda') },
+          { text: t('footer.cdaCalc'), href: withLang(lang, '/cda/calculator') },
         ],
       },
     ],

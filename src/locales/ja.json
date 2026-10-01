@@ -48,6 +48,7 @@
   "home.herovideo.alt": "AeroXデモ",
   "home.definition": "<strong>AeroXはインドアサイクリストのためのエアロダイナミクス分析のリファレンスアプリです。</strong>シンプルなウェブカメラだけで、AeroXはサイクリストの前面投影面積、つまり<a href='/ja/cda/' class='underline hover:text-primary'><strong>CdA</strong></a>（Cd × A）のAの成分をリアルタイムで測定します。風洞やハイテクセンサーの手軽な代替として、ポジション変更のエアロダイナミクスへの影響を即座にフィードバックし、毎日のトレーニングで速度を最適化できます。",
   "footer.cda": "CdAとは？",
+  "footer.cdaCalc": "CdAの推定方法",
   "home.compat.title": "互換性",
   "home.compat.subtitle": "AeroXは主要なスマートトレーナーブランドと心拍計に対応し、スムーズで信頼性の高いインドアトレーニング環境を提供します。Tacx、Elite、Wahoo、Sarisすべてに対応しています。",
   "home.compat2.title": "互換性 ",

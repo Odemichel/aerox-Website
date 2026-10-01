@@ -48,6 +48,7 @@
   "home.herovideo.alt": "AeroX demo",
   "home.definition": "<strong>AeroX, indoor bisikletçiler için aerodinamik analizde referans uygulamadır.</strong> Basit bir webcam ile AeroX, bisikletçinin ön cephe alanını, yani <a href='/tr/cda/' class='underline hover:text-primary'><strong>CdA</strong></a>'sının (Cd × A) A bileşenini gerçek zamanlı olarak ölçer. Rüzgar tünellerine ve yüksek teknolojili sensörlere erişilebilir bir alternatif olan uygulama, her pozisyon değişikliğinin aerodinamik etkisi hakkında anında geri bildirim sağlar ve her gün bisiklette hızınızı optimize etmeniz için antrenman yapmanıza olanak tanır.",
   "footer.cda": "CdA nedir?",
+  "footer.cdaCalc": "CdA nasıl tahmin edilir?",
   "home.compat.title": "Uyumluluk",
   "home.compat.subtitle": "AeroX, önde gelen akıllı bisiklet rulosu ve nabız sensörü markaları ile sorunsuz ve güvenilir bir iç mekan antrenmanı için çalışır. Tacx, Elite, Wahoo, Saris — hepsi uyumlu.",
   "home.compat2.title": "Uyumluluk ",

@@ -48,6 +48,7 @@
   "home.herovideo.alt": "Demonstração AeroX",
   "home.definition": "<strong>AeroX é a aplicação de referência em análise aerodinâmica para ciclistas indoor.</strong> Com uma simples webcam, AeroX mede em tempo real a área frontal do ciclista, ou seja, a componente A do seu <a href='/pt/cda/' class='underline hover:text-primary'><strong>CdA</strong></a> (Cd × A). Alternativa acessível a túneis de vento e sensores high-tech, a aplicação fornece feedback instantâneo sobre o impacto aerodinâmico de cada mudança de posição, para treinar todos os dias a otimizar sua velocidade na bicicleta.",
   "footer.cda": "O que é o CdA?",
+  "footer.cdaCalc": "Como estimar o seu CdA?",
   "home.compat.title": "Compatibilidade",
   "home.compat.subtitle": "AeroX funciona com as principais marcas de rolos inteligentes e sensores cardíacos, para um treino indoor fluido e confiável. Tacx, Elite, Wahoo, Saris — tudo compatível.",
   "home.compat2.title": "Compatibilidade ",

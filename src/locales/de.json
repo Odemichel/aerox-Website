@@ -48,6 +48,7 @@
   "home.herovideo.alt": "AeroX-Demo",
   "home.definition": "<strong>AeroX ist die Referenz-App für die aerodynamische Analyse von Indoor-Radsportlern.</strong> Mit einer einfachen Webcam misst AeroX in Echtzeit die Stirnfläche des Radfahrers, also die Komponente A seines <a href='/de/cda/' class='underline hover:text-primary'><strong>CdA</strong></a> (Cd × A). Als zugängliche Alternative zu Windkanälen und High-Tech-Sensoren liefert die App sofortiges Feedback zur aerodynamischen Auswirkung jeder Positionsänderung, um jeden Tag die Geschwindigkeit auf dem Rad zu optimieren.",
   "footer.cda": "Was ist der CdA?",
+  "footer.cdaCalc": "Wie schätzt man seinen CdA-Wert?",
   "home.compat.title": "Kompatibilität",
   "home.compat.subtitle": "AeroX funktioniert mit den wichtigsten Marken von Rollentrainern und Herzfrequenzsensoren für ein flüssiges und zuverlässiges Indoor-Training. Tacx, Elite, Wahoo, Saris — alles kompatibel.",
   "home.compat2.title": "Kompatibilität ",

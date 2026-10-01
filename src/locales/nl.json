@@ -48,6 +48,7 @@
   "home.herovideo.alt": "AeroX-demonstratie",
   "home.definition": "<strong>AeroX is de referentie-app voor aerodynamische analyse voor indoor wielrenners.</strong> Met een eenvoudige webcam meet AeroX in real time het frontale oppervlak van de fietser, oftewel de component A van zijn <a href='/nl/cda/' class='underline hover:text-primary'><strong>CdA</strong></a> (Cd × A). Als toegankelijk alternatief voor windtunnels en high-tech sensoren geeft de app directe feedback over de aerodynamische impact van elke positieverandering, om elke dag te trainen op het optimaliseren van je snelheid op de fiets.",
   "footer.cda": "Wat is CdA?",
+  "footer.cdaCalc": "Hoe schat je je CdA?",
   "home.compat.title": "Compatibiliteit",
   "home.compat.subtitle": "AeroX werkt met de belangrijkste merken fietstrainers en hartslagsensoren, voor een soepele en betrouwbare indoortraining. Tacx, Elite, Wahoo, Saris — alles is compatibel.",
   "home.compat2.title": "Compatibiliteit ",
