@@ -704,6 +704,7 @@
   "cda.calc.gainOptimal": "Je positie zit al op het niveau van een geoptimaliseerde positie op een {bike} voor jouw lichaamsbouw (CdA van ongeveer {target} m²). De Diagnose helpt je om die op lange termijn vol te houden.",
   "cda.calc.gainNote": "Referentie berekend zoals in de AeroX-app: frontaal oppervlak geschat op basis van je lengte en gewicht (formule van Du Bois), geoptimaliseerde positie op een racefiets = oppervlak in rechtopzittende houding verkleind met ongeveer 15% (S'entraîner à l'aérodynamisme), Cd afhankelijk van de houding, plus 0,035 m² voor de fiets. De Diagnose meet je echte winst, positie per positie.",
   "cda.calc.gainNote.tt": "Referentie berekend zoals in de AeroX-app: frontaal oppervlak geschat op basis van je lengte en gewicht (formule van Du Bois), optimale aeropositie op het opzetstuur volgens het model van de app, Cd afhankelijk van de houding, plus 0,035 m² voor de fiets. De Diagnose meet je echte winst, positie per positie.",
+  "cda.calc.indicative": "Indicatieve waarden: de geoptimaliseerde positie wordt geschat op basis van je lengte en gewicht met het model van de AeroX-app; je echte positie kan meer of minder aerodynamisch zijn. Alleen een meting, zoals de Diagnose, geeft je echte CdA.",
   "cda.calc.bike": "Fiets",
   "cda.calc.bike.road": "Racefiets",
   "cda.calc.bike.tt": "Tijdrit-/triatlonfiets (opzetstuur)",

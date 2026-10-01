@@ -704,6 +704,7 @@
   "cda.calc.gainOptimal": "Sua posição já está no nível de uma posição otimizada em uma {bike} para o seu biotipo (CdA de cerca de {target} m²). O Diagnóstico ajuda você a mantê-la ao longo do tempo.",
   "cda.calc.gainNote": "Referência calculada como no app AeroX: área frontal estimada a partir da sua altura e do seu peso (fórmula de Du Bois), posição otimizada na bicicleta de estrada = área na posição ereta reduzida em cerca de 15% (S'entraîner à l'aérodynamisme), Cd conforme a postura, mais 0,035 m² para a bicicleta. O Diagnóstico mede seu ganho real, posição por posição.",
   "cda.calc.gainNote.tt": "Referência calculada como no app AeroX: área frontal estimada a partir da sua altura e do seu peso (fórmula de Du Bois), posição aero ideal no clip-on segundo o modelo do app, Cd conforme a postura, mais 0,035 m² para a bicicleta. O Diagnóstico mede seu ganho real, posição por posição.",
+  "cda.calc.indicative": "Valores indicativos: a posição otimizada é estimada a partir da sua altura e do seu peso com o modelo do app AeroX; sua posição real pode ser mais ou menos aerodinâmica. Só uma medição, como o Diagnóstico, dá o seu CdA real.",
   "cda.calc.bike": "Bicicleta",
   "cda.calc.bike.road": "Bicicleta de estrada",
   "cda.calc.bike.tt": "Bicicleta de contrarrelógio / triatlo (clip-on)",

@@ -110,6 +110,8 @@ const optionalFields = [
       <p class="font-bold">{t(dict, 'cda.calc.gainTitle')}</p>
       <p data-cda-gain-speed class="mt-1"></p>
       <p data-cda-gain-watts class="mt-1"></p>
+      {/* Les cibles sont des estimations : le dire clairement. */}
+      <p class="mt-2 text-sm font-medium">{t(dict, 'cda.calc.indicative')}</p>
       <p data-gain-note="road" class="mt-2 text-xs text-muted">{t(dict, 'cda.calc.gainNote')}</p>
       <p data-gain-note="tt" class="mt-2 text-xs text-muted hidden">{t(dict, 'cda.calc.gainNote.tt')}</p>
     </div>

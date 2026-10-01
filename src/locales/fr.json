@@ -753,6 +753,7 @@
   "cda.calc.gainOptimal": "Ta position est déjà au niveau d'une position optimisée sur un {bike} pour ta morphologie (CdA d'environ {target} m²). Le Diagnostic t'aide à la tenir dans la durée.",
   "cda.calc.gainNote": "Référence calculée comme dans l'app AeroX : surface frontale estimée d'après ta taille et ton poids (formule de Du Bois), position optimisée sur vélo de route = surface relevée réduite d'environ 15 % (S'entraîner à l'aérodynamisme), Cd selon la posture, plus 0,035 m² pour le vélo. Le Diagnostic mesure ton gain réel, position par position.",
   "cda.calc.gainNote.tt": "Référence calculée comme dans l'app AeroX : surface frontale estimée d'après ta taille et ton poids (formule de Du Bois), position aéro optimale sur prolongateurs selon le modèle de l'app, Cd selon la posture, plus 0,035 m² pour le vélo. Le Diagnostic mesure ton gain réel, position par position.",
+  "cda.calc.indicative": "Valeurs indicatives : la position optimisée est estimée d'après ta taille et ton poids avec le modèle de l'app AeroX ; ta position réelle peut être plus ou moins aéro. Seule une mesure, comme le Diagnostic, donne ton CdA réel.",
   "cda.calc.bike": "Vélo",
   "cda.calc.bike.road": "Vélo de route",
   "cda.calc.bike.tt": "Vélo de contre-la-montre / triathlon (prolongateurs)",
