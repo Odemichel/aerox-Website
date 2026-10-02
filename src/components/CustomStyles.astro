@@ -12,7 +12,8 @@
 
     /* AeroX – Thème clair (HSL) */
     /* Ton ancien DS utilisait HSL → on met directement tes teintes ici */
-    --aw-color-primary: hsl(35 95% 58%); /* orange AeroX */
+    --aw-color-primary-hsl: 35 95% 58%;
+    --aw-color-primary: hsl(var(--aw-color-primary-hsl)); /* orange AeroX */
     --aw-color-secondary: hsl(210, 18%, 24%); /* bleu foncé surfacique */
 
     --aw-color-secondary-light: hsl(210 15% 25%); /* bleu foncé surfacique */
@@ -40,7 +41,8 @@
     --aw-font-heading: 'Manrope', system-ui, sans-serif;
     --aw-color-primary-light: hsl(35 100% 80%);
 
-    --aw-color-primary: hsl(35 95% 58%);
+    --aw-color-primary-hsl: 35 95% 58%;
+    --aw-color-primary: hsl(var(--aw-color-primary-hsl));
     --aw-color-secondary: hsl(210, 100%, 11%);
     --aw-color-secondary-light: hsl(209, 42%, 52%); /* bleu foncé surfacique */
 

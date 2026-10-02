@@ -8,7 +8,9 @@ export default {
     extend: {
       colors: {
         gradientprimary: 'var(--gradient-primary)',
-        primary: 'var(--aw-color-primary)',
+        // Canaux HSL : permet les opacités (bg-primary/10, border-primary/30…),
+        // impossibles avec une couleur complète en variable.
+        primary: 'hsl(var(--aw-color-primary-hsl) / <alpha-value>)',
         secondary: 'var(--aw-color-secondary)',
         accent: 'var(--aw-color-accent)',
         default: 'var(--aw-color-text-default)',
