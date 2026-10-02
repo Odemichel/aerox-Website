@@ -1,8 +1,12 @@
 ---
-// Calculateur de CdA de la page /cda : puissance, vitesse, masse et pente
-// d'une sortie → CdA estimée (src/lib/cda.ts) et ligne du tableau des valeurs
-// typiques la plus proche, les hypothèses du calcul, puis le pont vers le
-// Diagnostic (le livre offert est sur la page, hors du résultat).
+// Calculateur de CdA, en deux étapes :
+//  1. le calculateur : puissance, vitesse, masses, pente (+ altitude et
+//     température facultatives) → CdA estimé (src/lib/cda.ts), catégorie du
+//     tableau des valeurs typiques et hypothèses du calcul ;
+//  2. l'analyseur : taille + vélo de route / contre-la-montre → ce que le
+//     cycliste pourrait gagner face à une position optimisée pour sa
+//     morphologie (km/h à puissance égale, watts à vitesse égale), puis le
+//     pont vers le Diagnostic.
 import { CRR, ETA } from '~/lib/cda';
 import { type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
@@ -13,12 +17,10 @@ const dict = getDict(lang);
 const categoryKeys = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'];
 const categories = Object.fromEntries(categoryKeys.map((k) => [k, t(dict, `cda.values.${k}.label`)]));
 
+// Étape 1. Poids du cycliste + masse du vélo = masse totale de la formule.
 const fields = [
   { name: 'power', label: t(dict, 'cda.calc.power'), value: 200, min: 1, max: 2000, step: 1 },
   { name: 'speed', label: t(dict, 'cda.calc.speed'), value: 30, min: 1, max: 90, step: 0.1 },
-  // Taille et poids : morphologie pour le CdA optimal (modèle de l'app AeroX) ;
-  // poids du cycliste + masse du vélo = masse totale de la formule.
-  { name: 'height', label: t(dict, 'cda.calc.height'), value: 178, min: 120, max: 220, step: 1 },
   { name: 'riderWeight', label: t(dict, 'cda.calc.riderWeight'), value: 72, min: 30, max: 180, step: 0.1 },
   { name: 'bikeWeight', label: t(dict, 'cda.calc.bikeWeight'), value: 8, min: 4, max: 25, step: 0.1 },
   { name: 'slope', label: t(dict, 'cda.calc.slope'), value: 0, min: -10, max: 15, step: 0.1 },
@@ -28,86 +30,124 @@ const optionalFields = [
   { name: 'altitude', label: t(dict, 'cda.calc.altitude'), placeholder: '0', min: -500, max: 5000, step: 1 },
   { name: 'temperature', label: t(dict, 'cda.calc.temp'), placeholder: '15', min: -30, max: 50, step: 0.1 },
 ];
+const inputClass =
+  'border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 text-base text-gray-900 dark:text-white bg-white dark:bg-slate-800';
 ---
 
-<div class="not-prose my-8 rounded-2xl border border-gray-200 dark:border-slate-700 p-5 md:p-6">
-  <p class="text-lg font-bold mb-2">{t(dict, 'cda.calc.title')}</p>
-  <p class="text-sm text-muted mb-4">{t(dict, 'cda.calc.howto')}</p>
-  <form
-    data-cda-calc
-    data-lang={lang}
-    data-result={t(dict, 'cda.calc.result')}
-    data-category={t(dict, 'cda.calc.category')}
-    data-invalid={t(dict, 'cda.calc.invalid')}
-    data-categories={JSON.stringify(categories)}
-    data-assumptions={t(dict, 'cda.calc.assumptions')}
-    data-optimal-short={t(dict, 'cda.calc.optimalShort')}
-    data-at-speed={t(dict, 'cda.calc.atSpeed')}
-    data-kmh={lang === 'nl' ? 'km/u' : lang === 'tr' ? 'km/s' : 'km/h'}
-    data-bike-road={t(dict, 'cda.calc.bikeIn.road')}
-    data-bike-tt={t(dict, 'cda.calc.bikeIn.tt')}
-    data-crr={CRR}
-    data-eta={ETA}
-    class="grid grid-cols-1 sm:grid-cols-2 gap-4"
-  >
-    {
-      fields.map((f) => (
-        <label class="flex flex-col gap-1 text-sm font-medium">
-          {f.label}
-          <input
-            type="number"
-            name={f.name}
-            value={f.value}
-            min={f.min}
-            max={f.max}
-            step={f.step}
-            required
-            inputmode="decimal"
-            class="border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 text-base text-gray-900 dark:text-white bg-white dark:bg-slate-800"
-          />
-        </label>
-      ))
-    }
-    {
-      optionalFields.map((f) => (
-        <label class="flex flex-col gap-1 text-sm font-medium">
-          {f.label}
-          <input
-            type="number"
-            name={f.name}
-            placeholder={f.placeholder}
-            min={f.min}
-            max={f.max}
-            step={f.step}
-            inputmode="decimal"
-            class="border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 text-base text-gray-900 dark:text-white bg-white dark:bg-slate-800"
-          />
-        </label>
-      ))
-    }
-    {/* Même vélo : la position optimisée de référence dépend du vélo. */}
-    <label class="flex flex-col gap-1 text-sm font-medium sm:col-span-2">
-      {t(dict, 'cda.calc.bike')}
-      <select
-        name="bike"
-        class="border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 text-base text-gray-900 dark:text-white bg-white dark:bg-slate-800"
-      >
-        <option value="road">{t(dict, 'cda.calc.bike.road')}</option>
-        <option value="tt">{t(dict, 'cda.calc.bike.tt')}</option>
-      </select>
-    </label>
-    <button type="submit" class="btn-primary sm:col-span-2 px-6 py-2.5 font-semibold rounded-lg">
-      {t(dict, 'cda.calc.submit')}
-    </button>
-  </form>
+<div
+  data-cda-tool
+  data-lang={lang}
+  data-result={t(dict, 'cda.calc.result')}
+  data-category={t(dict, 'cda.calc.category')}
+  data-invalid={t(dict, 'cda.calc.invalid')}
+  data-categories={JSON.stringify(categories)}
+  data-assumptions={t(dict, 'cda.calc.assumptions')}
+  data-optimal-short={t(dict, 'cda.calc.optimalShort')}
+  data-at-speed={t(dict, 'cda.calc.atSpeed')}
+  data-kmh={lang === 'nl' ? 'km/u' : lang === 'tr' ? 'km/s' : 'km/h'}
+  data-bike-road={t(dict, 'cda.calc.bikeIn.road')}
+  data-bike-tt={t(dict, 'cda.calc.bikeIn.tt')}
+  data-crr={CRR}
+  data-eta={ETA}
+  class="not-prose my-8 space-y-6"
+>
+  <!-- 1. Calculateur -->
+  <section class="rounded-2xl border border-gray-200 dark:border-slate-700 p-5 md:p-6">
+    <p class="text-lg font-bold mb-2">{t(dict, 'cda.calc.step1')}</p>
+    <p class="text-sm text-muted mb-4">{t(dict, 'cda.calc.howto')}</p>
+    <form data-cda-calc class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {
+        fields.map((f) => (
+          <label class="flex flex-col gap-1 text-sm font-medium">
+            {f.label}
+            <input
+              type="number"
+              name={f.name}
+              value={f.value}
+              min={f.min}
+              max={f.max}
+              step={f.step}
+              required
+              inputmode="decimal"
+              class={inputClass}
+            />
+          </label>
+        ))
+      }
+      {
+        optionalFields.map((f) => (
+          <label class="flex flex-col gap-1 text-sm font-medium">
+            {f.label}
+            <input
+              type="number"
+              name={f.name}
+              placeholder={f.placeholder}
+              min={f.min}
+              max={f.max}
+              step={f.step}
+              inputmode="decimal"
+              class={inputClass}
+            />
+          </label>
+        ))
+      }
+      <button type="submit" class="btn-primary sm:col-span-2 px-6 py-2.5 font-semibold rounded-lg">
+        {t(dict, 'cda.calc.submit')}
+      </button>
+    </form>
 
-  <div data-cda-output class="mt-5 hidden" aria-live="polite">
-    <p data-cda-value class="text-xl font-bold"></p>
-    <p data-cda-category class="text-muted mt-1"></p>
-    <p data-cda-assumptions class="text-xs text-muted mt-2"></p>
-    {/* Ce que la position coûte face à une position optimisée (−15 % de surface frontale). */}
-    {/* Ce que la position coûte : trois chiffres, lisibles d'un coup d'œil. */}
-    <div data-cda-gain class="mt-4 rounded-xl border border-primary/40 bg-primary/10 p-4">
+    <div data-cda-output class="mt-5 hidden" aria-live="polite">
+      <p data-cda-value class="text-xl font-bold"></p>
+      <p data-cda-category class="text-muted mt-1"></p>
+      <p data-cda-assumptions class="text-xs text-muted mt-2"></p>
+    </div>
+  </section>
+
+  <!-- 2. Analyseur -->
+  <section class="rounded-2xl border border-primary/30 bg-primary/5 p-5 md:p-6">
+    <p class="text-lg font-bold mb-2">{t(dict, 'cda.analyze.title')}</p>
+    <p class="text-sm text-muted mb-4">{t(dict, 'cda.analyze.intro')}</p>
+    <form data-cda-analyze class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+      <label class="flex flex-col gap-1 text-sm font-medium">
+        {t(dict, 'cda.calc.height')}
+        <input
+          type="number"
+          name="height"
+          value="178"
+          min="120"
+          max="220"
+          step="1"
+          required
+          inputmode="decimal"
+          class={inputClass}
+        />
+        <span class="text-xs font-normal text-muted">{t(dict, 'cda.analyze.weightNote')}</span>
+      </label>
+
+      {/* Interrupteur vélo de route / contre-la-montre. */}
+      <div class="flex flex-col gap-1 text-sm font-medium">
+        <span>{t(dict, 'cda.calc.bike')}</span>
+        <label class="inline-flex items-center gap-3 cursor-pointer select-none py-2">
+          <span data-switch-road class="font-semibold">{t(dict, 'cda.analyze.road')}</span>
+          <input type="checkbox" name="tt" role="switch" class="peer sr-only" />
+          <span
+            class="relative inline-block h-6 w-11 shrink-0 rounded-full bg-gray-300 dark:bg-slate-600 transition-colors peer-checked:bg-primary after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:after:translate-x-5 peer-focus-visible:ring-2 peer-focus-visible:ring-primary"
+            aria-hidden="true"></span>
+          <span data-switch-tt class="text-muted">{t(dict, 'cda.analyze.tt')}</span>
+        </label>
+      </div>
+
+      <button
+        type="submit"
+        disabled
+        class="btn-primary sm:col-span-2 px-6 py-2.5 font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {t(dict, 'cda.analyze.submit')}
+      </button>
+      <p data-analyze-need class="sm:col-span-2 text-xs text-muted -mt-2">{t(dict, 'cda.analyze.needCda')}</p>
+    </form>
+
+    <div data-cda-gain class="mt-5 hidden" aria-live="polite">
       <p class="font-bold mb-3">{t(dict, 'cda.calc.gainTitle')}</p>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
         <div class="rounded-lg bg-white/70 dark:bg-slate-900/40 px-3 py-2">
@@ -115,12 +155,12 @@ const optionalFields = [
           <p data-gain-target class="text-2xl font-bold"></p>
           <p data-gain-bike class="text-xs text-muted"></p>
         </div>
-        <div data-gain-tile class="rounded-lg bg-white/70 dark:bg-slate-900/40 px-3 py-2">
+        <div class="rounded-lg bg-white/70 dark:bg-slate-900/40 px-3 py-2">
           <p class="text-xs uppercase tracking-wide text-muted">{t(dict, 'cda.calc.tile.speed')}</p>
           <p data-gain-kmh class="text-2xl font-bold text-primary"></p>
           <p data-gain-speed class="text-xs text-muted"></p>
         </div>
-        <div data-gain-tile class="rounded-lg bg-white/70 dark:bg-slate-900/40 px-3 py-2">
+        <div class="rounded-lg bg-white/70 dark:bg-slate-900/40 px-3 py-2">
           <p class="text-xs uppercase tracking-wide text-muted">{t(dict, 'cda.calc.tile.watts')}</p>
           <p data-gain-watts class="text-2xl font-bold text-primary"></p>
           <p data-gain-at class="text-xs text-muted"></p>
@@ -128,30 +168,37 @@ const optionalFields = [
       </div>
       <p data-gain-optimal class="mt-3 font-medium hidden"></p>
       <p class="mt-3 text-xs text-muted">{t(dict, 'cda.calc.estimates')}</p>
+      <p class="mt-4 text-sm">
+        {t(dict, 'cda.calc.bridge')}
+        <a href={localizedHref(lang, '/#pricing')} class="text-primary font-semibold underline ml-1">
+          {t(dict, 'cda.diag.cta')} →
+        </a>
+      </p>
     </div>
-    <p class="mt-4 text-sm">
-      {t(dict, 'cda.calc.bridge')}
-      <a href={localizedHref(lang, '/#pricing')} class="text-primary font-semibold underline ml-1">
-        {t(dict, 'cda.diag.cta')} →
-      </a>
-    </p>
-  </div>
+  </section>
 </div>
 
 <script>
-  import { type Bike, airDensity, cdaCategory, estimateCdA, optimizedGain } from '~/lib/cda';
+  import { type Bike, type CdaInput, airDensity, cdaCategory, estimateCdA, optimizedGain } from '~/lib/cda';
 
-  function initCdaCalculators() {
-    document.querySelectorAll<HTMLFormElement>('form[data-cda-calc]').forEach((form) => {
-      if (form.dataset.bound === '1') return;
-      form.dataset.bound = '1';
-      const box = form.parentElement!;
-      const out = box.querySelector<HTMLElement>('[data-cda-output]')!;
-      const value = box.querySelector<HTMLElement>('[data-cda-value]')!;
-      const category = box.querySelector<HTMLElement>('[data-cda-category]')!;
-      const assumptions = box.querySelector<HTMLElement>('[data-cda-assumptions]')!;
-      const gainBox = box.querySelector<HTMLElement>('[data-cda-gain]')!;
-      const q = (sel: string) => box.querySelector<HTMLElement>(sel)!;
+  function initCdaTools() {
+    document.querySelectorAll<HTMLElement>('[data-cda-tool]').forEach((tool) => {
+      if (tool.dataset.bound === '1') return;
+      tool.dataset.bound = '1';
+      const d = tool.dataset;
+      const q = (sel: string) => tool.querySelector<HTMLElement>(sel)!;
+      const calc = q('form[data-cda-calc]') as HTMLFormElement;
+      const analyze = q('form[data-cda-analyze]') as HTMLFormElement;
+      const analyzeBtn = analyze.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      const ttSwitch = analyze.elements.namedItem('tt') as HTMLInputElement;
+      const [out, value, category, assumptions, need, gainBox] = [
+        '[data-cda-output]',
+        '[data-cda-value]',
+        '[data-cda-category]',
+        '[data-cda-assumptions]',
+        '[data-analyze-need]',
+        '[data-cda-gain]',
+      ].map(q);
       const [gTarget, gBike, gKmh, gSpeed, gWatts, gAt, gOptimal] = [
         '[data-gain-target]',
         '[data-gain-bike]',
@@ -161,77 +208,101 @@ const optionalFields = [
         '[data-gain-at]',
         '[data-gain-optimal]',
       ].map(q);
-      const n1 = new Intl.NumberFormat(form.dataset.lang, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-      const n0 = new Intl.NumberFormat(form.dataset.lang, { maximumFractionDigits: 0 });
-      const labels = JSON.parse(form.dataset.categories ?? '{}') as Record<string, string>;
-      const fmt = new Intl.NumberFormat(form.dataset.lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      const num = (name: string) => Number((form.elements.namedItem(name) as HTMLInputElement).value);
+      const nf = (o: Intl.NumberFormatOptions) => new Intl.NumberFormat(d.lang, o);
+      const n0 = nf({ maximumFractionDigits: 0 });
+      const n1 = nf({ minimumFractionDigits: 1, maximumFractionDigits: 1 });
+      const n2 = nf({ minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const n3 = nf({ maximumFractionDigits: 3 });
+      const nMax1 = nf({ maximumFractionDigits: 1 });
+      const labels = JSON.parse(d.categories ?? '{}') as Record<string, string>;
+      const num = (form: HTMLFormElement, name: string) =>
+        Number((form.elements.namedItem(name) as HTMLInputElement).value);
       // Champ facultatif vide : valeur par défaut (0 m, 15 °C).
       const opt = (name: string, fallback: number) => {
-        const raw = (form.elements.namedItem(name) as HTMLInputElement).value.trim();
+        const raw = (calc.elements.namedItem(name) as HTMLInputElement).value.trim();
         return raw === '' ? fallback : Number(raw);
       };
 
-      form.addEventListener('submit', (e) => {
+      // Résultat de l'étape 1, repris par l'étape 2.
+      let last: { cda: number; input: CdaInput; riderWeight: number } | null = null;
+      const setAnalyzable = (ok: boolean) => {
+        analyzeBtn.disabled = !ok;
+        need.classList.toggle('hidden', ok);
+        if (!ok) gainBox.classList.add('hidden');
+      };
+
+      // Interrupteur : le libellé actif est mis en avant.
+      const syncSwitch = () => {
+        q('[data-switch-road]').classList.toggle('text-muted', ttSwitch.checked);
+        q('[data-switch-road]').classList.toggle('font-semibold', !ttSwitch.checked);
+        q('[data-switch-tt]').classList.toggle('text-muted', !ttSwitch.checked);
+        q('[data-switch-tt]').classList.toggle('font-semibold', ttSwitch.checked);
+      };
+      ttSwitch.addEventListener('change', syncSwitch);
+      syncSwitch();
+
+      calc.addEventListener('submit', (e) => {
         e.preventDefault();
         const altitudeM = opt('altitude', 0);
         const temperatureC = opt('temperature', 15);
-        const input = {
-          power: num('power'),
-          speedKmh: num('speed'),
-          massKg: num('riderWeight') + num('bikeWeight'),
-          slopePct: num('slope'),
+        const riderWeight = num(calc, 'riderWeight');
+        const input: CdaInput = {
+          power: num(calc, 'power'),
+          speedKmh: num(calc, 'speed'),
+          massKg: riderWeight + num(calc, 'bikeWeight'),
+          slopePct: num(calc, 'slope'),
           altitudeM,
           temperatureC,
         };
         const cda = estimateCdA(input);
         out.classList.remove('hidden');
         if (cda === null) {
-          value.textContent = form.dataset.invalid ?? '';
+          value.textContent = d.invalid ?? '';
           category.textContent = '';
           assumptions.textContent = '';
-          gainBox.classList.add('hidden');
+          last = null;
+          setAnalyzable(false);
           return;
         }
-        value.textContent = (form.dataset.result ?? '').replace('{cda}', fmt.format(cda));
-        category.textContent = (form.dataset.category ?? '').replace('{category}', labels[cdaCategory(cda)] ?? '');
-        const n3 = new Intl.NumberFormat(form.dataset.lang, { maximumFractionDigits: 3 });
-        assumptions.textContent = (form.dataset.assumptions ?? '')
-          .replace('{crr}', n3.format(Number(form.dataset.crr)))
-          .replace('{eta}', String(Math.round(Number(form.dataset.eta) * 100)))
+        value.textContent = (d.result ?? '').replace('{cda}', n2.format(cda));
+        category.textContent = (d.category ?? '').replace('{category}', labels[cdaCategory(cda)] ?? '');
+        assumptions.textContent = (d.assumptions ?? '')
+          .replace('{crr}', n3.format(Number(d.crr)))
+          .replace('{eta}', String(Math.round(Number(d.eta) * 100)))
           .replace('{rho}', n3.format(airDensity(altitudeM, temperatureC)))
           .replace('{altitude}', String(altitudeM))
           .replace('{temperature}', String(temperatureC));
-        const bike: Bike = (form.elements.namedItem('bike') as HTMLSelectElement).value === 'tt' ? 'tt' : 'road';
-        const gain = optimizedGain(cda, input, bike, num('riderWeight'), num('height'));
-        // Taille ou poids illisibles : pas de cible, pas d'encadré.
-        if (!Number.isFinite(gain.targetCda) || num('height') <= 0) {
-          gainBox.classList.add('hidden');
-          return;
-        }
-        const bikeLabel = (bike === 'tt' ? form.dataset.bikeTt : form.dataset.bikeRoad) ?? '';
-        const target = new Intl.NumberFormat(form.dataset.lang, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(gain.targetCda);
-        const nMax1 = new Intl.NumberFormat(form.dataset.lang, { maximumFractionDigits: 1 });
-        gTarget.textContent = `${target} m²`;
-        gBike.textContent = bikeLabel;
+        last = { cda, input, riderWeight };
+        setAnalyzable(true);
+        // Analyse déjà affichée : elle suit le nouveau calcul.
+        if (!gainBox.classList.contains('hidden')) analyze.requestSubmit();
+      });
+
+      analyze.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const height = num(analyze, 'height');
+        if (!last || !(height > 0)) return;
+        const bike: Bike = ttSwitch.checked ? 'tt' : 'road';
+        const gain = optimizedGain(last.cda, last.input, bike, last.riderWeight, height);
+        if (!Number.isFinite(gain.targetCda)) return;
+        const bikeLabel = (bike === 'tt' ? d.bikeTt : d.bikeRoad) ?? '';
+        const kmh = d.kmh ?? 'km/h';
         // Les gains s'affichent toujours ; s'il n'y en a pas, la ligne courte le dit.
-        const kmh = form.dataset.kmh ?? 'km/h';
         const gainKmh = gain.alreadyOptimal ? 0 : gain.gainKmh;
         const watts = gain.alreadyOptimal ? 0 : gain.wattsSaved;
+        gTarget.textContent = `${n2.format(gain.targetCda)} m²`;
+        gBike.textContent = bikeLabel;
         gKmh.textContent = `+${n1.format(gainKmh)} ${kmh}`;
-        gSpeed.textContent = `${n1.format(gain.alreadyOptimal ? input.speedKmh : gain.speedKmh)} ${kmh}`;
+        gSpeed.textContent = `${n1.format(gain.alreadyOptimal ? last.input.speedKmh : gain.speedKmh)} ${kmh}`;
         gWatts.textContent = watts > 0 ? `−${n0.format(watts)} W` : '0 W';
-        gAt.textContent = (form.dataset.atSpeed ?? '').replace('{speed}', nMax1.format(input.speedKmh));
+        gAt.textContent = (d.atSpeed ?? '').replace('{speed}', nMax1.format(last.input.speedKmh));
         gOptimal.classList.toggle('hidden', !gain.alreadyOptimal);
-        gOptimal.textContent = (form.dataset.optimalShort ?? '').replace('{bike}', bikeLabel);
+        gOptimal.textContent = (d.optimalShort ?? '').replace('{bike}', bikeLabel);
         gainBox.classList.remove('hidden');
       });
     });
   }
 
-  initCdaCalculators();
-  document.addEventListener('astro:page-load', initCdaCalculators);
+  initCdaTools();
+  document.addEventListener('astro:page-load', initCdaTools);
 </script>
