@@ -1,4 +1,6 @@
 -- Compteur du calculateur de CdA : contraintes et agrégats des vues.
+-- Table vidée : ce test ne dépend pas de l'ordre des autres.
+truncate public.cda_tool_events;
 insert into public.cda_tool_events (created_at, kind, lang, bike) values
   ('2026-10-01 10:00+02', 'calc', 'fr', null),
   ('2026-10-01 10:01+02', 'calc', 'fr', null),
