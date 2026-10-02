@@ -718,7 +718,7 @@
   "cda.calc.result": "Dein geschätzter CdA-Wert: {cda} m²",
   "cda.calc.category": "Dein geschätzter CdA-Wert entspricht der Kategorie „{category}“.",
   "cda.calc.invalid": "Mit diesen Werten deckt die Leistung nicht einmal Rollwiderstand und Steigung: Prüfe deine Leistung und deine Geschwindigkeit.",
-  "cda.calc.bridge": "Diese Rechnung liefert eine Gesamtschätzung deines CdA-Werts. AeroX misst deine Stirnfläche live, Position für Position, damit du weißt, welche Einstellung dich wirklich schneller macht.",
+  "cda.calc.bridge": "Diese Zahlen sind eine Gesamtschätzung. Deine Ausrüstung (Helm, Laufräder, Lenker …) macht etwa 20 % deines Luftwiderstands aus: Sie kann helfen. Der eigentliche Hebel ist aber deine Position: Dein Körper verursacht etwa 80 % des Luftwiderstands. Die AeroX Diagnose optimiert genau die Aerodynamik deiner Position, damit du die Geschwindigkeit zurückholst, die du verdienst.",
   "cda.impact.h2": "Gemessener Leistungseinfluss",
   "cda.impact.p1": "Jede Reduktion des CdA um 0,01 m² spart etwa <strong>2 bis 3 Watt bei 40 km/h</strong>. Konkrete Beispiele:",
   "cda.impact.item1": "CdA um 0,01 m² reduzieren: ~3 W gespart bei 40 km/h",

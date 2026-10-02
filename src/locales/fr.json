@@ -767,7 +767,7 @@
   "cda.calc.result": "Ton CdA estimé : {cda} m²",
   "cda.calc.category": "Ton CdA estimé correspond à la catégorie « {category} ».",
   "cda.calc.invalid": "Avec ces valeurs, la puissance ne couvre même pas le roulement et la pente : vérifie ta puissance et ta vitesse.",
-  "cda.calc.bridge": "Ce calcul donne une estimation globale de ton CdA. AeroX mesure ta surface frontale en direct, position par position, pour savoir quel réglage te fait vraiment gagner.",
+  "cda.calc.bridge": "Ces chiffres sont une estimation globale. Ton matériel (casque, roues, cintre…) représente environ 20 % de ta traînée aérodynamique : il peut aider. Mais le vrai levier, c'est ta position : ton corps compte pour environ 80 % de la traînée. Le Diagnostic AeroX permet justement d'optimiser l'aérodynamisme de ta position, pour récupérer la vitesse que tu mérites.",
   "cda.impact.h2": "Impact chiffré sur la performance",
   "cda.impact.p1": "L'impact dépend de ta vitesse et de l'ampleur du changement de position. Voici des exemples concrets mesurés :",
   "cda.impact.item1": "Position compacte sur vélo de route (pos 1→4, -20% de surface frontale) : ~33 W économisés à 30 km/h, ~53 W à 35 km/h",

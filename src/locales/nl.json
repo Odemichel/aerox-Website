@@ -718,7 +718,7 @@
   "cda.calc.result": "Je geschatte CdA: {cda} m²",
   "cda.calc.category": "Je geschatte CdA past in de categorie ‘{category}’.",
   "cda.calc.invalid": "Met deze waarden dekt het vermogen niet eens de rolweerstand en de helling: controleer je vermogen en je snelheid.",
-  "cda.calc.bridge": "Deze berekening geeft een globale schatting van je CdA. AeroX meet je frontaal oppervlak live, positie per positie, zodat je weet welke aanpassing je echt sneller maakt.",
+  "cda.calc.bridge": "Deze cijfers zijn een globale schatting. Je materiaal (helm, wielen, stuur…) is goed voor ongeveer 20% van je luchtweerstand: het kan helpen. Maar de echte hefboom is je positie: je lichaam is goed voor ongeveer 80% van de weerstand. De AeroX Diagnose optimaliseert precies de aerodynamica van je positie, zodat je de snelheid terugwint die je verdient.",
   "cda.impact.h2": "Gemeten impact op prestatie",
   "cda.impact.p1": "Elke reductie van 0,01 m² CdA bespaart ongeveer <strong>2 tot 3 watt bij 40 km/u</strong>. Concrete voorbeelden:",
   "cda.impact.item1": "CdA met 0,01 m² verlagen: ~3 W bespaard bij 40 km/u",

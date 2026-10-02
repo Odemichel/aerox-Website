@@ -718,7 +718,7 @@
   "cda.calc.result": "Il tuo CdA stimato: {cda} m²",
   "cda.calc.category": "Il tuo CdA stimato corrisponde alla categoria «{category}».",
   "cda.calc.invalid": "Con questi valori, la potenza non copre nemmeno il rotolamento e la pendenza: controlla la tua potenza e la tua velocità.",
-  "cda.calc.bridge": "Questo calcolo dà una stima globale del tuo CdA. AeroX misura la tua area frontale in diretta, posizione per posizione, per sapere quale regolazione ti fa davvero guadagnare.",
+  "cda.calc.bridge": "Questi numeri sono una stima globale. La tua attrezzatura (casco, ruote, manubrio…) rappresenta circa il 20% della tua resistenza aerodinamica: può aiutare. Ma la vera leva è la tua posizione: il tuo corpo conta per circa l'80% della resistenza. La Diagnosi AeroX serve proprio a ottimizzare l'aerodinamica della tua posizione, per recuperare la velocità che meriti.",
   "cda.impact.h2": "Impatto misurato sulla performance",
   "cda.impact.p1": "Ogni riduzione di 0,01 m² di CdA permette di risparmiare circa <strong>2-3 watt a 40 km/h</strong>. Ecco degli esempi concreti:",
   "cda.impact.item1": "Ridurre il CdA di 0,01 m²: ~3 W risparmiati a 40 km/h",

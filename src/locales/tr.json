@@ -718,7 +718,7 @@
   "cda.calc.result": "Tahmini CdA'n: {cda} m²",
   "cda.calc.category": "Tahmini CdA'n “{category}” kategorisine karşılık geliyor.",
   "cda.calc.invalid": "Bu değerlerle güç, yuvarlanma direncini ve eğimi bile karşılamıyor: gücünü ve hızını kontrol et.",
-  "cda.calc.bridge": "Bu hesaplama CdA'n için genel bir tahmin verir. AeroX ön cephe alanını canlı olarak, pozisyon pozisyon ölçer; böylece hangi ayarın seni gerçekten hızlandırdığını bilirsin.",
+  "cda.calc.bridge": "Bu rakamlar genel bir tahmindir. Ekipmanın (kask, jantlar, gidon…) aerodinamik direncinin yaklaşık %20'sini oluşturur: yardımcı olabilir. Ama asıl kaldıraç pozisyonun: direncin yaklaşık %80'i vücudundan gelir. AeroX Diagnostik tam da pozisyonunun aerodinamiğini optimize etmek ve hak ettiğin hızı geri kazanman için tasarlandı.",
   "cda.impact.h2": "Ölçülen performans etkisi",
   "cda.impact.p1": "Her 0,01 m² CdA düşüşü 40 km/s'de yaklaşık <strong>2-3 watt tasarruf</strong> sağlar. Somut örnekler:",
   "cda.impact.item1": "CdA'yı 0,01 m² düşürmek: 40 km/s'de ~3 W tasarruf",

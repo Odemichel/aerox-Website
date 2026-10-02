@@ -750,7 +750,7 @@
   "cda.calc.result": "Your estimated CdA: {cda} m²",
   "cda.calc.category": "Your estimated CdA matches the category “{category}”.",
   "cda.calc.invalid": "With these values, your power doesn't even cover rolling resistance and gradient: check your power and speed.",
-  "cda.calc.bridge": "This calculation gives an overall estimate of your CdA. AeroX measures your frontal area live, position by position, so you know which adjustment really makes you faster.",
+  "cda.calc.bridge": "These figures are an overall estimate. Your equipment (helmet, wheels, handlebar…) accounts for about 20% of your aerodynamic drag: it can help. But the real lever is your position: your body accounts for about 80% of the drag. The AeroX Diagnostic is designed precisely to optimise the aerodynamics of your position, so you get back the speed you deserve.",
   "cda.impact.h2": "Measured performance impact",
   "cda.impact.p1": "The impact depends on your speed and the extent of the position change. Concrete measured examples:",
   "cda.impact.item1": "Compact road position (pos 1→4, -20% frontal area): ~33 W saved at 30 km/h, ~53 W at 35 km/h",
