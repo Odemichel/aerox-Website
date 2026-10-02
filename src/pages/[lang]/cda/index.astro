@@ -26,34 +26,56 @@ const Link_measure = `/${lang}/blog/mesurer-cda-${lang}/`;
 const guideTexts = { eyebrow: 'cda.guide.eyebrow', title: 'cda.guide.title', text: 'cda.guide.text' };
 
 const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] as const;
+// Sections dans l'ordre de la page (sommaire).
+const sections = [
+  { id: 'definition', key: 'cda.definition.h2' },
+  { id: 'values', key: 'cda.values.h2' },
+  { id: 'formula', key: 'cda.formula.h2' },
+  { id: 'aerox', key: 'cda.aerox.title' },
+  { id: 'impact', key: 'cda.impact.h2' },
+  { id: 'reduce', key: 'cda.reduce.h2' },
+  { id: 'factors', key: 'cda.optimize.h2' },
+  { id: 'measure', key: 'cda.measure.h2' },
+];
 ---
 
 <Layout metadata={metadata}>
   <section class="py-12 md:py-16">
-    <article class="mx-auto max-w-3xl px-4 md:px-6 prose prose-lg dark:prose-invert">
+    <article class="mx-auto max-w-3xl px-4 md:px-6 prose prose-lg dark:prose-invert prose-headings:scroll-mt-[120px]">
       <h1>{t(dict, 'cda.h1')}</h1>
+      <p class="text-sm text-muted not-prose -mt-4 mb-6">
+        <a href={`/${lang}/team/`} class="hover:underline">{t(dict, 'cda.author')}</a>
+      </p>
       <p set:html={t(dict, 'cda.intro')} />
 
-      <h2>{t(dict, 'cda.definition.h2')}</h2>
+      {/* Sommaire : ancres des sections ci-dessous. */}
+      <nav
+        class="not-prose my-6 rounded-xl border border-gray-200 dark:border-slate-700 px-5 py-4"
+        aria-label={t(dict, 'blog.toc')}
+      >
+        <p class="text-xs font-semibold uppercase tracking-wide text-muted mb-2">{t(dict, 'blog.toc')}</p>
+        <ol class="list-decimal pl-5 space-y-1 text-base">
+          {
+            sections.map((sec) => (
+              <li>
+                <a href={`#${sec.id}`} class="text-primary hover:underline">
+                  {t(dict, sec.key)}
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+
+      <h2 id="definition">{t(dict, 'cda.definition.h2')}</h2>
       <p set:html={t(dict, 'cda.definition.p1')} />
       <ul>
         <li set:html={t(dict, 'cda.definition.cx')} />
         <li set:html={t(dict, 'cda.definition.a')} />
       </ul>
       <p><strong>{t(dict, 'cda.definition.formula')}</strong></p>
-      <p set:html={t(dict, 'cda.definition.p2')} />
 
-      {/* CdA = Cd × A : AeroX mesure A, la part que le cycliste contrôle. */}
-      <aside class="not-prose my-8 rounded-xl border-l-4 border-primary bg-primary/5 dark:bg-primary/10 px-5 py-4">
-        <p class="font-semibold mb-1">{t(dict, 'cda.aerox.title')}</p>
-        <p class="text-base text-muted" set:html={t(dict, 'cda.aerox.text')} />
-      </aside>
-
-      <h2>{t(dict, 'cda.why.h2')}</h2>
-      <p set:html={t(dict, 'cda.why.p1')} />
-      <p set:html={t(dict, 'cda.why.p2')} />
-
-      <h2>{t(dict, 'cda.values.h2')}</h2>
+      <h2 id="values">{t(dict, 'cda.values.h2')}</h2>
       <table>
         <thead>
           <tr>
@@ -80,11 +102,17 @@ const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] 
 
       <GuideCapture lang={lang} id="cda-mid" texts={guideTexts} source="cda" />
 
-      <h2>{t(dict, 'cda.formula.h2')}</h2>
+      <h2 id="formula">{t(dict, 'cda.formula.h2')}</h2>
       <p set:html={t(dict, 'cda.formula.short')} />
       <p><a href={Link_calculator}>{t(dict, 'cda.calcPage.link')} →</a></p>
 
-      <h2>{t(dict, 'cda.impact.h2')}</h2>
+      {/* Seul endroit où la distinction A / Cd est expliquée. */}
+      <h2 id="aerox">{t(dict, 'cda.aerox.title')}</h2>
+      <p set:html={t(dict, 'cda.aerox.text')} />
+
+      <h2 id="impact">{t(dict, 'cda.impact.h2')}</h2>
+      <p set:html={t(dict, 'cda.why.p1')} />
+      <p set:html={t(dict, 'cda.why.p2')} />
       <p set:html={t(dict, 'cda.impact.p1')} />
       <ul>
         <li>{t(dict, 'cda.impact.item1')}</li>
@@ -92,18 +120,18 @@ const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] 
         <li>{t(dict, 'cda.impact.item3')}</li>
         <li>{t(dict, 'cda.impact.item4')}</li>
       </ul>
+      <p class="text-sm text-muted">{t(dict, 'cda.impact.constantCd')}</p>
 
-      <h2>{t(dict, 'cda.measure.h2')}</h2>
+      <h2 id="reduce">{t(dict, 'cda.reduce.h2')}</h2>
+      <ul>
+        {[1, 2, 3, 4, 5].map((i) => <li set:html={t(dict, `cda.reduce.item${i}`)} />)}
+      </ul>
       <p>
-        {t(dict, 'cda.measure.short')}
-        <a href={Link_measure}>{t(dict, 'cda.measure.articleLink')} →</a>
+        {t(dict, 'cda.reduce.bridge')}
+        <a href={Link_diagnostic} class="ml-1">{t(dict, 'cda.diag.cta')} →</a>
       </p>
 
-      <h3>{t(dict, 'cda.measure.aerox.h3')}</h3>
-      <p set:html={t(dict, 'cda.measure.aerox.p1')} />
-      <p set:html={t(dict, 'cda.measure.aerox.p2')} />
-
-      <h2>{t(dict, 'cda.optimize.h2')}</h2>
+      <h2 id="factors">{t(dict, 'cda.optimize.h2')}</h2>
       <ul>
         <li set:html={t(dict, 'cda.optimize.item1')} />
         <li set:html={t(dict, 'cda.optimize.item2')} />
@@ -111,8 +139,11 @@ const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] 
         <li set:html={t(dict, 'cda.optimize.item4')} />
       </ul>
 
-      <h2>{t(dict, 'cda.conclusion.h2')}</h2>
-      <p set:html={t(dict, 'cda.conclusion.p1')} />
+      <h2 id="measure">{t(dict, 'cda.measure.h2')}</h2>
+      <p>
+        {t(dict, 'cda.measure.short')}
+        <a href={Link_measure}>{t(dict, 'cda.measure.articleLink')} →</a>
+      </p>
 
       {/* Pont vers le Diagnostic : la mesure de surface frontale, guidée. */}
       <div class="not-prose mt-10 rounded-2xl border border-gray-200 dark:border-slate-700 px-6 py-8 text-center">
@@ -149,7 +180,7 @@ const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] 
         url: 'https://aeroxbefaster.com',
       },
       datePublished: '2026-03-24',
-      dateModified: '2026-10-01',
+      dateModified: '2026-10-02',
       mainEntityOfPage: `https://aeroxbefaster.com/${lang}/cda/`,
       inLanguage: lang,
     })}

@@ -13,7 +13,7 @@ AeroX is a virtual wind tunnel for indoor cyclists. The application uses artific
 - Used by bike fitters on 3 continents (Brazil, USA, Europe)
 
 ## What is CdA?
-CdA (Coefficient of Drag × Area) is the primary metric of aerodynamic efficiency in cycling. It is expressed in m² and represents the product of the drag coefficient (Cx) and the frontal area (A). Lower CdA means less aerodynamic resistance. Typical values: road cyclist 0.30–0.35 m², time trial position 0.20–0.25 m², professional TT 0.18–0.22 m².
+CdA (Coefficient of Drag × Area) is the primary metric of aerodynamic efficiency in cycling. It is expressed in m² and represents the product of the drag coefficient (Cd) and the frontal area (A). Lower CdA means less aerodynamic resistance. Typical values: road cyclist 0.30–0.35 m², time trial position 0.20–0.25 m², professional TT 0.18–0.22 m².
 
 ## Technical specifications
 - Platforms: macOS and Windows (desktop application)

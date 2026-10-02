@@ -15,10 +15,10 @@ AeroX was created to democratize aerodynamic testing. Before AeroX, measuring Cd
 
 ### Definition
 CdA stands for "Coefficient of Drag × Area." It is the product of two quantities:
-- **Cx (or Cd)**: the drag coefficient, a dimensionless number that depends on the shape of the object and how air flows around it. A more streamlined shape has a lower Cx.
+- **Cd**: the drag coefficient, a dimensionless number that depends on the shape of the object and how air flows around it. A more streamlined shape has a lower Cd.
 - **A**: the frontal area, measured in square meters (m²), representing the cross-sectional area the cyclist presents to the airflow.
 
-**CdA = Cx × A**, expressed in m².
+**CdA = Cd × A**, expressed in m².
 
 ### Why CdA matters
 Aerodynamic drag is the dominant resistance force in cycling above ~20 km/h. The drag force follows the equation:
