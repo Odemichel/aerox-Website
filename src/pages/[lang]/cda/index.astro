@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
 import GuideCapture from '~/components/widgets/GuideCapture.astro';
+import PostSidebarBook from '~/components/blog/PostSidebarBook.astro';
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
 
@@ -41,121 +42,161 @@ const sections = [
 
 <Layout metadata={metadata}>
   <section class="py-12 md:py-16">
-    <article class="mx-auto max-w-3xl px-4 md:px-6 prose prose-lg dark:prose-invert prose-headings:scroll-mt-[120px]">
-      <h1>{t(dict, 'cda.h1')}</h1>
-      <p class="text-sm text-muted not-prose -mt-4 mb-6">
-        <a href={`/${lang}/team/`} class="hover:underline">{t(dict, 'cda.author')}</a>
-      </p>
-      <p set:html={t(dict, 'cda.intro')} />
-
-      {/* Sommaire : ancres des sections ci-dessous. */}
-      <nav
-        class="not-prose my-6 rounded-xl border border-gray-200 dark:border-slate-700 px-5 py-4"
-        aria-label={t(dict, 'blog.toc')}
+    {
+      /* ≥ 1 200 px : comme les articles, colonne gauche collante avec le sommaire
+         (section en cours en orange) puis le livre ; en dessous, les deux restent dans le texte. */
+    }
+    <div
+      class="mx-auto min-[1200px]:grid min-[1200px]:grid-cols-[15rem_minmax(0,48rem)] min-[1200px]:justify-center min-[1200px]:gap-10"
+    >
+      <aside class="hidden min-[1200px]:block border-r border-gray-200 dark:border-slate-700 pr-6">
+        <div class="sticky top-[140px] space-y-6">
+          <nav
+            class="text-sm"
+            aria-label={t(dict, 'blog.toc')}
+            data-toc
+            data-toc-active="bg-[hsl(35_95%_58%/0.15)] text-primary !border-primary font-semibold"
+          >
+            <p class="font-semibold uppercase tracking-wide text-xs text-muted mb-3">{t(dict, 'blog.toc')}</p>
+            <ol class="space-y-1 border-l border-gray-200 dark:border-slate-700">
+              {
+                sections.map((sec) => (
+                  <li>
+                    <a
+                      href={`#${sec.id}`}
+                      data-toc-link={sec.id}
+                      class="block -ml-px pl-3 py-1 rounded-r border-l-2 border-transparent hover:border-primary hover:text-primary text-muted transition-colors"
+                    >
+                      {t(dict, sec.key)}
+                    </a>
+                  </li>
+                ))
+              }
+            </ol>
+          </nav>
+          <PostSidebarBook lang={lang} revealAt={0} />
+        </div>
+      </aside>
+      <article
+        class="mx-auto max-w-3xl px-4 md:px-6 prose prose-lg dark:prose-invert prose-headings:scroll-mt-[120px] min-[1200px]:mx-0 min-[1200px]:px-0"
       >
-        <p class="text-xs font-semibold uppercase tracking-wide text-muted mb-2">{t(dict, 'blog.toc')}</p>
-        <ol class="list-decimal pl-5 space-y-1 text-base">
-          {
-            sections.map((sec) => (
-              <li>
-                <a href={`#${sec.id}`} class="text-primary hover:underline">
-                  {t(dict, sec.key)}
-                </a>
-              </li>
-            ))
-          }
-        </ol>
-      </nav>
+        <h1>{t(dict, 'cda.h1')}</h1>
+        <p class="text-sm text-muted not-prose -mt-4 mb-6">
+          <a href={`/${lang}/team/`} class="hover:underline">{t(dict, 'cda.author')}</a>
+        </p>
+        <p set:html={t(dict, 'cda.intro')} />
 
-      <h2 id="definition">{t(dict, 'cda.definition.h2')}</h2>
-      <p set:html={t(dict, 'cda.definition.p1')} />
-      <ul>
-        <li set:html={t(dict, 'cda.definition.cx')} />
-        <li set:html={t(dict, 'cda.definition.a')} />
-      </ul>
-      <p><strong>{t(dict, 'cda.definition.formula')}</strong></p>
+        {/* Sommaire : ancres des sections ci-dessous. */}
+        <nav
+          class="min-[1200px]:hidden not-prose my-6 rounded-xl border border-gray-200 dark:border-slate-700 px-5 py-4"
+          aria-label={t(dict, 'blog.toc')}
+        >
+          <p class="text-xs font-semibold uppercase tracking-wide text-muted mb-2">{t(dict, 'blog.toc')}</p>
+          <ol class="list-decimal pl-5 space-y-1 text-base">
+            {
+              sections.map((sec) => (
+                <li>
+                  <a href={`#${sec.id}`} class="text-primary hover:underline">
+                    {t(dict, sec.key)}
+                  </a>
+                </li>
+              ))
+            }
+          </ol>
+        </nav>
 
-      <h2 id="values">{t(dict, 'cda.values.h2')}</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>{t(dict, 'cda.values.header1')}</th>
-            <th>{t(dict, 'cda.values.header2')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            valueRows.map((key) => (
-              <tr>
-                <td>{t(dict, `cda.values.${key}.label`)}</td>
-                <td>{t(dict, `cda.values.${key}.value`)}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-      <p>
-        {t(dict, 'cda.values.bridge')}
-        <a href={Link_calculator}>{t(dict, 'cda.calcPage.link')} →</a>
-        <a href={Link_diagnostic} class="ml-3">{t(dict, 'cda.diag.cta')} →</a>
-      </p>
+        <h2 id="definition">{t(dict, 'cda.definition.h2')}</h2>
+        <p set:html={t(dict, 'cda.definition.p1')} />
+        <ul>
+          <li set:html={t(dict, 'cda.definition.cx')} />
+          <li set:html={t(dict, 'cda.definition.a')} />
+        </ul>
+        <p><strong>{t(dict, 'cda.definition.formula')}</strong></p>
 
-      <GuideCapture lang={lang} id="cda-mid" texts={guideTexts} source="cda" />
+        <h2 id="values">{t(dict, 'cda.values.h2')}</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>{t(dict, 'cda.values.header1')}</th>
+              <th>{t(dict, 'cda.values.header2')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              valueRows.map((key) => (
+                <tr>
+                  <td>{t(dict, `cda.values.${key}.label`)}</td>
+                  <td>{t(dict, `cda.values.${key}.value`)}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+        <p>
+          {t(dict, 'cda.values.bridge')}
+          <a href={Link_calculator}>{t(dict, 'cda.calcPage.link')} →</a>
+          <a href={Link_diagnostic} class="ml-3">{t(dict, 'cda.diag.cta')} →</a>
+        </p>
 
-      <h2 id="formula">{t(dict, 'cda.formula.h2')}</h2>
-      <p set:html={t(dict, 'cda.formula.short')} />
-      <p><a href={Link_calculator}>{t(dict, 'cda.calcPage.link')} →</a></p>
+        <div class="min-[1200px]:hidden">
+          <GuideCapture lang={lang} id="cda-mid" texts={guideTexts} source="cda" />
+        </div>
 
-      {/* Seul endroit où la distinction A / Cd est expliquée. */}
-      <h2 id="aerox">{t(dict, 'cda.aerox.title')}</h2>
-      <p set:html={t(dict, 'cda.aerox.text')} />
+        <h2 id="formula">{t(dict, 'cda.formula.h2')}</h2>
+        <p set:html={t(dict, 'cda.formula.short')} />
+        <p><a href={Link_calculator}>{t(dict, 'cda.calcPage.link')} →</a></p>
 
-      <h2 id="impact">{t(dict, 'cda.impact.h2')}</h2>
-      <p set:html={t(dict, 'cda.why.p1')} />
-      <p set:html={t(dict, 'cda.why.p2')} />
-      <p set:html={t(dict, 'cda.impact.p1')} />
-      <ul>
-        <li>{t(dict, 'cda.impact.item1')}</li>
-        <li>{t(dict, 'cda.impact.item2')}</li>
-        <li>{t(dict, 'cda.impact.item3')}</li>
-        <li>{t(dict, 'cda.impact.item4')}</li>
-      </ul>
-      <p class="text-sm text-muted">{t(dict, 'cda.impact.constantCd')}</p>
+        {/* Seul endroit où la distinction A / Cd est expliquée. */}
+        <h2 id="aerox">{t(dict, 'cda.aerox.title')}</h2>
+        <p set:html={t(dict, 'cda.aerox.text')} />
 
-      <h2 id="reduce">{t(dict, 'cda.reduce.h2')}</h2>
-      <ul>
-        {[1, 2, 3, 4, 5].map((i) => <li set:html={t(dict, `cda.reduce.item${i}`)} />)}
-      </ul>
-      <p>
-        {t(dict, 'cda.reduce.bridge')}
-        <a href={Link_diagnostic} class="ml-1">{t(dict, 'cda.diag.cta')} →</a>
-      </p>
+        <h2 id="impact">{t(dict, 'cda.impact.h2')}</h2>
+        <p set:html={t(dict, 'cda.why.p1')} />
+        <p set:html={t(dict, 'cda.why.p2')} />
+        <p set:html={t(dict, 'cda.impact.p1')} />
+        <ul>
+          <li>{t(dict, 'cda.impact.item1')}</li>
+          <li>{t(dict, 'cda.impact.item2')}</li>
+          <li>{t(dict, 'cda.impact.item3')}</li>
+          <li>{t(dict, 'cda.impact.item4')}</li>
+        </ul>
+        <p class="text-sm text-muted">{t(dict, 'cda.impact.constantCd')}</p>
 
-      <h2 id="factors">{t(dict, 'cda.optimize.h2')}</h2>
-      <ul>
-        <li set:html={t(dict, 'cda.optimize.item1')} />
-        <li set:html={t(dict, 'cda.optimize.item2')} />
-        <li set:html={t(dict, 'cda.optimize.item3')} />
-        <li set:html={t(dict, 'cda.optimize.item4')} />
-      </ul>
+        <h2 id="reduce">{t(dict, 'cda.reduce.h2')}</h2>
+        <ul>
+          {[1, 2, 3, 4, 5].map((i) => <li set:html={t(dict, `cda.reduce.item${i}`)} />)}
+        </ul>
+        <p>
+          {t(dict, 'cda.reduce.bridge')}
+          <a href={Link_diagnostic} class="ml-1">{t(dict, 'cda.diag.cta')} →</a>
+        </p>
 
-      <h2 id="measure">{t(dict, 'cda.measure.h2')}</h2>
-      <p>
-        {t(dict, 'cda.measure.short')}
-        <a href={Link_measure}>{t(dict, 'cda.measure.articleLink')} →</a>
-      </p>
+        <h2 id="factors">{t(dict, 'cda.optimize.h2')}</h2>
+        <ul>
+          <li set:html={t(dict, 'cda.optimize.item1')} />
+          <li set:html={t(dict, 'cda.optimize.item2')} />
+          <li set:html={t(dict, 'cda.optimize.item3')} />
+          <li set:html={t(dict, 'cda.optimize.item4')} />
+        </ul>
 
-      {/* Pont vers le Diagnostic : la mesure de surface frontale, guidée. */}
-      <div class="not-prose mt-10 rounded-2xl border border-gray-200 dark:border-slate-700 px-6 py-8 text-center">
-        <h2 class="text-xl md:text-2xl font-bold mb-2">{t(dict, 'cda.diag.title')}</h2>
-        <p class="text-muted mb-6" set:html={t(dict, 'cda.diag.text')} />
-        <a href={Link_diagnostic} class="btn-primary inline-block px-8 py-3 text-lg font-semibold rounded-lg">
-          {t(dict, 'cda.diag.cta')}
-        </a>
-      </div>
+        <h2 id="measure">{t(dict, 'cda.measure.h2')}</h2>
+        <p>
+          {t(dict, 'cda.measure.short')}
+          <a href={Link_measure}>{t(dict, 'cda.measure.articleLink')} →</a>
+        </p>
 
-      <p class="text-xs text-muted/60 mt-8 italic">{t(dict, 'cda.lastUpdated')}</p>
-    </article>
+        {/* Pont vers le Diagnostic : la mesure de surface frontale, guidée. */}
+        <div class="not-prose mt-10 rounded-2xl border border-gray-200 dark:border-slate-700 px-6 py-8 text-center">
+          <h2 class="text-xl md:text-2xl font-bold mb-2">{t(dict, 'cda.diag.title')}</h2>
+          <p class="text-muted mb-6" set:html={t(dict, 'cda.diag.text')} />
+          <a href={Link_diagnostic} class="btn-primary inline-block px-8 py-3 text-lg font-semibold rounded-lg">
+            {t(dict, 'cda.diag.cta')}
+          </a>
+        </div>
+
+        <p class="text-xs text-muted/60 mt-8 italic">{t(dict, 'cda.lastUpdated')}</p>
+      </article>
+    </div>
   </section>
 
   <script
@@ -186,3 +227,10 @@ const sections = [
     })}
   />
 </Layout>
+
+<script>
+  import { initTocSpy } from '~/lib/tocSpy';
+
+  initTocSpy();
+  document.addEventListener('astro:page-load', initTocSpy);
+</script>
