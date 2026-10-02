@@ -124,17 +124,17 @@ const inputClass =
         <span class="text-xs font-normal text-muted">{t(dict, 'cda.analyze.weightNote')}</span>
       </label>
 
-      {/* Interrupteur vélo de route / contre-la-montre. */}
+      {/* Choix du vélo : même sélecteur que mensuel / annuel des tarifs bike fitter. */}
       <div class="flex flex-col gap-1 text-sm font-medium">
         <span>{t(dict, 'cda.calc.bike')}</span>
-        <label class="inline-flex items-center gap-3 cursor-pointer select-none py-2">
-          <span data-switch-road class="font-semibold">{t(dict, 'cda.analyze.road')}</span>
-          <input type="checkbox" name="tt" role="switch" class="peer sr-only" />
-          <span
-            class="relative inline-block h-6 w-11 shrink-0 rounded-full bg-gray-300 dark:bg-slate-600 transition-colors peer-checked:bg-primary after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:after:translate-x-5 peer-focus-visible:ring-2 peer-focus-visible:ring-primary"
-            aria-hidden="true"></span>
-          <span data-switch-tt class="text-muted">{t(dict, 'cda.analyze.tt')}</span>
-        </label>
+        <div class="inline-flex self-start rounded-full border border-gray-300 dark:border-slate-600 p-1" role="group">
+          <button type="button" class="cda-bike rounded-full px-3 py-1 text-sm" data-bike="road">
+            {t(dict, 'cda.analyze.road')}
+          </button>
+          <button type="button" class="cda-bike rounded-full px-3 py-1 text-sm" data-bike="tt">
+            {t(dict, 'cda.analyze.tt')}
+          </button>
+        </div>
       </div>
 
       <button
@@ -190,7 +190,6 @@ const inputClass =
       const calc = q('form[data-cda-calc]') as HTMLFormElement;
       const analyze = q('form[data-cda-analyze]') as HTMLFormElement;
       const analyzeBtn = analyze.querySelector<HTMLButtonElement>('button[type="submit"]')!;
-      const ttSwitch = analyze.elements.namedItem('tt') as HTMLInputElement;
       const [out, value, category, assumptions, need, gainBox] = [
         '[data-cda-output]',
         '[data-cda-value]',
@@ -231,15 +230,30 @@ const inputClass =
         if (!ok) gainBox.classList.add('hidden');
       };
 
-      // Interrupteur : le libellé actif est mis en avant.
-      const syncSwitch = () => {
-        q('[data-switch-road]').classList.toggle('text-muted', ttSwitch.checked);
-        q('[data-switch-road]').classList.toggle('font-semibold', !ttSwitch.checked);
-        q('[data-switch-tt]').classList.toggle('text-muted', !ttSwitch.checked);
-        q('[data-switch-tt]').classList.toggle('font-semibold', ttSwitch.checked);
+      // Relance l'analyse affichée (dispatchEvent plutôt que requestSubmit,
+      // absent de Safari 15).
+      const rerunAnalysis = () => analyze.dispatchEvent(new Event('submit', { cancelable: true }));
+      // Choix du vélo : le bouton actif ressort (fond orange, texte bleu nuit en gras).
+      let bike: Bike = 'road';
+      const bikeButtons = [...tool.querySelectorAll<HTMLButtonElement>('.cda-bike')];
+      const syncBike = () => {
+        bikeButtons.forEach((b) => {
+          const on = b.dataset.bike === bike;
+          b.classList.toggle('bg-primary', on);
+          b.classList.toggle('text-[#0b2239]', on);
+          b.classList.toggle('font-bold', on);
+          b.setAttribute('aria-pressed', String(on));
+        });
       };
-      ttSwitch.addEventListener('change', syncSwitch);
-      syncSwitch();
+      bikeButtons.forEach((b) =>
+        b.addEventListener('click', () => {
+          bike = b.dataset.bike === 'tt' ? 'tt' : 'road';
+          syncBike();
+          // Analyse déjà affichée : elle suit le choix du vélo.
+          if (!gainBox.classList.contains('hidden')) rerunAnalysis();
+        })
+      );
+      syncBike();
 
       calc.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -275,14 +289,13 @@ const inputClass =
         last = { cda, input, riderWeight };
         setAnalyzable(true);
         // Analyse déjà affichée : elle suit le nouveau calcul.
-        if (!gainBox.classList.contains('hidden')) analyze.requestSubmit();
+        if (!gainBox.classList.contains('hidden')) rerunAnalysis();
       });
 
       analyze.addEventListener('submit', (e) => {
         e.preventDefault();
         const height = num(analyze, 'height');
         if (!last || !(height > 0)) return;
-        const bike: Bike = ttSwitch.checked ? 'tt' : 'road';
         const gain = optimizedGain(last.cda, last.input, bike, last.riderWeight, height);
         if (!Number.isFinite(gain.targetCda)) return;
         const bikeLabel = (bike === 'tt' ? d.bikeTt : d.bikeRoad) ?? '';
