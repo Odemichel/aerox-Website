@@ -222,6 +222,17 @@ const inputClass =
         return raw === '' ? fallback : Number(raw);
       };
 
+      // Compteur d'usage anonyme (Supabase, voir /api/cda-event/) : n'attend
+      // pas la réponse et n'affecte jamais l'affichage.
+      const track = (kind: 'calc' | 'analyze', bike?: Bike) => {
+        fetch('/api/cda-event/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ kind, lang: d.lang, ...(bike ? { bike } : {}) }),
+          keepalive: true,
+        }).catch(() => undefined);
+      };
+
       // Résultat de l'étape 1, repris par l'étape 2.
       let last: { cda: number; input: CdaInput; riderWeight: number } | null = null;
       const setAnalyzable = (ok: boolean) => {
@@ -288,6 +299,7 @@ const inputClass =
           .replace('{temperature}', String(temperatureC));
         last = { cda, input, riderWeight };
         setAnalyzable(true);
+        track('calc');
         // Analyse déjà affichée : elle suit le nouveau calcul.
         if (!gainBox.classList.contains('hidden')) rerunAnalysis();
       });
@@ -312,6 +324,7 @@ const inputClass =
         gOptimal.classList.toggle('hidden', !gain.alreadyOptimal);
         gOptimal.textContent = (d.optimalShort ?? '').replace('{bike}', bikeLabel);
         gainBox.classList.remove('hidden');
+        track('analyze', bike);
       });
     });
   }
