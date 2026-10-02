@@ -47,15 +47,15 @@ const sections = [
          (section en cours en orange) puis le livre ; en dessous, les deux restent dans le texte. */
     }
     <div
-      class="mx-auto min-[1200px]:grid min-[1200px]:grid-cols-[15rem_minmax(0,48rem)] min-[1200px]:justify-center min-[1200px]:gap-10"
+      class="mx-auto min-[1200px]:grid min-[1200px]:grid-cols-[15rem_minmax(0,48rem)_15rem] min-[1200px]:justify-center min-[1200px]:gap-10"
     >
       <aside class="hidden min-[1200px]:block border-r border-gray-200 dark:border-slate-700 pr-6">
-        <div class="sticky top-[140px] space-y-6">
+        <div class="sticky top-[140px]">
           <nav
             class="text-sm"
             aria-label={t(dict, 'blog.toc')}
             data-toc
-            data-toc-active="bg-[hsl(35_95%_58%/0.15)] text-primary !border-primary font-semibold"
+            data-toc-active="bg-primary/15 text-primary !border-primary font-semibold"
           >
             <p class="font-semibold uppercase tracking-wide text-xs text-muted mb-3">{t(dict, 'blog.toc')}</p>
             <ol class="space-y-1 border-l border-gray-200 dark:border-slate-700">
@@ -74,7 +74,6 @@ const sections = [
               }
             </ol>
           </nav>
-          <PostSidebarBook lang={lang} revealAt={0} />
         </div>
       </aside>
       <article
@@ -196,6 +195,12 @@ const sections = [
 
         <p class="text-xs text-muted/60 mt-8 italic">{t(dict, 'cda.lastUpdated')}</p>
       </article>
+      {/* Comme les articles : le livre dans la colonne de droite. */}
+      <aside class="hidden min-[1200px]:block">
+        <div class="sticky top-[140px]">
+          <PostSidebarBook lang={lang} revealAt={0} />
+        </div>
+      </aside>
     </div>
   </section>
 

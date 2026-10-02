@@ -4,7 +4,7 @@
 // fil du défilement. Les liens portent `data-toc-link="<id de la section>"` ;
 // le conteneur `data-toc` porte les classes de mise en évidence dans
 // `data-toc-active` (séparées par des espaces), pour que chaque page choisisse
-// sa couleur (articles : jaune ; /cda : orange). Les classes doivent figurer
+// sa couleur (articles et /cda : orange). Les classes doivent figurer
 // en clair dans le fichier .astro de la page pour que Tailwind les génère.
 
 export function initTocSpy() {
