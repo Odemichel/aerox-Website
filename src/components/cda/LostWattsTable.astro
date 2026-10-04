@@ -1,6 +1,7 @@
 ---
-// Watts absorbés par l'air pour chaque position de référence de /cda, à 30 et
-// 40 km/h, calculés à partir des fourchettes de CdA (src/lib/cdaPositions.ts).
+// Watts perdus par rapport à la position 6 (tout optimisé) à 30 et 40 km/h :
+// différence de puissance aérodynamique, avec le milieu de chaque fourchette de
+// CdA (src/lib/cdaPositions.ts). Un seul chiffre par vitesse.
 import { t } from '~/lib/i18n';
 import { CDA_POSITIONS, aeroWatts } from '~/lib/cdaPositions';
 import { positionImage } from '~/lib/cdaPositionImages';
@@ -12,12 +13,16 @@ const { dict } = Astro.props;
 
 const [title, at30] = t(dict, 'cda.values.header4').split(' · ');
 const at40 = t(dict, 'cda.values.header5').split(' · ')[1];
-const range = ([lo, hi]: readonly number[], kmh: number) => `${aeroWatts(lo, kmh)}–${aeroWatts(hi, kmh)} W`;
+const mid = ([lo, hi]: readonly number[]) => (lo + hi) / 2;
+const best = mid(CDA_POSITIONS[CDA_POSITIONS.length - 1].cda);
+const lost = (cda: readonly number[], kmh: number) =>
+  mid(cda) === best ? t(dict, 'cda.values.ref') : `+${aeroWatts(mid(cda) - best, kmh)} W`;
 const rows = CDA_POSITIONS.map((r) => ({
   n: r.n,
   label: t(dict, `cda.values.${r.key}.desc`),
-  w30: range(r.cda, 30),
-  w40: range(r.cda, 40),
+  w30: lost(r.cda, 30),
+  w40: lost(r.cda, 40),
+  isRef: mid(r.cda) === best,
   face: positionImage(r.n),
 }));
 ---
@@ -46,10 +51,14 @@ const rows = CDA_POSITIONS.map((r) => ({
             <span class="mr-1 text-primary">{r.n}.</span>
             {r.label}
           </p>
-          <p class="whitespace-nowrap text-right text-base md:text-xl font-black italic text-red-300 tabular-nums">
+          <p
+            class={`whitespace-nowrap text-right tabular-nums ${r.isRef ? 'text-sm text-slate-400' : 'text-base md:text-xl font-black italic text-red-300'}`}
+          >
             {r.w30}
           </p>
-          <p class="whitespace-nowrap text-right text-base md:text-xl font-black italic text-red-300 tabular-nums">
+          <p
+            class={`whitespace-nowrap text-right tabular-nums ${r.isRef ? 'text-sm text-slate-400' : 'text-base md:text-xl font-black italic text-red-300'}`}
+          >
             {r.w40}
           </p>
         </li>

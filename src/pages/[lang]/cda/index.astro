@@ -115,13 +115,6 @@ const sections = [
 
         <h2 id="values">{t(dict, 'cda.values.h2')}</h2>
         <PositionsCdaTable dict={dict} lang={lang} />
-        <p>
-          <strong>{t(dict, 'cda.values.bridge')}</strong>
-          <br />
-          <a href={Link_calculator}>{t(dict, 'cda.values.bridge.calc')} →</a>
-          <br />
-          <a href={Link_diagnostic}>{t(dict, 'cda.values.bridge.diag')} →</a>
-        </p>
 
         <div class="min-[1200px]:hidden">
           <GuideCapture lang={lang} id="cda-mid" texts={guideTexts} source="cda" />
@@ -138,15 +131,15 @@ const sections = [
         <h2 id="impact">{t(dict, 'cda.impact.h2')}</h2>
         <p set:html={t(dict, 'cda.why.p1')} />
         <p set:html={t(dict, 'cda.why.p2')} />
-        <LostWattsTable dict={dict} />
         <p set:html={t(dict, 'cda.impact.p1')} />
-        <ul>
-          <li>{t(dict, 'cda.impact.item1')}</li>
-          <li>{t(dict, 'cda.impact.item2')}</li>
-          <li>{t(dict, 'cda.impact.item3')}</li>
-          <li>{t(dict, 'cda.impact.item4')}</li>
-        </ul>
-        <p class="text-sm text-muted">{t(dict, 'cda.impact.constantCd')}</p>
+        <LostWattsTable dict={dict} />
+        <p>
+          <strong>{t(dict, 'cda.values.bridge')}</strong>
+          <br />
+          <a href={Link_calculator}>{t(dict, 'cda.values.bridge.calc')} →</a>
+          <br />
+          <a href={Link_diagnostic}>{t(dict, 'cda.values.bridge.diag')} →</a>
+        </p>
 
         <h2 id="reduce">{t(dict, 'cda.reduce.h2')}</h2>
         <ul>
