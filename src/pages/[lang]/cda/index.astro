@@ -4,6 +4,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import GuideCapture from '~/components/widgets/GuideCapture.astro';
 import PostSidebarBook from '~/components/blog/PostSidebarBook.astro';
 import PositionsCdaTable from '~/components/cda/PositionsCdaTable.astro';
+import LostWattsTable from '~/components/cda/LostWattsTable.astro';
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
 
@@ -137,6 +138,7 @@ const sections = [
         <h2 id="impact">{t(dict, 'cda.impact.h2')}</h2>
         <p set:html={t(dict, 'cda.why.p1')} />
         <p set:html={t(dict, 'cda.why.p2')} />
+        <LostWattsTable dict={dict} />
         <p set:html={t(dict, 'cda.impact.p1')} />
         <ul>
           <li>{t(dict, 'cda.impact.item1')}</li>
