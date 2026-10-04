@@ -733,7 +733,7 @@
   "cda.reduce.item4": "<strong>肩</strong>：肩をすぼめて内側に寄せ、身体の前面を閉じます。",
   "cda.reduce.item5": "<strong>ウェア</strong>：シワやはためく生地のない、体にフィットしたウェアを選びましょう。",
   "cda.reduce.bridge": "どのレバーがあなたに効くでしょうか？それは測定できます。AeroX診断があなたのポジションをライブで比較します。",
-  "cda.author": "執筆：Olivier Demichel（元CNRS流体力学研究者、AeroX創業者）",
+  "cda.author": "執筆：Olivier Demichel（元CNRS研究者、トライアスリート、AeroX創業者）",
   "cda.measure.h2": "CdAの測定方法",
   "cda.optimize.h2": "CdAに影響を与える要因",
   "cda.optimize.item1": "<strong>身体のポジション（抵抗の80%）</strong>：上体の角度、頭の位置、腕の間隔。ライダーの身体が空気抵抗の大部分を占めます。",

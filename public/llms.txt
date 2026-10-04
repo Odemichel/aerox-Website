@@ -42,7 +42,7 @@ CdA (Coefficient of Drag × Area) is the primary metric of aerodynamic efficienc
 - Available on macOS and Windows
 
 ## Team
-- **Olivier Demichel** — Founder & Engineer. Former CNRS researcher (French National Centre for Scientific Research), triathlete. Background in fluid dynamics and computational physics.
+- **Olivier Demichel** — Founder & Engineer. Former CNRS researcher (French National Centre for Scientific Research), triathlete.
 - **Milan Larivière** — Ambassador, elite triathlete (2nd, European Junior Cup 2025); his high-level feedback informs AeroX development.
 
 ## Main pages
