@@ -653,7 +653,7 @@
   "cda.diag.text": "O Diagnóstico AeroX: até 10 posições comparadas ao vivo, um teste de manutenção na melhor e, depois, sua posição recomendada com seus ganhos em tempo e em km/h. Pagamento único.",
   "cda.diag.cta": "Conhecer o Diagnóstico",
   "cda.why.p1": "No plano e sem vento, o ar já representa cerca de <strong>78% da resistência total a 25 km/h</strong>, e mais de 90% perto de 45 km/h. Reduzir o seu CdA é, portanto, a alavanca de desempenho mais poderosa, muito mais do que acrescentar watts.",
-  "cda.why.p2": "Passar de uma posição elevada para uma posição compacta otimizada reduz a área frontal em cerca de 20%; com prolongadores, em cerca de 37% (medições do livro <em>S'entraîner à l'aérodynamisme</em>). Com a mesma potência, isso representa <strong>2 a 3 km/h a mais</strong>, e 4 a 5 km/h nos prolongadores. É a posição do corpo que oferece as maiores alavancas, não o equipamento.",
+  "cda.why.p2": "Passar de uma posição elevada para uma posição compacta otimizada reduz a área frontal em cerca de 20%; com prolongadores, em cerca de 37% (medições do livro <em>S'entraîner à l'aérodynamisme</em>, <a href='{bookUrl}' target='_blank' rel='noopener'>baixar aqui</a>). Com a mesma potência, isso representa <strong>2 a 3 km/h a mais</strong>, e 4 a 5 km/h nos prolongadores. É a posição do corpo que oferece as maiores alavancas, não o equipamento.",
   "cda.values.h2": "Valores típicos de CdA por posição",
   "cda.values.header1": "Posição",
   "cda.values.header2": "CdA (m²)",

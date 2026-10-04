@@ -653,7 +653,7 @@
   "cda.diag.text": "El Diagnóstico AeroX: hasta 10 posiciones comparadas en directo, una prueba de mantenimiento en la mejor y, después, tu posición recomendada con tus ganancias en tiempo y en km/h. Pago único.",
   "cda.diag.cta": "Descubrir el Diagnóstico",
   "cda.why.p1": "En llano y sin viento, el aire ya representa cerca del <strong>78 % de la resistencia total a 25 km/h</strong>, y más del 90 % hacia 45 km/h. Reducir tu CdA es, por tanto, la palanca de rendimiento más potente, mucho más que añadir vatios.",
-  "cda.why.p2": "Pasar de una posición erguida a una posición compacta optimizada reduce el área frontal en torno a un 20 %; con acopladores, en torno a un 37 % (mediciones del libro <em>S'entraîner à l'aérodynamisme</em>). A potencia idéntica, esto supone <strong>de 2 a 3 km/h más</strong>, y de 4 a 5 km/h con acopladores. Es la posición del cuerpo la que ofrece las mayores palancas, no el material.",
+  "cda.why.p2": "Pasar de una posición erguida a una posición compacta optimizada reduce el área frontal en torno a un 20 %; con acopladores, en torno a un 37 % (mediciones del libro <em>S'entraîner à l'aérodynamisme</em>, <a href='{bookUrl}' target='_blank' rel='noopener'>descargar aquí</a>). A potencia idéntica, esto supone <strong>de 2 a 3 km/h más</strong>, y de 4 a 5 km/h con acopladores. Es la posición del cuerpo la que ofrece las mayores palancas, no el material.",
   "cda.values.h2": "Valores típicos de CdA por posición",
   "cda.values.header1": "Posición",
   "cda.values.header2": "CdA (m²)",

@@ -28,8 +28,10 @@ const metadata = {
 // sur la page du calculateur). Le
 // calculateur et la comparaison des méthodes de mesure ont leurs pages ; ici,
 // le livre au milieu et le pont vers le Diagnostic à la fin.
+// Liens texte vers le Diagnostic : orange clair (text-[#ffc56b]).
 const Link_diagnostic = localizedHref(lang, '/#pricing');
 const Link_calculator = `/${lang}/cda/calculator/`;
+const Link_book = `/${lang}/method/`;
 const Link_measure = `/${lang}/blog/mesurer-cda-${lang}/`;
 const guideTexts = { eyebrow: 'cda.guide.eyebrow', title: 'cda.guide.title', text: 'cda.guide.text' };
 
@@ -51,7 +53,7 @@ const sections = [
          (section en cours en orange) puis le livre ; en dessous, les deux restent dans le texte. */
     }
     <div
-      class="mx-auto min-[1200px]:grid min-[1200px]:grid-cols-[15rem_minmax(0,48rem)_15rem] min-[1200px]:justify-center min-[1200px]:gap-10"
+      class="mx-auto min-[1200px]:grid min-[1200px]:grid-cols-[15rem_minmax(0,48rem)_15rem] min-[1200px]:justify-center min-[1200px]:gap-10 min-[1200px]:px-8"
     >
       <aside class="hidden min-[1200px]:block border-r border-gray-200 dark:border-slate-700 pr-6">
         <div class="sticky top-[140px]">
@@ -125,7 +127,9 @@ const sections = [
         <p>
           <strong>{t(dict, 'cda.values.cta.q')}</strong>
           <br />
-          <a href={Link_diagnostic}>{t(dict, 'cda.values.cta.a')} →</a>
+          <a href={Link_diagnostic} class="text-[#ffc56b] decoration-[#ffc56b]/60 hover:text-primary"
+            >{t(dict, 'cda.values.cta.a')} →</a
+          >
         </p>
 
         <div class="min-[1200px]:hidden">
@@ -135,7 +139,7 @@ const sections = [
         <h2 id="impact">{t(dict, 'cda.impact.h2')}</h2>
         <p set:html={t(dict, 'cda.why.p1')} />
         <p set:html={t(dict, 'cda.impact.air')} />
-        <p set:html={t(dict, 'cda.why.p2')} />
+        <p set:html={t(dict, 'cda.why.p2').replace('{bookUrl}', Link_book)} />
         <p set:html={t(dict, 'cda.impact.p1')} />
         <LostWattsTable dict={dict} />
         <p>
@@ -143,7 +147,9 @@ const sections = [
           <br />
           <a href={Link_calculator}>{t(dict, 'cda.values.bridge.calc')} →</a>
           <br />
-          <a href={Link_diagnostic}>{t(dict, 'cda.values.bridge.diag')} →</a>
+          <a href={Link_diagnostic} class="text-[#ffc56b] decoration-[#ffc56b]/60 hover:text-primary"
+            >{t(dict, 'cda.values.bridge.diag')} →</a
+          >
         </p>
 
         <h2 id="reduce">{t(dict, 'cda.reduce.h2')}</h2>
@@ -151,7 +157,9 @@ const sections = [
         <p>{t(dict, 'cda.reduce.note')}</p>
         <p>
           {t(dict, 'cda.reduce.bridge')}
-          <a href={Link_diagnostic} class="ml-1">{t(dict, 'cda.diag.cta')} →</a>
+          <a href={Link_diagnostic} class="ml-1 text-[#ffc56b] decoration-[#ffc56b]/60 hover:text-primary"
+            >{t(dict, 'cda.diag.cta')} →</a
+          >
         </p>
 
         <h2 id="measure">{t(dict, 'cda.measure.h2')}</h2>

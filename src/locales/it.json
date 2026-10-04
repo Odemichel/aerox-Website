@@ -653,7 +653,7 @@
   "cda.diag.text": "La Diagnosi AeroX: fino a 10 posizioni confrontate in diretta, un test di mantenimento sulla migliore, poi la tua posizione consigliata con i tuoi guadagni in tempo e in km/h. Pagamento unico.",
   "cda.diag.cta": "Scopri la Diagnosi",
   "cda.why.p1": "In pianura e senza vento, l'aria rappresenta già circa il <strong>78% della resistenza totale a 25 km/h</strong>, e oltre il 90% verso i 45 km/h. Ridurre il tuo CdA è quindi la leva di prestazione più potente, molto più che aggiungere watt.",
-  "cda.why.p2": "Passare da una posizione eretta a una posizione compatta ottimizzata riduce l'area frontale di circa il 20%; con le prolunghe, di circa il 37% (misure del libro <em>S'entraîner à l'aérodynamisme</em>). A parità di potenza, significa <strong>da 2 a 3 km/h in più</strong>, e da 4 a 5 km/h sulle prolunghe. È la posizione del corpo a offrire le leve maggiori, non l'attrezzatura.",
+  "cda.why.p2": "Passare da una posizione eretta a una posizione compatta ottimizzata riduce l'area frontale di circa il 20%; con le prolunghe, di circa il 37% (misure del libro <em>S'entraîner à l'aérodynamisme</em>, <a href='{bookUrl}' target='_blank' rel='noopener'>scarica qui</a>). A parità di potenza, significa <strong>da 2 a 3 km/h in più</strong>, e da 4 a 5 km/h sulle prolunghe. È la posizione del corpo a offrire le leve maggiori, non l'attrezzatura.",
   "cda.values.h2": "Valori tipici di CdA per posizione",
   "cda.values.header1": "Posizione",
   "cda.values.header2": "CdA (m²)",

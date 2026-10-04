@@ -653,7 +653,7 @@
   "cda.diag.text": "De AeroX Diagnose: tot 10 posities live vergeleken, een volhoudtest op de beste, daarna je aanbevolen positie met je winst in tijd en km/u. Eenmalige betaling.",
   "cda.diag.cta": "Ontdek de Diagnose",
   "cda.why.p1": "Op vlak terrein zonder wind is de lucht bij 25 km/u al goed voor ongeveer <strong>78% van de totale weerstand</strong>, en rond 45 km/u meer dan 90%. Je CdA verlagen is dus de krachtigste prestatiehefboom, veel meer dan watt toevoegen.",
-  "cda.why.p2": "Overstappen van een rechtopzittende naar een geoptimaliseerde compacte positie verkleint het frontaal oppervlak met ongeveer 20%; met aerobars met ongeveer 37% (metingen uit het boek <em>S'entraîner à l'aérodynamisme</em>). Bij hetzelfde vermogen betekent dat <strong>2 tot 3 km/u sneller</strong>, en 4 tot 5 km/u op aerobars. De lichaamspositie biedt de grootste hefbomen, niet het materiaal.",
+  "cda.why.p2": "Overstappen van een rechtopzittende naar een geoptimaliseerde compacte positie verkleint het frontaal oppervlak met ongeveer 20%; met aerobars met ongeveer 37% (metingen uit het boek <em>S'entraîner à l'aérodynamisme</em>, <a href='{bookUrl}' target='_blank' rel='noopener'>hier downloaden</a>). Bij hetzelfde vermogen betekent dat <strong>2 tot 3 km/u sneller</strong>, en 4 tot 5 km/u op aerobars. De lichaamspositie biedt de grootste hefbomen, niet het materiaal.",
   "cda.values.h2": "Typische CdA-waarden per positie",
   "cda.values.header1": "Positie",
   "cda.values.header2": "CdA (m²)",

@@ -653,7 +653,7 @@
   "cda.diag.text": "Die AeroX Diagnose: bis zu 10 Positionen live verglichen, ein Haltetest auf der besten, dann deine empfohlene Position mit deinen Gewinnen in Zeit und km/h. Einmalige Zahlung.",
   "cda.diag.cta": "Diagnose entdecken",
   "cda.why.p1": "Auf flacher Strecke ohne Wind macht die Luft bei 25 km/h bereits etwa <strong>78 % des Gesamtwiderstands</strong> aus, bei rund 45 km/h über 90 %. Den CdA zu senken ist daher der stärkste Leistungshebel, viel stärker als mehr Watt.",
-  "cda.why.p2": "Der Wechsel von einer aufrechten zu einer optimierten kompakten Position verringert die Stirnfläche um etwa 20 %; mit Aufsatzlenker um etwa 37 % (Messungen aus dem Buch <em>S'entraîner à l'aérodynamisme</em>). Bei gleicher Leistung bedeutet das <strong>2 bis 3 km/h mehr</strong>, auf dem Aufsatzlenker 4 bis 5 km/h. Die größten Hebel bietet die Körperposition, nicht das Material.",
+  "cda.why.p2": "Der Wechsel von einer aufrechten zu einer optimierten kompakten Position verringert die Stirnfläche um etwa 20 %; mit Aufsatzlenker um etwa 37 % (Messungen aus dem Buch <em>S'entraîner à l'aérodynamisme</em>, <a href='{bookUrl}' target='_blank' rel='noopener'>hier herunterladen</a>). Bei gleicher Leistung bedeutet das <strong>2 bis 3 km/h mehr</strong>, auf dem Aufsatzlenker 4 bis 5 km/h. Die größten Hebel bietet die Körperposition, nicht das Material.",
   "cda.values.h2": "Typische CdA-Werte nach Position",
   "cda.values.header1": "Position",
   "cda.values.header2": "CdA (m²)",

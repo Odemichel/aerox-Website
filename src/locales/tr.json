@@ -653,7 +653,7 @@
   "cda.diag.text": "AeroX Diagnostik: 10'a kadar pozisyon canlı karşılaştırılır, en iyisinde bir koruma testi yapılır, ardından zaman ve km/s kazanımlarınla birlikte önerilen pozisyonun sunulur. Tek seferlik ödeme.",
   "cda.diag.cta": "Diagnostik'i keşfet",
   "cda.why.p1": "Düz yolda ve rüzgârsız havada, hava 25 km/s'de <strong>toplam direncin yaklaşık %78'ini</strong>, 45 km/s civarında ise %90'dan fazlasını oluşturur. CdA'nı düşürmek bu yüzden watt eklemekten çok daha güçlü bir performans kaldıracıdır.",
-  "cda.why.p2": "Dik bir pozisyondan optimize edilmiş kompakt bir pozisyona geçmek ön cephe alanını yaklaşık %20 azaltır; uzatma barlarıyla yaklaşık %37 (<em>S'entraîner à l'aérodynamisme</em> kitabındaki ölçümler). Aynı güçte bu, <strong>2-3 km/s daha yüksek hız</strong> demektir; uzatma barlarında ise 4-5 km/s. En büyük kaldıraçları sunan ekipman değil, vücut pozisyonudur.",
+  "cda.why.p2": "Dik bir pozisyondan optimize edilmiş kompakt bir pozisyona geçmek ön cephe alanını yaklaşık %20 azaltır; uzatma barlarıyla yaklaşık %37 (<em>S'entraîner à l'aérodynamisme</em> kitabındaki ölçümler, <a href='{bookUrl}' target='_blank' rel='noopener'>buradan indir</a>). Aynı güçte bu, <strong>2-3 km/s daha yüksek hız</strong> demektir; uzatma barlarında ise 4-5 km/s. En büyük kaldıraçları sunan ekipman değil, vücut pozisyonudur.",
   "cda.values.h2": "Pozisyona göre tipik CdA değerleri",
   "cda.values.header1": "Pozisyon",
   "cda.values.header2": "CdA (m²)",

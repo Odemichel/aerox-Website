@@ -49,7 +49,7 @@ const guideTexts = { eyebrow: 'cda.guide.eyebrow', title: 'cda.guide.title', tex
 
         <h2>{t(dict, 'cda.formula.h2')}</h2>
         <CdaFormula dict={dict} />
-        <p><a href={Link_cda}>{t(dict, 'cda.calcPage.valuesLink')} →</a></p>
+        <p><a href={`${Link_cda}#values`}>{t(dict, 'cda.calcPage.valuesLink')} →</a></p>
 
         {/* Pont vers le Diagnostic : la mesure de surface frontale, position par position. */}
         <div class="not-prose mt-10 rounded-2xl border border-gray-200 dark:border-slate-700 px-6 py-8 text-center">

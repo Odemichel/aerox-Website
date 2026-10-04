@@ -702,7 +702,7 @@
   "cda.diag.text": "Le Diagnostic AeroX : jusqu'à 10 positions comparées en direct, un test de maintien sur la meilleure, puis ta position recommandée avec tes gains en temps et en km/h. Paiement unique.",
   "cda.diag.cta": "Découvrir le Diagnostic",
   "cda.why.p1": "Sur le plat et sans vent, l'air représente déjà environ <strong>78 % de la résistance totale à 25 km/h</strong>, et plus de 90 % vers 45 km/h. Réduire son CdA est donc le levier de performance le plus puissant, bien plus que d'ajouter des watts.",
-  "cda.why.p2": "Passer d'une position relevée à une position compacte optimisée réduit la surface frontale d'environ 20 % ; avec des prolongateurs, d'environ 37 % (mesures du livre <em>S'entraîner à l'aérodynamisme</em>). À puissance identique, cela représente <strong>2 à 3 km/h de plus</strong>, et 4 à 5 km/h sur prolongateurs. C'est la position du corps qui offre les plus gros leviers, pas le matériel.",
+  "cda.why.p2": "Passer d'une position relevée à une position compacte optimisée réduit la surface frontale d'environ 20 % ; avec des prolongateurs, d'environ 37 % (mesures du livre <em>S'entraîner à l'aérodynamisme</em>, <a href='{bookUrl}' target='_blank' rel='noopener'>télécharger ici</a>). À puissance identique, cela représente <strong>2 à 3 km/h de plus</strong>, et 4 à 5 km/h sur prolongateurs. C'est la position du corps qui offre les plus gros leviers, pas le matériel.",
   "cda.values.h2": "Valeurs typiques de CdA par position",
   "cda.values.header1": "Position",
   "cda.values.header2": "CdA (m²)",

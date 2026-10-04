@@ -685,7 +685,7 @@
   "cda.diag.text": "The AeroX Diagnostic: up to 10 positions compared live, a hold test on the best one, then your recommended position with your gains in time and km/h. One-off payment.",
   "cda.diag.cta": "Discover the Diagnostic",
   "cda.why.p1": "On the flat with no wind, air already accounts for about <strong>78% of total resistance at 25 km/h</strong>, and over 90% around 45 km/h. Reducing your CdA is therefore the most powerful performance lever, far more than adding watts.",
-  "cda.why.p2": "Moving from an upright position to an optimized compact position reduces frontal area by about 20%; with aerobars, by about 37% (measurements from the book <em>S'entraîner à l'aérodynamisme</em>). At the same power, that means <strong>2 to 3 km/h faster</strong>, and 4 to 5 km/h on aerobars. Body position offers the biggest levers, not equipment.",
+  "cda.why.p2": "Moving from an upright position to an optimized compact position reduces frontal area by about 20%; with aerobars, by about 37% (measurements from the book <em>S'entraîner à l'aérodynamisme</em>, <a href='{bookUrl}' target='_blank' rel='noopener'>download here</a>). At the same power, that means <strong>2 to 3 km/h faster</strong>, and 4 to 5 km/h on aerobars. Body position offers the biggest levers, not equipment.",
   "cda.values.h2": "Typical CdA values by position",
   "cda.values.header1": "Position",
   "cda.values.header2": "CdA (m²)",
