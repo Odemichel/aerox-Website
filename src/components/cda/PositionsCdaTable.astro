@@ -1,0 +1,156 @@
+---
+// Tableau « valeurs typiques de CdA » de /cda : une ligne par position, avec
+// un pictogramme de profil, le CdA (fourchette courante) et la surface
+// frontale A mesurée avec AeroX (livre, tableau 2.1 ; ligne 6 = position de la
+// ligne 5, le gain vient du Cd) et les watts absorbés par l'air à 30 et 40 km/h,
+// calculés ici à partir des fourchettes de CdA (mêmes valeurs que les libellés
+// cda.values.*.value : les garder alignées).
+//
+// Les clés de ligne sont celles du calculateur (src/lib/cda.ts, cdaCategory) :
+// ne pas les renommer sans lui.
+import { t } from '~/lib/i18n';
+
+interface Props {
+  dict: Record<string, string>;
+  lang: string;
+}
+const { dict, lang } = Astro.props;
+
+const ROWS = [
+  { key: 'city', area: 0.52, cda: [0.4, 0.5] },
+  { key: 'road_hoods', area: 0.44, cda: [0.3, 0.35] },
+  { key: 'road_drops', area: 0.42, cda: [0.27, 0.32] },
+  { key: 'tt', area: 0.36, cda: [0.2, 0.25] },
+  { key: 'pro_tt', area: 0.33, cda: [0.18, 0.22] },
+  { key: 'track', area: 0.33, cda: [0.17, 0.2], approx: true },
+] as const;
+
+// Puissance absorbée par l'air : P = ½ ρ CdA v³ (air à 1,225 kg/m³, sans vent).
+const RHO = 1.225;
+const aeroWatts = (cda: number, kmh: number) => Math.round(0.5 * RHO * cda * (kmh / 3.6) ** 3);
+const wattsRange = ([lo, hi]: readonly number[], kmh: number) => `${aeroWatts(lo, kmh)}–${aeroWatts(hi, kmh)} W`;
+const [wattsTitle, at30] = t(dict, 'cda.values.header4').split(' · ');
+const at40 = t(dict, 'cda.values.header5').split(' · ')[1];
+
+const fmt = (n: number) => new Intl.NumberFormat(lang, { minimumFractionDigits: 2 }).format(n);
+
+// Pictogramme de profil (vélo vers la droite) : angle du buste, tête, mains.
+type Pose = { torso: number; headUp: boolean; elbow: [number, number]; hand: [number, number]; aero?: boolean };
+const POSES: Pose[] = [
+  { torso: 58, headUp: true, elbow: [52, 19], hand: [60, 21] },
+  { torso: 36, headUp: true, elbow: [53, 22], hand: [59, 27] },
+  { torso: 12, headUp: false, elbow: [50, 21], hand: [60, 21] },
+  { torso: 12, headUp: true, elbow: [50, 22], hand: [65, 20] },
+  { torso: 6, headUp: false, elbow: [50, 22], hand: [62, 19] },
+  { torso: 6, headUp: false, elbow: [50, 22], hand: [62, 19], aero: true },
+];
+const HIP: [number, number] = [31, 21];
+const pose = (p: Pose) => {
+  const r = (p.torso * Math.PI) / 180;
+  const sh: [number, number] = [HIP[0] + 19 * Math.cos(r), HIP[1] - 19 * Math.sin(r)];
+  const head: [number, number] = p.headUp ? [sh[0] + 4, sh[1] - 5] : [sh[0] + 5.5, sh[1] - 1];
+  return { sh, head };
+};
+
+const rows = ROWS.map((r, i) => ({
+  ...r,
+  n: i + 1,
+  label: t(dict, `cda.values.${r.key}.label`),
+  desc: t(dict, `cda.values.${r.key}.desc`),
+  cda: t(dict, `cda.values.${r.key}.value`),
+  areaText: `${r.approx ? '≈ ' : ''}${fmt(r.area)}`,
+  w30: wattsRange(r.cda, 30),
+  w40: wattsRange(r.cda, 40),
+  p: POSES[i],
+  g: pose(POSES[i]),
+}));
+---
+
+<div class="not-prose my-8">
+  <div
+    class="hidden sm:grid grid-cols-[1fr_6.5rem_4.5rem_8.5rem] gap-3 items-end rounded-t-xl border border-primary/40 bg-slate-950/60 px-4 py-2.5 text-sm font-bold uppercase tracking-wide text-primary"
+  >
+    <span>{t(dict, 'cda.values.header1')}</span>
+    <span class="text-right">{t(dict, 'cda.values.header2')}</span>
+    <span class="text-right">{t(dict, 'cda.values.header3')}</span>
+    <span class="text-right leading-tight">
+      {wattsTitle}
+      <span class="block text-xs normal-case text-slate-400">{at30} · {at40}</span>
+    </span>
+  </div>
+  <ol class="mt-2 space-y-2">
+    {
+      rows.map((r) => (
+        <li class="grid grid-cols-[4.5rem_1fr] sm:grid-cols-[4.5rem_1fr_6.5rem_4.5rem_8.5rem] items-center gap-x-3 gap-y-2 rounded-xl border border-primary/30 bg-slate-950/50 p-2.5 shadow-[0_0_14px_rgba(251,165,47,0.08)]">
+          <svg
+            viewBox="0 -7 76 57"
+            class="h-12 w-[4.5rem] rounded-lg border border-primary/30 bg-slate-900/80 p-0.5 text-primary"
+            aria-hidden="true"
+          >
+            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              {r.p.aero ? (
+                <>
+                  <circle cx="16" cy="38" r="10" fill="currentColor" fill-opacity="0.35" stroke-width="1.5" />
+                  <circle cx="61" cy="38" r="10" fill="currentColor" fill-opacity="0.2" stroke-width="1.5" />
+                </>
+              ) : (
+                <>
+                  <circle cx="16" cy="38" r="10" stroke-width="1.5" />
+                  <circle cx="61" cy="38" r="10" stroke-width="1.5" />
+                </>
+              )}
+              <path d="M16 38 L37 38 L31 22 L57 22 L61 38 M37 38 L57 22" stroke-width="1.2" stroke-opacity="0.7" />
+              <path d={`M${HIP[0]} ${HIP[1]} L41 30 L37 41`} stroke-width="2.4" />
+              <path d={`M${HIP[0]} ${HIP[1]} L${r.g.sh[0]} ${r.g.sh[1]}`} stroke-width="3" />
+              <path
+                d={`M${r.g.sh[0]} ${r.g.sh[1]} L${r.p.elbow[0]} ${r.p.elbow[1]} L${r.p.hand[0]} ${r.p.hand[1]}`}
+                stroke-width="2"
+              />
+              {r.p.aero ? (
+                <path
+                  d={`M${r.g.head[0] + 4} ${r.g.head[1]} A4 4 0 0 0 ${r.g.head[0] - 2} ${r.g.head[1] - 3} L${r.g.head[0] - 9} ${r.g.head[1] - 0.5} Z`}
+                  fill="currentColor"
+                  stroke-width="1"
+                />
+              ) : (
+                <circle cx={r.g.head[0]} cy={r.g.head[1]} r="3.8" fill="currentColor" stroke="none" />
+              )}
+            </g>
+          </svg>
+          <div class="min-w-0">
+            <p class="font-bold uppercase italic leading-tight tracking-wide text-white">
+              <span class="mr-1 text-primary">{r.n}.</span>
+              {r.label}
+            </p>
+            <p class="mt-0.5 text-sm text-slate-300 leading-snug">{r.desc}</p>
+          </div>
+          <p class="col-start-2 sm:col-start-auto flex items-baseline gap-2 sm:block sm:text-right">
+            <span class="sm:hidden text-xs font-bold uppercase text-slate-400">{t(dict, 'cda.values.header2')}</span>
+            <span class="whitespace-nowrap text-lg md:text-xl font-black italic text-primary tabular-nums">
+              {r.cda}
+            </span>
+          </p>
+          <p class="col-start-2 sm:col-start-auto flex items-baseline gap-2 sm:block sm:text-right">
+            <span class="sm:hidden text-xs font-bold uppercase text-slate-400">{t(dict, 'cda.values.header3')}</span>
+            <span class="whitespace-nowrap text-lg md:text-xl font-black italic text-white tabular-nums">
+              {r.areaText}
+            </span>
+          </p>
+          <div class="col-start-2 sm:col-start-auto text-sm sm:text-right tabular-nums">
+            <p class="sm:hidden text-xs font-bold uppercase text-slate-400">{wattsTitle}</p>
+            <p class="flex items-baseline gap-2 sm:justify-end">
+              <span class="text-xs font-bold text-slate-400">{at30}</span>
+              <span class="whitespace-nowrap font-bold text-red-300">{r.w30}</span>
+            </p>
+            <p class="flex items-baseline gap-2 sm:justify-end">
+              <span class="text-xs font-bold text-slate-400">{at40}</span>
+              <span class="whitespace-nowrap font-bold text-red-300">{r.w40}</span>
+            </p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="mt-3 text-xs italic text-slate-400 leading-relaxed">{t(dict, 'cda.values.note')}</p>
+  <p class="mt-1 text-xs italic text-slate-400 leading-relaxed">{t(dict, 'cda.values.wattsNote')}</p>
+</div>

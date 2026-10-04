@@ -157,10 +157,24 @@ const clients = [
 // Gains chiffrés : positions 1 et 5 du livre (la position testée des captures
 // est sur prolongateurs), à 30 km/h : tableaux 2.1, 2.2, 2.3 et 2.5 ;
 // 13,8 s/km × 40 km = 9 min 12 s.
+// Nombres formatés selon la langue (virgule ou point décimal, espace du %).
+const nf = (n: number, digits: number) =>
+  new Intl.NumberFormat(lang, { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(n);
+const pct = new Intl.NumberFormat(lang, { style: 'percent', signDisplay: 'always' }).format(-0.31);
 const gains = [
-  { icon: 'tabler:arrows-minimize', value: '−31 %', label: t(dict, 'bfx.gains.area'), detail: '0,52 → 0,36 m²' },
+  {
+    icon: 'tabler:arrows-minimize',
+    value: pct.replace('-', '−'),
+    label: t(dict, 'bfx.gains.area'),
+    detail: `${nf(0.52, 2)} → ${nf(0.36, 2)} m²`,
+  },
   { icon: 'tabler:bolt', value: '−53 W', label: t(dict, 'bfx.gains.watts') },
-  { icon: 'tabler:gauge', value: '+3,9 km/h', label: t(dict, 'bfx.gains.speed'), detail: '30,0 → 33,9 km/h' },
+  {
+    icon: 'tabler:gauge',
+    value: `+${nf(3.9, 1)} km/h`,
+    label: t(dict, 'bfx.gains.speed'),
+    detail: `${nf(30, 1)} → ${nf(33.9, 1)} km/h`,
+  },
   { icon: 'tabler:stopwatch', value: '−9 min 12 s', label: t(dict, 'bfx.gains.time') },
 ];
 const benefits = [
@@ -334,14 +348,14 @@ const card = 'rounded-2xl border border-gray-200 dark:border-slate-700 bg-white/
               {
                 img: silStart,
                 badge: t(dict, 'bfx.compare.badge.before'),
-                area: '0,52 m²',
+                area: `${nf(0.52, 2)} m²`,
                 tone: 'bg-red-700 text-white',
                 order: '',
               },
               {
                 img: silTested,
                 badge: t(dict, 'bfx.compare.badge.after'),
-                area: '0,36 m²',
+                area: `${nf(0.36, 2)} m²`,
                 tone: 'bg-emerald-400 text-slate-950',
                 order: 'md:order-last',
               },

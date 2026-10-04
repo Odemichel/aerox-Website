@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
 import GuideCapture from '~/components/widgets/GuideCapture.astro';
 import PostSidebarBook from '~/components/blog/PostSidebarBook.astro';
+import PositionsCdaTable from '~/components/cda/PositionsCdaTable.astro';
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
 
@@ -26,7 +27,6 @@ const Link_calculator = `/${lang}/cda/calculator/`;
 const Link_measure = `/${lang}/blog/mesurer-cda-${lang}/`;
 const guideTexts = { eyebrow: 'cda.guide.eyebrow', title: 'cda.guide.title', text: 'cda.guide.text' };
 
-const valueRows = ['city', 'road_hoods', 'road_drops', 'tt', 'pro_tt', 'track'] as const;
 // Sections dans l'ordre de la page (sommaire).
 const sections = [
   { id: 'definition', key: 'cda.definition.h2' },
@@ -113,28 +113,13 @@ const sections = [
         <p><strong>{t(dict, 'cda.definition.formula')}</strong></p>
 
         <h2 id="values">{t(dict, 'cda.values.h2')}</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>{t(dict, 'cda.values.header1')}</th>
-              <th>{t(dict, 'cda.values.header2')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              valueRows.map((key) => (
-                <tr>
-                  <td>{t(dict, `cda.values.${key}.label`)}</td>
-                  <td>{t(dict, `cda.values.${key}.value`)}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
+        <PositionsCdaTable dict={dict} lang={lang} />
         <p>
-          {t(dict, 'cda.values.bridge')}
-          <a href={Link_calculator}>{t(dict, 'cda.calcPage.link')} →</a>
-          <a href={Link_diagnostic} class="ml-3">{t(dict, 'cda.diag.cta')} →</a>
+          <strong>{t(dict, 'cda.values.bridge')}</strong>
+          <br />
+          <a href={Link_calculator}>{t(dict, 'cda.values.bridge.calc')} →</a>
+          <br />
+          <a href={Link_diagnostic}>{t(dict, 'cda.values.bridge.diag')} →</a>
         </p>
 
         <div class="min-[1200px]:hidden">

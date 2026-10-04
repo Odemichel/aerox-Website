@@ -17,6 +17,7 @@ const AREAS = [0.52, 0.48, 0.44, 0.42, 0.36, 0.33];
 const ref = AREAS[0];
 const maxGain = (ref - Math.min(...AREAS)) / ref;
 const fmt = (n: number) => new Intl.NumberFormat(lang, { minimumFractionDigits: 2 }).format(n);
+const pct = (n: number) => new Intl.NumberFormat(lang, { style: 'percent' }).format(n).replace('-', '−');
 const rows = AREAS.map((a, i) => {
   const gain = (ref - a) / ref;
   // Opacité de 0,2 (petit gain) à 1 (gain maximal) ; la référence reste grise.
@@ -25,7 +26,7 @@ const rows = AREAS.map((a, i) => {
     n: i + 1,
     label: t(dict, `bfx.positions.p${i + 1}`),
     area: fmt(a),
-    delta: i === 0 ? '' : `−${Math.round(gain * 100)} %`,
+    delta: i === 0 ? '' : pct(-Math.round(gain * 100) / 100),
     width: ((a / ref) * 100).toFixed(1),
     intensity: intensity.toFixed(2),
   };
