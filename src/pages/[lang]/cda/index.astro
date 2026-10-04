@@ -115,6 +115,11 @@ const sections = [
 
         <h2 id="values">{t(dict, 'cda.values.h2')}</h2>
         <PositionsCdaTable dict={dict} lang={lang} />
+        <p>
+          <strong>{t(dict, 'cda.values.cta.q')}</strong>
+          <br />
+          <a href={Link_diagnostic}>{t(dict, 'cda.values.cta.a')} →</a>
+        </p>
 
         <div class="min-[1200px]:hidden">
           <GuideCapture lang={lang} id="cda-mid" texts={guideTexts} source="cda" />
@@ -142,9 +147,10 @@ const sections = [
         </p>
 
         <h2 id="reduce">{t(dict, 'cda.reduce.h2')}</h2>
-        <ul>
-          {[1, 2, 3, 4, 5].map((i) => <li set:html={t(dict, `cda.reduce.item${i}`)} />)}
-        </ul>
+        <ol>
+          {[1, 2, 3, 4, 5, 6].map((i) => <li set:html={t(dict, `cda.reduce.item${i}`)} />)}
+        </ol>
+        <p>{t(dict, 'cda.reduce.note')}</p>
         <p>
           {t(dict, 'cda.reduce.bridge')}
           <a href={Link_diagnostic} class="ml-1">{t(dict, 'cda.diag.cta')} →</a>

@@ -415,9 +415,14 @@ const card = 'rounded-2xl border border-gray-200 dark:border-slate-700 bg-white/
           <h3 class="font-semibold text-red-300">{t(dict, 'bfx.compare.without.title')}</h3>
           <ul class="mt-3 space-y-2">
             {
-              list('bfx.compare.without.text').map((item) => (
+              list('bfx.compare.without.text').map((item, idx) => (
                 <li class="flex gap-2 text-gray-200">
-                  <Icon name="tabler:x" class="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
+                  {/* « Vous ajustez » est neutre : pas de croix sur la première ligne. */}
+                  {idx === 0 ? (
+                    <span class="h-5 w-5 shrink-0" />
+                  ) : (
+                    <Icon name="tabler:x" class="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
+                  )}
                   <span>{item}</span>
                 </li>
               ))
