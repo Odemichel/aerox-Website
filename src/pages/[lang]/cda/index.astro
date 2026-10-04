@@ -6,6 +6,7 @@ import PostSidebarBook from '~/components/blog/PostSidebarBook.astro';
 import PositionsCdaTable from '~/components/cda/PositionsCdaTable.astro';
 import LostWattsTable from '~/components/cda/LostWattsTable.astro';
 import ReduceLevers from '~/components/cda/ReduceLevers.astro';
+import CdaFactors from '~/components/cda/CdaFactors.astro';
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
 
@@ -156,12 +157,7 @@ const sections = [
         </p>
 
         <h2 id="factors">{t(dict, 'cda.optimize.h2')}</h2>
-        <ul>
-          <li set:html={t(dict, 'cda.optimize.item1')} />
-          <li set:html={t(dict, 'cda.optimize.item2')} />
-          <li set:html={t(dict, 'cda.optimize.item3')} />
-          <li set:html={t(dict, 'cda.optimize.item4')} />
-        </ul>
+        <CdaFactors dict={dict} />
 
         <h2 id="measure">{t(dict, 'cda.measure.h2')}</h2>
         <p>
