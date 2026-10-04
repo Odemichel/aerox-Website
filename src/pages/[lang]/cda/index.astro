@@ -5,6 +5,7 @@ import GuideCapture from '~/components/widgets/GuideCapture.astro';
 import PostSidebarBook from '~/components/blog/PostSidebarBook.astro';
 import PositionsCdaTable from '~/components/cda/PositionsCdaTable.astro';
 import LostWattsTable from '~/components/cda/LostWattsTable.astro';
+import ReduceLevers from '~/components/cda/ReduceLevers.astro';
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
 
@@ -147,9 +148,7 @@ const sections = [
         </p>
 
         <h2 id="reduce">{t(dict, 'cda.reduce.h2')}</h2>
-        <ol>
-          {[1, 2, 3, 4, 5, 6].map((i) => <li set:html={t(dict, `cda.reduce.item${i}`)} />)}
-        </ol>
+        <ReduceLevers dict={dict} />
         <p>{t(dict, 'cda.reduce.note')}</p>
         <p>
           {t(dict, 'cda.reduce.bridge')}
