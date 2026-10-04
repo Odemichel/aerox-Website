@@ -7,6 +7,7 @@ import PositionsCdaTable from '~/components/cda/PositionsCdaTable.astro';
 import LostWattsTable from '~/components/cda/LostWattsTable.astro';
 import ReduceLevers from '~/components/cda/ReduceLevers.astro';
 import CdaFactors from '~/components/cda/CdaFactors.astro';
+import CdaDefinitionDiagram from '~/components/cda/CdaDefinitionDiagram.astro';
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
 
@@ -22,7 +23,9 @@ const metadata = {
   robots: { index: true, follow: true },
 };
 
-// Page pilier : définition, Cd vs A, valeurs typiques, formule courte. Le
+// Page pilier : définition (Cd × A, ce que mesure AeroX), facteurs, valeurs
+// typiques par position, impact, leviers, mesure (la formule détaillée est
+// sur la page du calculateur). Le
 // calculateur et la comparaison des méthodes de mesure ont leurs pages ; ici,
 // le livre au milieu et le pont vers le Diagnostic à la fin.
 const Link_diagnostic = localizedHref(lang, '/#pricing');
@@ -33,12 +36,10 @@ const guideTexts = { eyebrow: 'cda.guide.eyebrow', title: 'cda.guide.title', tex
 // Sections dans l'ordre de la page (sommaire).
 const sections = [
   { id: 'definition', key: 'cda.definition.h2' },
+  { id: 'factors', key: 'cda.optimize.h2' },
   { id: 'values', key: 'cda.values.h2' },
-  { id: 'formula', key: 'cda.formula.h2' },
-  { id: 'aerox', key: 'cda.aerox.title' },
   { id: 'impact', key: 'cda.impact.h2' },
   { id: 'reduce', key: 'cda.reduce.h2' },
-  { id: 'factors', key: 'cda.optimize.h2' },
   { id: 'measure', key: 'cda.measure.h2' },
 ];
 ---
@@ -113,7 +114,11 @@ const sections = [
           <li set:html={t(dict, 'cda.definition.cx')} />
           <li set:html={t(dict, 'cda.definition.a')} />
         </ul>
-        <p><strong>{t(dict, 'cda.definition.formula')}</strong></p>
+        <CdaDefinitionDiagram dict={dict} />
+        <p set:html={t(dict, 'cda.def.aerox')} />
+
+        <h2 id="factors">{t(dict, 'cda.optimize.h2')}</h2>
+        <CdaFactors dict={dict} />
 
         <h2 id="values">{t(dict, 'cda.values.h2')}</h2>
         <PositionsCdaTable dict={dict} lang={lang} />
@@ -127,16 +132,9 @@ const sections = [
           <GuideCapture lang={lang} id="cda-mid" texts={guideTexts} source="cda" />
         </div>
 
-        <h2 id="formula">{t(dict, 'cda.formula.h2')}</h2>
-        <p set:html={t(dict, 'cda.formula.short')} />
-        <p><a href={Link_calculator}>{t(dict, 'cda.calcPage.link')} →</a></p>
-
-        {/* Seul endroit où la distinction A / Cd est expliquée. */}
-        <h2 id="aerox">{t(dict, 'cda.aerox.title')}</h2>
-        <p set:html={t(dict, 'cda.aerox.text')} />
-
         <h2 id="impact">{t(dict, 'cda.impact.h2')}</h2>
         <p set:html={t(dict, 'cda.why.p1')} />
+        <p set:html={t(dict, 'cda.impact.air')} />
         <p set:html={t(dict, 'cda.why.p2')} />
         <p set:html={t(dict, 'cda.impact.p1')} />
         <LostWattsTable dict={dict} />
@@ -156,14 +154,12 @@ const sections = [
           <a href={Link_diagnostic} class="ml-1">{t(dict, 'cda.diag.cta')} →</a>
         </p>
 
-        <h2 id="factors">{t(dict, 'cda.optimize.h2')}</h2>
-        <CdaFactors dict={dict} />
-
         <h2 id="measure">{t(dict, 'cda.measure.h2')}</h2>
         <p>
           {t(dict, 'cda.measure.short')}
           <a href={Link_measure}>{t(dict, 'cda.measure.articleLink')} →</a>
         </p>
+        <p><a href={Link_calculator}>{t(dict, 'cda.calcPage.link')} →</a></p>
 
         {/* Pont vers le Diagnostic : la mesure de surface frontale, guidée. */}
         <div class="not-prose mt-10 rounded-2xl border border-gray-200 dark:border-slate-700 px-6 py-8 text-center">

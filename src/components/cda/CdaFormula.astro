@@ -1,0 +1,80 @@
+---
+// Formule du CdA lisible (/cda) : bilan de puissance terme par terme (air,
+// roulement, pente), puis CdA isolé sur le plat, et légende des symboles.
+// Même équation que src/lib/cda.ts (estimateCdA).
+import { t } from '~/lib/i18n';
+
+interface Props {
+  dict: Record<string, string>;
+}
+const { dict } = Astro.props;
+
+const terms = [
+  { expr: '½ · ρ · CdA · v³', label: t(dict, 'cda.formula.air'), main: true },
+  { expr: 'Crr · m · g · v', label: t(dict, 'cda.formula.roll') },
+  { expr: 'm · g · sin θ · v', label: t(dict, 'cda.formula.slope') },
+];
+const legend = t(dict, 'cda.formula.legend')
+  .split('|')
+  .map((item) => item.split('::'));
+const box = 'flex flex-col items-center rounded-lg px-3 py-2';
+---
+
+<div class="not-prose my-6 space-y-4">
+  <p class="text-default">{t(dict, 'cda.formula.intro')}</p>
+
+  <!-- Bilan de puissance -->
+  <div class="flex flex-wrap items-center justify-center gap-2 rounded-xl border border-primary/40 bg-slate-950/70 p-3">
+    <span class={`${box} bg-white/5`}>
+      <span class="math text-lg sm:text-xl font-bold text-white">η · P</span>
+      <span class="text-xs text-slate-400">{t(dict, 'cda.formula.power')}</span>
+    </span>
+    <span class="text-xl font-black text-slate-400">=</span>
+    {
+      terms.map((term, i) => (
+        <>
+          {i > 0 && <span class="text-xl font-black text-slate-400">+</span>}
+          <span class={`${box} ${term.main ? 'border border-primary bg-primary/15' : 'bg-white/5'}`}>
+            <span
+              class={`whitespace-nowrap math text-lg sm:text-xl font-bold ${term.main ? 'text-primary' : 'text-white'}`}
+            >
+              {term.expr}
+            </span>
+            <span class="text-xs text-slate-400">{term.label}</span>
+          </span>
+        </>
+      ))
+    }
+  </div>
+
+  <!-- CdA isolé sur le plat -->
+  <p class="text-default">{t(dict, 'cda.formula.flat')}</p>
+  <div class="flex items-center justify-center gap-3 rounded-xl border border-primary/40 bg-slate-950/70 p-4">
+    <span class="text-2xl font-black italic text-primary">CdA</span>
+    <span class="text-2xl font-black text-slate-400">=</span>
+    <span class="inline-flex flex-col items-center whitespace-nowrap math text-lg sm:text-xl font-bold text-white">
+      <span class="px-2">η · P − Crr · m · g · v</span>
+      <span class="my-1 h-0.5 w-full bg-slate-300"></span>
+      <span class="px-2">½ · ρ · v³</span>
+    </span>
+  </div>
+
+  <!-- Légende des symboles -->
+  <dl class="grid grid-cols-1 gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
+    {
+      legend.map(([sym, desc]) => (
+        <div class="flex gap-2">
+          <dt class="w-9 shrink-0 math text-base font-bold text-primary">{sym}</dt>
+          <dd class="text-slate-300">{desc}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>
+
+<style>
+  /* La police du site dessine η comme un « n » : symboles en police mathématique. */
+  .math {
+    font-family: 'Cambria Math', Cambria, 'STIX Two Math', 'Times New Roman', Georgia, serif;
+  }
+</style>

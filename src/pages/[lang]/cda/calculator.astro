@@ -6,6 +6,7 @@
 import type { GetStaticPaths } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
 import CdaCalculator from '~/components/widgets/CdaCalculator.astro';
+import CdaFormula from '~/components/cda/CdaFormula.astro';
 import GuideCapture from '~/components/widgets/GuideCapture.astro';
 import PostSidebarBook from '~/components/blog/PostSidebarBook.astro';
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
@@ -47,7 +48,7 @@ const guideTexts = { eyebrow: 'cda.guide.eyebrow', title: 'cda.guide.title', tex
         </div>
 
         <h2>{t(dict, 'cda.formula.h2')}</h2>
-        <p set:html={t(dict, 'cda.formula.p1')} />
+        <CdaFormula dict={dict} />
         <p><a href={Link_cda}>{t(dict, 'cda.calcPage.valuesLink')} →</a></p>
 
         {/* Pont vers le Diagnostic : la mesure de surface frontale, position par position. */}
