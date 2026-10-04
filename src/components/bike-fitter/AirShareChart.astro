@@ -1,0 +1,138 @@
+---
+// Part de l'air dans la résistance totale sur le plat, sans vent, de 15 à
+// 50 km/h. Les points sont calculés ici à partir des hypothèses affichées sous
+// le graphique : changer une hypothèse change la courbe ET la légende.
+import { t } from '~/lib/i18n';
+
+interface Props {
+  dict: Record<string, string>;
+}
+const { dict } = Astro.props;
+
+// Hypothèses (paramètres de référence du livre, position route relevée)
+const RHO = 1.225; // kg/m³
+const CDA = 0.48; // m²
+const CRR = 0.005;
+const MASS = 80; // kg, cycliste + vélo
+const G = 9.81;
+
+const share = (kmh: number) => {
+  const v = kmh / 3.6;
+  const aero = 0.5 * RHO * CDA * v * v;
+  return (100 * aero) / (aero + MASS * G * CRR);
+};
+
+const W = 640;
+const H = 300;
+const pad = { l: 64, r: 20, t: 24, b: 54 };
+const xMin = 15;
+const xMax = 50;
+const x = (kmh: number) => pad.l + ((kmh - xMin) / (xMax - xMin)) * (W - pad.l - pad.r);
+const y = (pct: number) => pad.t + (1 - pct / 100) * (H - pad.t - pad.b);
+
+const speeds = Array.from({ length: xMax - xMin + 1 }, (_, i) => xMin + i);
+const path = speeds.map((s, i) => `${i ? 'L' : 'M'}${x(s).toFixed(1)},${y(share(s)).toFixed(1)}`).join(' ');
+const area = `${path} L${x(xMax)},${y(0)} L${x(xMin)},${y(0)} Z`;
+const marked = [25, 45].map((v) => ({ v, p: Math.round(share(v)) }));
+const tableRows = [15, 20, 25, 30, 35, 40, 45, 50].map((v) => ({ v, p: Math.round(share(v)) }));
+---
+
+<figure class="not-prose relative">
+  <figcaption class="text-base font-semibold text-default mb-3">{t(dict, 'bfx.chart.air.title')}</figcaption>
+  <svg viewBox={`0 0 ${W} ${H}`} class="w-full h-auto" role="img" aria-label={t(dict, 'bfx.chart.air.title')}>
+    <defs>
+      <linearGradient id="airShareFill" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="hsl(35 95% 58%)" stop-opacity="0.28"></stop>
+        <stop offset="100%" stop-color="hsl(35 95% 58%)" stop-opacity="0"></stop>
+      </linearGradient>
+    </defs>
+    {
+      [0, 25, 50, 75, 100].map((p) => (
+        <g>
+          <line x1={pad.l} x2={W - pad.r} y1={y(p)} y2={y(p)} stroke="currentColor" stroke-opacity="0.12" />
+          <text x={pad.l - 8} y={y(p) + 4} text-anchor="end" class="air-tick" fill="currentColor" fill-opacity="0.65">
+            {p} %
+          </text>
+        </g>
+      ))
+    }
+    {
+      [15, 20, 25, 30, 35, 40, 45, 50].map((s) => (
+        <text x={x(s)} y={H - pad.b + 18} text-anchor="middle" class="air-tick" fill="currentColor" fill-opacity="0.65">
+          {s}
+        </text>
+      ))
+    }
+    <text
+      x={(pad.l + W - pad.r) / 2}
+      y={H - 6}
+      text-anchor="middle"
+      class="air-tick"
+      fill="currentColor"
+      fill-opacity="0.8"
+    >
+      {t(dict, 'bfx.chart.air.x')}
+    </text>
+    <path d={area} fill="url(#airShareFill)"></path>
+    <path d={path} fill="none" stroke="hsl(35 95% 58%)" stroke-width="2.5" stroke-linejoin="round"></path>
+    {
+      marked.map(({ v, p }) => (
+        <g class="air-point">
+          <line
+            x1={x(v)}
+            x2={x(v)}
+            y1={y(p)}
+            y2={y(0)}
+            stroke="currentColor"
+            stroke-opacity="0.35"
+            stroke-dasharray="3 4"
+          />
+          <circle cx={x(v)} cy={y(p)} r="6" fill="hsl(35 95% 58%)" stroke="hsl(210 24% 18%)" stroke-width="2" />
+          <text x={x(v)} y={y(p) - 14} text-anchor="middle" class="air-mark" font-weight="700" fill="currentColor">
+            {p} %
+          </text>
+          <circle cx={x(v)} cy={y(p)} r="18" fill="transparent">
+            <title>{t(dict, 'bfx.chart.air.point', { v, p })}</title>
+          </circle>
+        </g>
+      ))
+    }
+  </svg>
+  <p class="mt-3 text-xs text-muted leading-relaxed">{t(dict, 'bfx.chart.air.conditions')}</p>
+  <div class="sr-only">
+    <table>
+      <caption>{t(dict, 'bfx.chart.air.title')}</caption>
+      <thead><tr><th>{t(dict, 'bfx.chart.air.x')}</th><th>{t(dict, 'bfx.chart.air.y')}</th></tr></thead>
+      <tbody
+        >{
+          tableRows.map((r) => (
+            <tr>
+              <>
+                <td>{r.v}</td>
+                <td>{r.p} %</td>
+              </>
+            </tr>
+          ))
+        }</tbody
+      >
+    </table>
+  </div>
+</figure>
+
+<style>
+  /* Tailles en unités du viewBox : plus grandes sur mobile, où le SVG est réduit. */
+  .air-tick {
+    font-size: 12px;
+  }
+  .air-mark {
+    font-size: 14px;
+  }
+  @media (max-width: 639px) {
+    .air-tick {
+      font-size: 20px;
+    }
+    .air-mark {
+      font-size: 24px;
+    }
+  }
+</style>

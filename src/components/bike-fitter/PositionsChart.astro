@@ -1,0 +1,73 @@
+---
+// Surfaces frontales de six positions d'un même cycliste (1,78 m, 72 kg),
+// mesurées avec AeroX. Source : O. Demichel, « S'entraîner à
+// l'aérodynamisme » (2026), tableau 2.1. Ne pas modifier sans la source.
+//
+// Longueur de barre = surface ; intensité de l'orange = gain par rapport à la
+// position 1 (plus la surface baisse, plus la barre et le pourcentage sont vifs).
+import { t } from '~/lib/i18n';
+
+interface Props {
+  dict: Record<string, string>;
+  lang: string;
+}
+const { dict, lang } = Astro.props;
+
+const AREAS = [0.52, 0.48, 0.44, 0.42, 0.36, 0.33];
+const ref = AREAS[0];
+const maxGain = (ref - Math.min(...AREAS)) / ref;
+const fmt = (n: number) => new Intl.NumberFormat(lang, { minimumFractionDigits: 2 }).format(n);
+const rows = AREAS.map((a, i) => {
+  const gain = (ref - a) / ref;
+  // Opacité de 0,2 (petit gain) à 1 (gain maximal) ; la référence reste grise.
+  const intensity = i === 0 ? 0 : 0.2 + 0.8 * (gain / maxGain);
+  return {
+    n: i + 1,
+    label: t(dict, `bfx.positions.p${i + 1}`),
+    area: fmt(a),
+    delta: i === 0 ? '' : `−${Math.round(gain * 100)} %`,
+    width: ((a / ref) * 100).toFixed(1),
+    intensity: intensity.toFixed(2),
+  };
+});
+---
+
+<figure class="not-prose">
+  <ol class="space-y-4" aria-label={t(dict, 'bfx.positions.axis')}>
+    {
+      rows.map((r) => (
+        <li class="grid grid-cols-[1.75rem_1fr_auto] gap-x-3 items-center">
+          <span class="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-sm font-bold text-default">
+            {r.n}
+          </span>
+          <div class="min-w-0">
+            <p class="text-sm text-muted leading-snug">{r.label}</p>
+            <div class="mt-1.5 h-3 rounded-full bg-white/10">
+              <div
+                class={`h-3 rounded-full ${r.n === 1 ? 'bg-slate-400' : ''}`}
+                style={`width:${r.width}%;${r.n === 1 ? '' : `background:hsl(35 95% 58% / ${r.intensity})`}`}
+              />
+            </div>
+          </div>
+          <div class="w-[5.5rem] text-right tabular-nums">
+            <p class="text-lg font-bold leading-tight text-default">{r.area} m²</p>
+            {r.delta ? (
+              <p
+                class={`mt-0.5 inline-block rounded-md px-1.5 text-sm font-black ${+r.intensity >= 0.6 ? 'text-slate-950' : 'text-white'}`}
+                style={`background:hsl(35 95% 58% / ${r.intensity})`}
+              >
+                {r.delta}
+              </p>
+            ) : (
+              <p class="mt-0.5 text-xs text-muted">{t(dict, 'bfx.positions.ref')}</p>
+            )}
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+  <figcaption class="mt-5 space-y-2 text-sm text-muted leading-relaxed">
+    <p>{t(dict, 'bfx.positions.reading')}</p>
+    <p class="text-xs italic">{t(dict, 'bfx.positions.source')}</p>
+  </figcaption>
+</figure>

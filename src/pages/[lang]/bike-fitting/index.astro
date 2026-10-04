@@ -1,13 +1,17 @@
 ---
 import type { GetStaticPaths } from 'astro';
+import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/PageLayout.astro';
 import Features from '~/components/widgets/Features.astro';
 import BfPricing from '~/components/widgets/BfPricing.astro';
 import BikeFitterTestimonials from '~/components/widgets/BikeFitterTestimonials.astro';
+import AirShareChart from '~/components/bike-fitter/AirShareChart.astro';
+import PositionsChart from '~/components/bike-fitter/PositionsChart.astro';
 
 import aeroxHero from '~/assets/images/aerox-hero.jpg';
 import bikePower from '~/assets/images/bike-fitter/bikefitting-bike-power.jpg';
-import aeroxGain from '~/assets/images/bike-fitter/aerox-gain.png';
+import silStart from '~/assets/images/bike-fitter/silhouette-position-depart.jpg';
+import silTested from '~/assets/images/bike-fitter/silhouette-position-testee.jpg';
 
 import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
 import { SITE } from 'astrowind:config';
@@ -18,41 +22,45 @@ export const getStaticPaths: GetStaticPaths = async () => SUPPORTED_LOCALES.map(
 
 const lang = (Astro.params.lang as Locale) ?? 'fr';
 const dict = getDict(lang);
+const list = (key: string) => t(dict, key).split('|');
 
 const metadata = {
-  title: t(dict, 'bf.meta.title'),
-  description: t(dict, 'bf.meta.description'),
+  title: t(dict, 'bfx.meta.title'),
+  description: t(dict, 'bfx.meta.description'),
   robots: { index: true, follow: true },
   openGraph: {
-    images: [{ url: '~/assets/images/bike-fitter/aerox-gain.png', alt: t(dict, 'bf.gain.img.alt') }],
+    images: [{ url: '~/assets/images/bike-fitter/silhouette-position-testee.jpg', alt: t(dict, 'bfx.hero.img.alt') }],
   },
 };
 
-const homeHref = `/${lang}/`;
-const blogBfHref = `/${lang}/blog/BF-mesurer-${lang}/`;
-// Tous les CTA de cette page mènent à la page de réservation de démo.
-// Elle ne s'adresse qu'aux bike-fitters, d'où la disparition du paramètre
-// `?profil=` qui servait à présélectionner un profil dans l'ancien
-// formulaire mixte.
-const reservationHref = `/${lang}/periode-test/#reservation`;
-// Action principale : l'essai gratuit (inscription bike fitter, 2 analyses
-// offertes). La démo reste proposée en second.
+// Action principale : l'essai gratuit (inscription bike fitter). La démo
+// reste proposée en second.
 const trialHref = `/${lang}/inscription/inscription/?profil=bike-fitter`;
+const reservationHref = `/${lang}/periode-test/#reservation`;
+const contactHref = `/${lang}/contact/`;
+const cdaHref = `/${lang}/cda/`;
 
-/* ===== FAQPage JSON-LD ===== */
-const faqItems = [1, 2, 3, 4, 5].map((i) => ({
-  '@type': 'Question' as const,
-  name: t(dict, `bf.faq.q${i}`),
-  acceptedAnswer: {
-    '@type': 'Answer' as const,
-    text: t(dict, `bf.faq.a${i}`),
-  },
+/* ===== FAQ : deux volets, réponses visibles ===== */
+type FaqItem = { q: string; a: string; link?: { href: string; label: string } };
+const faqPractical: FaqItem[] = [1, 2, 3, 4].map((i) => ({
+  q: t(dict, `bfx.faq.p${i}.q`),
+  a: t(dict, `bfx.faq.p${i}.a`),
+}));
+const faqBackground: FaqItem[] = [1, 2, 3, 4].map((i) => ({
+  q: t(dict, `bfx.faq.f${i}.q`),
+  a: t(dict, `bfx.faq.f${i}.a`),
+  link: i === 2 ? { href: cdaHref, label: t(dict, 'bfx.faq.f2.link') } : undefined,
 }));
 
+/* ===== FAQPage JSON-LD ===== */
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: faqItems,
+  mainEntity: [...faqPractical, ...faqBackground].map((f) => ({
+    '@type': 'Question' as const,
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer' as const, text: f.a },
+  })),
 };
 
 /* ===== Service JSON-LD ===== */
@@ -61,12 +69,8 @@ const serviceSchema = {
   '@context': 'https://schema.org',
   '@type': 'Service',
   name: 'AeroX Bike Fitting',
-  description: t(dict, 'bf.meta.description'),
-  provider: {
-    '@type': 'Organization',
-    name: 'AeroX',
-    url: siteOrigin,
-  },
+  description: t(dict, 'bfx.meta.description'),
+  provider: { '@type': 'Organization', name: 'AeroX', url: siteOrigin },
   url: `${siteOrigin}/${lang}/bike-fitting/`,
   areaServed: 'Worldwide',
   serviceType: 'Aerodynamic Bike Fitting Software',
@@ -79,12 +83,9 @@ const softwareSchema = {
   name: 'AeroX',
   applicationCategory: 'SportsApplication',
   operatingSystem: 'macOS, Windows',
-  description: t(dict, 'bf.meta.description'),
+  description: t(dict, 'bfx.meta.description'),
   url: `${siteOrigin}/${lang}/bike-fitting/`,
-  audience: {
-    '@type': 'BusinessAudience',
-    audienceType: 'Bike Fitters',
-  },
+  audience: { '@type': 'BusinessAudience', audienceType: 'Bike Fitters' },
   // Grille publique (HT). Source des montants : src/lib/billing/catalog.ts.
   offers: [
     { name: t(dict, 'bfp.essential.name'), price: '20.00', unitCode: 'MON' },
@@ -102,114 +103,147 @@ const softwareSchema = {
       price: o.price,
       priceCurrency: 'EUR',
       valueAddedTaxIncluded: false,
-      ...(o.unitCode ? { unitCode: o.unitCode, billingDuration: 1 } : {}),
+      unitCode: o.unitCode,
+      billingDuration: 1,
     },
   })),
 };
 
 /* ===== HowTo JSON-LD ===== */
+const steps = [1, 2, 3, 4].map((i) => ({
+  i,
+  title: t(dict, `bfx.steps.s${i}.title`),
+  desc: t(dict, `bfx.steps.s${i}.desc`),
+}));
 const howToSchema = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
-  name:
-    lang === 'fr'
-      ? 'Comment réaliser un bike fitting aérodynamique avec AeroX'
-      : 'How to perform an aerodynamic bike fitting with AeroX',
-  description: t(dict, 'bf.meta.description'),
-  step: [1, 2, 3].map((i) => ({
-    '@type': 'HowToStep',
-    name: t(dict, `bf.steps.s${i}.title`),
-    text: t(dict, `bf.steps.s${i}.desc`),
-  })),
+  name: t(dict, 'bfx.steps.title'),
+  description: t(dict, 'bfx.meta.description'),
+  step: steps.map((s) => ({ '@type': 'HowToStep', name: s.title, text: s.desc })),
 };
 
 /* ===== Review JSON-LD ===== */
-const reviews = [
+const reviewSchema = [
   { name: 'Marcelo Rocha', quote: t(dict, 'bf.social.rocha.quote') },
   { name: 'Marcelo Muniz Machado', quote: t(dict, 'bf.social.muniz.quote') },
   { name: 'Mark Gerlando', quote: t(dict, 'bf.social.gerlando.quote') },
-];
-const reviewSchema = reviews.map((r) => ({
+].map((r) => ({
   '@context': 'https://schema.org',
   '@type': 'Review',
-  itemReviewed: {
-    '@type': 'SoftwareApplication',
-    name: 'AeroX',
-  },
-  author: {
-    '@type': 'Person',
-    name: r.name,
-  },
+  itemReviewed: { '@type': 'SoftwareApplication', name: 'AeroX' },
+  author: { '@type': 'Person', name: r.name },
   reviewBody: r.quote,
 }));
+
+const principe = [1, 2, 3].map((i) => ({
+  title: t(dict, `bfx.principe.p${i}.title`),
+  text: t(dict, `bfx.principe.p${i}.text`),
+}));
+const mesures = [
+  { i: 1, icon: 'tabler:user-scan' },
+  { i: 2, icon: 'tabler:bolt' },
+  { i: 3, icon: 'tabler:clock-hour-4' },
+  { i: 4, icon: 'tabler:chart-line' },
+].map(({ i, icon }) => ({ icon, title: t(dict, `bfx.mesures.m${i}.title`), desc: t(dict, `bfx.mesures.m${i}.desc`) }));
+const clients = [
+  { i: 1, icon: 'tabler:bike' },
+  { i: 2, icon: 'tabler:stopwatch' },
+  { i: 3, icon: 'tabler:trophy' },
+  { i: 4, icon: 'tabler:route' },
+  { i: 5, icon: 'tabler:heart-handshake' },
+].map(({ i, icon }) => ({ icon, title: t(dict, `bfx.clients.c${i}.title`), desc: t(dict, `bfx.clients.c${i}.desc`) }));
+
+// Gains chiffrés : positions 1 et 5 du livre (la position testée des captures
+// est sur prolongateurs), à 30 km/h : tableaux 2.1, 2.2, 2.3 et 2.5 ;
+// 13,8 s/km × 40 km = 9 min 12 s.
+const gains = [
+  { icon: 'tabler:arrows-minimize', value: '−31 %', label: t(dict, 'bfx.gains.area'), detail: '0,52 → 0,36 m²' },
+  { icon: 'tabler:bolt', value: '−53 W', label: t(dict, 'bfx.gains.watts') },
+  { icon: 'tabler:gauge', value: '+3,9 km/h', label: t(dict, 'bfx.gains.speed'), detail: '30,0 → 33,9 km/h' },
+  { icon: 'tabler:stopwatch', value: '−9 min 12 s', label: t(dict, 'bfx.gains.time') },
+];
+const benefits = [
+  { i: 1, icon: 'tabler:eye-check' },
+  { i: 2, icon: 'tabler:award' },
+  { i: 3, icon: 'tabler:repeat' },
+  { i: 4, icon: 'tabler:plug-connected' },
+].map(({ i, icon }) => ({
+  icon,
+  title: t(dict, `bfx.benefits.b${i}.title`),
+  desc: t(dict, `bfx.benefits.b${i}.desc`),
+}));
+// Annuaire et modèle de page web : pas encore disponibles, affichés « Bientôt ».
+const growth = [
+  { i: 1, icon: 'tabler:users-group', soon: false },
+  { i: 2, icon: 'tabler:map-pin', soon: true },
+  { i: 3, icon: 'tabler:world-www', soon: true },
+].map(({ i, icon, soon }) => ({
+  icon,
+  soon,
+  title: t(dict, `bfx.growth.g${i}.title`),
+  desc: t(dict, `bfx.growth.g${i}.desc`),
+}));
+const precisionItems = (key: string) =>
+  list(key).map((item) => {
+    const [title, desc] = item.split('::');
+    return { title, desc };
+  });
+
+// Charte de la page en production : titres centrés, fonds alternés, blocs qui
+// apparaissent au défilement (.bf-fade-in).
+const section = 'relative not-prose scroll-mt-[72px] py-12 md:py-16';
+const alt = 'bg-gray-50 dark:bg-slate-900/50';
+const wrap = 'mx-auto max-w-4xl px-4 md:px-6';
+const h2 = 'text-2xl md:text-3xl font-bold text-center';
+const lead = 'mt-4 text-lg text-muted text-center max-w-3xl mx-auto';
+const card = 'rounded-2xl border border-gray-200 dark:border-slate-700 bg-white/5 p-6';
 ---
 
 <Layout metadata={metadata} audience="bike-fitter">
-  <!-- JSON-LD schemas -->
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
   {reviewSchema.map((r) => <script type="application/ld+json" set:html={JSON.stringify(r)} />)}
 
-  <!-- 1. HERO — full-width image + text overlay -->
-  <section class="relative not-prose overflow-hidden">
+  <!-- A1 · HERO -->
+  <section id="hero" class="relative not-prose overflow-hidden">
     <div class="absolute inset-0">
       <img
         src={aeroxHero.src}
         width={aeroxHero.width}
         height={aeroxHero.height}
-        alt={t(dict, 'bf.hero.img.alt')}
+        alt=""
         class="w-full h-full object-cover"
         loading="eager"
       />
       <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
     </div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-32">
+    <div
+      class="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-28 grid md:grid-cols-[1fr_auto] gap-10 items-center"
+    >
       <div class="max-w-2xl">
-        <p class="text-sm font-semibold uppercase tracking-wider text-primary mb-4">
-          {t(dict, 'bf.hero.tagline')}
-        </p>
+        <p class="text-sm font-semibold uppercase tracking-wider text-primary mb-4">{t(dict, 'bfx.hero.tagline')}</p>
         <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6 text-white">
-          {t(dict, 'bf.hero.title.l1')}<br />
-          <span class="text-primary">{t(dict, 'bf.hero.title.l2')}</span>
+          {t(dict, 'bfx.hero.title.l1')}<br />
+          <span class="text-primary">{t(dict, 'bfx.hero.title.l2')}</span>
         </h1>
-        <p class="text-lg md:text-xl text-gray-200 max-w-xl" set:html={t(dict, 'bf.hero.text')} />
-        <div class="mt-6 flex flex-wrap gap-3">
-          <span
-            class="inline-flex items-center gap-1.5 bg-primary/20 backdrop-blur-sm rounded-full px-4 py-1.5 border border-primary/30"
-          >
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              ></path></svg
-            >
-            <span class="text-sm font-bold text-white">{lang === 'fr' ? 'Résultats visibles' : 'Visible results'}</span>
-          </span>
-          <span
-            class="inline-flex items-center gap-1.5 bg-primary/20 backdrop-blur-sm rounded-full px-4 py-1.5 border border-primary/30"
-          >
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"
-              ><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              ></path></svg
-            >
-            <span class="text-sm font-bold text-white">{lang === 'fr' ? 'Mesure en direct' : 'Live measurement'}</span>
-          </span>
-          <span
-            class="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 border border-white/20"
-          >
-            <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"
-              ><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path></svg
-            >
-            <span class="text-sm font-semibold text-gray-200">{lang === 'fr' ? '2 min install' : '2 min setup'}</span>
-          </span>
-        </div>
+        <p class="text-lg md:text-xl text-gray-200 max-w-xl">{t(dict, 'bfx.hero.text')}</p>
+        <ul class="mt-6 flex flex-wrap gap-3">
+          {
+            [
+              { icon: 'tabler:eye', label: t(dict, 'bfx.hero.chip1') },
+              { icon: 'tabler:activity', label: t(dict, 'bfx.hero.chip2') },
+              { icon: 'tabler:clock', label: t(dict, 'bfx.hero.chip3') },
+            ].map((c) => (
+              <li class="inline-flex items-center gap-1.5 bg-primary/20 backdrop-blur-sm rounded-full px-4 py-1.5 border border-primary/30">
+                <Icon name={c.icon} class="w-4 h-4 text-primary" />
+                <span class="text-sm font-bold text-white">{c.label}</span>
+              </li>
+            ))
+          }
+        </ul>
         <div class="mt-8 flex flex-wrap gap-3">
           <a
             href={trialHref}
@@ -221,180 +255,333 @@ const reviewSchema = reviews.map((r) => ({
             href={reservationHref}
             class="btn-secondary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold"
           >
-            {t(dict, 'bf.hero.cta')}
+            {t(dict, 'bfx.hero.demo')}
           </a>
         </div>
+        <p class="mt-3 text-sm text-gray-300">{t(dict, 'bfx.hero.note')}</p>
       </div>
+      <figure class="hidden md:block w-[260px] lg:w-[290px]">
+        <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-3 border border-white/15 shadow-2xl">
+          <img
+            src={silTested.src}
+            width={silTested.width}
+            height={silTested.height}
+            alt={t(dict, 'bfx.hero.img.alt')}
+            class="block w-full rounded-xl"
+            loading="eager"
+          />
+        </div>
+        <figcaption class="mt-3 text-sm text-gray-300 text-center">{t(dict, 'bfx.hero.figcaption')}</figcaption>
+      </figure>
     </div>
   </section>
 
-  <!-- Bloc définition citable — optimisé GEO/AI Overviews -->
+  <!-- Définition citable (GEO) -->
   <section class="relative not-prose">
     <div class="mx-auto max-w-4xl px-4 md:px-6 py-6">
-      <p class="text-sm text-muted leading-relaxed">{t(dict, 'bf.definition')}</p>
-      <p class="text-xs text-muted/60 mt-2 italic">{t(dict, 'bf.lastUpdated')}</p>
+      <p class="text-sm text-muted leading-relaxed">{t(dict, 'bfx.definition')}</p>
     </div>
   </section>
 
-  <!-- 2. BÉNÉFICES -->
+  <!-- BÉNÉFICES STUDIO : les douleurs du fitter d'abord (widget de la production) -->
   <Features
+    id="benefices"
     columns={2}
-    title={t(dict, 'bf.benefits.title')}
-    items={[
-      {
-        title: t(dict, 'bf.benefits.b1.title'),
-        description: t(dict, 'bf.benefits.b1.desc'),
-        icon: 'tabler:chart-bar',
-      },
-      {
-        title: t(dict, 'bf.benefits.b2.title'),
-        description: t(dict, 'bf.benefits.b2.desc'),
-        icon: 'tabler:star',
-      },
-      {
-        title: t(dict, 'bf.benefits.b3.title'),
-        description: t(dict, 'bf.benefits.b3.desc'),
-        icon: 'tabler:repeat',
-      },
-      {
-        title: t(dict, 'bf.benefits.b4.title'),
-        description: t(dict, 'bf.benefits.b4.desc'),
-        icon: 'tabler:plug-connected',
-      },
-    ]}
+    classes={{ container: '!max-w-5xl' }}
+    title={t(dict, 'bfx.benefits.title')}
+    items={benefits.map((b) => ({ title: b.title, description: b.desc, icon: b.icon }))}
   />
 
-  <!-- VISUAL PROOF — image plein fond + glassmorphism overlay + aerox-gain -->
-  <section class="relative not-prose scroll-mt-[72px] overflow-hidden">
+  <!-- A4 · UNE COMPARAISON, PAS UN CHIFFRE ISOLÉ -->
+  <section id="avant-apres" class={`${section} overflow-hidden`}>
     <div class="absolute inset-0">
       <img
         src={bikePower.src}
         width={bikePower.width}
         height={bikePower.height}
-        alt={t(dict, 'bf.visual.img.alt')}
+        alt=""
         class="w-full h-full object-cover"
         loading="lazy"
       />
-      <div class="absolute inset-0 bg-black/30"></div>
+      <div class="absolute inset-0 bg-slate-950/80"></div>
     </div>
-    <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-16 md:py-24">
-      <div class="flex flex-col items-center md:flex-row md:items-stretch md:justify-center gap-6 md:gap-12">
-        <!-- Aerox gain overlay — 450px fixe -->
-        <div class="w-[85%] md:w-[500px] md:max-w-[45%] md:shrink-0 flex items-center justify-center">
-          <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/15 shadow-2xl inline-block">
-            <img
-              src={aeroxGain.src}
-              width={aeroxGain.width}
-              height={aeroxGain.height}
-              alt={t(dict, 'bf.gain.img.alt')}
-              class="block w-full rounded-xl"
-              loading="lazy"
-            />
+    <div class={`relative ${wrap}`}>
+      <h2 class={`${h2} text-white`}>{t(dict, 'bfx.compare.title')}</h2>
+      <p class={`${lead} !text-gray-200`}>{t(dict, 'bfx.compare.text')}</p>
+      <ul class="mt-5 flex flex-wrap justify-center gap-2">
+        {
+          list('bfx.compare.settings').map((s) => (
+            <li class="rounded-full border border-primary/30 bg-primary/20 backdrop-blur-sm px-3 py-1 text-sm font-semibold text-white">
+              {s}
+            </li>
+          ))
+        }
+      </ul>
+
+      <!-- Carte avant / après : captures réelles, gains au centre (≤ 60 % de la hauteur d'écran) -->
+      <figure class="mt-8">
+        <div
+          class="grid grid-cols-2 rounded-t-2xl bg-slate-950/80 py-2 text-center text-base md:text-lg font-bold uppercase tracking-wide"
+        >
+          <span class="text-slate-300">{t(dict, 'bfx.compare.before')}</span>
+          <span class="text-emerald-400">{t(dict, 'bfx.compare.after')}</span>
+        </div>
+        <div
+          class="grid grid-cols-2 md:grid-cols-[auto_12.5rem_auto] md:justify-center gap-x-3 gap-y-7 md:gap-5 items-center rounded-b-2xl border border-t-0 border-white/15 bg-white/5 backdrop-blur-sm p-3 pb-7 md:p-4 md:pb-8"
+        >
+          {
+            [
+              {
+                img: silStart,
+                badge: t(dict, 'bfx.compare.badge.before'),
+                area: '0,52 m²',
+                tone: 'bg-red-700 text-white',
+                order: '',
+              },
+              {
+                img: silTested,
+                badge: t(dict, 'bfx.compare.badge.after'),
+                area: '0,36 m²',
+                tone: 'bg-emerald-400 text-slate-950',
+                order: 'md:order-last',
+              },
+            ].map(({ img, badge, area, tone, order }) => (
+              <div class={`relative justify-self-center ${order}`}>
+                <img
+                  src={img.src}
+                  width={img.width}
+                  height={img.height}
+                  alt={badge}
+                  class="block h-[26vh] md:h-[min(52vh,27.5rem)] w-auto rounded-xl"
+                  loading="lazy"
+                />
+                <span
+                  class={`absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2.5 py-1 text-center text-[11px] md:text-xs font-bold uppercase leading-tight shadow-lg ${tone}`}
+                >
+                  {badge}
+                  <br />
+                  <span class="text-sm normal-case tabular-nums">{area}</span>
+                </span>
+              </div>
+            ))
+          }
+
+          <!-- Widget « gains chiffrés » -->
+          <div
+            class="col-span-2 md:col-span-1 rounded-2xl border-2 border-emerald-400/80 bg-slate-950/90 px-3 py-3 md:py-2.5 text-center shadow-[0_0_28px_rgba(52,211,153,0.3)]"
+          >
+            <p class="font-bold md:text-sm uppercase leading-tight text-white">{t(dict, 'bfx.gains.title')}</p>
+            <p class="text-xs md:text-[11px] text-slate-400">{t(dict, 'bfx.gains.subtitle')}</p>
+            <dl class="mt-2 grid grid-cols-2 md:grid-cols-1 gap-x-3">
+              {
+                gains.map((g) => (
+                  <div class="border-t border-white/10 py-2.5 md:py-1.5">
+                    <Icon name={g.icon} class="mx-auto hidden md:block h-4 w-4 text-emerald-400" />
+                    <dd class="mt-1 whitespace-nowrap text-xl md:text-[1.35rem] font-black leading-none text-emerald-400 tabular-nums">
+                      {g.value}
+                    </dd>
+                    <dt class="mt-1 text-[11px] md:text-[10px] font-bold uppercase tracking-wide text-slate-100">
+                      {g.label}
+                    </dt>
+                    {g.detail && <p class="hidden md:block text-[10px] text-slate-400 tabular-nums">{g.detail}</p>}
+                  </div>
+                ))
+              }
+            </dl>
           </div>
         </div>
-        <!-- Glassmorphism text card — 33% -->
-        <div class="w-[85%] md:w-1/3 flex">
-          <div
-            class="w-full bg-white/75 dark:bg-slate-800/75 backdrop-blur-sm border border-gray-200 dark:border-slate-600 rounded-2xl p-8 md:p-10 shadow-2xl flex flex-col justify-center"
-          >
-            <h2 class="text-2xl md:text-3xl font-bold mb-4 text-default">{t(dict, 'bf.visual.title')}</h2>
-            <p class="text-lg text-muted">{t(dict, 'bf.visual.subtitle')}</p>
-          </div>
+        <figcaption class="mt-3 space-y-1 text-xs text-gray-300 leading-relaxed">
+          <p>{t(dict, 'bfx.compare.fig.caption')}</p>
+          <p class="italic">{t(dict, 'bfx.gains.note')}</p>
+        </figcaption>
+      </figure>
+
+      <div class="mt-8 grid sm:grid-cols-2 gap-4">
+        <div class="rounded-2xl border border-red-500/50 bg-red-500/15 backdrop-blur-sm p-6">
+          <h3 class="font-semibold text-red-300">{t(dict, 'bfx.compare.without.title')}</h3>
+          <ul class="mt-3 space-y-2">
+            {
+              list('bfx.compare.without.text').map((item) => (
+                <li class="flex gap-2 text-gray-200">
+                  <Icon name="tabler:x" class="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
+                  <span>{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="rounded-2xl border-2 border-primary bg-primary/15 backdrop-blur-sm p-6">
+          <h3 class="font-semibold text-primary">{t(dict, 'bfx.compare.with.title')}</h3>
+          <ul class="mt-3 space-y-2">
+            {
+              list('bfx.compare.with.text').map((item) => (
+                <li class="flex gap-2 text-white">
+                  <Icon name="tabler:check" class="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                  <span>{item}</span>
+                </li>
+              ))
+            }
+          </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CE QUE MESURE AEROX — contenu enrichi + liens internes -->
-  <section class="relative not-prose scroll-mt-[72px]">
-    <div class="relative mx-auto max-w-4xl px-4 md:px-6 py-12 md:py-16">
-      <h2 class="text-2xl md:text-3xl font-bold text-center mb-8">{t(dict, 'bf.metrics.title')}</h2>
-      <div class="prose prose-lg dark:prose-invert max-w-none text-muted">
-        <p set:html={t(dict, 'bf.metrics.intro')} />
-        <div class="grid md:grid-cols-2 gap-6 my-8 not-prose">
-          {
-            [
-              {
-                i: 1,
-                icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>',
-              },
-              { i: 2, icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>' },
-              {
-                i: 3,
-                icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>',
-              },
-              {
-                i: 4,
-                icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>',
-              },
-            ].map(({ i, icon }) => (
-              <div class="flex gap-3 items-start bf-fade-in">
-                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-1">
-                  <svg
-                    class="w-5 h-5 text-primary"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    set:html={icon}
-                  />
-                </div>
-                <div>
-                  <p class="font-semibold text-default mb-1">{t(dict, `bf.metrics.m${i}.title`)}</p>
-                  <p class="text-sm text-muted">{t(dict, `bf.metrics.m${i}.desc`)}</p>
-                </div>
+  <!-- A3 · CE QUE MESURE AEROX -->
+  <section id="mesures" class={section}>
+    <div class={wrap}>
+      <h2 class={h2}>{t(dict, 'bfx.mesures.title')}</h2>
+      <div class="mt-8 grid sm:grid-cols-2 gap-x-8 gap-y-6">
+        {
+          mesures.map((m) => (
+            <div class="flex gap-4 bf-fade-in">
+              <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <Icon name={m.icon} class="w-5 h-5 text-primary" />
               </div>
+              <div>
+                <h3 class="font-semibold text-default">{m.title}</h3>
+                <p class="mt-1 text-sm text-muted">{m.desc}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+      <p class="mt-8 rounded-xl border-l-4 border-primary bg-primary/10 px-5 py-4 text-default">
+        {t(dict, 'bfx.mesures.note')}
+      </p>
+    </div>
+  </section>
+
+  <!-- A9 · PRÉCISION ET LIMITES -->
+  <section id="precision" class={`${section} ${alt}`}>
+    <div class={wrap}>
+      <h2 class={h2}>{t(dict, 'bfx.precision.title')}</h2>
+      <p class={lead}>{t(dict, 'bfx.precision.intro')}</p>
+
+      <div class="mt-8 grid md:grid-cols-2 gap-4">
+        {
+          [
+            {
+              value: '3 %',
+              title: t(dict, 'bfx.precision.repeat'),
+              desc: t(dict, 'bfx.precision.repeat.desc'),
+              strong: true,
+            },
+            {
+              value: '10 %',
+              title: t(dict, 'bfx.precision.absolute'),
+              desc: t(dict, 'bfx.precision.absolute.desc'),
+              strong: false,
+            },
+          ].map((s) => (
+            <div class={`${card} flex items-center gap-5`}>
+              <p class={`shrink-0 text-5xl font-black tabular-nums ${s.strong ? 'text-primary' : 'text-default'}`}>
+                {s.value}
+              </p>
+              <div>
+                <p class="font-semibold text-default">{s.title}</p>
+                <p class="mt-1 text-sm text-muted">{s.desc}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-4 grid md:grid-cols-2 gap-4">
+        {
+          [
+            {
+              title: t(dict, 'bfx.precision.does.title'),
+              items: precisionItems('bfx.precision.does.items'),
+              icon: 'tabler:circle-check-filled',
+              mark: 'tabler:check',
+              head: 'bg-emerald-400/15 text-emerald-300',
+              tone: 'text-emerald-400',
+            },
+            {
+              title: t(dict, 'bfx.precision.doesnt.title'),
+              items: precisionItems('bfx.precision.doesnt.items'),
+              icon: 'tabler:circle-x-filled',
+              mark: 'tabler:x',
+              head: 'bg-red-500/15 text-red-300',
+              tone: 'text-red-400',
+            },
+          ].map((col) => (
+            <div class="overflow-hidden rounded-2xl border border-gray-200 dark:border-slate-700 bg-white/5">
+              <h3 class={`flex items-center gap-2 px-5 py-3 text-lg font-bold ${col.head}`}>
+                <Icon name={col.icon} class="h-6 w-6" />
+                {col.title}
+              </h3>
+              <ul class="divide-y divide-gray-200 dark:divide-slate-700/70">
+                {col.items.map((it) => (
+                  <li class="flex gap-3 px-5 py-3">
+                    <Icon name={col.mark} class={`mt-0.5 h-5 w-5 shrink-0 ${col.tone}`} />
+                    <div>
+                      <p class="font-semibold text-default">{it.title}</p>
+                      <p class="text-sm text-muted">{it.desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class={`${card} mt-4`}>
+        <h3 class="font-semibold text-default">{t(dict, 'bfx.precision.vary.title')}</h3>
+        <ul class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+          {
+            list('bfx.precision.vary.items').map((v, idx) => (
+              <li class="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 text-sm text-default">
+                <Icon
+                  name={['tabler:body-scan', 'tabler:camera', 'tabler:bulb', 'tabler:shirt'][idx]}
+                  class="h-5 w-5 shrink-0 text-primary"
+                />
+                {v}
+              </li>
             ))
           }
-        </div>
-        <p set:html={t(dict, 'bf.metrics.outro')} />
+        </ul>
+        <p class="mt-4 text-muted">{t(dict, 'bfx.precision.vary.note')}</p>
       </div>
+    </div>
+  </section>
 
-      <!-- Liens internes -->
-      <div class="mt-8 grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-        <a
-          href={blogBfHref}
-          class="group flex items-start gap-3 p-4 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-primary/50 hover:shadow-md transition-all"
-        >
-          <div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-              ></path></svg
-            >
-          </div>
-          <div>
-            <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">
-              {t(dict, 'bf.links.blog')}
-            </p>
-            <p class="text-xs text-muted mt-0.5">{lang === 'fr' ? 'Article de blog' : 'Blog post'}</p>
-          </div>
-        </a>
-        <a
-          href={homeHref}
-          class="group flex items-start gap-3 p-4 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-primary/50 hover:shadow-md transition-all"
-        >
-          <div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-              ></path></svg
-            >
-          </div>
-          <div>
-            <p class="text-sm font-semibold text-default group-hover:text-primary transition-colors">
-              {t(dict, 'bf.links.home')}
-            </p>
-            <p class="text-xs text-muted mt-0.5">{lang === 'fr' ? 'Page principale' : 'Main page'}</p>
-          </div>
-        </a>
+  <!-- A7 · A8 : aide à la décision, position tenable -->
+  <section id="complement" class={section}>
+    <div class={`${wrap} grid md:grid-cols-2 gap-6`}>
+      <div class="rounded-2xl border-2 border-primary bg-primary/10 p-6 bf-fade-in">
+        <Icon name="tabler:tools" class="w-8 h-8 text-primary" />
+        <h2 class="mt-3 text-xl font-bold text-default">{t(dict, 'bfx.complement.title')}</h2>
+        <p class="mt-2 text-default">{t(dict, 'bfx.complement.text')}</p>
       </div>
+      <div class={`${card} bf-fade-in`}>
+        <Icon name="tabler:lungs" class="w-8 h-8 text-primary" />
+        <h2 class="mt-3 text-xl font-bold text-default">{t(dict, 'bfx.tenable.title')}</h2>
+        <p class="mt-2 text-muted">{t(dict, 'bfx.tenable.text')}</p>
+      </div>
+    </div>
+  </section>
 
-      <!-- CTA intermédiaire -->
+  <!-- A5 · LA SÉANCE EN TROIS ÉTAPES -->
+  <section id="etapes" class={`${section} ${alt}`}>
+    <div class="mx-auto max-w-6xl px-4 md:px-6">
+      <h2 class={h2}>{t(dict, 'bfx.steps.title')}</h2>
+      <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {
+          steps.map((s) => (
+            <div class="flex flex-col items-center text-center bf-fade-in">
+              <div class="w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center text-xl font-bold mb-4">
+                {s.i}
+              </div>
+              <h3 class="text-lg font-semibold mb-2">{s.title}</h3>
+              <p class="text-sm text-muted">{s.desc}</p>
+            </div>
+          ))
+        }
+      </div>
+      {/* TODO : photo du poste de mesure en studio (webcam face au vélo sur home trainer) à insérer ici. */}
       <div class="mt-10 text-center">
         <a
           href={trialHref}
@@ -406,70 +593,8 @@ const reviewSchema = reviews.map((r) => ({
     </div>
   </section>
 
-  <!-- COMMENT ÇA MARCHE — 3 étapes -->
-  <section class="relative not-prose scroll-mt-[72px] bg-gray-50 dark:bg-slate-900/50">
-    <div class="relative mx-auto max-w-5xl px-4 md:px-6 py-12 md:py-16">
-      <h2 class="text-2xl md:text-3xl font-bold text-center mb-10">{t(dict, 'bf.steps.title')}</h2>
-      <div class="grid md:grid-cols-3 gap-8">
-        {
-          [1, 2, 3].map((i) => (
-            <div class="flex flex-col items-center text-center bf-fade-in">
-              <div class="w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center text-xl font-bold mb-4">
-                {i}
-              </div>
-              <h3 class="text-lg font-semibold mb-2">{t(dict, `bf.steps.s${i}.title`)}</h3>
-              <p class="text-sm text-muted">{t(dict, `bf.steps.s${i}.desc`)}</p>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- TABLEAU COMPARATIF — AeroX vs Soufflerie vs Fitting classique -->
-  <section class="relative not-prose scroll-mt-[72px]">
-    <div class="mx-auto max-w-4xl px-4 md:px-6 py-10 md:py-14">
-      <h2 class="text-2xl md:text-3xl font-bold text-center mb-8">{t(dict, 'bf.table.title')}</h2>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm border-collapse">
-          <thead>
-            <tr class="bg-primary/10 dark:bg-primary/20">
-              <th class="text-left px-4 py-3 font-semibold">{t(dict, 'bf.table.col1')}</th>
-              <th class="text-left px-4 py-3 font-semibold text-primary">{t(dict, 'bf.table.col2')}</th>
-              <th class="text-left px-4 py-3 font-semibold">{t(dict, 'bf.table.col3')}</th>
-              <th class="text-left px-4 py-3 font-semibold">{t(dict, 'bf.table.col4')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              [
-                { key: 'cost', highlight: true },
-                { key: 'aero', highlight: true },
-                { key: 'access', highlight: false },
-                { key: 'duration', highlight: true },
-                { key: 'followup', highlight: true },
-              ].map(({ key, highlight }, idx) => (
-                <tr
-                  class={`border-b border-gray-200 dark:border-slate-700 ${idx % 2 === 1 ? 'bg-gray-50 dark:bg-slate-800/30' : ''}`}
-                >
-                  <td class="px-4 py-3 font-medium">{t(dict, `bf.table.${key}`)}</td>
-                  <td class={`px-4 py-3 ${highlight ? 'text-primary font-semibold' : ''}`}>
-                    {t(dict, `bf.table.${key}.aerox`)}
-                  </td>
-                  <td class="px-4 py-3">{t(dict, `bf.table.${key}.tunnel`)}</td>
-                  <td class="px-4 py-3 text-muted">{t(dict, `bf.table.${key}.classic`)}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </div>
-      <p class="text-xs text-muted/60 text-center mt-3 italic">{t(dict, 'bf.lastUpdated')}</p>
-    </div>
-  </section>
-
-  <!-- 4. PREUVE SOCIALE — Bike fitters -->
-  <section class="relative not-prose scroll-mt-[72px] overflow-hidden">
+  <!-- A11 · ILS L'UTILISENT EN SÉANCE -->
+  <section id="preuves" class={`${section} overflow-hidden`}>
     <!-- Globe SVG en fond -->
     <div class="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
       <svg
@@ -516,79 +641,172 @@ const reviewSchema = reviews.map((r) => ({
         <circle cx="400" cy="400" r="10" fill="currentColor" opacity="0.7"></circle>
       </svg>
     </div>
-
-    <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16">
-      <div class="max-w-4xl mx-auto text-center mb-10">
-        <h2 class="text-2xl md:text-3xl font-bold mb-2">{t(dict, 'bf.testimonial.title')}</h2>
-        <p class="text-lg text-muted" set:html={t(dict, 'bf.social.subtitle')} />
-      </div>
-
+    <div class={`relative ${wrap}`}>
+      <h2 class={h2}>{t(dict, 'bfx.proof.title')}</h2>
+      <p class={lead}>{t(dict, 'bfx.proof.subtitle')}</p>
+    </div>
+    <div class="relative mx-auto mt-10 max-w-7xl px-4 md:px-6">
       <BikeFitterTestimonials lang={lang} />
     </div>
   </section>
 
-  <!-- 4 bis. TARIFS -->
-  <BfPricing lang={lang} />
-
-  <!-- 5. FAQ -->
-  <section class="relative not-prose scroll-mt-[72px]">
-    <div class="relative mx-auto max-w-4xl px-4 md:px-6 py-12 md:py-16">
-      <h2 class="text-2xl md:text-3xl font-bold text-center mb-8">{t(dict, 'bf.faq.title')}</h2>
-      <div class="space-y-4">
+  <!-- ARGUMENTS · CE QUE VOUS POURREZ EXPLIQUER À VOS CLIENTS -->
+  <section id="principe" class={`${section} ${alt}`}>
+    <div class={wrap}>
+      <h2 class={h2}>{t(dict, 'bfx.explain.title')}</h2>
+      <ol class="mt-8 space-y-5">
         {
-          [1, 2, 3, 4, 5].map((i) => (
-            <div class="rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors">
-              <div class="px-5 py-4">
-                <h3 class="font-semibold text-base text-default">{t(dict, `bf.faq.q${i}`)}</h3>
-                <p class="mt-2 text-sm text-muted">{t(dict, `bf.faq.short${i}`)}</p>
-                <details class="mt-2 group">
-                  <summary class="cursor-pointer inline-flex items-center text-muted dark:hover:text-primary font-medium select-none text-sm">
-                    {t(dict, `bf.faq.more${i}`)}
-                    <svg
-                      class="w-4 h-4 ml-1 transition-transform group-open:rotate-180"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </summary>
-                  <div class="mt-2 p-3 rounded-xl dark:bg-black/50 text-muted text-sm leading-relaxed">
-                    {t(dict, `bf.faq.a${i}`)}
-                  </div>
-                </details>
+          principe.map((p, idx) => (
+            <li class="flex gap-4">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white font-bold">
+                {idx + 1}
+              </span>
+              <div>
+                <h3 class="text-lg font-semibold text-default">{p.title}</h3>
+                <p class="mt-1 text-muted">{p.text}</p>
               </div>
-            </div>
+            </li>
           ))
         }
+      </ol>
+      <div class={`${card} mt-8 max-w-2xl mx-auto`}>
+        <AirShareChart dict={dict} />
       </div>
     </div>
   </section>
 
-  <!-- 6. FORMULAIRE DE CONTACT -->
-  <section id="contact-bf" class="relative not-prose scroll-mt-[72px]">
-    <div class="relative mx-auto max-w-3xl px-4 md:px-6 py-12 md:py-16">
-      <div class="text-center p-6 md:p-10 rounded-2xl shadow-xl dark:shadow-none dark:border dark:border-slate-600">
-        <h2 class="text-3xl md:text-4xl font-bold tracking-tighter mb-4">{t(dict, 'bf.cta.title')}</h2>
-        <p class="text-xl text-muted dark:text-slate-400 mb-8">{t(dict, 'bf.cta.subtitle')}</p>
+  <!-- A3 bis · ORDRES DE GRANDEUR MESURÉS -->
+  <section id="positions" class={section}>
+    <div class={wrap}>
+      <h2 class={h2}>{t(dict, 'bfx.positions.title')}</h2>
+      <p class={lead}>{t(dict, 'bfx.positions.intro')}</p>
+      <div class={`${card} mt-6`}>
+        <PositionsChart dict={dict} lang={lang} />
+      </div>
+    </div>
+  </section>
 
+  <!-- A10 · POUR QUELS CLIENTS -->
+  <section id="clients" class={`${section} ${alt}`}>
+    <div class={wrap}>
+      <h2 class={h2}>{t(dict, 'bfx.clients.title')}</h2>
+      <ul class="mt-8 grid sm:grid-cols-2 gap-x-8 gap-y-5">
         {
-          /*
-          Un seul formulaire de réservation pour tout le site, sur
-          /periode-test/. `profil=bike-fitter` y présélectionne le bon profil :
-          sans ce paramètre, un bike-fitter venu d'ici arriverait sur un
-          formulaire réglé sur « cycliste ».
-        */
+          clients.map((c) => (
+            <li class="flex gap-3 bf-fade-in">
+              <Icon name={c.icon} class="mt-0.5 w-6 h-6 shrink-0 text-primary" />
+              <div>
+                <h3 class="font-semibold text-default">{c.title}</h3>
+                <p class="mt-0.5 text-sm text-muted">{c.desc}</p>
+              </div>
+            </li>
+          ))
         }
-        <div class="flex flex-wrap justify-center gap-3">
+      </ul>
+    </div>
+  </section>
+
+  <!-- DÉVELOPPEZ VOTRE ACTIVITÉ : études groupées (Illimité), annuaire et page web (à venir) -->
+  <section id="activite" class={section}>
+    <div class={wrap}>
+      <h2 class={h2}>{t(dict, 'bfx.growth.title')}</h2>
+      <p class={lead}>{t(dict, 'bfx.growth.intro')}</p>
+      <ul class="mt-6 space-y-4">
+        {
+          growth.map((g) => (
+            <li class={`${card} flex gap-4 bf-fade-in`}>
+              <div class="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <Icon name={g.icon} class="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h3 class="flex flex-wrap items-center gap-2 text-lg font-semibold text-default">
+                  {g.title}
+                  {g.soon && (
+                    <span class="rounded-full border border-primary/60 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-primary">
+                      {t(dict, 'bfx.growth.soon')}
+                    </span>
+                  )}
+                </h3>
+                <p class="mt-1 text-muted">{g.desc}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="mt-8 text-center">
+        <a
+          href={trialHref}
+          class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold"
+        >
+          {t(dict, 'bf.cta.trial')}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- A12 · TARIFS (inchangés) -->
+  <BfPricing lang={lang} />
+
+  <!-- A13 · FAQ -->
+  <section id="faq" class={section}>
+    <div class={wrap}>
+      <h2 class={h2}>{t(dict, 'bfx.faq.title')}</h2>
+      {
+        [
+          { title: t(dict, 'bfx.faq.practical'), items: faqPractical },
+          { title: t(dict, 'bfx.faq.background'), items: faqBackground },
+        ].map((group) => (
+          <div class="mt-8">
+            <h3 class="text-sm font-bold uppercase tracking-wide text-primary">{group.title}</h3>
+            <div class="mt-3 space-y-3">
+              {group.items.map((f) => (
+                <div class="rounded-xl border border-gray-200 dark:border-slate-700 px-5 py-4">
+                  <h4 class="font-semibold text-default">{f.q}</h4>
+                  <p class="mt-2 text-sm text-muted leading-relaxed">{f.a}</p>
+                  {f.link && (
+                    <a href={f.link.href} class="mt-2 inline-block text-sm font-semibold text-primary hover:underline">
+                      {f.link.label} →
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- A14 · A15 · RÉSUMÉ ET APPEL FINAL -->
+  <section id="cta-final" class={section}>
+    <div class={wrap}>
+      <h2 class={h2}>{t(dict, 'bfx.resume.title')}</h2>
+      <ul class="mt-6 mx-auto max-w-2xl space-y-2">
+        {
+          list('bfx.resume.items').map((r) => (
+            <li class="flex gap-2 text-default">
+              <Icon name="tabler:check" class="mt-0.5 w-5 h-5 shrink-0 text-primary" />
+              <span>{r}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <div
+        class="mt-12 text-center p-6 md:p-10 rounded-2xl shadow-xl dark:shadow-none dark:border dark:border-slate-600"
+      >
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tighter">{t(dict, 'bfx.final.title')}</h2>
+        <p class="mt-3 text-lg text-muted">{t(dict, 'bfx.final.text')}</p>
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
           <a href={trialHref} class="btn-primary px-8 py-3 text-lg font-semibold inline-block">
             {t(dict, 'bf.cta.trial')}
           </a>
           <a href={reservationHref} class="btn-secondary px-8 py-3 text-lg font-semibold inline-block">
-            {t(dict, 'bf.cta.demo')}
+            {t(dict, 'bfx.hero.demo')}
           </a>
         </div>
+        <a href={contactHref} class="mt-5 inline-block text-sm text-muted underline hover:text-primary">
+          {t(dict, 'bfx.final.quote')}
+        </a>
       </div>
     </div>
   </section>
