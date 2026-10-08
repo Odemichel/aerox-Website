@@ -241,3 +241,21 @@ describe('phone', () => {
     expect(validateLead({ ...base, phone: '0'.repeat(2001) })).toEqual({ ok: false, error: 'field_too_long' });
   });
 });
+
+describe('studio', () => {
+  it('est facultatif et vide par défaut', () => {
+    const r = validateLead(base);
+    expect(r.ok && r.lead.studio).toBe('');
+  });
+
+  it('est conservé, sans espaces autour', () => {
+    const r = validateLead({ ...base, studio: '  B2S ', intent: 'presentation' });
+    expect(r.ok && r.lead.studio).toBe('B2S');
+    expect(r.ok && r.lead.intent).toBe('presentation');
+  });
+
+  it('refuse un studio non texte ou trop long', () => {
+    expect(validateLead({ ...base, studio: 42 })).toEqual({ ok: false, error: 'invalid_field' });
+    expect(validateLead({ ...base, studio: 'x'.repeat(2001) })).toEqual({ ok: false, error: 'field_too_long' });
+  });
+});

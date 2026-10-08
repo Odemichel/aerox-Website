@@ -14,10 +14,11 @@ const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
 /**
  * Ce qu'un bike-fitter demande, et donc à quel point il est chaud :
  * `demo` et `devis` viennent du formulaire, `inscription` de la création de
- * compte directe. Toute autre valeur retombe sur `demo` plutôt que de rejeter
+ * compte directe, `presentation` du formulaire qui précède la réservation
+ * Calendly de la présentation en ligne (page bike fitter). Toute autre valeur retombe sur `demo` plutôt que de rejeter
  * la requête : c'est un champ d'information commerciale, pas un contrôle.
  */
-export const LEAD_INTENTS = ['demo', 'devis', 'inscription'] as const;
+export const LEAD_INTENTS = ['demo', 'devis', 'inscription', 'presentation'] as const;
 export type LeadIntent = (typeof LEAD_INTENTS)[number];
 
 export type LeadInput = {
@@ -30,6 +31,7 @@ export type LeadInput = {
   webcam?: unknown;
   intent?: unknown;
   phone?: unknown;
+  studio?: unknown;
   source?: unknown;
   results?: unknown;
   hp?: unknown;
@@ -45,6 +47,7 @@ export type Lead = {
   webcam: 'oui' | 'non' | '';
   intent: LeadIntent;
   phone: string;
+  studio: string;
 };
 
 export type LeadResult = { ok: true; honeypot: boolean; lead: Lead } | { ok: false; error: string };
@@ -135,6 +138,11 @@ export function validateLead(input: LeadInput): LeadResult {
   if (phone === null) return { ok: false, error: 'invalid_field' };
   if (phone.length > MAX_FIELD_LENGTH) return { ok: false, error: 'field_too_long' };
 
+  // Nom du studio (bike fitter), facultatif.
+  const studio = asText(input.studio);
+  if (studio === null) return { ok: false, error: 'invalid_field' };
+  if (studio.length > MAX_FIELD_LENGTH) return { ok: false, error: 'field_too_long' };
+
   // Le honeypot se déclenche sur toute valeur non vide, quel que soit son type :
   // un bot qui poste `hp: 1` ou `hp: ['x']` ne doit pas passer au travers du
   // filtre simplement parce que ce n'est pas une chaîne.
@@ -143,7 +151,7 @@ export function validateLead(input: LeadInput): LeadResult {
   return {
     ok: true,
     honeypot,
-    lead: { topic: topic as LeadTopic, name, email, message, availability, trainer, webcam, intent, phone },
+    lead: { topic: topic as LeadTopic, name, email, message, availability, trainer, webcam, intent, phone, studio },
   };
 }
 

@@ -3,7 +3,9 @@ import type { GetStaticPaths } from 'astro';
 import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/PageLayout.astro';
 import Features from '~/components/widgets/Features.astro';
+import { BF_PRESENTATION_URL } from '~/config/links';
 import BfPricing from '~/components/widgets/BfPricing.astro';
+import BfPresentationDialog from '~/components/widgets/BfPresentationDialog.astro';
 import BikeFitterTestimonials from '~/components/widgets/BikeFitterTestimonials.astro';
 import AirShareChart from '~/components/bike-fitter/AirShareChart.astro';
 import PositionsChart from '~/components/bike-fitter/PositionsChart.astro';
@@ -33,10 +35,16 @@ const metadata = {
   },
 };
 
-// Action principale : l'essai gratuit (inscription bike fitter). La démo
-// reste proposée en second.
-const trialHref = `/${lang}/inscription/inscription/?profil=bike-fitter`;
-const reservationHref = `/${lang}/periode-test/#reservation`;
+// Seule action proposée : réserver la présentation en ligne. Le lien ouvre
+// d'abord le formulaire court (BfPresentationDialog, enregistrement
+// MailerLite), puis Calendly. Pas d'essai en libre-service depuis cette page :
+// la démo passe avant l'essai.
+const presentation = {
+  href: BF_PRESENTATION_URL,
+  target: '_blank',
+  rel: 'noopener',
+  'data-bf-presentation': '',
+};
 const contactHref = `/${lang}/contact/`;
 const cdaHref = `/${lang}/cda/`;
 
@@ -260,16 +268,10 @@ const card = 'rounded-2xl border border-gray-200 dark:border-slate-700 bg-white/
         </ul>
         <div class="mt-8 flex flex-wrap gap-3">
           <a
-            href={trialHref}
+            {...presentation}
             class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold"
           >
-            {t(dict, 'bf.cta.trial')}
-          </a>
-          <a
-            href={reservationHref}
-            class="btn-secondary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold"
-          >
-            {t(dict, 'bfx.hero.demo')}
+            {t(dict, 'bf.cta.presentation')}
           </a>
         </div>
         <p class="mt-3 text-sm text-gray-300">{t(dict, 'bfx.hero.note')}</p>
@@ -603,10 +605,10 @@ const card = 'rounded-2xl border border-gray-200 dark:border-slate-700 bg-white/
       {/* TODO : photo du poste de mesure en studio (webcam face au vélo sur home trainer) à insérer ici. */}
       <div class="mt-10 text-center">
         <a
-          href={trialHref}
+          {...presentation}
           class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold"
         >
-          {t(dict, 'bf.cta.trial')}
+          {t(dict, 'bf.cta.presentation')}
         </a>
       </div>
     </div>
@@ -754,10 +756,10 @@ const card = 'rounded-2xl border border-gray-200 dark:border-slate-700 bg-white/
       </ul>
       <div class="mt-8 text-center">
         <a
-          href={trialHref}
+          {...presentation}
           class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-lg rounded-md font-semibold"
         >
-          {t(dict, 'bf.cta.trial')}
+          {t(dict, 'bf.cta.presentation')}
         </a>
       </div>
     </div>
@@ -816,11 +818,8 @@ const card = 'rounded-2xl border border-gray-200 dark:border-slate-700 bg-white/
         <h2 class="text-3xl md:text-4xl font-bold tracking-tighter">{t(dict, 'bfx.final.title')}</h2>
         <p class="mt-3 text-lg text-muted">{t(dict, 'bfx.final.text')}</p>
         <div class="mt-6 flex flex-wrap justify-center gap-3">
-          <a href={trialHref} class="btn-primary px-8 py-3 text-lg font-semibold inline-block">
-            {t(dict, 'bf.cta.trial')}
-          </a>
-          <a href={reservationHref} class="btn-secondary px-8 py-3 text-lg font-semibold inline-block">
-            {t(dict, 'bfx.hero.demo')}
+          <a {...presentation} class="btn-primary px-8 py-3 text-lg font-semibold inline-block">
+            {t(dict, 'bf.cta.presentation')}
           </a>
         </div>
         <a href={contactHref} class="mt-5 inline-block text-sm text-muted underline hover:text-primary">
@@ -829,6 +828,7 @@ const card = 'rounded-2xl border border-gray-200 dark:border-slate-700 bg-white/
       </div>
     </div>
   </section>
+  <BfPresentationDialog lang={lang} />
 </Layout>
 
 <style>

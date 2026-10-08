@@ -83,6 +83,7 @@ export const POST: APIRoute = async (context) => {
   if (lead.trainer) fields.home_trainer = lead.trainer;
   if (lead.webcam) fields.webcam = lead.webcam;
   if (lead.phone) fields.phone = lead.phone;
+  if (lead.studio) fields.studio = lead.studio;
   // Champs de qualification bike-fitter : `bf_intent` dit ce qu'il demande
   // (démo, devis, ou simple création de compte), `bf_status` et `bf_signup`
   // alignent la fiche MailerLite sur ce que porte déjà Supabase. Un compte
@@ -167,7 +168,12 @@ export const POST: APIRoute = async (context) => {
           availability: lead.availability,
           trainer: lead.trainer,
           webcam: lead.webcam,
-          message: lead.message,
+          // Demande de présentation : le formulaire n'a pas de message, la
+          // notification dit ce qui a été demandé et pour quel studio.
+          message:
+            lead.intent === 'presentation'
+              ? `Présentation en ligne (Calendly)${lead.studio ? ` · Studio : ${lead.studio}` : ''}`
+              : lead.message,
         },
       }),
       // Comme pour MailerLite, le rejet du timeout vient de `fetch` : il est

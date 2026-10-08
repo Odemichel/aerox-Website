@@ -1,0 +1,134 @@
+---
+// Formulaire court avant la réservation de la présentation en ligne (page
+// bike fitter). Chaque lien `a[data-bf-presentation]` ouvre cette fenêtre au
+// lieu d'aller directement sur Calendly : le bike fitter est d'abord
+// enregistré par /api/lead (groupe MailerLite bike-fitter, bf_intent
+// `presentation`, notification admin), puis envoyé sur Calendly avec son nom
+// et son email déjà remplis.
+//
+// Sans JavaScript, le lien mène directement à Calendly (href conservé).
+// Si l'enregistrement échoue, la redirection a quand même lieu : on ne perd
+// jamais la réservation pour un incident MailerLite.
+import { BF_PRESENTATION_URL } from '~/config/links';
+import { type Locale, getDict, t } from '~/lib/i18n';
+
+const { lang } = Astro.props as { lang: Locale };
+const dict = getDict(lang);
+const inputClass =
+  'w-full border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 text-base text-gray-900 dark:text-white bg-white dark:bg-slate-800';
+---
+
+<dialog
+  id="bf-presentation-dialog"
+  data-calendly={BF_PRESENTATION_URL}
+  data-lang={lang}
+  class="w-[calc(100%-2rem)] max-w-md rounded-2xl p-0 bg-white dark:bg-slate-900 text-default backdrop:bg-black/60"
+  aria-labelledby="bf-presentation-title"
+>
+  <form method="dialog" class="relative px-6 py-6 space-y-4">
+    <button
+      type="submit"
+      value="cancel"
+      formnovalidate
+      class="absolute right-3 top-3 rounded-full px-2 text-2xl leading-none text-muted hover:text-default"
+      aria-label={t(dict, 'bfpres.close')}
+    >
+      ×
+    </button>
+    <div>
+      <h2 id="bf-presentation-title" class="text-xl font-bold pr-6">{t(dict, 'bfpres.title')}</h2>
+      <p class="mt-1 text-sm text-muted">{t(dict, 'bfpres.text')}</p>
+    </div>
+    <label class="flex flex-col gap-1 text-sm font-medium">
+      {t(dict, 'bfpres.name')}
+      <input type="text" name="name" autocomplete="name" required maxlength="200" class={inputClass} />
+    </label>
+    <label class="flex flex-col gap-1 text-sm font-medium">
+      {t(dict, 'bfpres.email')}
+      <input type="email" name="email" autocomplete="email" required maxlength="200" class={inputClass} />
+    </label>
+    <label class="flex flex-col gap-1 text-sm font-medium">
+      {t(dict, 'bfpres.studio')}
+      <input type="text" name="studio" autocomplete="organization" required maxlength="200" class={inputClass} />
+    </label>
+    {/* Honeypot : invisible pour l'humain, rempli par les bots. Jamais de label. */}
+    <input
+      type="text"
+      name="hp"
+      tabindex="-1"
+      autocomplete="off"
+      aria-hidden="true"
+      class="absolute left-[-9999px] w-px h-px opacity-0"
+    />
+    <button
+      type="submit"
+      value="send"
+      class="btn-primary w-full px-6 py-3 font-semibold rounded-lg disabled:opacity-60"
+    >
+      {t(dict, 'bfpres.submit')}
+    </button>
+    <p class="text-xs text-muted text-center">{t(dict, 'bfpres.privacy')}</p>
+  </form>
+</dialog>
+
+<script>
+  // Même schéma d'attache que guideCaptureForm : appel immédiat +
+  // `astro:page-load`, idempotent grâce au marqueur `data-bound`.
+  function initBfPresentation() {
+    const dialog = document.getElementById('bf-presentation-dialog') as HTMLDialogElement | null;
+    if (!dialog || dialog.dataset.bound === '1') return;
+    dialog.dataset.bound = '1';
+    // Navigateur sans <dialog> : les liens gardent leur comportement (Calendly direct).
+    if (typeof dialog.showModal !== 'function') return;
+    const form = dialog.querySelector('form')!;
+    const send = form.querySelector<HTMLButtonElement>('button[value="send"]')!;
+    const calendly = dialog.dataset.calendly ?? '';
+    const lang = dialog.dataset.lang ?? 'fr';
+
+    document.querySelectorAll<HTMLAnchorElement>('a[data-bf-presentation]').forEach((a) =>
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        dialog.showModal();
+      })
+    );
+
+    // Arrivée depuis le bouton du header d'une autre page.
+    if (window.location.hash === '#presentation') dialog.showModal();
+
+    form.addEventListener('submit', async (e) => {
+      const submitter = (e as SubmitEvent).submitter as HTMLButtonElement | null;
+      if (submitter?.value !== 'send') return; // fermeture : comportement natif
+      e.preventDefault();
+      const value = (n: string) => (form.elements.namedItem(n) as HTMLInputElement).value.trim();
+      const name = value('name');
+      const email = value('email');
+      send.disabled = true;
+      try {
+        const res = await fetch(`/${lang}/api/lead/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            topic: 'bike-fitter',
+            intent: 'presentation',
+            name,
+            email,
+            studio: value('studio'),
+            hp: (form.elements.namedItem('hp') as HTMLInputElement).value,
+          }),
+          signal: AbortSignal.timeout(10000),
+        });
+        if (!res.ok) console.error('bf-presentation: enregistrement refusé', res.status);
+      } catch (err) {
+        console.error('bf-presentation: enregistrement impossible', err);
+      }
+      // Calendly préremplit nom et email depuis l'URL.
+      const url = new URL(calendly);
+      url.searchParams.set('name', name);
+      url.searchParams.set('email', email);
+      window.location.href = url.toString();
+    });
+  }
+
+  initBfPresentation();
+  document.addEventListener('astro:page-load', initBfPresentation);
+</script>

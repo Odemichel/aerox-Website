@@ -3,11 +3,16 @@
 // intégrée à sa carte), 14 jours d'essai gratuit sur les deux, guide de
 // choix, accompagnement inclus et FAQ tarifs.
 //
+// Page publique : grille informative, aucun bouton d'achat ni d'essai, seul
+// l'appel à réserver la présentation en ligne. Les boutons d'achat ne
+// s'affichent que dans l'espace bike fitter (`inAccount`).
+//
 // La page est pré-rendue : tout ce qui change dans le temps (places restantes,
 // fin de l'offre de lancement) est lu côté navigateur, jamais figé au build.
 import { Icon } from 'astro-icon/components';
 import { getDict, t, type Locale } from '~/lib/i18n';
 import { BF_AVAILABLE_AT, LAUNCH_OFFER } from '~/lib/billing/catalog';
+import { BF_PRESENTATION_URL } from '~/config/links';
 
 interface Props {
   lang: Locale;
@@ -34,7 +39,6 @@ const priceSuffix = (period: string) => `${t(dict, 'bfp.vat')}${period.startsWit
 // Accompagnement inclus dans toutes les offres : listé dans chaque carte,
 // là où il est lu, plutôt que dans un bloc à part.
 const included = [t(dict, 'bfp.inc.setup'), t(dict, 'bfp.inc.monthly')];
-const trialHref = `/${lang}/inscription/inscription/?profil=bike-fitter`;
 const demoHref = `/${lang}/periode-test/#reservation`;
 
 const plans = [
@@ -100,9 +104,11 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
                 </li>
               ))}
             </ul>
-            <button type="button" class="bf-buy btn-secondary w-full justify-center" data-offer={p.offer}>
-              {p.cta}
-            </button>
+            {inAccount && (
+              <button type="button" class="bf-buy btn-secondary w-full justify-center" data-offer={p.offer}>
+                {p.cta}
+              </button>
+            )}
           </div>
         ))
       }
@@ -195,34 +201,40 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
             ))
           }
         </ul>
-        <button
-          type="button"
-          class="bf-buy bf-launch-only btn-primary w-full justify-center"
-          data-offer="unlimited_launch"
-        >
-          {t(dict, 'bfp.launch.cta')}
-        </button>
-        <button
-          type="button"
-          class="bf-buy bf-launchyearly-only hidden btn-primary w-full justify-center"
-          data-offer="unlimited_launch_annual"
-        >
-          {t(dict, 'bfp.launch.cta')}
-        </button>
-        <button
-          type="button"
-          class="bf-buy bf-standard-only hidden btn-primary w-full justify-center"
-          data-offer="unlimited"
-        >
-          {t(dict, 'bfp.unlimited.cta')}
-        </button>
-        <button
-          type="button"
-          class="bf-buy bf-yearly-only hidden btn-primary w-full justify-center"
-          data-offer="unlimited_annual"
-        >
-          {t(dict, 'bfp.unlimited.cta')}
-        </button>
+        {
+          inAccount && (
+            <>
+              <button
+                type="button"
+                class="bf-buy bf-launch-only btn-primary w-full justify-center"
+                data-offer="unlimited_launch"
+              >
+                {t(dict, 'bfp.launch.cta')}
+              </button>
+              <button
+                type="button"
+                class="bf-buy bf-launchyearly-only hidden btn-primary w-full justify-center"
+                data-offer="unlimited_launch_annual"
+              >
+                {t(dict, 'bfp.launch.cta')}
+              </button>
+              <button
+                type="button"
+                class="bf-buy bf-standard-only hidden btn-primary w-full justify-center"
+                data-offer="unlimited"
+              >
+                {t(dict, 'bfp.unlimited.cta')}
+              </button>
+              <button
+                type="button"
+                class="bf-buy bf-yearly-only hidden btn-primary w-full justify-center"
+                data-offer="unlimited_annual"
+              >
+                {t(dict, 'bfp.unlimited.cta')}
+              </button>
+            </>
+          )
+        }
       </div>
     </div>
 
@@ -243,10 +255,18 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
       </dl>
     </div>
 
-    <!-- Essai gratuit : conditions (partout) et inscription (hors espace BF) -->
+    <!-- Essai gratuit : conditions (partout) ; hors espace BF, seul appel : la présentation en ligne -->
     <p class="mx-auto mt-6 max-w-3xl text-center text-sm text-muted">{t(dict, 'bfp.trial')}</p>
     <div class={`mt-6 flex flex-col items-center gap-2 text-center ${inAccount ? 'hidden' : ''}`}>
-      <a href={trialHref} class="btn-primary px-8 py-3 text-lg font-semibold">{t(dict, 'bf.cta.trial')}</a>
+      <a
+        href={BF_PRESENTATION_URL}
+        target="_blank"
+        rel="noopener"
+        data-bf-presentation
+        class="btn-primary px-8 py-3 text-lg font-semibold"
+      >
+        {t(dict, 'bf.cta.presentation')}
+      </a>
       <p class="text-sm text-muted">
         {t(dict, 'bfp.quote.text')}
         <a href={demoHref} class="ml-1 font-semibold text-primary underline hover:no-underline">
