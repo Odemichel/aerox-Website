@@ -101,7 +101,7 @@ export function makeNavigation(langInput?: string, audience: Audience = 'rider')
       audience === 'bike-fitter'
         ? {
             variant: 'primary',
-            text: `<span class="sm:hidden">${t('cta.bikefitter.short')}</span><span class="hidden sm:inline">${t('lead.form.intent.demo')}</span>`,
+            text: `<span class="sm:hidden">${t('cta.bikefitter.short')}</span><span class="hidden sm:inline">${t('bf.cta.presentation')}</span>`,
             icon: 'tabler:calendar-event',
             // Présentation en ligne : sur la page bike fitter, le lien ouvre le
             // formulaire avant Calendly (BfPresentationDialog) ; ailleurs, il y
