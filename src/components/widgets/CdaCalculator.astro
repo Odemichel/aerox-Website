@@ -6,7 +6,10 @@
 //  2. l'analyseur : taille + vélo de route / contre-la-montre → ce que le
 //     cycliste pourrait gagner face à une position optimisée pour sa
 //     morphologie (km/h à puissance égale, watts à vitesse égale), puis le
-//     pont vers le Diagnostic.
+//     pont vers le Diagnostic ;
+//  3. sous les gains, un encart facultatif « recevoir mes résultats » :
+//     email seul, envoyé avec les chiffres à la route du livre (MailerLite).
+//     Rien n'est masqué derrière l'email.
 import { CRR, ETA } from '~/lib/cda';
 import { type Locale, getDict, t } from '~/lib/i18n';
 import { localizedHref } from '~/utils/localize';
@@ -168,6 +171,44 @@ const inputClass =
       </div>
       <p data-gain-optimal class="mt-3 font-medium hidden"></p>
       <p class="mt-3 text-xs text-muted">{t(dict, 'cda.calc.estimates')}</p>
+
+      {/* Encart email : n'apparaît qu'avec les gains, disparaît une fois envoyé. */}
+      <div
+        data-cda-mail
+        data-text={t(dict, 'cda.mail.text')}
+        data-text-optimal={t(dict, 'cda.mail.textOptimal')}
+        data-success={t(dict, 'cda.mail.success')}
+        data-error={t(dict, 'book.form.error')}
+        class="relative mt-5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/50 px-4 py-4"
+      >
+        <p class="font-semibold">{t(dict, 'cda.mail.title')}</p>
+        <p data-cda-mail-text class="text-sm text-muted mt-1 mb-3"></p>
+        <form data-cda-mail-form class="flex flex-col sm:flex-row gap-2">
+          <input
+            type="email"
+            name="email"
+            autocomplete="email"
+            aria-label={t(dict, 'book.form.email.placeholder')}
+            placeholder={t(dict, 'book.form.email.placeholder')}
+            required
+            class={`w-full sm:flex-1 text-sm ${inputClass}`}
+          />
+          {/* Honeypot : invisible pour l'humain, rempli par les bots. Jamais de label. */}
+          <input
+            type="text"
+            name="hp"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+            class="absolute left-[-9999px] w-px h-px opacity-0"
+          />
+          <button type="submit" class="btn-primary px-5 py-2 text-sm font-semibold rounded-lg disabled:opacity-50">
+            {t(dict, 'cda.mail.submit')}
+          </button>
+        </form>
+        <p data-cda-mail-msg class="text-sm mt-2 hidden" aria-live="polite"></p>
+        <p data-cda-mail-privacy class="text-xs text-muted mt-2">{t(dict, 'cda.mail.privacy')}</p>
+      </div>
       <p class="mt-4 text-sm">
         {t(dict, 'cda.calc.bridge')}
         <a href={localizedHref(lang, '/#pricing')} class="text-primary font-semibold underline ml-1">
@@ -224,7 +265,7 @@ const inputClass =
 
       // Compteur d'usage anonyme (Supabase, voir /api/cda-event/) : n'attend
       // pas la réponse et n'affecte jamais l'affichage.
-      const track = (kind: 'calc' | 'analyze', bike?: Bike) => {
+      const track = (kind: 'calc' | 'analyze' | 'email', bike?: Bike) => {
         fetch('/api/cda-event/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -232,6 +273,20 @@ const inputClass =
           keepalive: true,
         }).catch(() => undefined);
       };
+
+      // Encart « recevoir mes résultats » : il reprend la dernière analyse.
+      const mail = q('[data-cda-mail]');
+      const mailForm = mail.querySelector<HTMLFormElement>('form[data-cda-mail-form]')!;
+      const mailText = q('[data-cda-mail-text]');
+      const mailMsg = q('[data-cda-mail-msg]');
+      let lastGain: {
+        cda: number;
+        targetCda: number;
+        gainKmh: number;
+        wattsSaved: number;
+        speedKmh: number;
+        bike: Bike;
+      } | null = null;
 
       // Résultat de l'étape 1, repris par l'étape 2.
       let last: { cda: number; input: CdaInput; riderWeight: number } | null = null;
@@ -265,6 +320,39 @@ const inputClass =
         })
       );
       syncBike();
+
+      mailForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!lastGain) return;
+        const btn = mailForm.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+        const email = (mailForm.elements.namedItem('email') as HTMLInputElement).value.trim();
+        const hp = (mailForm.elements.namedItem('hp') as HTMLInputElement).value;
+        const md = mail.dataset;
+        btn.disabled = true;
+        let ok = false;
+        try {
+          const res = await fetch(`/${d.lang}/telechargement/api/subscribe-livre/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, hp, source: 'calculator_result', results: lastGain }),
+          });
+          ok = Boolean(((await res.json()) as { success?: boolean }).success);
+        } catch {
+          ok = false;
+        }
+        mailMsg.classList.remove('hidden', 'text-red-600', 'text-green-600');
+        mailMsg.classList.add(ok ? 'text-green-600' : 'text-red-600');
+        mailMsg.textContent = (ok ? md.success : md.error) ?? '';
+        if (!ok) {
+          btn.disabled = false;
+          return;
+        }
+        // Envoyé : on ne redemande plus rien pendant la visite.
+        mailForm.classList.add('hidden');
+        mailText.classList.add('hidden');
+        q('[data-cda-mail-privacy]').classList.add('hidden');
+        track('email');
+      });
 
       calc.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -324,6 +412,17 @@ const inputClass =
         gOptimal.classList.toggle('hidden', !gain.alreadyOptimal);
         gOptimal.textContent = (d.optimalShort ?? '').replace('{bike}', bikeLabel);
         gainBox.classList.remove('hidden');
+        lastGain = {
+          cda: last.cda,
+          targetCda: gain.targetCda,
+          gainKmh,
+          wattsSaved: watts,
+          speedKmh: last.input.speedKmh,
+          bike,
+        };
+        mailText.textContent = ((gain.alreadyOptimal ? mail.dataset.textOptimal : mail.dataset.text) ?? '')
+          .replace('{cda}', n2.format(last.cda))
+          .replace('{gain}', `+${n1.format(gainKmh)} ${kmh}`);
         track('analyze', bike);
       });
     });

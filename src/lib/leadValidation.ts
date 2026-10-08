@@ -31,6 +31,7 @@ export type LeadInput = {
   intent?: unknown;
   phone?: unknown;
   source?: unknown;
+  results?: unknown;
   hp?: unknown;
 };
 
@@ -150,10 +151,60 @@ export function validateLead(input: LeadInput): LeadResult {
  * Formulaire d'où vient l'inscription au livre (champ MailerLite
  * `signup_source`). Valeur hors liste : ignorée, jamais un motif de rejet.
  */
-export const SIGNUP_SOURCES = ['home', 'sidebar', 'article_end', 'calculator', 'cda', 'method'] as const;
+export const SIGNUP_SOURCES = [
+  'home',
+  'sidebar',
+  'article_end',
+  'calculator',
+  'calculator_result',
+  'cda',
+  'method',
+] as const;
 export type SignupSource = (typeof SIGNUP_SOURCES)[number];
 
-export type BookSubscriber = { email: string; name: string; phone: string; source: SignupSource | '' };
+/**
+ * Résultats du calculateur de CdA joints à l'inscription (encart « recevoir
+ * mes résultats »), recopiés dans des champs MailerLite pour le mail de
+ * récapitulatif. Bornes larges : on écarte l'absurde, pas l'atypique.
+ */
+export type CdaResults = {
+  cda: number;
+  targetCda: number;
+  gainKmh: number;
+  wattsSaved: number;
+  speedKmh: number;
+  bike: 'road' | 'tt';
+};
+
+const CDA_RESULT_BOUNDS: Record<Exclude<keyof CdaResults, 'bike'>, [number, number]> = {
+  cda: [0.05, 2],
+  targetCda: [0.05, 2],
+  gainKmh: [0, 30],
+  wattsSaved: [0, 2000],
+  speedKmh: [1, 90],
+};
+
+/** Résultats valides, ou `null` : des résultats invalides ne bloquent jamais l'inscription. */
+export function validateCdaResults(input: unknown): CdaResults | null {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return null;
+  const r = input as Record<string, unknown>;
+  if (r.bike !== 'road' && r.bike !== 'tt') return null;
+  const out: Partial<CdaResults> = { bike: r.bike };
+  for (const [key, [min, max]] of Object.entries(CDA_RESULT_BOUNDS)) {
+    const v = r[key];
+    if (typeof v !== 'number' || !Number.isFinite(v) || v < min || v > max) return null;
+    out[key as keyof typeof CDA_RESULT_BOUNDS] = v;
+  }
+  return out as CdaResults;
+}
+
+export type BookSubscriber = {
+  email: string;
+  name: string;
+  phone: string;
+  source: SignupSource | '';
+  results: CdaResults | null;
+};
 
 export type BookSubscriberResult =
   | { ok: true; honeypot: boolean; subscriber: BookSubscriber }
@@ -184,5 +235,7 @@ export function validateBookSubscriber(input: LeadInput): BookSubscriberResult {
 
   const source = (SIGNUP_SOURCES as readonly unknown[]).includes(input.source) ? (input.source as SignupSource) : '';
 
-  return { ok: true, honeypot: isHoneypotFilled(input.hp), subscriber: { email, name, phone, source } };
+  const results = validateCdaResults(input.results);
+
+  return { ok: true, honeypot: isHoneypotFilled(input.hp), subscriber: { email, name, phone, source, results } };
 }

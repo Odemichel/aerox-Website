@@ -1,13 +1,14 @@
 // src/lib/cdaEvents.ts
 //
 // Compteur d'usage du calculateur de CdA : un événement par calcul (`calc`)
-// et par analyse d'efficacité (`analyze`), sans aucune donnée personnelle
+// par analyse d'efficacité (`analyze`) et par demande des résultats par email
+// (`email`, l'adresse elle-même n'est jamais transmise ici), sans aucune donnée personnelle
 // (ni IP, ni identifiant). Lu dans Supabase par les vues
 // cda_tool_activity_daily / _weekly / _monthly.
 
 import { SUPPORTED_LOCALES } from '~/lib/i18n';
 
-export const CDA_EVENT_KINDS = ['calc', 'analyze'] as const;
+export const CDA_EVENT_KINDS = ['calc', 'analyze', 'email'] as const;
 export type CdaEventKind = (typeof CDA_EVENT_KINDS)[number];
 
 export type CdaEvent = { kind: CdaEventKind; lang: string; bike: 'road' | 'tt' | null };

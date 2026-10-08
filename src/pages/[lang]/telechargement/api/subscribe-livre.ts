@@ -2,7 +2,7 @@ export const prerender = false;
 
 import { SUPPORTED_LOCALES } from '~/lib/i18n';
 import type { APIRoute } from 'astro';
-import { validateBookSubscriber } from '~/lib/leadValidation';
+import { type CdaResults, validateBookSubscriber } from '~/lib/leadValidation';
 import { bookRateLimiter } from '~/lib/rateLimit';
 import { emailDigest, isJsonRequest, rateLimitKey } from '~/lib/requestGuards';
 
@@ -10,10 +10,37 @@ const GROUP_LIVRE_FR = '180094076021900759';
 const GROUP_GLOBAL_FR = '180112371932464856';
 const GROUP_LIVRE_EN = '180112344157783367';
 const GROUP_GLOBAL_EN = '180113595562985140';
+// Encart « recevoir mes résultats » du calculateur de CdA : l'automatisation
+// de ces groupes envoie le récapitulatif (champs cda_*).
+const GROUP_CDA_RESULTS_FR = '200778278777127972';
+const GROUP_CDA_RESULTS_EN = '200778280506230086';
 
 // Même budget que /api/lead : sans lui, un MailerLite qui s'enlise fait tuer
 // l'invocation par la plateforme et le visiteur voit une erreur non contrôlée.
 const MAILERLITE_TIMEOUT_MS = 8000;
+
+/**
+ * Champs MailerLite du récapitulatif, déjà mis en forme pour le mail : le
+ * modèle les insère tels quels. Français pour les listes FR, anglais sinon
+ * (même partage que les groupes).
+ */
+function cdaResultFields(r: CdaResults, fr: boolean): Record<string, string> {
+  const fmt = (v: number, digits: number) =>
+    new Intl.NumberFormat(fr ? 'fr-FR' : 'en-GB', {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    }).format(v);
+  const bike =
+    r.bike === 'tt' ? (fr ? 'vélo de contre-la-montre' : 'time-trial bike') : fr ? 'vélo de route' : 'road bike';
+  return {
+    cda_value: fmt(r.cda, 2),
+    cda_target: fmt(r.targetCda, 2),
+    cda_gain_kmh: fmt(r.gainKmh, 1),
+    cda_gain_watts: fmt(r.wattsSaved, 0),
+    cda_speed: fmt(r.speedKmh, 1),
+    cda_bike: bike,
+  };
+}
 
 function json(body: unknown, status: number) {
   return new Response(JSON.stringify(body), {
@@ -49,12 +76,14 @@ export const POST: APIRoute = async (context) => {
     return json({ success: true }, 200);
   }
 
-  const { email, name, phone, source } = result.subscriber;
+  const { email, name, phone, source, results } = result.subscriber;
 
   // `[lang]` accepte n'importe quel segment (route SSR). Seul `fr` va vers les
   // listes françaises ; toute autre langue reçoit le livre et les emails en
   // anglais plutôt qu'en français.
-  const groups = params.lang === 'fr' ? [GROUP_LIVRE_FR, GROUP_GLOBAL_FR] : [GROUP_LIVRE_EN, GROUP_GLOBAL_EN];
+  const fr = params.lang === 'fr';
+  const groups = fr ? [GROUP_LIVRE_FR, GROUP_GLOBAL_FR] : [GROUP_LIVRE_EN, GROUP_GLOBAL_EN];
+  if (results) groups.push(fr ? GROUP_CDA_RESULTS_FR : GROUP_CDA_RESULTS_EN);
 
   // Champs vides omis : l'appel met à jour un abonné existant, et un `name: ''`
   // risquerait d'effacer le nom d'un abonné qui se réinscrit depuis le
@@ -66,6 +95,7 @@ export const POST: APIRoute = async (context) => {
   // la page : `[lang]` n'est retenu que s'il fait partie des langues du site.
   if (source) fields.signup_source = source;
   if ((SUPPORTED_LOCALES as readonly string[]).includes(params.lang ?? '')) fields.lang = params.lang as string;
+  if (results) Object.assign(fields, cdaResultFields(results, fr));
 
   let mlRes: Response;
   try {

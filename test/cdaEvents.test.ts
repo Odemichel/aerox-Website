@@ -10,6 +10,13 @@ describe('validateCdaEvent', () => {
       bike: 'tt',
     });
   });
+  it('accepte une demande de résultats par email, sans vélo', () => {
+    expect(validateCdaEvent({ kind: 'email', lang: 'fr', bike: 'tt' })).toEqual({
+      kind: 'email',
+      lang: 'fr',
+      bike: null,
+    });
+  });
   it('ignore le vélo pour un calcul', () => {
     expect(validateCdaEvent({ kind: 'calc', lang: 'fr', bike: 'tt' })?.bike).toBeNull();
   });
