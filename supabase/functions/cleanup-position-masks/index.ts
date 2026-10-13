@@ -36,10 +36,7 @@ Deno.serve(async (req) => {
     return new Response('unauthorized', { status: 401 });
   }
 
-  const db = createClient(
-    Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-  );
+  const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
   const { data, error } = await db.rpc('position_masks_expired');
   if (error) {
@@ -50,15 +47,10 @@ Deno.serve(async (req) => {
   const paths = (data ?? []) as string[];
   let deleted = 0;
   for (let i = 0; i < paths.length; i += BATCH) {
-    const { data: removed, error: removeError } = await db.storage
-      .from(BUCKET)
-      .remove(paths.slice(i, i + BATCH));
+    const { data: removed, error: removeError } = await db.storage.from(BUCKET).remove(paths.slice(i, i + BATCH));
     if (removeError) {
       console.error('storage.remove', removeError);
-      return new Response(
-        JSON.stringify({ deleted, error: removeError.message }),
-        { status: 500 },
-      );
+      return new Response(JSON.stringify({ deleted, error: removeError.message }), { status: 500 });
     }
     deleted += removed?.length ?? 0;
   }
