@@ -3,7 +3,7 @@ title: "Condizioni d'Uso"
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Ultimo aggiornamento: 1° ottobre 2026_
+_Ultimo aggiornamento: 15 ottobre 2026_
 
 Grazie per usare **AeroX**, la soluzione che trasforma il tuo rullo in una galleria del vento virtuale.  
 Le presenti Condizioni d'Uso disciplinano l'accesso e l'utilizzo del servizio AeroX.  
@@ -57,7 +57,7 @@ Le presenti Condizioni d'Uso definiscono i diritti e gli obblighi di AeroX e del
 
 ## 5 bis. Piani per bike fitter: prova gratuita, abbonamento e disdetta
 
-Questo articolo si applica agli account bike fitter. In caso di contrasto, prevale sugli articoli 4 e 9.
+Questo articolo si applica agli account bike fitter. In caso di contrasto, prevale sugli articoli 4 e 10.
 
 - **Piani**: **Essenziale**, 20 € + IVA al mese più 15 € + IVA per analisi, fatturati alla fine di ogni periodo mensile; **Illimitato**, 99 € + IVA al mese o 990 € + IVA all’anno. **Offerta di lancio**, riservata ai primi 20 studi e sottoscritta entro il 31 dicembre 2026: Illimitato a 69 € + IVA al mese fino al 31 dicembre 2026, poi 99 € + IVA al mese, oppure 690 € + IVA il primo anno, poi 990 € + IVA all’anno. I prezzi sono IVA esclusa; l’IVA è applicata secondo la normativa vigente.
 - **Analisi**: un cliente analizzato con AeroX, conteggiato una volta per periodo mobile di 30 giorni. Le nuove sessioni dello stesso cliente in quel periodo non sono conteggiate.
@@ -87,11 +87,26 @@ L'Utente si impegna a:
 - usare AeroX esclusivamente per scopi sportivi e personali,
 - non utilizzare il Servizio per scopi commerciali, fraudolenti o illeciti,
 - rispettare i limiti di utilizzo previsti all'articolo 4,
-- non tentare di aggirare la sicurezza né di accedere al codice sorgente.
+- non tentare di aggirare la sicurezza del Servizio, e rispettare l'articolo 8 (proprietà intellettuale e protezione del software).
 
 ---
 
-## 8. Limitazione di responsabilità
+## 8. Proprietà intellettuale e protezione del software
+
+- **Titolarità dei diritti**: il software AeroX (applicazioni desktop per macOS e Windows, applicazione web e mobile complementare, in tutte le loro versioni e aggiornamenti), i suoi modelli di intelligenza artificiale (in particolare i modelli di segmentazione e di stima della posa, i loro pesi, le loro architetture addestrate e i loro parametri), i dataset di addestramento, gli algoritmi di calcolo (superficie frontale, CdA, calibrazione), la documentazione, i marchi, i loghi e le denominazioni AeroX nonché i contenuti del sito e dell'applicazione appartengono esclusivamente a Olivier Demichel («O. Demichel»), titolare di tutti i relativi diritti di proprietà intellettuale. I dati personali dell'Utente non vi rientrano: sono disciplinati dall'articolo 11.
+- **Licenza d'uso**: nel rispetto delle presenti Condizioni, l'Utente dispone di un diritto d'uso del Servizio personale, legato al proprio account, non esclusivo, non cedibile e non sublicenziabile. Tale diritto è limitato all'uso dell'applicazione nell'ambito previsto dalle presenti Condizioni (compresa, per un account bike fitter, l'analisi dei propri clienti) e alla durata dell'abbonamento o dell'acquisto corrispondente. Non comporta alcun trasferimento di proprietà; tutti i diritti non espressamente concessi restano riservati.
+- **Divieti**: fatte salve le eccezioni previste dall'articolo L122-6-1 del Codice della proprietà intellettuale francese (CPI), all'Utente è vietato, direttamente o tramite terzi:
+  - copiare, estrarre, isolare, esportare o riutilizzare i modelli di intelligenza artificiale di AeroX o i loro pesi al di fuori dell'applicazione;
+  - integrarli in un altro software, in un'altra applicazione (comprese quelle mobili, iOS o Android) o in un altro servizio;
+  - utilizzarli per addestrare, distillare, perfezionare (fine-tuning) o valutare un altro modello;
+  - decompilare, disassemblare o sottoporre a reverse engineering il software o i modelli, oppure eludere, disattivare o alterare le loro misure tecniche di protezione (cifratura, firma, ecc.);
+  - riprodurre, modificare, tradurre, adattare, distribuire, noleggiare, vendere o mettere a disposizione di terzi, in tutto o in parte, il software, i modelli, i dataset, gli algoritmi o la documentazione.
+- **Eccezioni di legge**: il presente articolo non priva l'Utente di alcuno dei diritti che gli riconosce l'articolo L122-6-1 del CPI, in particolare, alle condizioni e nei limiti da esso fissati, la copia di riserva e la decompilazione indispensabile all'interoperabilità del software con un programma creato autonomamente. Le informazioni necessarie all'interoperabilità possono essere richieste a contact@aeroxbefaster.com.
+- **Sanzioni**: qualsiasi violazione del presente articolo comporta la risoluzione immediata della licenza e dell'account, senza rimborso, fatta salva ogni azione di O. Demichel, in particolare per contraffazione (articoli L335-2 e L335-3 del CPI), e ogni richiesta di risarcimento dei danni.
+
+---
+
+## 9. Limitazione di responsabilità
 
 - AeroX adotta ogni mezzo ragionevole per offrire un servizio affidabile, ma non garantisce l'assenza di errori o interruzioni.
 - AeroX non è responsabile di lesioni, di un'errata interpretazione dei dati o di un uso improprio del Servizio.
@@ -99,28 +114,28 @@ L'Utente si impegna a:
 
 ---
 
-## 9. Risoluzione
+## 10. Risoluzione
 
 - L'Utente può disdire il proprio abbonamento in qualsiasi momento.
 - AeroX può sospendere o cancellare un account in caso di frode, violazione delle presenti Condizioni o uso abusivo.
 
 ---
 
-## 10. Dati personali
+## 11. Dati personali
 
 - AeroX raccoglie e tratta alcuni dati (ad esempio metriche sportive, email) per fornire il Servizio.
 - Tali dati sono trattati in conformità alla nostra [Informativa sulla privacy](/privacy).
 
 ---
 
-## 11. Legge applicabile e controversie
+## 12. Legge applicabile e controversie
 
 - Le presenti Condizioni d'Uso sono regolate dalla legge francese.
 - In caso di controversia, le parti cercheranno una soluzione amichevole prima di qualsiasi azione giudiziaria.
 
 ---
 
-## 12. Contatti
+## 13. Contatti
 
 Per qualsiasi domanda sulle presenti Condizioni d'Uso, scrivici a:  
 📧 **contact@aeroxbefaster.com**

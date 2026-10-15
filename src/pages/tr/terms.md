@@ -3,7 +3,7 @@ title: 'Genel Kullanım Koşulları'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Son güncelleme: 1 Ekim 2026_
+_Son güncelleme: 15 Ekim 2026_
 
 **AeroX**'u kullandığınız için teşekkür ederiz. AeroX, ev bisiklet antrenörünüzü sanal bir rüzgar tüneline dönüştüren çözümdür.
 Bu Genel Kullanım Koşulları (GKK), AeroX hizmetine erişimi ve kullanımını düzenlemektedir.
@@ -57,7 +57,7 @@ Bu GKK, Hizmetin kullanımı kapsamında AeroX ile Kullanıcı arasındaki hak v
 
 ## 5/A. Bike fitter planları: ücretsiz deneme, abonelik ve iptal
 
-Bu madde bike fitter hesapları için geçerlidir. 4. ve 9. maddelerle çelişmesi halinde bu madde esas alınır.
+Bu madde bike fitter hesapları için geçerlidir. 4. ve 10. maddelerle çelişmesi halinde bu madde esas alınır.
 
 - **Planlar**: **Temel**, aylık 20 € KDV hariç artı analiz başına 15 € KDV hariç, her aylık dönemin sonunda faturalanır; **Sınırsız**, aylık 99 € KDV hariç veya yıllık 990 € KDV hariç. **Lansman teklifi**, ilk 20 stüdyoya ayrılmış ve en geç 31 Aralık 2026'ya kadar abone olunmuş: Sınırsız 31 Aralık 2026'ya kadar aylık 69 € KDV hariç, ardından aylık 99 € KDV hariç; veya ilk yıl 690 € KDV hariç, ardından yıllık 990 € KDV hariç. Fiyatlar vergiler hariçtir; KDV yürürlükteki kurallara göre uygulanır.
 - **Analiz**: AeroX ile analiz edilen bir müşteri; 30 günlük kayan dönemde bir kez sayılır. Aynı müşterinin bu dönemdeki yeni seansları sayılmaz.
@@ -87,11 +87,26 @@ Kullanıcı aşağıdakileri taahhüt eder:
 - AeroX'u sportif ve kişisel amacına uygun olarak kullanmak,
 - hizmeti ticari, hileli veya yasadışı amaçlarla kullanmamak,
 - 4. maddede öngörülen kullanım sınırlamalarına uymak,
-- güvenliği aşmaya veya kaynak koduna erişmeye çalışmamak.
+- Hizmetin güvenliğini aşmaya çalışmamak ve 8. maddeye (Fikri mülkiyet ve yazılımın korunması) uymak.
 
 ---
 
-## 8. Sorumluluk sınırlamaları
+## 8. Fikri mülkiyet ve yazılımın korunması
+
+- **Hakların sahipliği**: AeroX yazılımı (macOS ve Windows masaüstü uygulamaları, web ve mobil yardımcı uygulama; tüm sürümleri ve güncellemeleriyle birlikte), yapay zekâ modelleri (özellikle segmentasyon ve poz tahmini modelleri, bunların ağırlıkları, eğitilmiş mimarileri ve parametreleri), eğitim veri kümeleri, hesaplama algoritmaları (ön yüzey alanı, CdA, kalibrasyon), dokümantasyon, AeroX markaları, logoları ve adları ile web sitesinin ve uygulamanın içerikleri münhasıran Olivier Demichel’e („O. Demichel”) aittir; bunlara ilişkin tüm fikri mülkiyet haklarının sahibi odur. Kullanıcının kişisel verileri bu kapsamda değildir: bunlar 11. maddeye tabidir.
+- **Kullanım lisansı**: Bu Koşullara uyulması kaydıyla Kullanıcıya, Hizmeti kullanmak için hesabına bağlı, kişisel, münhasır olmayan, devredilemez ve alt lisans verilemez bir hak tanınır. Bu hak, uygulamanın bu Koşullarda öngörülen çerçevede kullanımıyla (bike fitter hesabında, müşterilerinin analizi dahil) ve ilgili abonelik veya satın alma süresiyle sınırlıdır. Hiçbir mülkiyet devri sonucunu doğurmaz; açıkça tanınmayan tüm haklar saklıdır.
+- **Yasaklar**: Fransız Fikri Mülkiyet Kanunu’nun (Code de la propriété intellectuelle, CPI) L122-6-1. maddesinde öngörülen istisnalar saklı kalmak kaydıyla, Kullanıcının doğrudan veya üçüncü bir kişi aracılığıyla aşağıdakileri yapması yasaktır:
+  - AeroX’un yapay zekâ modellerini veya ağırlıklarını uygulama dışında kopyalamak, çıkarmak, ayırmak, dışa aktarmak veya yeniden kullanmak;
+  - bunları başka bir yazılıma, başka bir uygulamaya (iOS veya Android dahil mobil uygulamalar) veya başka bir hizmete entegre etmek;
+  - bunları başka bir modeli eğitmek, damıtmak, ince ayar yapmak (fine-tuning) veya değerlendirmek için kullanmak;
+  - yazılımı veya modelleri kaynak koda geri dönüştürmek (decompilation), makine kodunu çözümlemek (disassembly) veya tersine mühendisliğe tabi tutmak ya da teknik koruma önlemlerini (şifreleme, imza vb.) aşmak, devre dışı bırakmak veya değiştirmek;
+  - yazılımı, modelleri, veri kümelerini, algoritmaları veya dokümantasyonu kısmen ya da tamamen çoğaltmak, değiştirmek, çevirmek, uyarlamak, dağıtmak, kiralamak, satmak veya üçüncü kişilerin kullanımına sunmak.
+- **Yasal istisnalar**: Bu madde, Kullanıcıyı CPI’nın L122-6-1. maddesinin kendisine tanıdığı haklardan hiçbirinden yoksun bırakmaz; bunlar arasında özellikle, söz konusu maddenin belirlediği koşul ve sınırlar dahilinde, yedek kopya alma ve yazılımın bağımsız olarak geliştirilmiş bir programla birlikte çalışabilirliği için zorunlu olan kaynak koda geri dönüştürme yer alır. Birlikte çalışabilirlik için gerekli bilgiler contact@aeroxbefaster.com adresinden talep edilebilir.
+- **Yaptırımlar**: Bu maddenin herhangi bir ihlali, lisansın ve hesabın iade yapılmaksızın derhal feshedilmesi sonucunu doğurur; bu durum, O. Demichel’in özellikle hak ihlali (contrefaçon; CPI L335-2 ve L335-3. maddeler) nedeniyle başvurabileceği her türlü yasal yola ve tazminat taleplerine halel getirmez.
+
+---
+
+## 9. Sorumluluk sınırlamaları
 
 - AeroX, güvenilir bir hizmet sağlamak için tüm makul araçları kullanır, ancak hata veya kesinti olmayacağını garanti etmez.
 - AeroX, yaralanma, verilerin yanlış yorumlanması veya hizmetin uygunsuz kullanımı durumunda sorumlu değildir.
@@ -99,28 +114,28 @@ Kullanıcı aşağıdakileri taahhüt eder:
 
 ---
 
-## 9. Fesih
+## 10. Fesih
 
 - Kullanıcı aboneliğini istediği zaman feshedebilir.
 - AeroX, dolandırıcılık, GKK ihlali veya aşırı kullanım durumunda bir hesabı askıya alabilir veya silebilir.
 
 ---
 
-## 10. Kişisel veriler
+## 11. Kişisel veriler
 
 - AeroX, Hizmeti sağlamak için belirli verileri (ör. spor ölçümleri, e-posta adresi) toplar ve işler.
 - Bu veriler [Gizlilik Politikası](/privacy) uyarınca işlenir.
 
 ---
 
-## 11. Uygulanacak hukuk ve uyuşmazlıklar
+## 12. Uygulanacak hukuk ve uyuşmazlıklar
 
 - Bu GKK, Fransız hukukuna tabidir.
 - Uyuşmazlık halinde, herhangi bir yargı sürecinden önce dostane bir çözüm aranacaktır.
 
 ---
 
-## 12. İletişim
+## 13. İletişim
 
 Bu GKK ile ilgili herhangi bir sorunuz için bize yazabilirsiniz:
 📧 **contact@aeroxbefaster.com**

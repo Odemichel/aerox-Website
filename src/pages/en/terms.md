@@ -3,7 +3,7 @@ title: 'Terms of Use'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Last updated: October 1, 2026_
+_Last updated: October 15, 2026_
 
 Thank you for using **AeroX**, the solution that turns your home trainer into a virtual wind tunnel.  
 These Terms of Use govern access to and use of the AeroX service.  
@@ -57,7 +57,7 @@ These Terms of Use define the rights and obligations of AeroX and the User regar
 
 ## 5a. Bike fitter plans: free trial, subscription and cancellation
 
-This section applies to bike fitter accounts. Where it conflicts with sections 4 and 9, it prevails.
+This section applies to bike fitter accounts. Where it conflicts with sections 4 and 10, it prevails.
 
 - **Plans**: **Essential**, €20 excl. VAT per month plus €15 excl. VAT per analysis, billed at the end of each monthly period; **Unlimited**, €99 excl. VAT per month or €990 excl. VAT per year. **Launch offer**, reserved for the first 20 studios and subscribed by 31 December 2026: Unlimited at €69 excl. VAT per month until 31 December 2026, then €99 excl. VAT per month, or €690 excl. VAT for the first year, then €990 excl. VAT per year. Prices exclude taxes; VAT is applied under the rules in force.
 - **Analysis**: one client analysed with AeroX, counted once per rolling 30-day period. Further sessions with the same client during that period are not counted.
@@ -87,11 +87,26 @@ The User agrees to:
 - use AeroX exclusively for its intended sporting and personal purposes,
 - not misuse the Service for commercial, fraudulent, or unlawful purposes,
 - respect the usage limits described in Section 4,
-- not attempt to bypass security systems or access the source code.
+- not attempt to bypass the security of the Service, and comply with Section 8 (Intellectual Property and Software Protection).
 
 ---
 
-## 8. Limitation of Liability
+## 8. Intellectual Property and Software Protection
+
+- **Ownership**: the AeroX software (macOS and Windows desktop applications, web and mobile companion application, in all their versions and updates), its artificial intelligence models (in particular the segmentation and pose estimation models, their weights, trained architectures and parameters), the training datasets, the calculation algorithms (frontal area, CdA, calibration), the documentation, the AeroX trademarks, logos and names, and the content of the website and the application belong exclusively to Olivier Demichel (“O. Demichel”), who holds all the related intellectual property rights. The User’s personal data is not covered: it is governed by Section 11.
+- **Licence**: subject to compliance with these Terms of Use, the User is granted a personal right to use the Service, attached to their Account, which is non-exclusive, non-transferable and non-sublicensable. This right is limited to using the application within the scope provided for by these Terms of Use (including, for a bike fitter account, analysing their clients) and to the term of the corresponding subscription or purchase. It does not transfer any ownership; all rights not expressly granted are reserved.
+- **Prohibitions**: subject to the exceptions provided for by Article L122-6-1 of the French Intellectual Property Code (CPI), the User may not, directly or through a third party:
+  - copy, extract, isolate, export or reuse the AeroX artificial intelligence models or their weights outside the application;
+  - integrate them into any other software, application (including mobile, iOS or Android) or service;
+  - use them to train, distil, fine-tune or evaluate another model;
+  - decompile, disassemble or reverse engineer the software or the models, or circumvent, disable or alter their technical protection measures (encryption, signature, etc.);
+  - reproduce, modify, translate, adapt, distribute, rent, sell or make available to third parties all or part of the software, models, datasets, algorithms or documentation.
+- **Statutory exceptions**: this section does not deprive the User of any right granted by Article L122-6-1 of the CPI, in particular, under the conditions and within the limits it sets, making a backup copy and decompiling where indispensable for the interoperability of the software with independently created software. Information needed for interoperability can be requested at contact@aeroxbefaster.com.
+- **Sanctions**: any breach of this section results in the immediate termination of the licence and of the Account, without refund, without prejudice to any action by O. Demichel, in particular for infringement (Articles L335-2 and L335-3 of the CPI), and to any claim for damages.
+
+---
+
+## 9. Limitation of Liability
 
 - AeroX makes every reasonable effort to provide a reliable service but does not guarantee the absence of errors or interruptions.
 - AeroX shall not be held liable for any injury, data misinterpretation, or inappropriate use of the Service.
@@ -99,28 +114,28 @@ The User agrees to:
 
 ---
 
-## 9. Termination
+## 10. Termination
 
 - The User may cancel their subscription at any time.
 - AeroX may suspend or delete an account in the event of fraud, breach of these Terms, or abusive use.
 
 ---
 
-## 10. Personal Data
+## 11. Personal Data
 
 - AeroX collects and processes certain data (e.g. performance metrics, email) to provide the Service.
 - Such data is handled in accordance with our [Privacy Policy](/privacy).
 
 ---
 
-## 11. Governing Law and Disputes
+## 12. Governing Law and Disputes
 
 - These Terms of Use are governed by French law.
 - In the event of a dispute, both parties agree to seek an amicable resolution before taking legal action.
 
 ---
 
-## 12. Contact
+## 13. Contact
 
 For any questions about these Terms of Use, please contact us at:  
 📧 **contact@aeroxbefaster.com**

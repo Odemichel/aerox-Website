@@ -3,7 +3,7 @@ title: 'Algemene Gebruiksvoorwaarden'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Laatste update: 1 oktober 2026_
+_Laatste update: 15 oktober 2026_
 
 Bedankt voor het gebruik van **AeroX**, de oplossing die uw fietstrainer omtovert in een virtuele windtunnel.
 Deze Algemene Gebruiksvoorwaarden (AGV) regelen de toegang tot en het gebruik van de AeroX-dienst.
@@ -57,7 +57,7 @@ Deze AGV bepalen de rechten en plichten van AeroX en de Gebruiker in het kader v
 
 ## 5a. Formules voor bike fitters: gratis proefperiode, abonnement en opzegging
 
-Dit artikel geldt voor bike-fitteraccounts. Bij tegenstrijdigheid heeft het voorrang op de artikelen 4 en 9.
+Dit artikel geldt voor bike-fitteraccounts. Bij tegenstrijdigheid heeft het voorrang op de artikelen 4 en 10.
 
 - **Formules**: **Essentieel**, € 20 excl. btw per maand plus € 15 excl. btw per analyse, gefactureerd aan het einde van elke maandperiode; **Onbeperkt**, € 99 excl. btw per maand of € 990 excl. btw per jaar. **Lanceringsaanbod**, voorbehouden aan de eerste 20 studio's en uiterlijk op 31 december 2026 afgesloten: Onbeperkt voor € 69 excl. btw per maand tot 31 december 2026, daarna € 99 excl. btw per maand, of € 690 excl. btw het eerste jaar, daarna € 990 excl. btw per jaar. Prijzen zijn exclusief belastingen; btw wordt toegepast volgens de geldende regels.
 - **Analyse**: één klant die met AeroX wordt geanalyseerd, één keer geteld per glijdende periode van 30 dagen. Nieuwe sessies met dezelfde klant in die periode worden niet geteld.
@@ -87,11 +87,26 @@ De Gebruiker verbindt zich ertoe:
 - AeroX te gebruiken in overeenstemming met het beoogde sportieve en persoonlijke doel,
 - de dienst niet te misbruiken voor commerciële, frauduleuze of onwettige doeleinden,
 - de in artikel 4 voorziene gebruiksbeperkingen na te leven,
-- niet te proberen de beveiliging te omzeilen of toegang te krijgen tot de broncode.
+- niet te proberen de beveiliging van de Dienst te omzeilen, en artikel 8 (intellectuele eigendom en bescherming van de software) na te leven.
 
 ---
 
-## 8. Aansprakelijkheidsbeperkingen
+## 8. Intellectuele eigendom en bescherming van de software
+
+- **Eigendom van de rechten**: de AeroX-software (desktopapplicaties voor macOS en Windows, web- en mobiele begeleidende app, in al hun versies en updates), de AI-modellen ervan (met name de segmentatiemodellen en de modellen voor houdingsschatting, hun gewichten, getrainde architecturen en parameters), de trainingsdatasets, de rekenalgoritmen (frontaal oppervlak, CdA, kalibratie), de documentatie, de merken, logo’s en benamingen AeroX en de inhoud van de website en de applicatie behoren uitsluitend toe aan Olivier Demichel („O. Demichel”), houder van alle daarmee verbonden intellectuele-eigendomsrechten. De persoonsgegevens van de Gebruiker vallen hier niet onder: daarop is artikel 11 van toepassing.
+- **Gebruikslicentie**: mits deze AGV worden nageleefd, krijgt de Gebruiker een persoonlijk, aan zijn account gebonden, niet-exclusief, niet-overdraagbaar en niet-sublicentieerbaar recht om de Dienst te gebruiken. Dit recht is beperkt tot het gebruik van de applicatie binnen het kader van deze AGV (voor een bike-fitteraccount met inbegrip van de analyse van zijn klanten) en tot de looptijd van het betreffende abonnement of de betreffende aankoop. Er wordt geen eigendom overgedragen; alle niet uitdrukkelijk verleende rechten blijven voorbehouden.
+- **Verboden**: onder voorbehoud van de uitzonderingen van artikel L122-6-1 van het Franse Wetboek van intellectuele eigendom (Code de la propriété intellectuelle, CPI) is het de Gebruiker verboden om, rechtstreeks of via een derde:
+  - de AI-modellen van AeroX of hun gewichten buiten de applicatie te kopiëren, te extraheren, te isoleren, te exporteren of te hergebruiken;
+  - ze te integreren in andere software, een andere applicatie (ook mobiel, iOS of Android) of een andere dienst;
+  - ze te gebruiken om een ander model te trainen, te distilleren, bij te stellen (fine-tuning) of te evalueren;
+  - de software of de modellen te decompileren, te disassembleren of aan reverse engineering te onderwerpen, of hun technische beschermingsmaatregelen (versleuteling, handtekening enz.) te omzeilen, uit te schakelen of te wijzigen;
+  - de software, de modellen, de datasets, de algoritmen of de documentatie geheel of gedeeltelijk te reproduceren, te wijzigen, te vertalen, te bewerken, te verspreiden, te verhuren, te verkopen of ter beschikking te stellen van derden.
+- **Wettelijke uitzonderingen**: dit artikel ontneemt de Gebruiker geen enkel recht dat artikel L122-6-1 CPI hem toekent, met name, onder de daarin gestelde voorwaarden en binnen de daarin gestelde grenzen, het maken van een reservekopie en het decompileren voor zover dat onmisbaar is voor de interoperabiliteit van de software met onafhankelijk gecreëerde programmatuur. De voor interoperabiliteit benodigde informatie kan worden aangevraagd via contact@aeroxbefaster.com.
+- **Sancties**: elke schending van dit artikel leidt tot de onmiddellijke beëindiging van de licentie en van het account, zonder terugbetaling, onverminderd elke rechtsvordering van O. Demichel, met name wegens inbreuk (contrefaçon, artikelen L335-2 en L335-3 CPI), en elke vordering tot schadevergoeding.
+
+---
+
+## 9. Aansprakelijkheidsbeperkingen
 
 - AeroX zet alle redelijke middelen in om een betrouwbare dienst te garanderen, maar garandeert niet de afwezigheid van fouten of onderbrekingen.
 - AeroX is niet aansprakelijk in geval van letsel, verkeerde interpretatie van gegevens of ongeschikt gebruik van de dienst.
@@ -99,28 +114,28 @@ De Gebruiker verbindt zich ertoe:
 
 ---
 
-## 9. Beëindiging
+## 10. Beëindiging
 
 - De Gebruiker kan zijn abonnement op elk moment opzeggen.
 - AeroX kan een account opschorten of verwijderen in geval van fraude, schending van de AGV of overmatig gebruik.
 
 ---
 
-## 10. Persoonsgegevens
+## 11. Persoonsgegevens
 
 - AeroX verzamelt en verwerkt bepaalde gegevens (bijv. sportwaardes, e-mailadres) om de Dienst te verlenen.
 - Deze gegevens worden verwerkt in overeenstemming met het [Privacybeleid](/privacy).
 
 ---
 
-## 11. Toepasselijk recht en geschillen
+## 12. Toepasselijk recht en geschillen
 
 - Deze AGV zijn onderworpen aan het Franse recht.
 - In geval van een geschil wordt eerst een minnelijke oplossing nagestreefd alvorens een gerechtelijke procedure wordt gestart.
 
 ---
 
-## 12. Contact
+## 13. Contact
 
 Voor vragen over deze AGV kunt u schrijven naar:
 📧 **contact@aeroxbefaster.com**

@@ -3,7 +3,7 @@ title: 'Termos de Uso'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Última atualização: 1º de outubro de 2026_
+_Última atualização: 15 de outubro de 2026_
 
 Obrigado por usar o **AeroX**, a solução que transforma o seu rolo de treino em um túnel de vento virtual.  
 Estes Termos de Uso regem o acesso e o uso do serviço AeroX.  
@@ -57,7 +57,7 @@ Estes Termos de Uso definem os direitos e obrigações do AeroX e do Usuário no
 
 ## 5-A. Planos para bike fitters: teste gratuito, assinatura e cancelamento
 
-Este artigo aplica-se às contas de bike fitter. Em caso de contradição, prevalece sobre os artigos 4 e 9.
+Este artigo aplica-se às contas de bike fitter. Em caso de contradição, prevalece sobre os artigos 4 e 10.
 
 - **Planos**: **Essencial**, 20 € sem IVA por mês mais 15 € sem IVA por análise, faturados no fim de cada período mensal; **Ilimitado**, 99 € sem IVA por mês ou 990 € sem IVA por ano. **Oferta de lançamento**, reservada aos 20 primeiros estúdios e subscrita até 31 de dezembro de 2026: Ilimitado a 69 € sem IVA por mês até 31 de dezembro de 2026, depois 99 € sem IVA por mês, ou 690 € sem IVA no primeiro ano, depois 990 € sem IVA por ano. Os preços não incluem impostos; o IVA é aplicado de acordo com a regulamentação em vigor.
 - **Análise**: um cliente analisado com o AeroX, contado uma vez por período móvel de 30 dias. As novas sessões do mesmo cliente nesse período não são contadas.
@@ -87,11 +87,26 @@ O Usuário se compromete a:
 - usar o AeroX exclusivamente para fins esportivos e pessoais,
 - não desviar o Serviço para fins comerciais, fraudulentos ou ilícitos,
 - respeitar os limites de uso previstos no artigo 4,
-- não tentar contornar a segurança nem acessar o código-fonte.
+- não tentar contornar a segurança do Serviço, e respeitar o artigo 8 (propriedade intelectual e proteção do software).
 
 ---
 
-## 8. Limitação de responsabilidade
+## 8. Propriedade intelectual e proteção do software
+
+- **Titularidade dos direitos**: o software AeroX (aplicativos de desktop para macOS e Windows, aplicativo web e móvel complementar, em todas as suas versões e atualizações), seus modelos de inteligência artificial (em especial os modelos de segmentação e de estimativa de pose, seus pesos, suas arquiteturas treinadas e seus parâmetros), os conjuntos de dados de treinamento, os algoritmos de cálculo (área frontal, CdA, calibração), a documentação, as marcas, logotipos e denominações AeroX, bem como os conteúdos do site e do aplicativo, pertencem exclusivamente a Olivier Demichel («O. Demichel»), titular de todos os direitos de propriedade intelectual a eles relacionados. Os dados pessoais do Usuário não estão incluídos: são regidos pelo artigo 11.
+- **Licença de uso**: desde que respeite estes Termos, o Usuário dispõe de um direito de uso do Serviço pessoal, vinculado à sua conta, não exclusivo, intransferível e não sublicenciável. Esse direito é limitado ao uso do aplicativo no âmbito previsto por estes Termos (incluindo, para uma conta de bike fitter, a análise de seus clientes) e à duração da assinatura ou da compra correspondente. Não implica nenhuma transferência de propriedade; todos os direitos não concedidos expressamente ficam reservados.
+- **Proibições**: ressalvadas as exceções previstas no artigo L122-6-1 do Código da Propriedade Intelectual francês (CPI), é proibido ao Usuário, diretamente ou por meio de terceiros:
+  - copiar, extrair, isolar, exportar ou reutilizar os modelos de inteligência artificial do AeroX ou seus pesos fora do aplicativo;
+  - integrá-los a outro software, outro aplicativo (inclusive móvel, iOS ou Android) ou outro serviço;
+  - utilizá-los para treinar, destilar, ajustar (fine-tuning) ou avaliar outro modelo;
+  - descompilar, desmontar ou fazer engenharia reversa do software ou dos modelos, ou contornar, desativar ou alterar suas medidas técnicas de proteção (criptografia, assinatura etc.);
+  - reproduzir, modificar, traduzir, adaptar, distribuir, alugar, vender ou disponibilizar a terceiros, no todo ou em parte, o software, os modelos, os conjuntos de dados, os algoritmos ou a documentação.
+- **Exceções legais**: o presente artigo não priva o Usuário de nenhum dos direitos que lhe reconhece o artigo L122-6-1 do CPI, em especial, nas condições e nos limites nele fixados, a cópia de segurança e a descompilação indispensável à interoperabilidade do software com um programa criado de forma independente. As informações necessárias à interoperabilidade podem ser solicitadas em contact@aeroxbefaster.com.
+- **Sanções**: qualquer descumprimento do presente artigo acarreta a rescisão imediata da licença e da conta, sem reembolso, sem prejuízo de qualquer ação de O. Demichel, em especial por contrafação (artigos L335-2 e L335-3 do CPI), e de qualquer pedido de indenização por perdas e danos.
+
+---
+
+## 9. Limitação de responsabilidade
 
 - O AeroX emprega todos os meios razoáveis para oferecer um serviço confiável, mas não garante a ausência de erros ou interrupções.
 - O AeroX não se responsabiliza por lesões, interpretação equivocada dos dados ou uso inadequado do Serviço.
@@ -99,28 +114,28 @@ O Usuário se compromete a:
 
 ---
 
-## 9. Rescisão
+## 10. Rescisão
 
 - O Usuário pode cancelar a assinatura a qualquer momento.
 - O AeroX pode suspender ou excluir uma conta em caso de fraude, descumprimento destes Termos ou uso abusivo.
 
 ---
 
-## 10. Dados pessoais
+## 11. Dados pessoais
 
 - O AeroX coleta e trata certos dados (por exemplo, métricas esportivas, e-mail) para fornecer o Serviço.
 - Esses dados são tratados de acordo com a nossa [Política de Privacidade](/privacy).
 
 ---
 
-## 11. Lei aplicável e litígios
+## 12. Lei aplicável e litígios
 
 - Estes Termos de Uso são regidos pela lei francesa.
 - Em caso de litígio, as partes buscarão uma solução amigável antes de qualquer ação judicial.
 
 ---
 
-## 12. Contato
+## 13. Contato
 
 Para qualquer dúvida sobre estes Termos de Uso, escreva para:  
 📧 **contact@aeroxbefaster.com**

@@ -3,7 +3,7 @@ title: 'Conditions Générales d’Utilisation'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Dernière mise à jour : 1er octobre 2026_
+_Dernière mise à jour : 15 octobre 2026_
 
 Merci d’utiliser **AeroX**, la solution qui transforme ton home-trainer en soufflerie virtuelle.  
 Ces Conditions Générales d’Utilisation (CGU) encadrent l’accès et l’usage du service AeroX.  
@@ -57,7 +57,7 @@ Les présentes CGU définissent les droits et obligations d’AeroX et de l’Ut
 
 ## 5 bis. Offres bike fitter : essai gratuit, abonnement et résiliation
 
-Cet article s’applique aux comptes bike fitter. En cas de contradiction, il prévaut sur les articles 4 et 9.
+Cet article s’applique aux comptes bike fitter. En cas de contradiction, il prévaut sur les articles 4 et 10.
 
 - **Offres** : **Essentiel**, 20 € HT par mois, plus 15 € HT par analyse, facturées à la fin de chaque période mensuelle ; **Illimité**, 99 € HT par mois ou 990 € HT par an. **Offre de lancement**, réservée aux 20 premiers studios et souscrite au plus tard le 31 décembre 2026 : l’Illimité à 69 € HT par mois jusqu’au 31 décembre 2026 puis 99 € HT par mois, ou 690 € HT la première année puis 990 € HT par an. Les prix sont hors taxes ; la TVA est appliquée selon la réglementation en vigueur.
 - **Analyse** : un client analysé avec AeroX, décompté une fois par période glissante de 30 jours. Les nouvelles séances du même client pendant cette période ne sont pas décomptées.
@@ -87,11 +87,26 @@ L’Utilisateur s’engage à :
 - utiliser AeroX conformément à sa destination sportive et personnelle,
 - ne pas détourner le service à des fins commerciales, frauduleuses ou illicites,
 - respecter les limites d’utilisation prévues à l’article 4,
-- ne pas tenter de contourner la sécurité ou d’accéder au code source.
+- ne pas tenter de contourner la sécurité du Service, et respecter l’article 8 (propriété intellectuelle et protection du logiciel).
 
 ---
 
-## 8. Limitations de responsabilité
+## 8. Propriété intellectuelle et protection du logiciel
+
+- **Titularité des droits** : le logiciel AeroX (applications de bureau macOS et Windows, application web et mobile compagnon, dans toutes leurs versions et mises à jour), ses modèles d’intelligence artificielle (notamment les modèles de segmentation et d’estimation de pose, leurs poids, leurs architectures entraînées et leurs paramètres), les jeux de données d’entraînement, les algorithmes de calcul (surface frontale, CdA, calibration), la documentation, les marques, logos et dénominations AeroX ainsi que les contenus du site et de l’application appartiennent exclusivement à Olivier Demichel (« O. Demichel »), titulaire de l’ensemble des droits de propriété intellectuelle qui s’y rattachent. Les données personnelles de l’Utilisateur ne sont pas visées : elles relèvent de l’article 11.
+- **Licence d’utilisation** : sous réserve du respect des présentes CGU, l’Utilisateur bénéficie d’un droit d’utilisation du Service personnel, attaché à son Compte, non exclusif, non cessible et non sous-licenciable. Ce droit est limité à l’utilisation de l’application dans le cadre prévu par les présentes CGU (y compris, pour un compte bike fitter, l’analyse de ses clients) et à la durée de l’abonnement ou de l’achat correspondant. Il n’emporte aucun transfert de propriété ; tout droit non expressément concédé reste réservé.
+- **Interdictions** : sous réserve des exceptions prévues par l’article L122-6-1 du Code de la propriété intellectuelle (CPI), il est interdit à l’Utilisateur, directement ou par l’intermédiaire d’un tiers :
+  - de copier, extraire, isoler, exporter ou réutiliser les modèles d’intelligence artificielle d’AeroX ou leurs poids en dehors de l’application ;
+  - de les intégrer dans un autre logiciel, une autre application (y compris mobile, iOS ou Android) ou un autre service ;
+  - de les utiliser pour entraîner, distiller, affiner ou évaluer un autre modèle ;
+  - de décompiler, de désassembler ou de faire de l’ingénierie inverse du logiciel ou des modèles, ou de contourner, désactiver ou altérer leurs mesures techniques de protection (chiffrement, signature, etc.) ;
+  - de reproduire, modifier, traduire, adapter, distribuer, louer, vendre ou mettre à la disposition de tiers tout ou partie du logiciel, des modèles, des jeux de données, des algorithmes ou de la documentation.
+- **Exceptions légales** : le présent article ne prive l’Utilisateur d’aucun des droits que lui reconnaît l’article L122-6-1 du CPI, notamment, dans les conditions et limites qu’il fixe, la copie de sauvegarde et la décompilation indispensable à l’interopérabilité du logiciel avec un logiciel créé de façon indépendante. Les informations nécessaires à l’interopérabilité peuvent être demandées à contact@aeroxbefaster.com.
+- **Sanctions** : tout manquement au présent article entraîne la résiliation immédiate de la licence et du Compte, sans remboursement, sans préjudice de toute action d’O. Demichel, notamment en contrefaçon (articles L335-2 et L335-3 du CPI), et de toute demande de dommages et intérêts.
+
+---
+
+## 9. Limitations de responsabilité
 
 - AeroX met en œuvre tous les moyens raisonnables pour assurer un service fiable, mais ne garantit pas l’absence d’erreurs ou d’interruptions.
 - AeroX n’est pas responsable en cas de blessure, de mauvaise interprétation des données ou d’utilisation inadaptée du service.
@@ -99,28 +114,28 @@ L’Utilisateur s’engage à :
 
 ---
 
-## 9. Résiliation
+## 10. Résiliation
 
 - L’Utilisateur peut résilier son abonnement à tout moment.
 - AeroX peut suspendre ou supprimer un compte en cas de fraude, non-respect des CGU ou usage abusif.
 
 ---
 
-## 10. Données personnelles
+## 11. Données personnelles
 
 - AeroX collecte et traite certaines données (ex. mesures sportives, email) pour fournir le Service.
 - Ces données sont traitées conformément à la [Politique de Confidentialité](/privacy).
 
 ---
 
-## 11. Droit applicable et litiges
+## 12. Droit applicable et litiges
 
 - Les présentes CGU sont soumises au droit français.
 - En cas de litige, une solution amiable sera recherchée avant toute procédure judiciaire.
 
 ---
 
-## 12. Contact
+## 13. Contact
 
 Pour toute question concernant ces CGU, vous pouvez écrire à :  
 📧 **contact@aeroxbefaster.com**

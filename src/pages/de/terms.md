@@ -3,7 +3,7 @@ title: 'Allgemeine Nutzungsbedingungen'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Letzte Aktualisierung: 1. Oktober 2026_
+_Letzte Aktualisierung: 15. Oktober 2026_
 
 Vielen Dank, dass Sie **AeroX** nutzen – die Lösung, die Ihren Rollentrainer in einen virtuellen Windkanal verwandelt.
 Diese Allgemeinen Nutzungsbedingungen (ANB) regeln den Zugang zu und die Nutzung des AeroX-Dienstes.
@@ -57,7 +57,7 @@ Diese ANB legen die Rechte und Pflichten von AeroX und dem Nutzer im Rahmen der 
 
 ## 5a. Bike-Fitter-Tarife: kostenloser Test, Abonnement und Kündigung
 
-Dieser Abschnitt gilt für Bike-Fitter-Konten. Bei Widersprüchen hat er Vorrang vor den Abschnitten 4 und 9.
+Dieser Abschnitt gilt für Bike-Fitter-Konten. Bei Widersprüchen hat er Vorrang vor den Abschnitten 4 und 10.
 
 - **Tarife**: **Essential**, 20 € netto pro Monat zuzüglich 15 € netto pro Analyse, abgerechnet am Ende jedes Monatszeitraums; **Unbegrenzt**, 99 € netto pro Monat oder 990 € netto pro Jahr. **Einführungsangebot**, den ersten 20 Studios vorbehalten und bis spätestens 31. Dezember 2026 abzuschließen: Unbegrenzt für 69 € netto pro Monat bis 31. Dezember 2026, danach 99 € netto pro Monat, oder 690 € netto im ersten Jahr, danach 990 € netto pro Jahr. Alle Preise verstehen sich netto; die Mehrwertsteuer wird nach geltendem Recht berechnet.
 - **Analyse**: ein mit AeroX analysierter Kunde, gezählt einmal pro gleitendem Zeitraum von 30 Tagen. Weitere Sitzungen desselben Kunden in diesem Zeitraum werden nicht gezählt.
@@ -87,11 +87,26 @@ Der Nutzer verpflichtet sich:
 - AeroX bestimmungsgemäß für sportliche und persönliche Zwecke zu nutzen,
 - den Dienst nicht für kommerzielle, betrügerische oder rechtswidrige Zwecke zu missbrauchen,
 - die in Artikel 4 vorgesehenen Nutzungsbeschränkungen einzuhalten,
-- nicht zu versuchen, die Sicherheit zu umgehen oder auf den Quellcode zuzugreifen.
+- nicht zu versuchen, die Sicherheit des Dienstes zu umgehen, und Artikel 8 (Geistiges Eigentum und Schutz der Software) einzuhalten.
 
 ---
 
-## 8. Haftungsbeschränkungen
+## 8. Geistiges Eigentum und Schutz der Software
+
+- **Inhaberschaft der Rechte**: Die AeroX-Software (Desktop-Anwendungen für macOS und Windows, Web- und mobile Begleit-App, in allen Versionen und Updates), ihre Modelle der künstlichen Intelligenz (insbesondere die Modelle zur Segmentierung und zur Posenschätzung, ihre Gewichte, trainierten Architekturen und Parameter), die Trainingsdatensätze, die Berechnungsalgorithmen (Stirnfläche, CdA, Kalibrierung), die Dokumentation, die AeroX-Marken, -Logos und -Bezeichnungen sowie die Inhalte der Website und der Anwendung gehören ausschließlich Olivier Demichel („O. Demichel“), dem Inhaber sämtlicher damit verbundener Rechte des geistigen Eigentums. Die personenbezogenen Daten des Nutzers sind davon nicht erfasst: Für sie gilt Artikel 11.
+- **Nutzungslizenz**: Vorbehaltlich der Einhaltung dieser ANB erhält der Nutzer ein persönliches, an sein Konto gebundenes, nicht ausschließliches, nicht übertragbares und nicht unterlizenzierbares Recht zur Nutzung des Dienstes. Dieses Recht beschränkt sich auf die Nutzung der Anwendung in dem durch diese ANB vorgesehenen Rahmen (bei einem Bike-Fitter-Konto einschließlich der Analyse seiner Kunden) und auf die Laufzeit des jeweiligen Abonnements oder Kaufs. Es überträgt keinerlei Eigentum; alle nicht ausdrücklich eingeräumten Rechte bleiben vorbehalten.
+- **Verbote**: Vorbehaltlich der Ausnahmen nach Artikel L122-6-1 des französischen Gesetzbuchs über geistiges Eigentum (Code de la propriété intellectuelle, CPI) ist es dem Nutzer untersagt, selbst oder durch Dritte:
+  - die KI-Modelle von AeroX oder ihre Gewichte außerhalb der Anwendung zu kopieren, zu extrahieren, zu isolieren, zu exportieren oder weiterzuverwenden;
+  - sie in eine andere Software, eine andere Anwendung (einschließlich mobiler Apps für iOS oder Android) oder einen anderen Dienst zu integrieren;
+  - sie zum Trainieren, Destillieren, Feinabstimmen (Fine-Tuning) oder Evaluieren eines anderen Modells zu verwenden;
+  - die Software oder die Modelle zu dekompilieren, zu disassemblieren oder durch Reverse Engineering zurückzuentwickeln oder ihre technischen Schutzmaßnahmen (Verschlüsselung, Signatur usw.) zu umgehen, zu deaktivieren oder zu verändern;
+  - die Software, die Modelle, die Datensätze, die Algorithmen oder die Dokumentation ganz oder teilweise zu vervielfältigen, zu verändern, zu übersetzen, zu bearbeiten, zu verbreiten, zu vermieten, zu verkaufen oder Dritten zugänglich zu machen.
+- **Gesetzliche Ausnahmen**: Dieser Artikel entzieht dem Nutzer keines der Rechte, die ihm Artikel L122-6-1 CPI gewährt, insbesondere – unter den dort festgelegten Bedingungen und in den dort festgelegten Grenzen – das Anfertigen einer Sicherungskopie und die Dekompilierung, soweit sie für die Interoperabilität der Software mit einem unabhängig geschaffenen Programm unerlässlich ist. Die für die Interoperabilität erforderlichen Informationen können unter contact@aeroxbefaster.com angefordert werden.
+- **Sanktionen**: Jeder Verstoß gegen diesen Artikel führt zur sofortigen Beendigung der Lizenz und des Kontos ohne Erstattung, unbeschadet etwaiger rechtlicher Schritte von O. Demichel, insbesondere wegen Schutzrechtsverletzung (contrefaçon, Artikel L335-2 und L335-3 CPI), und etwaiger Schadensersatzansprüche.
+
+---
+
+## 9. Haftungsbeschränkungen
 
 - AeroX setzt alle angemessenen Mittel ein, um einen zuverlässigen Dienst zu gewährleisten, garantiert jedoch nicht die Fehler- oder Unterbrechungsfreiheit.
 - AeroX haftet nicht für Verletzungen, Fehlinterpretationen der Daten oder unsachgemäße Nutzung des Dienstes.
@@ -99,28 +114,28 @@ Der Nutzer verpflichtet sich:
 
 ---
 
-## 9. Kündigung
+## 10. Kündigung
 
 - Der Nutzer kann sein Abonnement jederzeit kündigen.
 - AeroX kann ein Konto im Falle von Betrug, Verstoß gegen die ANB oder missbräuchlicher Nutzung sperren oder löschen.
 
 ---
 
-## 10. Personenbezogene Daten
+## 11. Personenbezogene Daten
 
 - AeroX erhebt und verarbeitet bestimmte Daten (z. B. Sportwerte, E-Mail-Adresse), um den Dienst bereitzustellen.
 - Diese Daten werden gemäß der [Datenschutzrichtlinie](/privacy) verarbeitet.
 
 ---
 
-## 11. Anwendbares Recht und Streitigkeiten
+## 12. Anwendbares Recht und Streitigkeiten
 
 - Diese ANB unterliegen dem französischen Recht.
 - Im Falle eines Rechtsstreits wird zunächst eine gütliche Einigung angestrebt, bevor ein Gerichtsverfahren eingeleitet wird.
 
 ---
 
-## 12. Kontakt
+## 13. Kontakt
 
 Bei Fragen zu diesen ANB können Sie uns schreiben an:
 📧 **contact@aeroxbefaster.com**
