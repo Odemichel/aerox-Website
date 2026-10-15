@@ -15,7 +15,10 @@ En créant un compte ou en utilisant AeroX, tu acceptes pleinement ces condition
 
 - **AeroX** : l’application éditée par la société AeroX (projet indépendant, basé en France).
 - **Service** : l’ensemble des fonctionnalités offertes par AeroX (logiciel, site, simulateur, etc.).
-- **Utilisateur** : toute personne physique majeure utilisant AeroX.
+- **Utilisateur** : toute personne utilisant AeroX au moyen d’un Compte, à savoir :
+  - le **cycliste** (compte cycliste) : personne physique majeure agissant à des fins personnelles, en qualité de consommateur ;
+  - le **bike fitter** (compte bike fitter) : professionnel, personne physique (notamment entrepreneur individuel) ou personne morale, agissant pour les besoins de son activité professionnelle.
+- **Consommateur** et **professionnel** : au sens de l’article liminaire du Code de la consommation.
 - **Compte** : accès personnel permettant d’utiliser le Service après inscription et paiement éventuel d’un abonnement.
 
 ---
@@ -63,7 +66,8 @@ Cet article s’applique aux comptes bike fitter. En cas de contradiction, il pr
 
 - **Offres** : **Essentiel**, 20 € HT par mois, plus 15 € HT par analyse, facturées à la fin de chaque période mensuelle ; **Illimité**, 99 € HT par mois ou 990 € HT par an. **Offre de lancement**, réservée aux 20 premiers studios et souscrite au plus tard le 31 décembre 2026 : l’Illimité à 69 € HT par mois jusqu’au 31 décembre 2026 puis 99 € HT par mois, ou 690 € HT la première année puis 990 € HT par an. Les prix sont hors taxes ; la TVA est appliquée selon la réglementation en vigueur.
 - **Analyse** : un client analysé avec AeroX, décompté une fois par période glissante de 30 jours. Les nouvelles séances du même client pendant cette période ne sont pas décomptées.
-- **Essai gratuit** : la première souscription commence par un **essai gratuit de 14 jours** (les 14 jours ne sont décomptés qu’à partir de la mise à disposition de la nouvelle version de l’application, le 20 octobre 2026, pour une souscription antérieure). Il est réservé aux entreprises dont l’identifiant a été vérifié (SIREN ou SIRET, n° de TVA intracommunautaire, ou site internet validé par AeroX), à raison d’un essai par entreprise. Un moyen de paiement valide est enregistré au démarrage de l’essai ; **aucun montant n’est prélevé pendant l’essai**, et les analyses réalisées pendant l’essai ne sont pas facturées.
+- **Essai gratuit** : la première souscription commence par un **essai gratuit de 14 jours** (pour une souscription antérieure à la sortie de la nouvelle version de l’application, le 20 octobre 2026, les 14 jours ne sont décomptés qu’à partir de cette sortie). Il est réservé aux entreprises dont l’identifiant a été vérifié (SIREN ou SIRET, n° de TVA intracommunautaire, ou site internet validé par AeroX), à raison d’un essai par entreprise. Un moyen de paiement valide est enregistré au démarrage de l’essai ; **aucun montant n’est prélevé pendant l’essai**, et les analyses réalisées pendant l’essai ne sont pas facturées.
+- **Mise à disposition des offres** : les offres bike fitter sont mises à disposition le 1er novembre 2026, avec la version de l’application qui décompte les analyses. Aucun montant n’est prélevé avant cette date, y compris pour une souscription antérieure.
 - **Fin de l’essai** : **sauf résiliation avant la fin de l’essai, l’abonnement choisi démarre automatiquement à son terme et le premier paiement est prélevé ce jour-là** sur le moyen de paiement enregistré. La date de fin de l’essai est indiquée lors de la souscription et dans l’espace bike fitter.
 - **Résilier pendant l’essai** : à tout moment avant la fin de l’essai, depuis l’espace bike fitter (« Résilier l’essai »). Aucun montant n’est alors prélevé, et l’accès reste ouvert jusqu’à la fin de l’essai.
 - **Durée et résiliation** : les abonnements sont sans engagement de durée et reconduits tacitement par période (mois ou année). Ils se résilient à tout moment depuis l’espace bike fitter ; la résiliation prend effet à la fin de la période en cours, déjà payée, sans remboursement au prorata.
@@ -146,15 +150,16 @@ L’Utilisateur s’engage à :
 ## 12. Données personnelles
 
 - AeroX collecte et traite certaines données (ex. mesures sportives, email) pour fournir le Service.
-- Ces données sont traitées conformément à la [Politique de Confidentialité](/privacy).
+- Ces données sont traitées conformément à la [Politique de Confidentialité](/fr/privacy/).
 
 ---
 
 ## 13. Droit applicable, litiges et langue
 
 - Les présentes CGU sont soumises au droit français. Lorsque l’Utilisateur est un consommateur résidant dans un autre État membre de l’Union européenne, ce choix ne le prive pas de la protection que lui assurent les dispositions impératives de la loi de son pays de résidence.
-- **Réclamation préalable** : avant toute action en justice, l’Utilisateur adresse une réclamation écrite à contact@aeroxbefaster.com, afin de rechercher une solution amiable.
+- **Réclamation amiable** : en cas de litige, l’Utilisateur est invité à adresser d’abord une réclamation écrite à contact@aeroxbefaster.com, afin de rechercher une solution amiable. Cette démarche n’est pas une condition préalable à une action en justice.
 - **Juridiction compétente** : l’Utilisateur consommateur peut saisir, à son choix, l’une des juridictions territorialement compétentes en vertu du Code de procédure civile ou la juridiction du lieu où il demeurait au moment de la conclusion du contrat ou de la survenance du fait dommageable (article R631-3 du Code de la consommation). Le consommateur résidant dans un autre État membre de l’Union européenne peut saisir les juridictions de son domicile.
+- **Professionnels** : lorsque l’Utilisateur est un professionnel, tout litige relève de la compétence des tribunaux du ressort du siège d’AeroX, dans les conditions prévues par l’article 48 du Code de procédure civile.
 - **Langue** : les présentes CGU sont rédigées en français. Des traductions peuvent être proposées à titre de courtoisie ; en cas de divergence, **la version française fait foi**.
 
 ---

@@ -19,7 +19,10 @@ By creating an account or using AeroX, you fully accept these terms.
 
 - **AeroX**: the application developed by the AeroX company (independent project based in France).
 - **Service**: all features provided by AeroX (software, website, simulator, etc.).
-- **User**: any adult individual using AeroX.
+- **User**: any person using AeroX through an Account, namely:
+  - the **rider** (rider account): an adult individual acting for personal purposes, as a consumer;
+  - the **bike fitter** (bike fitter account): a professional, whether an individual (in particular a sole trader) or a legal entity, acting for the purposes of their business.
+- **Consumer** and **professional**: within the meaning of the preliminary article of the French Consumer Code.
 - **Account**: personal access allowing the User to use the Service after registration and, where applicable, payment of a subscription.
 
 ---
@@ -67,7 +70,8 @@ This section applies to bike fitter accounts. Where it conflicts with sections 4
 
 - **Plans**: **Essential**, €20 excl. VAT per month plus €15 excl. VAT per analysis, billed at the end of each monthly period; **Unlimited**, €99 excl. VAT per month or €990 excl. VAT per year. **Launch offer**, reserved for the first 20 studios and subscribed by 31 December 2026: Unlimited at €69 excl. VAT per month until 31 December 2026, then €99 excl. VAT per month, or €690 excl. VAT for the first year, then €990 excl. VAT per year. Prices exclude taxes; VAT is applied under the rules in force.
 - **Analysis**: one client analysed with AeroX, counted once per rolling 30-day period. Further sessions with the same client during that period are not counted.
-- **Free trial**: the first subscription starts with a **14-day free trial** (for an earlier subscription, the 14 days only start counting when the new version of the app becomes available, on 20 October 2026). It is reserved for companies whose identifier has been verified (EU VAT number, French SIREN or SIRET, or a website approved by AeroX), one trial per company. A valid payment method is saved when the trial starts; **nothing is charged during the trial**, and analyses made during the trial are not billed.
+- **Free trial**: the first subscription starts with a **14-day free trial** (for a subscription made before the release of the new version of the app, on 20 October 2026, the 14 days only start counting from that release). It is reserved for companies whose identifier has been verified (EU VAT number, French SIREN or SIRET, or a website approved by AeroX), one trial per company. A valid payment method is saved when the trial starts; **nothing is charged during the trial**, and analyses made during the trial are not billed.
+- **Availability of the plans**: bike fitter plans are made available on 1 November 2026, with the version of the app that counts analyses. Nothing is charged before that date, including for an earlier subscription.
 - **End of the trial**: **unless cancelled before the trial ends, the chosen subscription starts automatically at the end of the trial and the first payment is taken that day** from the saved payment method. The trial end date is shown when subscribing and in the bike fitter account.
 - **Cancelling during the trial**: at any time before the trial ends, from the bike fitter account (“Cancel the trial”). Nothing is then charged, and access remains open until the end of the trial.
 - **Term and cancellation**: subscriptions have no minimum term and renew automatically for each period (month or year). They can be cancelled at any time from the bike fitter account; cancellation takes effect at the end of the current, already paid period, with no prorated refund.
@@ -150,15 +154,16 @@ The User agrees to:
 ## 12. Personal Data
 
 - AeroX collects and processes certain data (e.g. performance metrics, email) to provide the Service.
-- Such data is handled in accordance with our [Privacy Policy](/privacy).
+- Such data is handled in accordance with our [Privacy Policy](/es/privacy/).
 
 ---
 
 ## 13. Governing Law, Disputes and Language
 
 - These Terms of Use are governed by French law. Where the User is a consumer residing in another Member State of the European Union, this choice does not deprive them of the protection afforded by the mandatory provisions of the law of their country of residence.
-- **Prior complaint**: before taking legal action, the User sends a written complaint to contact@aeroxbefaster.com, in order to seek an amicable solution.
+- **Amicable complaint**: in the event of a dispute, the User is invited to first send a written complaint to contact@aeroxbefaster.com, in order to seek an amicable solution. This step is not a prerequisite for taking legal action.
 - **Competent court**: a User acting as a consumer may bring proceedings, at their choice, before one of the courts with territorial jurisdiction under the French Code of Civil Procedure or before the court of the place where they lived when the contract was concluded or when the harmful event occurred (French Consumer Code, Article R631-3). A consumer residing in another Member State of the European Union may bring proceedings before the courts of their place of domicile.
+- **Professionals**: where the User is a professional, any dispute falls within the jurisdiction of the courts for the place where AeroX has its registered office, under the conditions provided for by Article 48 of the French Code of Civil Procedure.
 - **Language**: these Terms of Use are drafted in French. Translations may be provided as a courtesy; in the event of any discrepancy, **the French version prevails**.
 
 ---
