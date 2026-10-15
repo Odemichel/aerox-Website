@@ -3,7 +3,7 @@ title: 'Datenschutzrichtlinie'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Letzte Aktualisierung_: 21. September 2025
+_Letzte Aktualisierung_: 15. Oktober 2026
 
 Diese Datenschutzrichtlinie beschreibt unsere Praktiken hinsichtlich der Erhebung, Nutzung und des Schutzes Ihrer personenbezogenen Daten bei der Nutzung des Dienstes **AeroX**.
 Sie erläutert außerdem Ihre Rechte und wie das Gesetz Sie schützt.
@@ -23,7 +23,7 @@ Wörter, deren Anfangsbuchstabe großgeschrieben ist, haben die in den folgenden
 Im Sinne dieser Datenschutzrichtlinie:
 
 - **Konto**: bezeichnet ein einzigartiges Konto, das für den Zugang zum Dienst erstellt wurde.
-- **Unternehmen** (im Folgenden als „AeroX", „wir", „unser" oder „uns" bezeichnet): AeroX, mit Sitz in Frankreich.
+- **Unternehmen** (im Folgenden als „AeroX", „wir", „unser" oder „uns" bezeichnet): SAS AeroX, 30 rue René Cassin, 21000 Dijon, Frankreich, Verantwortlicher für die Verarbeitung.
 - **Cookies**: kleine Dateien, die auf Ihrem Gerät abgelegt werden und unter anderem dazu dienen, Ihre Einstellungen zu speichern oder die Nutzung des Dienstes zu analysieren.
 - **Land**: Frankreich.
 - **Gerät**: jedes Gerät, das den Zugang zum Dienst ermöglicht (Computer, Smartphone, Tablet).

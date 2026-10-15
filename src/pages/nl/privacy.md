@@ -3,7 +3,7 @@ title: 'Privacybeleid'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Laatste update_: 21 september 2025
+_Laatste update_: 15 oktober 2026
 
 Dit Privacybeleid beschrijft onze praktijken met betrekking tot het verzamelen, gebruiken en beschermen van uw persoonsgegevens wanneer u de dienst **AeroX** gebruikt.
 Het verduidelijkt ook uw rechten en de manier waarop de wet u beschermt.
@@ -23,7 +23,7 @@ Woorden waarvan de eerste letter een hoofdletter is, hebben de betekenis zoals v
 In het kader van dit Privacybeleid:
 
 - **Account**: verwijst naar een uniek account dat is aangemaakt voor toegang tot de dienst.
-- **Bedrijf** (hierna aangeduid als "AeroX", "wij", "ons" of "onze"): AeroX, gevestigd in Frankrijk.
+- **Bedrijf** (hierna aangeduid als "AeroX", "wij", "ons" of "onze"): SAS AeroX, 30 rue René Cassin, 21000 Dijon, Frankrijk, verwerkingsverantwoordelijke.
 - **Cookies**: kleine bestanden die op uw apparaat worden geplaatst, met name om uw voorkeuren op te slaan of het gebruik van de dienst te analyseren.
 - **Land**: Frankrijk.
 - **Apparaat**: elk apparaat dat toegang biedt tot de dienst (computer, smartphone, tablet).

@@ -3,7 +3,7 @@ title: 'Informativa sulla privacy'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Ultimo aggiornamento_: 21 settembre 2025
+_Ultimo aggiornamento_: 15 ottobre 2026
 
 La presente Informativa sulla privacy descrive le nostre pratiche di raccolta, utilizzo e protezione dei tuoi dati personali quando utilizzi il servizio **AeroX**.  
 Spiega inoltre i tuoi diritti e come la legge ti tutela.
@@ -23,7 +23,7 @@ Le parole con l'iniziale maiuscola hanno i significati definiti alle condizioni 
 Ai fini della presente Informativa sulla privacy:
 
 - **Account**: un account unico creato per accedere al servizio.
-- **Società** (indicata come "AeroX", "noi" o "nostro"): AeroX, con sede in Francia.
+- **Società** (indicata come "AeroX", "noi" o "nostro"): SAS AeroX, 30 rue René Cassin, 21000 Dijon, Francia, titolare del trattamento.
 - **Cookie**: piccoli file salvati sul tuo dispositivo che aiutano a ricordare le tue preferenze o ad analizzare l'uso del servizio.
 - **Paese**: Francia.
 - **Dispositivo**: qualsiasi apparecchio in grado di accedere al servizio (computer, smartphone, tablet).

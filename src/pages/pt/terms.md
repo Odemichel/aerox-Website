@@ -17,7 +17,7 @@ By creating an account or using AeroX, you fully accept these terms.
 
 ## 1. Definitions
 
-- **AeroX**: the application developed by the AeroX company (independent project based in France).
+- **AeroX**: the application published by SAS AeroX, a French simplified joint-stock company (société par actions simplifiée) with a share capital of €7,000, whose registered office is at 30 rue René Cassin, 21000 Dijon, France, registered with the Dijon Trade and Companies Register (RCS) under number 991 124 215 (see the [legal notice](/pt/legal/)). Depending on the context, “AeroX” refers to the application or to the company that publishes it.
 - **Service**: all features provided by AeroX (software, website, simulator, etc.).
 - **User**: any person using AeroX through an Account, namely:
   - the **rider** (rider account): an adult individual acting for personal purposes, as a consumer;
@@ -163,7 +163,7 @@ The User agrees to:
 - These Terms of Use are governed by French law. Where the User is a consumer residing in another Member State of the European Union, this choice does not deprive them of the protection afforded by the mandatory provisions of the law of their country of residence.
 - **Amicable complaint**: in the event of a dispute, the User is invited to first send a written complaint to contact@aeroxbefaster.com, in order to seek an amicable solution. This step is not a prerequisite for taking legal action.
 - **Competent court**: a User acting as a consumer may bring proceedings, at their choice, before one of the courts with territorial jurisdiction under the French Code of Civil Procedure or before the court of the place where they lived when the contract was concluded or when the harmful event occurred (French Consumer Code, Article R631-3). A consumer residing in another Member State of the European Union may bring proceedings before the courts of their place of domicile.
-- **Professionals**: where the User is a professional, any dispute falls within the jurisdiction of the courts for the place where AeroX has its registered office, under the conditions provided for by Article 48 of the French Code of Civil Procedure.
+- **Professionals**: where the User is a professional, any dispute falls within the jurisdiction of the Commercial Court of Dijon (tribunal de commerce de Dijon), under the conditions provided for by Article 48 of the French Code of Civil Procedure.
 - **Language**: these Terms of Use are drafted in French. Translations may be provided as a courtesy; in the event of any discrepancy, **the French version prevails**.
 
 ---

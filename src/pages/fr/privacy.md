@@ -3,7 +3,7 @@ title: 'Politique de Confidentialité'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Dernière mise à jour_ : 21 septembre 2025
+_Dernière mise à jour_ : 15 octobre 2026
 
 La présente Politique de Confidentialité décrit nos pratiques concernant la collecte, l’utilisation et la protection de vos données personnelles lorsque vous utilisez le service **AeroX**.  
 Elle précise également vos droits et la manière dont la loi vous protège.
@@ -23,7 +23,7 @@ Les mots dont la première lettre est en majuscule ont un sens défini dans les 
 Pour les besoins de cette Politique de Confidentialité :
 
 - **Compte** : désigne un compte unique créé pour accéder au service.
-- **Société** (désignée ci-après par "AeroX", "nous", "notre" ou "nos") : AeroX, basé en France.
+- **Société** (désignée ci-après par "AeroX", "nous", "notre" ou "nos") : SAS AeroX, 30 rue René Cassin, 21000 Dijon, France, responsable du traitement.
 - **Cookies** : petits fichiers déposés sur votre appareil, permettant notamment de mémoriser vos préférences ou d’analyser l’usage du service.
 - **Pays** : France.
 - **Appareil** : tout appareil permettant d’accéder au service (ordinateur, smartphone, tablette).

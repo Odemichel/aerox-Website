@@ -13,7 +13,7 @@ En créant un compte ou en utilisant AeroX, tu acceptes pleinement ces condition
 
 ## 1. Définitions
 
-- **AeroX** : l’application éditée par la société AeroX (projet indépendant, basé en France).
+- **AeroX** : l’application éditée par la SAS AeroX, société par actions simplifiée au capital de 7 000 €, dont le siège est situé 30 rue René Cassin, 21000 Dijon, immatriculée au RCS de Dijon sous le numéro 991 124 215 (voir les [mentions légales](/fr/legal/)). Selon le contexte, « AeroX » désigne l’application ou la société qui l’édite.
 - **Service** : l’ensemble des fonctionnalités offertes par AeroX (logiciel, site, simulateur, etc.).
 - **Utilisateur** : toute personne utilisant AeroX au moyen d’un Compte, à savoir :
   - le **cycliste** (compte cycliste) : personne physique majeure agissant à des fins personnelles, en qualité de consommateur ;
@@ -159,7 +159,7 @@ L’Utilisateur s’engage à :
 - Les présentes CGU sont soumises au droit français. Lorsque l’Utilisateur est un consommateur résidant dans un autre État membre de l’Union européenne, ce choix ne le prive pas de la protection que lui assurent les dispositions impératives de la loi de son pays de résidence.
 - **Réclamation amiable** : en cas de litige, l’Utilisateur est invité à adresser d’abord une réclamation écrite à contact@aeroxbefaster.com, afin de rechercher une solution amiable. Cette démarche n’est pas une condition préalable à une action en justice.
 - **Juridiction compétente** : l’Utilisateur consommateur peut saisir, à son choix, l’une des juridictions territorialement compétentes en vertu du Code de procédure civile ou la juridiction du lieu où il demeurait au moment de la conclusion du contrat ou de la survenance du fait dommageable (article R631-3 du Code de la consommation). Le consommateur résidant dans un autre État membre de l’Union européenne peut saisir les juridictions de son domicile.
-- **Professionnels** : lorsque l’Utilisateur est un professionnel, tout litige relève de la compétence des tribunaux du ressort du siège d’AeroX, dans les conditions prévues par l’article 48 du Code de procédure civile.
+- **Professionnels** : lorsque l’Utilisateur est un professionnel, tout litige relève de la compétence du tribunal de commerce de Dijon, dans les conditions prévues par l’article 48 du Code de procédure civile.
 - **Langue** : les présentes CGU sont rédigées en français. Des traductions peuvent être proposées à titre de courtoisie ; en cas de divergence, **la version française fait foi**.
 
 ---

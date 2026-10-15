@@ -3,7 +3,7 @@ title: 'Gizlilik Politikası'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Son güncelleme_: 21 Eylül 2025
+_Son güncelleme_: 15 Ekim 2026
 
 Bu Gizlilik Politikası, **AeroX** hizmetini kullanırken kişisel verilerinizin toplanması, kullanılması ve korunmasına ilişkin uygulamalarımızı açıklamaktadır.
 Ayrıca haklarınızı ve yasaların sizi nasıl koruduğunu belirtmektedir.
@@ -23,7 +23,7 @@ AeroX'u kullanarak, bilgilerinizin bu politikaya uygun olarak toplanmasını ve 
 Bu Gizlilik Politikası kapsamında:
 
 - **Hesap**: hizmete erişim için oluşturulan benzersiz bir hesabı ifade eder.
-- **Şirket** (bundan sonra "AeroX", "biz", "bizim" veya "bize" olarak anılacaktır): Fransa merkezli AeroX.
+- **Şirket** (bundan sonra "AeroX", "biz", "bizim" veya "bize" olarak anılacaktır): SAS AeroX, 30 rue René Cassin, 21000 Dijon, Fransa; veri sorumlusu.
 - **Çerezler**: cihazınıza yerleştirilen küçük dosyalar olup, özellikle tercihlerinizi kaydetmek veya hizmet kullanımını analiz etmek için kullanılır.
 - **Ülke**: Fransa.
 - **Cihaz**: hizmete erişimi sağlayan herhangi bir cihaz (bilgisayar, akıllı telefon, tablet).

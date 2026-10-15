@@ -3,7 +3,7 @@ title: 'Privacy Policy'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Last updated_: September 21, 2025
+_Last updated_: October 15, 2026
 
 This Privacy Policy describes our practices regarding the collection, use, and protection of your personal data when you use the **AeroX** service.  
 It also explains your rights and how the law protects you.
@@ -23,7 +23,7 @@ Words with an initial capital letter have meanings defined under the following c
 For the purposes of this Privacy Policy:
 
 - **Account**: means a unique account created to access the service.
-- **Company** (referred to as "AeroX", "we", "our" or "us"): AeroX, based in France.
+- **Company** (referred to as "AeroX", "we", "our" or "us"): SAS AeroX, 30 rue René Cassin, 21000 Dijon, France, the data controller.
 - **Cookies**: small files placed on your device that help remember your preferences or analyze service usage.
 - **Country**: France.
 - **Device**: any device that can access the service (computer, smartphone, tablet).

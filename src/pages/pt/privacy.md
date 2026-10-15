@@ -3,7 +3,7 @@ title: 'Política de Privacidade'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Última atualização_: 21 de setembro de 2025
+_Última atualização_: 15 de outubro de 2026
 
 Esta Política de Privacidade descreve nossas práticas de coleta, uso e proteção dos seus dados pessoais quando você usa o serviço **AeroX**.  
 Ela também explica os seus direitos e como a lei protege você.
@@ -23,7 +23,7 @@ As palavras com inicial maiúscula têm os significados definidos nas condiçõe
 Para os fins desta Política de Privacidade:
 
 - **Conta**: uma conta única criada para acessar o serviço.
-- **Empresa** (designada como "AeroX", "nós" ou "nosso"): AeroX, sediada na França.
+- **Empresa** (designada como "AeroX", "nós" ou "nosso"): SAS AeroX, 30 rue René Cassin, 21000 Dijon, França, controladora dos dados pessoais.
 - **Cookies**: pequenos arquivos colocados no seu dispositivo que ajudam a lembrar suas preferências ou a analisar o uso do serviço.
 - **País**: França.
 - **Dispositivo**: qualquer aparelho capaz de acessar o serviço (computador, smartphone, tablet).

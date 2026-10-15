@@ -149,6 +149,10 @@ export function makeNavigation(langInput?: string, audience: Audience = 'rider')
         text: t('footer.terms'),
         href: withLang(lang, '/terms'),
       },
+      {
+        text: t('footer.legal'),
+        href: withLang(lang, '/legal'),
+      },
     ],
     socialLinks: [], // requis par Props de Footer.astro
     footNote: t('footer.footnote'),
