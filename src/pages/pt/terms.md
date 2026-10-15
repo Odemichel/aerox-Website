@@ -3,141 +3,171 @@ title: 'Termos de Uso'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Última atualização: 15 de outubro de 2026_
+<div lang="en">
 
-Obrigado por usar o **AeroX**, a solução que transforma o seu rolo de treino em um túnel de vento virtual.  
-Estes Termos de Uso regem o acesso e o uso do serviço AeroX.  
-Ao criar uma conta ou usar o AeroX, você aceita integralmente estes termos.
+> **Courtesy translation.** These Terms of Use are provided in English for information purposes only. Only the [French version](/fr/terms/) is legally binding and prevails in the event of any discrepancy.
 
----
+_Last updated: October 15, 2026_
 
-## 1. Definições
-
-- **AeroX**: o aplicativo desenvolvido pela empresa AeroX (projeto independente, sediado na França).
-- **Serviço**: o conjunto das funcionalidades oferecidas pelo AeroX (software, site, simulador etc.).
-- **Usuário**: toda pessoa física maior de idade que utiliza o AeroX.
-- **Conta**: acesso pessoal que permite utilizar o Serviço após o cadastro e, se for o caso, o pagamento de uma assinatura.
+Thank you for using **AeroX**, the solution that turns your home trainer into a virtual wind tunnel.  
+These Terms of Use govern access to and use of the AeroX service.  
+By creating an account or using AeroX, you fully accept these terms.
 
 ---
 
-## 2. Objeto
+## 1. Definitions
 
-Estes Termos de Uso definem os direitos e obrigações do AeroX e do Usuário no âmbito do uso do Serviço.
-
----
-
-## 3. Criação e uso da conta
-
-- O acesso ao AeroX exige a criação de uma conta pessoal.
-- As informações fornecidas no cadastro devem ser exatas e estar atualizadas.
-- **Cada conta é estritamente pessoal e intransferível.**  
-  👉 O compartilhamento de conta (empréstimo, revenda ou cessão de credenciais) é **proibido** e pode resultar na suspensão ou exclusão da conta.
+- **AeroX**: the application developed by the AeroX company (independent project based in France).
+- **Service**: all features provided by AeroX (software, website, simulator, etc.).
+- **User**: any adult individual using AeroX.
+- **Account**: personal access allowing the User to use the Service after registration and, where applicable, payment of a subscription.
 
 ---
 
-## 4. Assinaturas e uso
+## 2. Purpose
 
-- O acesso completo ao Serviço depende do pagamento de uma assinatura ou de um plano específico.
-- Cada assinatura inclui **até 30 horas de uso por mês**.
-- Se precisar de mais horas, o Usuário deve entrar em contato com o AeroX (contact@aeroxbefaster.com) para obter uma extensão ou uma oferta adequada.
-- O AeroX se reserva o direito de cobrar um valor adicional ou limitar o acesso em caso de uso abusivo ou desproporcional.
+These Terms of Use define the rights and obligations of AeroX and the User regarding the use of the Service.
 
 ---
 
-## 5. Diagnóstico AeroX: compra, duração, arrependimento e reembolso
+## 3. Account Creation and Use
 
-- **Conteúdo**: o Diagnóstico AeroX é um serviço digital vendido por unidade. Ele inclui sessões realizadas no aplicativo AeroX (comparação de posições, teste de estabilidade) e um relatório de recomendação.
-- **Duração**: uma compra dá direito a um diagnóstico, que pode ser usado durante **30 dias a partir do seu início** no aplicativo. Ele termina ao fim desse prazo ou quando o Usuário declara tê-lo concluído; os resultados continuam disponíveis. Recomeçar um diagnóstico em andamento não prorroga esse prazo.
-- **Direito de arrependimento**: o Usuário consumidor tem **14 dias a partir da compra** para desistir, sem precisar justificar, escrevendo para contact@aeroxbefaster.com. O AeroX reembolsa então a totalidade dos valores pagos, pelo mesmo meio de pagamento, em até 14 dias após o pedido.
-- **Renúncia**: no pagamento, o Usuário solicita expressamente o acesso imediato ao diagnóstico e reconhece que perde o direito de arrependimento assim que realizar a primeira sessão (Código do Consumidor francês, art. L221-28, 13°). Após a realização de uma sessão, o diagnóstico não é mais reembolsável.
-- **Garantia AeroX**: além do direito de arrependimento, o AeroX reembolsa integralmente o diagnóstico, mediante simples pedido para contact@aeroxbefaster.com, enquanto nenhuma sessão tiver sido realizada, qualquer que seja a data da compra, em especial se o equipamento do Usuário não for compatível. A partir da realização da primeira sessão, o diagnóstico é considerado consumido e não é mais reembolsável.
-- **Efeito de um reembolso**: todo reembolso encerra o acesso ao diagnóstico correspondente.
+- Access to AeroX requires the creation of a personal account.
+- The information provided during registration must be accurate and up to date.
+- **Each account is strictly personal and non-transferable.**  
+  👉 Account sharing (loan, resale, or transfer of credentials) is **prohibited** and may result in suspension or deletion of the account.
 
 ---
 
-## 5-A. Planos para bike fitters: teste gratuito, assinatura e cancelamento
+## 4. Subscriptions and Usage
 
-Este artigo aplica-se às contas de bike fitter. Em caso de contradição, prevalece sobre os artigos 4 e 10.
-
-- **Planos**: **Essencial**, 20 € sem IVA por mês mais 15 € sem IVA por análise, faturados no fim de cada período mensal; **Ilimitado**, 99 € sem IVA por mês ou 990 € sem IVA por ano. **Oferta de lançamento**, reservada aos 20 primeiros estúdios e subscrita até 31 de dezembro de 2026: Ilimitado a 69 € sem IVA por mês até 31 de dezembro de 2026, depois 99 € sem IVA por mês, ou 690 € sem IVA no primeiro ano, depois 990 € sem IVA por ano. Os preços não incluem impostos; o IVA é aplicado de acordo com a regulamentação em vigor.
-- **Análise**: um cliente analisado com o AeroX, contado uma vez por período móvel de 30 dias. As novas sessões do mesmo cliente nesse período não são contadas.
-- **Teste gratuito**: a primeira assinatura começa com um **teste gratuito de 14 dias** (para uma subscrição anterior, os 14 dias só começam a contar quando a nova versão da aplicação estiver disponível, a 20 de outubro de 2026). É reservado a empresas cujo identificador foi verificado (número de IVA intracomunitário, SIREN ou SIRET francês, ou site validado pela AeroX), um teste por empresa. No início do teste é registado um meio de pagamento válido; **nada é cobrado durante o teste**, e as análises realizadas durante o teste não são faturadas.
-- **Fim do teste**: **salvo cancelamento antes do fim do teste, a assinatura escolhida começa automaticamente no seu termo e o primeiro pagamento é cobrado nesse dia** no meio de pagamento registado. A data de fim do teste é indicada na subscrição e no espaço de bike fitter.
-- **Cancelar durante o teste**: a qualquer momento antes do fim do teste, no espaço de bike fitter («Cancelar o teste»). Nesse caso nada é cobrado e o acesso mantém-se até ao fim do teste.
-- **Duração e cancelamento**: as assinaturas não têm fidelização e renovam-se tacitamente por período (mês ou ano). Cancelam-se a qualquer momento no espaço de bike fitter; o cancelamento produz efeito no fim do período em curso, já pago, sem reembolso proporcional.
-- **Mudança de plano**: passar para um plano superior é imediato, com a diferença calculada proporcionalmente; passar para um inferior produz efeito no fim do período em curso.
-- **Falta de pagamento**: se um pagamento falhar, o acesso é mantido 7 dias; depois, a conta passa a só leitura até à regularização. Os montantes devidos continuam exigíveis.
-- **Faturas**: disponíveis no espaço de bike fitter («Gerir a faturação»).
-- **Profissionais**: os planos para bike fitters destinam-se a profissionais que atuam no âmbito da sua atividade; o direito de livre resolução previsto para os consumidores não se aplica.
+- Full access to the Service requires payment of a subscription or specific plan.
+- Each subscription includes **up to 30 hours of use per month**.
+- If additional hours are needed, the User must contact AeroX (contact@aeroxbefaster.com) to obtain an extension or suitable offer.
+- AeroX reserves the right to charge additional fees or limit access in the event of excessive or disproportionate use.
+- Purchases (subscriptions, AeroX Diagnostic) are concluded directly with AeroX, which is the seller; payment is processed by the payment provider Stripe.
 
 ---
 
-## 6. Funcionamento do serviço
+## 5. AeroX Diagnostic: Purchase, Duration, Withdrawal and Refunds
 
-- O AeroX fornece uma análise aerodinâmica em tempo real por meio de webcam e rolo de treino conectado.
-- O AeroX não garante a disponibilidade ininterrupta do serviço (manutenção, atualizações, melhorias).
-- O Usuário é responsável pelo seu próprio equipamento (rolo de treino, bicicleta, câmera, computador).
-
----
-
-## 7. Obrigações do usuário
-
-O Usuário se compromete a:
-
-- usar o AeroX exclusivamente para fins esportivos e pessoais,
-- não desviar o Serviço para fins comerciais, fraudulentos ou ilícitos,
-- respeitar os limites de uso previstos no artigo 4,
-- não tentar contornar a segurança do Serviço, e respeitar o artigo 8 (propriedade intelectual e proteção do software).
+- **Content**: the AeroX Diagnostic is a digital service sold individually. It consists of sessions carried out in the AeroX application (position comparison, stability test) and a recommendation report.
+- **Duration**: one purchase entitles the User to one diagnostic, usable for **30 days from the moment it is started** in the application. It ends at the end of this period or when the User declares it finished; its results remain available. Restarting a diagnostic in progress does not extend this period.
+- **Right of withdrawal**: a User acting as a consumer has **14 days from the purchase** to withdraw, without giving any reason, by writing to contact@aeroxbefaster.com. AeroX then refunds all sums paid, using the same payment method, no later than 14 days after the request.
+- **Waiver**: at checkout, by ticking the box provided for this purpose, the User accepts these Terms of Use, expressly requests immediate access to the diagnostic and acknowledges losing the right of withdrawal as soon as the first session is completed (French Consumer Code, Article L221-28 13°). Once a session has been completed, the diagnostic is no longer refundable.
+- **AeroX guarantee**: in addition to the right of withdrawal, AeroX fully refunds the diagnostic, upon simple request to contact@aeroxbefaster.com, as long as no session has been completed, regardless of the purchase date, in particular if the User's equipment is not compatible. As soon as the first session has been completed, the diagnostic is consumed and is no longer refundable.
+- **Effect of a refund**: any refund ends access to the corresponding diagnostic.
+- **Legal guarantee**: the no-refund rules above do not apply to the remedies under the legal guarantee of conformity (Section 9), which remain due in the event of a lack of conformity.
 
 ---
 
-## 8. Propriedade intelectual e proteção do software
+## 5a. Bike fitter plans: free trial, subscription and cancellation
 
-- **Titularidade dos direitos**: o software AeroX (aplicativos de desktop para macOS e Windows, aplicativo web e móvel complementar, em todas as suas versões e atualizações), seus modelos de inteligência artificial (em especial os modelos de segmentação e de estimativa de pose, seus pesos, suas arquiteturas treinadas e seus parâmetros), os conjuntos de dados de treinamento, os algoritmos de cálculo (área frontal, CdA, calibração), a documentação, as marcas, logotipos e denominações AeroX, bem como os conteúdos do site e do aplicativo, pertencem exclusivamente a Olivier Demichel («O. Demichel»), titular de todos os direitos de propriedade intelectual a eles relacionados. Os dados pessoais do Usuário não estão incluídos: são regidos pelo artigo 11.
-- **Licença de uso**: desde que respeite estes Termos, o Usuário dispõe de um direito de uso do Serviço pessoal, vinculado à sua conta, não exclusivo, intransferível e não sublicenciável. Esse direito é limitado ao uso do aplicativo no âmbito previsto por estes Termos (incluindo, para uma conta de bike fitter, a análise de seus clientes) e à duração da assinatura ou da compra correspondente. Não implica nenhuma transferência de propriedade; todos os direitos não concedidos expressamente ficam reservados.
-- **Proibições**: ressalvadas as exceções previstas no artigo L122-6-1 do Código da Propriedade Intelectual francês (CPI), é proibido ao Usuário, diretamente ou por meio de terceiros:
-  - copiar, extrair, isolar, exportar ou reutilizar os modelos de inteligência artificial do AeroX ou seus pesos fora do aplicativo;
-  - integrá-los a outro software, outro aplicativo (inclusive móvel, iOS ou Android) ou outro serviço;
-  - utilizá-los para treinar, destilar, ajustar (fine-tuning) ou avaliar outro modelo;
-  - descompilar, desmontar ou fazer engenharia reversa do software ou dos modelos, ou contornar, desativar ou alterar suas medidas técnicas de proteção (criptografia, assinatura etc.);
-  - reproduzir, modificar, traduzir, adaptar, distribuir, alugar, vender ou disponibilizar a terceiros, no todo ou em parte, o software, os modelos, os conjuntos de dados, os algoritmos ou a documentação.
-- **Exceções legais**: o presente artigo não priva o Usuário de nenhum dos direitos que lhe reconhece o artigo L122-6-1 do CPI, em especial, nas condições e nos limites nele fixados, a cópia de segurança e a descompilação indispensável à interoperabilidade do software com um programa criado de forma independente. As informações necessárias à interoperabilidade podem ser solicitadas em contact@aeroxbefaster.com.
-- **Sanções**: qualquer descumprimento do presente artigo acarreta a rescisão imediata da licença e da conta, sem reembolso, sem prejuízo de qualquer ação de O. Demichel, em especial por contrafação (artigos L335-2 e L335-3 do CPI), e de qualquer pedido de indenização por perdas e danos.
+This section applies to bike fitter accounts. Where it conflicts with sections 4 and 11, it prevails.
 
----
-
-## 9. Limitação de responsabilidade
-
-- O AeroX emprega todos os meios razoáveis para oferecer um serviço confiável, mas não garante a ausência de erros ou interrupções.
-- O AeroX não se responsabiliza por lesões, interpretação equivocada dos dados ou uso inadequado do Serviço.
-- Em qualquer caso, a responsabilidade do AeroX limita-se ao valor pago pelo Usuário pelo período em curso.
+- **Plans**: **Essential**, €20 excl. VAT per month plus €15 excl. VAT per analysis, billed at the end of each monthly period; **Unlimited**, €99 excl. VAT per month or €990 excl. VAT per year. **Launch offer**, reserved for the first 20 studios and subscribed by 31 December 2026: Unlimited at €69 excl. VAT per month until 31 December 2026, then €99 excl. VAT per month, or €690 excl. VAT for the first year, then €990 excl. VAT per year. Prices exclude taxes; VAT is applied under the rules in force.
+- **Analysis**: one client analysed with AeroX, counted once per rolling 30-day period. Further sessions with the same client during that period are not counted.
+- **Free trial**: the first subscription starts with a **14-day free trial** (for an earlier subscription, the 14 days only start counting when the new version of the app becomes available, on 20 October 2026). It is reserved for companies whose identifier has been verified (EU VAT number, French SIREN or SIRET, or a website approved by AeroX), one trial per company. A valid payment method is saved when the trial starts; **nothing is charged during the trial**, and analyses made during the trial are not billed.
+- **End of the trial**: **unless cancelled before the trial ends, the chosen subscription starts automatically at the end of the trial and the first payment is taken that day** from the saved payment method. The trial end date is shown when subscribing and in the bike fitter account.
+- **Cancelling during the trial**: at any time before the trial ends, from the bike fitter account (“Cancel the trial”). Nothing is then charged, and access remains open until the end of the trial.
+- **Term and cancellation**: subscriptions have no minimum term and renew automatically for each period (month or year). They can be cancelled at any time from the bike fitter account; cancellation takes effect at the end of the current, already paid period, with no prorated refund.
+- **Changing plans**: moving to a higher plan is immediate, with the difference prorated; moving to a lower plan takes effect at the end of the current period.
+- **Failed payment**: if a payment fails, access is kept for 7 days; after that, the account becomes read-only until payment is made. Amounts due remain payable.
+- **Invoices**: available in the bike fitter account (“Manage billing”).
+- **Professionals**: bike fitter plans are reserved for professionals acting for the purposes of their business; the right of withdrawal provided for consumers does not apply.
 
 ---
 
-## 10. Rescisão
+## 6. Service Operation
 
-- O Usuário pode cancelar a assinatura a qualquer momento.
-- O AeroX pode suspender ou excluir uma conta em caso de fraude, descumprimento destes Termos ou uso abusivo.
-
----
-
-## 11. Dados pessoais
-
-- O AeroX coleta e trata certos dados (por exemplo, métricas esportivas, e-mail) para fornecer o Serviço.
-- Esses dados são tratados de acordo com a nossa [Política de Privacidade](/privacy).
+- AeroX provides real-time aerodynamic analysis via webcam and connected home trainer.
+- AeroX does not guarantee uninterrupted service availability (maintenance, updates, improvements).
+- The User is responsible for their own equipment (home trainer, bike, camera, computer).
 
 ---
 
-## 12. Lei aplicável e litígios
+## 7. User Obligations
 
-- Estes Termos de Uso são regidos pela lei francesa.
-- Em caso de litígio, as partes buscarão uma solução amigável antes de qualquer ação judicial.
+The User agrees to:
+
+- use AeroX in accordance with its intended purpose and with the licence granted to them (Section 8): sporting, personal and non-commercial use for a rider account; analysis of their own clients, as part of their bike fitting business, for a bike fitter account,
+- not use the Service for fraudulent or unlawful purposes, nor for commercial purposes beyond what the Bike Fitter Licence allows,
+- respect the usage limits described in Section 4,
+- not attempt to bypass the security of the Service, and comply with Section 8 (Intellectual Property and Software Protection).
 
 ---
 
-## 13. Contato
+## 8. Intellectual Property and Software Protection
 
-Para qualquer dúvida sobre estes Termos de Uso, escreva para:  
+- **Ownership**: the AeroX software (macOS and Windows desktop applications, web and mobile companion application, in all their versions and updates), its artificial intelligence models (in particular the segmentation and pose estimation models, their weights, trained architectures and parameters), the training datasets, the calculation algorithms (frontal area, CdA, calibration), the documentation, the AeroX trademarks, logos and names, and the content of the website and the application belong exclusively to Olivier Demichel (“O. Demichel”), who holds all the related intellectual property rights. The User’s personal data is not covered: it is governed by Section 12.
+- **Licences**: subject to compliance with these Terms of Use, the User is granted, depending on the type of Account, one of the following two licences. Each is non-exclusive, non-transferable and non-sublicensable, and limited to using the application within the scope provided for by these Terms of Use, for the term of the corresponding subscription or purchase:
+  - **Rider Licence** (rider account): a personal, non-commercial right of use, attached to the User’s Account;
+  - **Bike Fitter Licence** (bike fitter account): a professional right of use, attached to the bike fitter account, limited to analysing their own clients as part of their bike fitting business. The bike fitter may give their clients the reports and results produced for them; they may not make the application or the models available to third parties, nor resell them.
+- **No transfer of ownership**: neither licence transfers any ownership; all rights not expressly granted are reserved.
+- **Prohibitions**: subject to the exceptions provided for by Article L122-6-1 of the French Intellectual Property Code (CPI), the User may not, directly or through a third party:
+  - copy, extract, isolate, export or reuse the AeroX artificial intelligence models or their weights outside the application;
+  - integrate them into any other software, application (including mobile, iOS or Android) or service;
+  - use them to train, distil, fine-tune or evaluate another model;
+  - decompile, disassemble or reverse engineer the software or the models, or circumvent, disable or alter their technical protection measures (encryption, signature, etc.);
+  - reproduce, modify, translate, adapt, distribute, rent, sell or make available to third parties all or part of the software, models, datasets, algorithms or documentation.
+- **Statutory exceptions**: this section does not deprive the User of any right granted by Article L122-6-1 of the CPI, in particular, under the conditions and within the limits it sets, making a backup copy and decompiling where indispensable for the interoperability of the software with independently created software. Information needed for interoperability can be requested at contact@aeroxbefaster.com.
+- **Sanctions**:
+  - in the event of a breach of this section, AeroX may suspend access to the Service or terminate the licence and the Account, after a formal notice sent by email has remained without effect for 15 days;
+  - in the event of a particularly serious breach, in particular extracting, exporting or reusing the artificial intelligence models or their weights outside the application, using them to train another model, or circumventing the technical protection measures, AeroX may terminate the licence and the Account immediately, without prior formal notice; the User is informed by email of the reason for the termination;
+  - what happens to sums already paid is governed by Section 11;
+  - these measures are without prejudice to any action by O. Demichel, in particular for infringement (Articles L335-2 and L335-3 of the CPI), and to any claim for damages.
+
+---
+
+## 9. Legal Guarantee of Conformity
+
+- As the seller, AeroX is bound towards a User acting as a consumer by the legal guarantee of conformity for digital content and services provided for in Articles L224-25-12 et seq. of the French Consumer Code.
+- **AeroX Diagnostic (single supply)**: AeroX is liable for any lack of conformity that becomes apparent within two years from the supply of the diagnostic. Any lack of conformity that becomes apparent within twelve months of the supply is presumed to have existed at the time of supply, unless proven otherwise.
+- **Subscriptions (continuous supply)**: AeroX is liable for any lack of conformity that becomes apparent throughout the term of the subscription.
+- **Remedies**: in the event of a lack of conformity, the User is entitled to have the digital content or service brought into conformity free of charge. Failing that, in particular if bringing it into conformity is impossible, is not done within a reasonable time or does not remedy the defect, the User may obtain a price reduction or the termination of the contract, under the conditions provided for by those articles.
+- **How to proceed**: the User sends the request to contact@aeroxbefaster.com, describing the defect observed.
+
+---
+
+## 10. Limitation of Liability
+
+- AeroX is bound by an obligation of means: it makes reasonable efforts to provide a reliable Service, without guaranteeing uninterrupted or error-free operation (maintenance, updates, improvements).
+- The measurements provided by AeroX (frontal area, CdA, scores) are estimates. Their quality also depends on factors beyond AeroX’s control, in particular the camera, the User’s equipment (computer, home trainer, sensors), lighting and setup. AeroX is not liable for any misinterpretation of the results, nor for any use of the Service that does not comply with its intended purpose or with these Terms of Use.
+- AeroX is not liable for indirect damage.
+- Towards a User acting as a professional, AeroX’s liability is limited to the amount paid for the current period.
+- **Express clause**: no provision of these Terms of Use excludes or limits the legal guarantee of conformity (Section 9), the warranty against hidden defects (Articles 1641 et seq. of the French Civil Code), AeroX’s liability for personal injury, or its liability for gross negligence or wilful misconduct.
+
+---
+
+## 11. Termination and Suspension
+
+- The User may cancel their subscription at any time.
+- AeroX may suspend or terminate an Account in the event of fraud, breach of these Terms of Use or abusive use, after a formal notice sent by email has remained without effect for 15 days, or immediately in the event of a particularly serious breach, in particular those referred to in Section 8. The User is informed by email of the reason for the measure.
+- **Sums already paid**: if AeroX terminates for breach by the User, sums corresponding to services already provided and to the period already elapsed remain due. The part of the price corresponding to the remaining term of a subscription, or to a purchase not yet used (in particular a diagnostic with no session completed), is refunded to the User, without prejudice to any damages that may be claimed to compensate for the loss suffered.
+
+---
+
+## 12. Personal Data
+
+- AeroX collects and processes certain data (e.g. performance metrics, email) to provide the Service.
+- Such data is handled in accordance with our [Privacy Policy](/privacy).
+
+---
+
+## 13. Governing Law, Disputes and Language
+
+- These Terms of Use are governed by French law. Where the User is a consumer residing in another Member State of the European Union, this choice does not deprive them of the protection afforded by the mandatory provisions of the law of their country of residence.
+- **Prior complaint**: before taking legal action, the User sends a written complaint to contact@aeroxbefaster.com, in order to seek an amicable solution.
+- **Competent court**: a User acting as a consumer may bring proceedings, at their choice, before one of the courts with territorial jurisdiction under the French Code of Civil Procedure or before the court of the place where they lived when the contract was concluded or when the harmful event occurred (French Consumer Code, Article R631-3). A consumer residing in another Member State of the European Union may bring proceedings before the courts of their place of domicile.
+- **Language**: these Terms of Use are drafted in French. Translations may be provided as a courtesy; in the event of any discrepancy, **the French version prevails**.
+
+---
+
+## 14. Contact
+
+For any questions about these Terms of Use, please contact us at:  
 📧 **contact@aeroxbefaster.com**
 
 ---
+
+</div>
