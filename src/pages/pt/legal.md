@@ -44,7 +44,7 @@ The website is hosted by:
 
 ## Intellectual Property
 
-The website, the AeroX application and their content are protected by intellectual property law. Ownership of the rights and the conditions of use are set out in Section 8 of the [Terms of Use](/pt/terms/).
+Unless otherwise stated, the website, the AeroX application and their content belong to SAS AeroX and are protected by intellectual property law. Ownership of the rights and the conditions of use are set out in Section 8 of the [Terms of Use](/pt/terms/).
 
 ---
 

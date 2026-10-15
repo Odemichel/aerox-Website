@@ -40,7 +40,7 @@ Le site est hébergé par :
 
 ## Propriété intellectuelle
 
-Le site, l’application AeroX et leurs contenus sont protégés par le droit de la propriété intellectuelle. La titularité des droits et les conditions d’utilisation sont précisées à l’article 8 des [Conditions Générales d’Utilisation](/fr/terms/).
+Sauf mention contraire, le site, l’application AeroX et leurs contenus appartiennent à la SAS AeroX et sont protégés par le droit de la propriété intellectuelle. La titularité des droits et les conditions d’utilisation sont précisées à l’article 8 des [Conditions Générales d’Utilisation](/fr/terms/).
 
 ---
 

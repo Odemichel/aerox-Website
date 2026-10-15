@@ -54,10 +54,11 @@ These Terms of Use define the rights and obligations of AeroX and the User regar
 
 ## 5. AeroX Diagnostic: Purchase, Duration, Withdrawal and Refunds
 
-- **Content**: the AeroX Diagnostic is a digital service sold individually. It consists of sessions carried out in the AeroX application (position comparison, stability test) and a recommendation report.
+- **Content**: the AeroX Diagnostic is digital content sold individually, supplied in dematerialised form in the AeroX application. It gives access to a protocol of guided sessions (position comparison, stability test) and to a recommendation report.
+- **Supply**: the diagnostic is supplied, and its performance begins, when its first session is started in the application, not at payment.
 - **Duration**: one purchase entitles the User to one diagnostic, usable for **30 days from the moment it is started** in the application. It ends at the end of this period or when the User declares it finished; its results remain available. Restarting a diagnostic in progress does not extend this period.
 - **Right of withdrawal**: a User acting as a consumer has **14 days from the purchase** to withdraw, without giving any reason, by writing to contact@aeroxbefaster.com. AeroX then refunds all sums paid, using the same payment method, no later than 14 days after the request.
-- **Waiver**: at checkout, by ticking the box provided for this purpose, the User accepts these Terms of Use, expressly requests immediate access to the diagnostic and acknowledges losing the right of withdrawal as soon as the first session is completed (French Consumer Code, Article L221-28 13°). Once a session has been completed, the diagnostic is no longer refundable.
+- **Waiver**: at checkout, by ticking the box provided for this purpose, the User accepts these Terms of Use, expressly requests immediate access to the diagnostic and acknowledges losing the right of withdrawal as soon as the first session is started, which marks the beginning of performance (French Consumer Code, Article L221-28 13°). Once the first session has been started, the diagnostic is no longer refundable under the right of withdrawal.
 - **AeroX guarantee**: in addition to the right of withdrawal, AeroX fully refunds the diagnostic, upon simple request to contact@aeroxbefaster.com, as long as no session has been completed, regardless of the purchase date, in particular if the User's equipment is not compatible. As soon as the first session has been completed, the diagnostic is consumed and is no longer refundable.
 - **Effect of a refund**: any refund ends access to the corresponding diagnostic.
 - **Legal guarantee**: the no-refund rules above do not apply to the remedies under the legal guarantee of conformity (Section 9), which remain due in the event of a lack of conformity.
@@ -103,7 +104,7 @@ The User agrees to:
 
 ## 8. Intellectual Property and Software Protection
 
-- **Ownership**: the AeroX software (macOS and Windows desktop applications, web and mobile companion application, in all their versions and updates), its artificial intelligence models (in particular the segmentation and pose estimation models, their weights, trained architectures and parameters), the training datasets, the calculation algorithms (frontal area, CdA, calibration), the documentation, the AeroX trademarks, logos and names, and the content of the website and the application belong exclusively to Olivier Demichel (“O. Demichel”), who holds all the related intellectual property rights. The User’s personal data is not covered: it is governed by Section 12.
+- **Ownership**: the AeroX software (macOS and Windows desktop applications, web and mobile companion application, in all their versions and updates), its artificial intelligence models (in particular the segmentation and pose estimation models, their weights, trained architectures and parameters), the training datasets, the calculation algorithms (frontal area, CdA, calibration), the documentation, the AeroX trademarks, logos and names, and the content of the website and the application belong exclusively to SAS AeroX, which holds all the related intellectual property rights. The User’s personal data is not covered: it is governed by Section 12.
 - **Licences**: subject to compliance with these Terms of Use, the User is granted, depending on the type of Account, one of the following two licences. Each is non-exclusive, non-transferable and non-sublicensable, and limited to using the application within the scope provided for by these Terms of Use, for the term of the corresponding subscription or purchase:
   - **Rider Licence** (rider account): a personal, non-commercial right of use, attached to the User’s Account;
   - **Bike Fitter Licence** (bike fitter account): a professional right of use, attached to the bike fitter account, limited to analysing their own clients as part of their bike fitting business. The bike fitter may give their clients the reports and results produced for them; they may not make the application or the models available to third parties, nor resell them.
@@ -119,14 +120,14 @@ The User agrees to:
   - in the event of a breach of this section, AeroX may suspend access to the Service or terminate the licence and the Account, after a formal notice sent by email has remained without effect for 15 days;
   - in the event of a particularly serious breach, in particular extracting, exporting or reusing the artificial intelligence models or their weights outside the application, using them to train another model, or circumventing the technical protection measures, AeroX may terminate the licence and the Account immediately, without prior formal notice; the User is informed by email of the reason for the termination;
   - what happens to sums already paid is governed by Section 11;
-  - these measures are without prejudice to any action by O. Demichel, in particular for infringement (Articles L335-2 and L335-3 of the CPI), and to any claim for damages.
+  - these measures are without prejudice to any action by AeroX, in particular for infringement (Articles L335-2 and L335-3 of the CPI), and to any claim for damages.
 
 ---
 
 ## 9. Legal Guarantee of Conformity
 
 - As the seller, AeroX is bound towards a User acting as a consumer by the legal guarantee of conformity for digital content and services provided for in Articles L224-25-12 et seq. of the French Consumer Code.
-- **AeroX Diagnostic (single supply)**: AeroX is liable for any lack of conformity that becomes apparent within two years from the supply of the diagnostic. Any lack of conformity that becomes apparent within twelve months of the supply is presumed to have existed at the time of supply, unless proven otherwise.
+- **AeroX Diagnostic (single supply of digital content)**: AeroX is liable for any lack of conformity that becomes apparent within two years from the supply of the diagnostic, that is, from the start of its first session (Section 5). Any lack of conformity that becomes apparent within twelve months of that supply is presumed to have existed at the time of supply, unless proven otherwise.
 - **Subscriptions (continuous supply)**: AeroX is liable for any lack of conformity that becomes apparent throughout the term of the subscription.
 - **Remedies**: in the event of a lack of conformity, the User is entitled to have the digital content or service brought into conformity free of charge. Failing that, in particular if bringing it into conformity is impossible, is not done within a reasonable time or does not remedy the defect, the User may obtain a price reduction or the termination of the contract, under the conditions provided for by those articles.
 - **How to proceed**: the User sends the request to contact@aeroxbefaster.com, describing the defect observed.
