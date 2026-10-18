@@ -67,11 +67,16 @@ const plans = [
 
 // Texte fixe, ou paire { lancement, tarif normal } choisie par le script.
 type Feature = string | { launch: string; standard: string };
+// Illimité : ce qu'AeroX apporte au studio et à ses clients, pas un détail
+// de facturation (décision du 2026-10-18).
 const unlimitedFeatures: Feature[] = [
-  t(dict, 'bfp.unlimited.f1'),
-  { launch: t(dict, 'bfp.unlimited.f2Launch'), standard: t(dict, 'bfp.unlimited.f2') },
+  t(dict, 'bfp.value.realtime'),
+  t(dict, 'bfp.value.positions'),
+  t(dict, 'bfp.value.share'),
+  t(dict, 'bfp.value.learn'),
+  t(dict, 'bfp.value.clients'),
+  t(dict, 'bfp.inc.setup'),
   t(dict, 'bfp.unlimited.f3'),
-  ...included,
 ];
 const guide = [
   {

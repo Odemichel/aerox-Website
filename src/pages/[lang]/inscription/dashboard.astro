@@ -103,6 +103,11 @@ const labels = {
       'start.cta',
       'start.others',
       'start.partner',
+      'start.partnerTitle',
+      'start.partnerCta',
+      'start.monthly',
+      'start.yearly',
+      'start.best',
     ].map((k) => `trial.${k}`),
     ...['title', 'text', 'trial', 'trialValue', 'when', 'changeDone', 'cancel', 'cancelConfirm', 'cancelDone'].map(
       (k) => `install.${k}`
@@ -675,6 +680,50 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       return details;
     }
 
+    /**
+     * Offre partenaire (lien privé) : rythme mensuel / annuel, annuel par
+     * défaut et mis en avant, puis un seul bouton pour l'offre choisie.
+     */
+    function partnerChoice(primary: boolean) {
+      const T = L();
+      const box = el('div', 'acct-partner');
+      const price = el('p', 'acct-partner-price');
+      const offers: Record<'monthly' | 'yearly', { offer: Offer; label: string }> = {
+        monthly: { offer: 'unlimited_partner', label: T['price.month'].replace('{price}', eur(5900)) },
+        yearly: { offer: 'unlimited_partner_annual', label: T['price.year'].replace('{price}', eur(59000)) },
+      };
+      let chosen: 'monthly' | 'yearly' = 'yearly';
+      const toggle = el('div', 'acct-switch');
+      toggle.setAttribute('role', 'group');
+      const options = (['monthly', 'yearly'] as const).map((k) => {
+        const b = el('button', 'acct-switch-btn', T[`trial.start.${k}`]);
+        b.type = 'button';
+        if (k === 'yearly') b.append(el('span', 'acct-switch-best', T['trial.start.best']));
+        b.addEventListener('click', () => {
+          chosen = k;
+          sync();
+        });
+        return [k, b] as const;
+      });
+      const sync = () => {
+        for (const [k, b] of options) {
+          b.classList.toggle('acct-switch-btn--on', k === chosen);
+          b.setAttribute('aria-pressed', String(k === chosen));
+        }
+        price.textContent = offers[chosen].label;
+      };
+      toggle.append(...options.map(([, b]) => b));
+      box.append(
+        el('h3', 'acct-plan-name', T['trial.start.partnerTitle']),
+        el('p', 'acct-lead', T['trial.start.partner']),
+        toggle,
+        price,
+        actions(btn(T['trial.start.partnerCta'], primary ? 'primary' : 'plain', () => startTrial(offers[chosen].offer)))
+      );
+      sync();
+      return box;
+    }
+
     function planHead(label: string, name: string, badge?: HTMLElement) {
       const head = el('div', 'acct-plan');
       const t = el('div');
@@ -871,24 +920,16 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         // Le bike fitter choisit son offre (Essentiel par défaut, ou l'offre
         // partenaire ouverte par le lien privé) et enregistre une carte ;
         // l'essai de 14 jours démarre à l'installation.
-        const partner = Boolean(s.partner_offer);
-        plan.append(
-          el('h3', 'acct-plan-name', T['trial.start.title']),
-          el('p', 'acct-lead', partner ? T['trial.start.partner'] : T['trial.start.text']),
-          partner
-            ? actions(
-                btn(T['price.month'].replace('{price}', eur(5900)), primaryFree ? 'primary' : 'plain', () =>
-                  startTrial('unlimited_partner')
-                ),
-                btn(T['price.year'].replace('{price}', eur(59000)), 'plain', () =>
-                  startTrial('unlimited_partner_annual')
-                )
-              )
-            : actions(
-                btn(T['trial.start.cta'], primaryFree ? 'primary' : 'plain', () => startTrial(DEFAULT_OFFER)),
-                linkBtn(T['trial.start.others'], '#tarifs', 'link')
-              )
-        );
+        if (s.partner_offer) plan.append(partnerChoice(primaryFree));
+        else
+          plan.append(
+            el('h3', 'acct-plan-name', T['trial.start.title']),
+            el('p', 'acct-lead', T['trial.start.text']),
+            actions(
+              btn(T['trial.start.cta'], primaryFree ? 'primary' : 'plain', () => startTrial(DEFAULT_OFFER)),
+              linkBtn(T['trial.start.others'], '#tarifs', 'link')
+            )
+          );
       } else if (trialUsed) {
         // Essai terminé (ou abonnement arrêté) : choisir une offre, sans nouvel essai.
         plan.append(
@@ -1657,6 +1698,48 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
   #account .acct-big {
     font-size: 1.5rem;
     font-weight: 700;
+  }
+
+  /* Offre partenaire : rythme mensuel / annuel (annuel mis en avant) */
+  #account .acct-switch {
+    display: inline-flex;
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+    padding: 0.25rem;
+    border: 1px solid var(--acct-line);
+    border-radius: 999px;
+  }
+  #account .acct-switch-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.875rem;
+    color: var(--acct-muted);
+  }
+  #account .acct-switch-btn--on {
+    background: var(--acct-accent);
+    color: #0b2239;
+    font-weight: 700;
+  }
+  #account .acct-switch-best {
+    border-radius: 999px;
+    padding: 0.05rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--acct-accent);
+    background: color-mix(in srgb, var(--acct-accent) 16%, transparent);
+  }
+  #account .acct-switch-btn--on .acct-switch-best {
+    color: #0b2239;
+    background: color-mix(in srgb, #ffffff 35%, transparent);
+  }
+  #account .acct-partner-price {
+    margin-top: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--acct-text);
   }
 
   /* Pastilles et notes */
