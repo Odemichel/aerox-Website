@@ -21,10 +21,15 @@ admin « Installation faite »), et une **offre partenaire** sur lien privé
 Les deux offres de lancement partagent les 20 places (plan `unlimited_launch`,
 offre `unlimited_launch` ou `unlimited_launch_annual`).
 
-Bascule : 1 à 5 analyses par mois → Essentiel ; 6 et plus → Illimité
-(20 + 15 × 5,3 ≈ 99 €). À partir de 7 analyses sur la période
-(`UPGRADE_HINT_AT`), l'espace d'un abonné Essentiel propose de passer à
-l'Illimité pour la période suivante. Toutes les offres incluent l'installation
+Bascule : pendant le lancement (Illimité à 69 €), 1 à 3 analyses par mois →
+Essentiel, 4 et plus → Illimité (20 + 15 × 4 = 80 €) ; ensuite (99 €), 1 à 5
+→ Essentiel, 6 et plus → Illimité (20 + 15 × 5,3 ≈ 99 €). La grille affiche
+les seuils du prix en cours. À partir de 4 analyses sur la période pendant
+le lancement, 7 ensuite (`UPGRADE_HINT_AT_LAUNCH` / `UPGRADE_HINT_AT`),
+l'espace d'un abonné Essentiel propose de passer à l'Illimité pour la
+période suivante. Grille (2026-10-18) : Illimité en première carte, annuel
+par défaut (« la plus intéressante »), badge « Offre privilège » pour le
+lancement. Toutes les offres incluent l'installation
 du setup en visio et une visio collective par mois. À l'usage (20 €/analyse)
 et Studio (79 €/mois), grille du 2026-09-24, ont été retirés le 2026-09-27
 avant toute vente, comme le Pack ; les plans `payg`, `studio`, `pack` restent

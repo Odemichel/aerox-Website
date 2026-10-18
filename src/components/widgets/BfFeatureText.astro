@@ -1,0 +1,21 @@
+---
+// Texte d'une grille tarifaire bike fitter : fixe, ou paire dont le script de
+// BfPricing garde la bonne variante (prix de lancement en cours ou tarif
+// normal). Rendu par défaut : la variante de lancement (page pré-rendue avant
+// le 31/12/2026).
+interface Props {
+  f: string | { launch: string; standard: string };
+}
+const { f } = Astro.props;
+---
+
+{
+  typeof f === 'string' ? (
+    <span>{f}</span>
+  ) : (
+    <span>
+      <span class="bf-when-launch">{f.launch}</span>
+      <span class="bf-when-standard hidden">{f.standard}</span>
+    </span>
+  )
+}

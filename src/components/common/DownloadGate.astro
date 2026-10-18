@@ -21,11 +21,13 @@ interface Props {
 }
 const { lang, trialNote } = Astro.props;
 const dict = getDict(lang);
-const releaseDay = new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : lang, {
+const releaseDayRaw = new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : lang, {
   day: 'numeric',
   month: 'long',
   timeZone: 'Europe/Paris',
 }).format(new Date(NEXT_RELEASE.opensAt));
+// En français, le premier du mois s'écrit « 1er ».
+const releaseDay = lang === 'fr' ? releaseDayRaw.replace(/^1 /, '1er ') : releaseDayRaw;
 ---
 
 <div
@@ -39,14 +41,14 @@ const releaseDay = new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : lang, {
 >
   <div class="dl-gate-closed rounded-xl border border-primary/40 bg-primary/5 p-5 text-left">
     <p class="font-semibold">{t(dict, 'dl.gate.title')}</p>
-    <p class="mt-1 text-muted">{t(dict, 'dl.gate.text')}</p>
+    <p class="mt-1 text-muted">{t(dict, 'dl.gate.text').replace('{date}', releaseDay)}</p>
     {
       trialNote && (
         <p
           class={`mt-2 font-semibold ${trialNote === 'bf' ? 'hidden' : ''}`}
           data-for-text={trialNote === 'bf' ? 'bf' : undefined}
         >
-          {t(dict, 'dl.gate.trial').replace('{date}', releaseDay)}
+          {t(dict, 'dl.gate.trial')}
         </p>
       )
     }

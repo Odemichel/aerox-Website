@@ -1,7 +1,13 @@
 ---
-// Tarifs bike fitter : Essentiel, Illimité (avec l'offre de lancement
-// intégrée à sa carte), 14 jours d'essai gratuit sur les deux, guide de
-// choix, accompagnement inclus et FAQ tarifs.
+// Tarifs bike fitter : Illimité mis en avant (première carte, offre de
+// lancement « offre privilège » intégrée, annuel par défaut), puis
+// Essentiel ; 14 jours d'essai gratuit sur les deux, guide de choix,
+// accompagnement inclus et FAQ tarifs.
+//
+// Les seuils Essentiel / Illimité suivent le prix en cours : 69 € pendant le
+// lancement (20 + 15 × 4 = 80 € > 69 €, donc Illimité dès 4 analyses), 99 €
+// ensuite (dès 6). Les deux libellés sont dans la page, le script garde le
+// bon (`.bf-when-launch` / `.bf-when-standard`).
 //
 // Page publique : grille informative, aucun bouton d'achat ni d'essai, seul
 // l'appel à réserver la présentation en ligne. Les boutons d'achat ne
@@ -13,6 +19,7 @@ import { Icon } from 'astro-icon/components';
 import { getDict, t, type Locale } from '~/lib/i18n';
 import { BF_AVAILABLE_AT, LAUNCH_OFFER } from '~/lib/billing/catalog';
 import { BF_PRESENTATION_URL } from '~/config/links';
+import FeatureText from './BfFeatureText.astro';
 
 interface Props {
   lang: Locale;
@@ -48,20 +55,33 @@ const plans = [
     desc: t(dict, 'bfp.essential.desc'),
     price: eur(20),
     suffix: t(dict, 'bfp.essential.unit'),
-    features: [t(dict, 'bfp.essential.f1'), t(dict, 'bfp.essential.f2'), t(dict, 'bfp.essential.f3'), ...included],
+    features: [
+      t(dict, 'bfp.essential.f1'),
+      { launch: t(dict, 'bfp.essential.f2Launch'), standard: t(dict, 'bfp.essential.f2') },
+      t(dict, 'bfp.essential.f3'),
+      ...included,
+    ],
     cta: t(dict, 'bfp.essential.cta'),
   },
 ];
 
-const unlimitedFeatures = [
+// Texte fixe, ou paire { lancement, tarif normal } choisie par le script.
+type Feature = string | { launch: string; standard: string };
+const unlimitedFeatures: Feature[] = [
   t(dict, 'bfp.unlimited.f1'),
-  t(dict, 'bfp.unlimited.f2'),
+  { launch: t(dict, 'bfp.unlimited.f2Launch'), standard: t(dict, 'bfp.unlimited.f2') },
   t(dict, 'bfp.unlimited.f3'),
   ...included,
 ];
 const guide = [
-  { offer: t(dict, 'bfp.essential.name'), when: t(dict, 'bfp.guide.essential') },
-  { offer: t(dict, 'bfp.unlimited.name'), when: t(dict, 'bfp.guide.unlimited') },
+  {
+    offer: t(dict, 'bfp.unlimited.name'),
+    when: { launch: t(dict, 'bfp.guide.unlimitedLaunch'), standard: t(dict, 'bfp.guide.unlimited') },
+  },
+  {
+    offer: t(dict, 'bfp.essential.name'),
+    when: { launch: t(dict, 'bfp.guide.essentialLaunch'), standard: t(dict, 'bfp.guide.essential') },
+  },
 ];
 const faq = [1, 2, 3, 4, 5, 6].map((i) => ({ q: t(dict, `bfp.faq.q${i}`), a: t(dict, `bfp.faq.a${i}`) }));
 const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shadow';
@@ -84,35 +104,6 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
     </div>
 
     <div class="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
-      {
-        plans.map((p) => (
-          <div class={`${cardClass} relative border border-gray-200 dark:border-slate-700`}>
-            <span class="absolute -top-3 left-6 rounded-full border border-primary bg-white dark:bg-slate-900 px-3 py-1 text-xs font-bold uppercase tracking-wide text-primary">
-              {t(dict, 'bfp.freeDays')}
-            </span>
-            <h3 class="text-xl font-bold uppercase tracking-wider">{p.name}</h3>
-            <p class="mt-1 min-h-[3rem] text-sm text-muted">{p.desc}</p>
-            <p class="mt-4 flex flex-wrap items-baseline gap-x-2">
-              <span class="text-4xl font-bold">{p.price}</span>
-              <span class="text-sm text-muted">{p.suffix}</span>
-            </p>
-            <ul class="mt-5 mb-6 flex-1 space-y-2 text-left">
-              {p.features.map((f) => (
-                <li class="flex items-start gap-2">
-                  <Icon name="tabler:check" class="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <span>{f}</span>
-                </li>
-              ))}
-            </ul>
-            {inAccount && (
-              <button type="button" class="bf-buy btn-secondary w-full justify-center" data-offer={p.offer}>
-                {p.cta}
-              </button>
-            )}
-          </div>
-        ))
-      }
-
       <!-- Illimité : offre de lancement tant qu'elle est ouverte, sinon tarif normal -->
       <div
         id="bf-unlimited"
@@ -145,11 +136,11 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
           </button>
           <button type="button" class="bf-billing rounded-full px-3 py-1 text-sm" data-billing="yearly">
             {t(dict, 'bfp.billing.yearly')}
-            <span class="bf-save ml-1 text-xs">{t(dict, 'bfp.billing.save')}</span>
+            <span class="bf-save ml-1 text-xs">{t(dict, 'bfp.billing.best')}</span>
           </button>
         </div>
 
-        <div class="bf-launch-only mt-4">
+        <div class="bf-launch-only mt-4 hidden">
           <!-- Prix de lancement, puis tarif normal : dit en toutes lettres, sans prix barré. -->
           <p class="flex flex-wrap items-baseline gap-x-2">
             <span class="text-4xl font-bold">{eur(69)}</span>
@@ -163,12 +154,13 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
           </p>
         </div>
 
-        <div class="bf-launchyearly-only mt-4 hidden">
+        <div class="bf-launchyearly-only mt-4">
           <p class="flex flex-wrap items-baseline gap-x-2">
             <span class="text-4xl font-bold">{eur(690)}</span>
             <span class="text-sm text-muted">{priceSuffix(t(dict, 'bfp.perYear'))}</span>
           </p>
           <p class="mt-1 text-sm">{t(dict, 'bfp.launch.yearUntil')}</p>
+          <p class="mt-1 text-sm font-semibold text-primary">{t(dict, 'bfp.billing.save')}</p>
           <p class="mt-2 text-sm">
             {t(dict, 'bfp.launch.text')}
             <span class="bf-launch-seats font-semibold text-primary" aria-live="polite"></span>
@@ -196,7 +188,7 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
             unlimitedFeatures.map((f) => (
               <li class="flex items-start gap-2">
                 <Icon name="tabler:check" class="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                <span>{f}</span>
+                <FeatureText f={f} />
               </li>
             ))
           }
@@ -206,14 +198,14 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
             <>
               <button
                 type="button"
-                class="bf-buy bf-launch-only btn-primary w-full justify-center"
+                class="bf-buy bf-launch-only hidden btn-primary w-full justify-center"
                 data-offer="unlimited_launch"
               >
                 {t(dict, 'bfp.launch.cta')}
               </button>
               <button
                 type="button"
-                class="bf-buy bf-launchyearly-only hidden btn-primary w-full justify-center"
+                class="bf-buy bf-launchyearly-only btn-primary w-full justify-center"
                 data-offer="unlimited_launch_annual"
               >
                 {t(dict, 'bfp.launch.cta')}
@@ -236,6 +228,34 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
           )
         }
       </div>
+      {
+        plans.map((p) => (
+          <div class={`${cardClass} relative border border-gray-200 dark:border-slate-700`}>
+            <span class="absolute -top-3 left-6 rounded-full border border-primary bg-white dark:bg-slate-900 px-3 py-1 text-xs font-bold uppercase tracking-wide text-primary">
+              {t(dict, 'bfp.freeDays')}
+            </span>
+            <h3 class="text-xl font-bold uppercase tracking-wider">{p.name}</h3>
+            <p class="mt-1 min-h-[3rem] text-sm text-muted">{p.desc}</p>
+            <p class="mt-4 flex flex-wrap items-baseline gap-x-2">
+              <span class="text-4xl font-bold">{p.price}</span>
+              <span class="text-sm text-muted">{p.suffix}</span>
+            </p>
+            <ul class="mt-5 mb-6 flex-1 space-y-2 text-left">
+              {p.features.map((f) => (
+                <li class="flex items-start gap-2">
+                  <Icon name="tabler:check" class="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                  <FeatureText f={f} />
+                </li>
+              ))}
+            </ul>
+            {inAccount && (
+              <button type="button" class="bf-buy btn-secondary w-full justify-center" data-offer={p.offer}>
+                {p.cta}
+              </button>
+            )}
+          </div>
+        ))
+      }
     </div>
 
     <!-- Guide de choix -->
@@ -247,7 +267,9 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
         {
           guide.map((g) => (
             <div>
-              <dt class="text-sm text-muted">{g.when}</dt>
+              <dt class="text-sm text-muted">
+                <FeatureText f={g.when} />
+              </dt>
               <dd class="font-bold uppercase tracking-wider text-primary">{g.offer}</dd>
             </div>
           ))
@@ -311,7 +333,8 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
   import type { Offer } from '~/lib/billing/logic';
 
   // État de la carte Illimité : offre de lancement ouverte ? rythme choisi ?
-  const state = { launchOpen: true, billing: 'monthly' as 'monthly' | 'yearly' };
+  // Annuel par défaut : la formule la plus intéressante.
+  const state = { launchOpen: true, billing: 'yearly' as 'monthly' | 'yearly' };
 
   /** Affiche le bloc de prix et le bouton qui correspondent à l'état. */
   function render() {
@@ -329,6 +352,13 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
     card
       .querySelectorAll<HTMLElement>('.bf-launch-badge')
       .forEach((n) => n.classList.toggle('hidden', !state.launchOpen));
+    // Seuils du guide et des cartes : prix de lancement ou tarif normal.
+    document
+      .querySelectorAll<HTMLElement>('.bf-when-launch')
+      .forEach((n) => n.classList.toggle('hidden', !state.launchOpen));
+    document
+      .querySelectorAll<HTMLElement>('.bf-when-standard')
+      .forEach((n) => n.classList.toggle('hidden', state.launchOpen));
     for (const m of ['launch', 'standard', 'launchyearly', 'yearly']) {
       card.querySelectorAll<HTMLElement>(`.bf-${m}-only`).forEach((n) => n.classList.toggle('hidden', m !== mode));
     }

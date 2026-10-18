@@ -223,6 +223,9 @@ export const PARTNER_OFFER_MONTHS = 12;
 // Essentiel : à partir de ce nombre d'analyses sur la période, l'espace
 // propose l'Illimité pour la période suivante (20 + 15 × 7 = 125 € > 99 €).
 export const UPGRADE_HINT_AT = 7;
+// Pendant le lancement, l'Illimité est à 69 € : Essentiel coûte plus dès 4
+// analyses (20 + 15 × 4 = 80 €).
+export const UPGRADE_HINT_AT_LAUNCH = 4;
 
 // Mise à disposition des offres bike fitter : avec la version de l'application
 // qui compte les analyses (même date que le Diagnostic AeroX).

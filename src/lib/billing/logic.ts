@@ -5,7 +5,15 @@
 // selon son statut. Les routes et le webhook n'y ajoutent que les appels
 // réseau ; tout ce qui décide est ici, et testé (test/billingLogic.test.ts).
 
-import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP, PARTNER_OFFER_MONTHS, TRIAL_DAYS, UPGRADE_HINT_AT } from './catalog';
+import {
+  BF_AVAILABLE_AT,
+  LAUNCH_OFFER,
+  LOOKUP,
+  PARTNER_OFFER_MONTHS,
+  TRIAL_DAYS,
+  UPGRADE_HINT_AT,
+  UPGRADE_HINT_AT_LAUNCH,
+} from './catalog';
 
 // `pack` : plan historique (crédits prépayés), plus vendu ; conservé pour les
 // comptes et les crédits existants. `payg` et `studio` (grille du 24/09/2026,
@@ -291,10 +299,12 @@ export function nextInvoiceCentsForOffer(
 
 /**
  * Essentiel : faut-il proposer l'Illimité pour la période suivante ?
- * Au-delà de 7 analyses sur la période, Essentiel coûte plus que l'Illimité.
+ * Dès 4 analyses sur la période pendant le lancement (Illimité à 69 €), dès
+ * 7 ensuite (99 €) : Essentiel coûte alors plus que l'Illimité.
  */
-export function suggestUpgrade(offer: Offer | null, analysesInPeriod: number): boolean {
-  return offer === 'essential' && analysesInPeriod >= UPGRADE_HINT_AT;
+export function suggestUpgrade(offer: Offer | null, analysesInPeriod: number, nowMs = Date.now()): boolean {
+  const threshold = nowMs < LAUNCH_OFFER.switchAt ? UPGRADE_HINT_AT_LAUNCH : UPGRADE_HINT_AT;
+  return offer === 'essential' && analysesInPeriod >= threshold;
 }
 
 /** Valeur MailerLite `bf_status` correspondant à l'état de facturation. */

@@ -207,10 +207,16 @@ describe('nextInvoiceCentsForOffer', () => {
 
 describe('suggestUpgrade', () => {
   it('Essentiel à partir de 7 analyses sur la période', () => {
-    expect(suggestUpgrade('essential', 6)).toBe(false);
-    expect(suggestUpgrade('essential', 7)).toBe(true);
-    expect(suggestUpgrade('unlimited', 30)).toBe(false);
-    expect(suggestUpgrade(null, 30)).toBe(false);
+    const after = LAUNCH_OFFER.switchAt + 1;
+    expect(suggestUpgrade('essential', 6, after)).toBe(false);
+    expect(suggestUpgrade('essential', 7, after)).toBe(true);
+    expect(suggestUpgrade('unlimited', 30, after)).toBe(false);
+    expect(suggestUpgrade(null, 30, after)).toBe(false);
+  });
+
+  it('pendant le lancement (Illimité à 69 €) : dès 4 analyses', () => {
+    expect(suggestUpgrade('essential', 3, NOW)).toBe(false);
+    expect(suggestUpgrade('essential', 4, NOW)).toBe(true);
   });
 });
 
