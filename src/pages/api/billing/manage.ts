@@ -14,6 +14,13 @@
 // un schedule : un passage en Illimité le temps d'un mois chargé ne se
 // rembourse pas.
 //
+// Offre en attente de l'installation (carte enregistrée, pas encore
+// d'abonnement) : `change` remplace l'offre choisie, `cancel` l'abandonne.
+// Rien n'est demandé à Stripe.
+//
+// Les offres partenaire ne sont proposées qu'après le lien privé
+// (`bf_billing.partner_offer`).
+//
 // Après chaque action, `bf_billing` est réaligné sur Stripe par la même
 // fonction que le webhook (`syncSubscription`) : l'espace BF affiche tout de
 // suite la résiliation ou le changement programmé. Le webhook qui suit
@@ -32,7 +39,10 @@ import {
   METERED_LOOKUP_KEYS,
   offerFromLookupKeys,
   OFFER_LOOKUP_KEYS,
+  PARTNER_OFFERS,
+  type Offer,
 } from '~/lib/billing/logic';
+import type { BillingRow } from '~/lib/billing/server';
 import { json, launchSeatsRemaining, loadBilling, priceIdsFor, stripe, supabaseAdmin } from '~/lib/billing/server';
 import { SCHEDULED_CHANGES, syncSubscription } from '~/lib/billing/webhook';
 
@@ -51,6 +61,39 @@ function itemsFor(offer: keyof typeof OFFER_LOOKUP_KEYS, priceIds: string[]) {
   );
 }
 
+/** Offre en attente de l'installation : changer d'offre ou abandonner. */
+async function managePending(userId: string, billing: BillingRow, body: { action?: unknown; offer?: unknown }) {
+  const db = supabaseAdmin();
+  if (body.action === 'cancel') {
+    const { error } = await db
+      .from('bf_billing')
+      .update({ pending_offer: null, pending_since: null })
+      .eq('user_id', userId)
+      .is('stripe_subscription_id', null);
+    if (error) throw new Error(`bf_billing (attente): ${error.message}`);
+    return json({ ok: true });
+  }
+  if (body.action !== 'change' || !isOffer(body.offer)) return json({ error: 'E_ACTION' }, 400);
+  const offer: Offer = body.offer;
+  if (offer === billing.pending_offer) return json({ error: 'E_SAME_OFFER' }, 400);
+  if (PARTNER_OFFERS.includes(offer) && !billing.partner_offer) return json({ error: 'E_PARTNER' }, 403);
+  // La place de lancement déjà réservée par l'offre en attente compte pour soi.
+  const ownSeat = LAUNCH_OFFERS.includes(billing.pending_offer!) ? 1 : 0;
+  if (LAUNCH_OFFERS.includes(offer) && !launchOfferOpen(Date.now(), (await launchSeatsRemaining(db)) + ownSeat)) {
+    return json(
+      { error: 'E_LAUNCH_CLOSED', fallback: offer === 'unlimited_launch_annual' ? 'unlimited_annual' : 'unlimited' },
+      409
+    );
+  }
+  const { error } = await db
+    .from('bf_billing')
+    .update({ pending_offer: offer })
+    .eq('user_id', userId)
+    .is('stripe_subscription_id', null);
+  if (error) throw new Error(`bf_billing (attente): ${error.message}`);
+  return json({ ok: true, effective: 'install' });
+}
+
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = (await request.json().catch(() => ({}))) as { action?: unknown; offer?: unknown; when?: unknown };
@@ -60,6 +103,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const db = supabaseAdmin();
     const billing = await loadBilling(db, user.id);
+    if (!billing?.stripe_subscription_id && billing?.pending_offer) return managePending(user.id, billing, body);
     if (!billing?.stripe_subscription_id) return json({ error: 'E_NO_SUBSCRIPTION' }, 404);
 
     const s = stripe();
@@ -112,6 +156,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (body.action !== 'change' || !isOffer(body.offer)) return json({ error: 'E_ACTION' }, 400);
     const offer = body.offer;
+    if (PARTNER_OFFERS.includes(offer) && !billing.partner_offer) return json({ error: 'E_PARTNER' }, 403);
     const current = offerFromLookupKeys(sub.items.data.map((i) => i.price.lookup_key));
     if (current === offer) return json({ error: 'E_SAME_OFFER' }, 400);
     if (LAUNCH_OFFERS.includes(offer) && !launchOfferOpen(Date.now(), await launchSeatsRemaining(db))) {

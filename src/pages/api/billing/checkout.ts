@@ -2,6 +2,13 @@
 //
 // Crée la session Stripe Checkout d'une offre bike fitter.
 //
+// Premier abonnement (essai jamais utilisé) : Checkout en mode `setup`. Le
+// bike fitter enregistre sa carte, son adresse de facturation et accepte les
+// CGV ; rien n'est prélevé et aucun abonnement n'est créé. Le webhook garde
+// l'offre choisie (`bf_billing.pending_offer`), l'abonnement naît à
+// l'installation du setup (/api/billing/start-trial/, bouton admin) avec 14
+// jours d'essai. Essai déjà utilisé : abonnement payant tout de suite.
+//
 // Même contrat de sécurité que `create-api-checkout.ts` : le corps ne choisit
 // que l'offre (liste blanche) et la langue (liste blanche). Le prix vient du
 // catalogue serveur, l'utilisateur du jeton vérifié. Le webhook croit les
@@ -14,6 +21,7 @@ import { authenticatedUser } from '~/lib/serverAuth';
 import {
   isOffer,
   LAUNCH_OFFERS,
+  PARTNER_OFFERS,
   launchOfferOpen,
   METERED_LOOKUP_KEYS,
   OFFER_LOOKUP_KEYS,
@@ -47,18 +55,18 @@ const CHECKOUT_LOCALES: Record<string, Stripe.Checkout.SessionCreateParams.Local
   tr: 'tr',
 };
 
-// Essai gratuit : ce qui se passe à la fin, dit sous le bouton de paiement
-// ({date} : fin de l'essai). Anglais par défaut.
-const TRIAL_NOTE: Record<string, string> = {
-  fr: 'Essai gratuit jusqu’au {date} : rien n’est prélevé avant. Sans résiliation depuis votre espace AeroX avant cette date, l’abonnement démarre et le premier paiement est prélevé ce jour-là.',
-  en: 'Free trial until {date}: nothing is charged before then. Unless you cancel from your AeroX account before that date, the subscription starts and the first payment is taken that day.',
-  de: 'Kostenloser Test bis {date}: Vorher wird nichts abgebucht. Ohne Kündigung in Ihrem AeroX-Bereich vor diesem Datum beginnt das Abonnement und die erste Zahlung wird an diesem Tag eingezogen.',
-  es: 'Prueba gratuita hasta el {date}: no se cobra nada antes. Si no cancelas desde tu espacio AeroX antes de esa fecha, la suscripción empieza y el primer pago se cobra ese día.',
-  it: 'Prova gratuita fino al {date}: nulla viene addebitato prima. Senza disdetta dal tuo spazio AeroX prima di questa data, l’abbonamento inizia e il primo pagamento viene addebitato quel giorno.',
-  nl: 'Gratis proefperiode tot {date}: daarvoor wordt niets afgeschreven. Zonder opzegging in je AeroX-ruimte vóór die datum start het abonnement en wordt de eerste betaling die dag afgeschreven.',
-  pt: 'Teste gratuito até {date}: nada é cobrado antes. Sem cancelamento no seu espaço AeroX antes dessa data, a assinatura começa e o primeiro pagamento é cobrado nesse dia.',
-  ja: '{date}まで無料トライアル：それまでは請求されません。この日までにAeroXのアカウントから解約しない場合、サブスクリプションが開始され、当日に初回の支払いが行われます。',
-  tr: '{date} tarihine kadar ücretsiz deneme: öncesinde hiçbir ücret alınmaz. Bu tarihten önce AeroX alanınızdan iptal etmezseniz abonelik başlar ve ilk ödeme o gün alınır.',
+// Premier abonnement : ce qui se passe après l'enregistrement de la carte,
+// dit sous le bouton. Anglais par défaut.
+const SETUP_NOTE: Record<string, string> = {
+  fr: 'Aucun paiement aujourd’hui : vous enregistrez votre carte. L’abonnement démarre le jour de l’installation de votre setup AeroX, avec 14 jours d’essai gratuit. Sans résiliation depuis votre espace AeroX avant la fin de l’essai, le premier paiement est prélevé ce jour-là.',
+  en: 'No payment today: you are saving your card. The subscription starts on the day your AeroX setup is installed, with a 14-day free trial. Unless you cancel from your AeroX account before the trial ends, the first payment is taken that day.',
+  de: 'Heute keine Zahlung: Sie hinterlegen Ihre Karte. Das Abonnement beginnt am Tag der Installation Ihres AeroX-Setups mit einem 14-tägigen kostenlosen Test. Ohne Kündigung in Ihrem AeroX-Bereich vor Testende wird die erste Zahlung an diesem Tag eingezogen.',
+  es: 'Ningún pago hoy: registras tu tarjeta. La suscripción empieza el día de la instalación de tu setup AeroX, con 14 días de prueba gratuita. Si no cancelas desde tu espacio AeroX antes del final de la prueba, el primer pago se cobra ese día.',
+  it: 'Nessun pagamento oggi: registri la tua carta. L’abbonamento inizia il giorno dell’installazione del tuo setup AeroX, con 14 giorni di prova gratuita. Senza disdetta dal tuo spazio AeroX prima della fine della prova, il primo pagamento viene addebitato quel giorno.',
+  nl: 'Vandaag geen betaling: je registreert je kaart. Het abonnement start op de dag dat je AeroX-setup wordt geïnstalleerd, met een gratis proefperiode van 14 dagen. Zonder opzegging in je AeroX-ruimte vóór het einde van de proefperiode wordt de eerste betaling die dag afgeschreven.',
+  pt: 'Nenhum pagamento hoje: regista o seu cartão. A assinatura começa no dia da instalação do seu setup AeroX, com 14 dias de teste gratuito. Sem cancelamento no seu espaço AeroX antes do fim do teste, o primeiro pagamento é cobrado nesse dia.',
+  ja: '本日のお支払いはありません：カードを登録します。サブスクリプションはAeroXセットアップの設置日に14日間の無料トライアル付きで開始します。トライアル終了前にAeroXのアカウントから解約しない場合、その日に初回の支払いが行われます。',
+  tr: 'Bugün ödeme yok: kartınızı kaydediyorsunuz. Abonelik, AeroX kurulumunuzun yapıldığı gün 14 günlük ücretsiz denemeyle başlar. Deneme bitmeden AeroX alanınızdan iptal etmezseniz ilk ödeme o gün alınır.',
 };
 
 // Case à cocher obligatoire : acceptation des CGV, dont l'article sur
@@ -91,16 +99,22 @@ export const POST: APIRoute = async ({ request, site }) => {
 
     const billing = await loadBilling(db, user.id);
 
-    // Premier abonnement : essai de 14 jours, ouvert seulement une fois
-    // l'entreprise vérifiée (SIRET, TVA ou site validé) — un essai par
-    // entreprise. Essai déjà utilisé : l'abonnement démarre sans essai.
+    // Premier abonnement : essai de 14 jours à l'installation, un par compte
+    // (décision du 2026-10-18 : plus de vérification d'entreprise préalable,
+    // le studio est vu à l'installation). Essai déjà utilisé : l'abonnement
+    // démarre sans essai.
     const withTrial = !billing?.trial_ends_at;
-    if (withTrial && billing?.trial_state !== 'granted') return json({ error: 'E_NEEDS_BUSINESS_ID' }, 409);
+
+    // Offre partenaire : seulement après le lien privé.
+    if (PARTNER_OFFERS.includes(offer) && !billing?.partner_offer) return json({ error: 'E_PARTNER' }, 403);
 
     // Un seul abonnement par bike fitter : changer d'offre passe par
     // /api/billing/manage/, qui modifie l'abonnement existant au lieu d'en
     // empiler un second (double prélèvement).
     if (billing?.stripe_subscription_id) return json({ error: 'E_HAS_SUBSCRIPTION' }, 409);
+    // Carte déjà enregistrée, en attente de l'installation : changer d'offre
+    // ou annuler passe par /api/billing/manage/.
+    if (billing?.pending_offer) return json({ error: 'E_HAS_PENDING' }, 409);
 
     if (LAUNCH_OFFERS.includes(offer) && !launchOfferOpen(Date.now(), await launchSeatsRemaining(db))) {
       return json(
@@ -116,7 +130,7 @@ export const POST: APIRoute = async ({ request, site }) => {
     // pourrait sinon être payée en plus de celle-ci. Le webhook rattrape le
     // cas restant (deux paiements quasi simultanés).
     for await (const open of stripe().checkout.sessions.list({ customer, status: 'open', limit: 20 })) {
-      if (open.mode === 'subscription' && open.metadata?.aerox_offer) {
+      if (open.metadata?.aerox_offer) {
         await stripe()
           .checkout.sessions.expire(open.id)
           .catch((err) => console.error('billing/checkout: session non expirée', open.id, err?.message));
@@ -125,69 +139,56 @@ export const POST: APIRoute = async ({ request, site }) => {
     const metadata = { userId: user.id, aerox_offer: offer };
     const base = siteBase(request, site);
 
-    const start = subscriptionStart(Date.now(), ANNUAL_OFFERS.includes(offer), withTrial);
-    const locale = lang === 'en' ? 'en-GB' : lang;
-    const trialDate =
-      'trial_end' in start
-        ? new Intl.DateTimeFormat(locale, {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            timeZone: 'Europe/Paris',
-          }).format(new Date(start.trial_end * 1000))
-        : '';
-    const params: Stripe.Checkout.SessionCreateParams = {
-      mode: 'subscription',
+    // Commun aux deux modes : adresse et raison sociale saisies enregistrées
+    // sur le client (Stripe Tax en a besoin pour les factures), numéro de TVA
+    // rattaché (autoliquidation B2B UE), acceptation des CGV obligatoire
+    // (dont l'essai et sa résiliation). Prérequis Stripe : l'URL des
+    // conditions générales est renseignée dans les réglages publics du compte.
+    const common = {
       customer,
-      // Adresse et raison sociale saisies au paiement enregistrées sur le
-      // client : Stripe Tax en a besoin pour les factures suivantes, et le
-      // numéro de TVA collecté y est rattaché (autoliquidation B2B UE).
       customer_update: { name: 'auto', address: 'auto' },
       billing_address_collection: 'required',
-      automatic_tax: { enabled: true },
       tax_id_collection: { enabled: true },
       locale: CHECKOUT_LOCALES[lang] ?? 'auto',
-      allow_promotion_codes: false,
-      // Acceptation des CGV obligatoire (dont l'essai et sa résiliation).
-      // Prérequis Stripe : l'URL des conditions générales est renseignée dans
-      // les réglages publics du compte (déjà requise par le Diagnostic).
       consent_collection: { terms_of_service: 'required' },
-      custom_text: {
-        terms_of_service_acceptance: {
-          message: (TERMS_NOTE[lang] ?? TERMS_NOTE.en).replace('{url}', `${base}/${lang}/terms/`),
-        },
-        // Essai : la date de fin et ce qui se passe ensuite, sous le bouton.
-        // (Pas pour un réabonnement sans essai démarrant au 1er novembre.)
-        ...(withTrial && trialDate
-          ? {
-              submit: {
-                message: (TRIAL_NOTE[lang] ?? TRIAL_NOTE.en).replace(
-                  '{date}',
-                  // En français, le premier du mois s'écrit « 1er ».
-                  lang === 'fr' ? trialDate.replace(/^1 /, '1er ') : trialDate
-                ),
-              },
-            }
-          : {}),
-      },
       success_url: accountUrl(base, lang, 'success'),
       cancel_url: accountUrl(base, lang, 'cancel'),
       metadata,
-      // Le prix mesuré (analyses Essentiel) n'a pas de quantité : elle vient
-      // du meter.
-      line_items: OFFER_LOOKUP_KEYS[offer].map((key, i) =>
-        METERED_LOOKUP_KEYS.includes(key) ? { price: priceIds[i] } : { price: priceIds[i], quantity: 1 }
-      ),
-      subscription_data: {
-        metadata,
-        // Essai de 14 jours (ou démarrage au 1er novembre 2026) : voir
-        // subscriptionStart.
-        ...start,
-        // Mode flexible : l'usage non facturé est facturé si l'on retire une
-        // ligne mesurée (passage d'Essentiel à Illimité en cours de mois).
-        billing_mode: { type: 'flexible' },
-      },
-    };
+    } satisfies Partial<Stripe.Checkout.SessionCreateParams>;
+    const termsMessage = (TERMS_NOTE[lang] ?? TERMS_NOTE.en).replace('{url}', `${base}/${lang}/terms/`);
+
+    const params: Stripe.Checkout.SessionCreateParams = withTrial
+      ? {
+          ...common,
+          mode: 'setup',
+          currency: 'eur',
+          setup_intent_data: { metadata },
+          custom_text: {
+            terms_of_service_acceptance: { message: termsMessage },
+            submit: { message: SETUP_NOTE[lang] ?? SETUP_NOTE.en },
+          },
+        }
+      : {
+          ...common,
+          mode: 'subscription',
+          automatic_tax: { enabled: true },
+          allow_promotion_codes: false,
+          custom_text: { terms_of_service_acceptance: { message: termsMessage } },
+          // Le prix mesuré (analyses Essentiel) n'a pas de quantité : elle
+          // vient du meter.
+          line_items: OFFER_LOOKUP_KEYS[offer].map((key, i) =>
+            METERED_LOOKUP_KEYS.includes(key) ? { price: priceIds[i] } : { price: priceIds[i], quantity: 1 }
+          ),
+          subscription_data: {
+            metadata,
+            // Réabonnement : démarrage au 1er novembre 2026 si l'on souscrit
+            // avant, sinon tout de suite (voir subscriptionStart).
+            ...subscriptionStart(Date.now(), ANNUAL_OFFERS.includes(offer), false),
+            // Mode flexible : l'usage non facturé est facturé si l'on retire
+            // une ligne mesurée (passage d'Essentiel à Illimité en cours de mois).
+            billing_mode: { type: 'flexible' },
+          },
+        };
 
     const session = await stripe().checkout.sessions.create(params);
     return json({ url: session.url });

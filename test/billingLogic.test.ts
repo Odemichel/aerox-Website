@@ -1,8 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP } from '../src/lib/billing/catalog';
-import { NEXT_RELEASE } from '../src/config/downloads';
 import {
   DEFAULT_OFFER,
+  addMonths,
+  partnerPriceEnd,
+  PARTNER_OFFERS,
   suggestUpgrade,
   trialEnd,
   graceAfterPaymentFailureEnd,
@@ -123,15 +125,16 @@ describe('subscriptionStart', () => {
   const anchor = BF_AVAILABLE_AT / 1000;
   const DAY = 86_400_000;
 
-  it('premier abonnement : 14 jours d’essai comptés à partir de la sortie de l’application', () => {
-    const fromRelease = Math.floor((NEXT_RELEASE.opensAt + 14 * DAY) / 1000);
-    // Souscrit le 1er octobre, avant la sortie (20 octobre) : 14 jours à partir du 20.
-    expect(subscriptionStart(NOW, false, true)).toEqual({ trial_end: fromRelease });
-    expect(subscriptionStart(NOW, true, true)).toEqual({ trial_end: fromRelease });
-    expect(fromRelease * 1000).toBeGreaterThan(BF_AVAILABLE_AT);
-    // Souscrit le 25 octobre, après la sortie : 14 jours, jusqu'au 8 novembre.
-    const late = Date.UTC(2026, 9, 25, 10);
-    expect(subscriptionStart(late, false, true)).toEqual({ trial_end: Math.floor((late + 14 * DAY) / 1000) });
+  it('premier abonnement, créé à l’installation : essai de 14 jours', () => {
+    const late = BF_AVAILABLE_AT + 3 * DAY;
+    const end = Math.floor((late + 14 * DAY) / 1000);
+    expect(subscriptionStart(late, false, true)).toEqual({ trial_end: end });
+    expect(subscriptionStart(late, true, true)).toEqual({ trial_end: end });
+  });
+
+  it('essai démarré à l’installation : 14 jours, jamais avant la mise à disposition', () => {
+    // Installé le 1er octobre : l'essai court jusqu'au 1er novembre.
+    expect(trialEnd(NOW)).toBe(Math.floor(BF_AVAILABLE_AT / 1000));
     const after = BF_AVAILABLE_AT + 10 * DAY;
     expect(trialEnd(after)).toBe(Math.floor((after + 14 * DAY) / 1000));
   });
@@ -222,5 +225,35 @@ describe('offre de lancement annuelle', () => {
     expect(isDowngrade('unlimited_launch_annual', 'unlimited')).toBe(true);
     expect(isDowngrade('unlimited_launch_annual', 'unlimited_launch')).toBe(true);
     expect(isDowngrade('unlimited_launch_annual', 'unlimited_annual')).toBe(false);
+  });
+});
+
+describe('offre partenaire', () => {
+  it('prix partenaire : plan Illimité (pas de place de lancement), offre exacte', () => {
+    expect(planFromLookupKeys([LOOKUP.unlimitedPartner])).toBe('unlimited');
+    expect(planFromLookupKeys([LOOKUP.unlimitedPartnerYear])).toBe('unlimited');
+    expect(offerFromLookupKeys([LOOKUP.unlimitedPartner])).toBe('unlimited_partner');
+    expect(offerFromLookupKeys([LOOKUP.unlimitedPartnerYear])).toBe('unlimited_partner_annual');
+    expect(PARTNER_OFFERS).toEqual(['unlimited_partner', 'unlimited_partner_annual']);
+    expect(isOffer('unlimited_partner')).toBe(true);
+  });
+
+  it('tarif partenaire : 12 mois à partir de l’ancrage (fin de l’essai)', () => {
+    const anchor = Math.floor(Date.UTC(2026, 10, 17, 9) / 1000);
+    expect(partnerPriceEnd(anchor)).toBe(Math.floor(Date.UTC(2027, 10, 17, 9) / 1000));
+    // Fin de mois : Date UTC reporte sur le mois suivant comme Stripe.
+    expect(addMonths(Math.floor(Date.UTC(2026, 0, 15) / 1000), 1)).toBe(Math.floor(Date.UTC(2026, 1, 15) / 1000));
+  });
+
+  it('prochaine facture : 59 € par mois, 590 € la première année puis 990 €', () => {
+    expect(nextInvoiceCentsForOffer('unlimited_partner', 0, NOW, null, true)).toBe(5900);
+    expect(nextInvoiceCentsForOffer('unlimited_partner_annual', 0, NOW, null, true)).toBe(59000);
+    expect(nextInvoiceCentsForOffer('unlimited_partner_annual', 0, NOW, null, false)).toBe(99000);
+  });
+
+  it('rangs : partenaire au niveau du lancement', () => {
+    expect(isDowngrade('unlimited_partner', 'essential')).toBe(true);
+    expect(isDowngrade('unlimited_partner', 'unlimited')).toBe(false);
+    expect(isDowngrade('unlimited_partner_annual', 'unlimited')).toBe(true);
   });
 });

@@ -20,10 +20,14 @@ import {
   crmStatus,
   graceAfterPaymentFailureEnd,
   isOffer,
+  LAUNCH_OFFERS,
   offerFromLookupKeys,
+  PARTNER_OFFERS,
+  partnerPriceEnd,
   planAfterSubscriptionEnds,
   planFromLookupKeys,
   subscriptionOutcome,
+  type Offer,
 } from './logic';
 import { loadBilling, priceIdForLookup, stripe } from './server';
 
@@ -78,7 +82,8 @@ function firstYearEnd(sub: Stripe.Subscription): number {
 }
 
 /**
- * Offres de lancement : pose le schedule qui ramène au tarif normal.
+ * Offres de lancement et partenaire : pose le schedule qui ramène au tarif
+ * normal.
  *  - Mensuel : 69 € → 99 € au 01/01/2027 00:00 (Paris), avec
  *    `proration_behavior: 'create_prorations'` : 99 € s'applique dès le
  *    01/01 ; le reste de la période en cours, payé à 69 €, est régularisé au
@@ -86,6 +91,9 @@ function firstYearEnd(sub: Stripe.Subscription): number {
  *    01/01 : la bascule a lieu à la fin de l'essai (rien n'a été payé à 69 €).
  *  - Annuel : 690 € la première année, 990 € par an ensuite, à la date
  *    anniversaire (échéance : pas de prorata).
+ *  - Partenaire : 59 €/mois ou 590 €/an pendant 12 mois payés à compter de
+ *    la fin de l'essai (ancrage de facturation), puis 99 €/mois ou 990 €/an,
+ *    sans prorata (la bascule tombe sur une échéance).
  * L'abonnement passe alors sur le prix Illimité standard : offre `unlimited`
  * (ou `unlimited_annual`), et la place de lancement se libère.
  *
@@ -95,19 +103,20 @@ function firstYearEnd(sub: Stripe.Subscription): number {
  * travail : il crée le schedule s'il manque, et le configure tant que la phase
  * au prix suivant n'y figure pas.
  */
-async function ensureLaunchSchedule(sub: Stripe.Subscription) {
+async function ensurePriceSchedule(sub: Stripe.Subscription) {
   // Résiliation programmée : ne rien reposer. Un schedule gère lui-même la
   // date de fin de l'abonnement, et y ajouter la phase suivante effacerait la
   // résiliation demandée par le bike fitter.
   if (sub.cancel_at_period_end || sub.cancel_at) return;
   const keys = sub.items.data.map((i) => i.price.lookup_key);
-  const yearly = keys.includes(LOOKUP.unlimitedLaunchYear);
-  const monthly = keys.includes(LOOKUP.unlimitedLaunch);
+  const partner = keys.includes(LOOKUP.unlimitedPartner) || keys.includes(LOOKUP.unlimitedPartnerYear);
+  const yearly = keys.includes(LOOKUP.unlimitedLaunchYear) || keys.includes(LOOKUP.unlimitedPartnerYear);
+  const monthly = keys.includes(LOOKUP.unlimitedLaunch) || keys.includes(LOOKUP.unlimitedPartner);
   if (!yearly && !monthly) return;
-  if (monthly && Date.now() >= LAUNCH_OFFER.switchAt) return;
+  if (monthly && !partner && Date.now() >= LAUNCH_OFFER.switchAt) return;
 
   const s = stripe();
-  // Après le lancement : le tarif normal (99 €/mois, 990 €/an).
+  // Ensuite : le tarif normal (99 €/mois, 990 €/an).
   const afterPrice = await priceIdForLookup(yearly ? LOOKUP.unlimitedYear : LOOKUP.unlimited);
 
   let scheduleId = idOf(sub.schedule);
@@ -143,15 +152,17 @@ async function ensureLaunchSchedule(sub: Stripe.Subscription) {
   if (configured || schedule.status !== 'active') return;
 
   const current = schedule.phases[0];
-  // Mensuel : bascule au 01/01/2027, ou à la fin de l'essai s'il court au-delà.
+  // Lancement mensuel : bascule au 01/01/2027, ou à la fin de l'essai s'il
+  // court au-delà. Partenaire : 12 mois après l'ancrage (fin de l'essai).
   const monthlySwitch = Math.max(Math.floor(LAUNCH_OFFER.switchAt / 1000), current.trial_end ?? 0);
+  const switchAt = partner ? partnerPriceEnd(sub.billing_cycle_anchor) : yearly ? firstYearEnd(sub) : monthlySwitch;
   await s.subscriptionSchedules.update(schedule.id, {
     end_behavior: 'release',
-    metadata: { aerox_schedule: 'launch' },
+    metadata: { aerox_schedule: partner ? 'partner' : 'launch' },
     phases: [
       {
         start_date: current.start_date,
-        end_date: yearly ? firstYearEnd(sub) : monthlySwitch,
+        end_date: switchAt,
         items: current.items.map((i) => ({ price: idOf(i.price)!, quantity: i.quantity ?? 1 })),
         // Sans elle, la mise à jour effacerait la période d'essai (premier
         // prélèvement le 1er novembre) et Stripe facturerait tout de suite.
@@ -161,7 +172,7 @@ async function ensureLaunchSchedule(sub: Stripe.Subscription) {
       {
         items: [{ price: afterPrice, quantity: 1 }],
         duration: { interval: yearly ? 'year' : 'month', interval_count: 1 },
-        proration_behavior: yearly ? 'none' : 'create_prorations',
+        proration_behavior: yearly || partner ? 'none' : 'create_prorations',
         metadata: sub.metadata,
       },
     ],
@@ -362,6 +373,10 @@ export async function syncSubscription(db: SupabaseClient, subscriptionId: strin
     scheduled_at: change?.at ?? null,
     // Essai gratuit : sa fin, jamais effacée ensuite (essai utilisé).
     ...(sub.trial_end ? { trial_ends_at: toIso(sub.trial_end) } : {}),
+    // Abonnement créé à l'installation : l'offre n'est plus en attente.
+    ...(sub.metadata?.aerox_installed_at ? { installed_at: sub.metadata.aerox_installed_at } : {}),
+    pending_offer: null,
+    pending_since: null,
   });
   // Seulement si quelque chose change pour le CRM : les renouvellements
   // mensuels ne réécrivent pas la fiche.
@@ -369,7 +384,10 @@ export async function syncSubscription(db: SupabaseClient, subscriptionId: strin
     await syncCrm(db, userId, plan, crmStatus(plan, outcome.status));
   }
 
-  if (plan === 'unlimited_launch' && outcome.status === 'active') await ensureLaunchSchedule(sub);
+  const offer = offerFromLookupKeys(keys);
+  if (offer && [...LAUNCH_OFFERS, ...PARTNER_OFFERS].includes(offer) && outcome.status === 'active') {
+    await ensurePriceSchedule(sub);
+  }
 }
 
 async function handleCheckout(db: SupabaseClient, session: Stripe.Checkout.Session) {
@@ -381,6 +399,38 @@ async function handleCheckout(db: SupabaseClient, session: Stripe.Checkout.Sessi
     if (subId) await syncSubscription(db, subId);
     return;
   }
+
+  if (session.mode === 'setup' && session.status === 'complete') await handleSetupCheckout(db, userId, session);
+}
+
+/**
+ * Premier abonnement : carte enregistrée (Checkout en mode `setup`). La carte
+ * devient le moyen de paiement par défaut du client, l'offre choisie attend
+ * l'installation (`pending_offer`) ; l'abonnement est créé par
+ * /api/billing/start-trial/. Rejouable : réécrit les mêmes valeurs.
+ */
+async function handleSetupCheckout(db: SupabaseClient, userId: string, session: Stripe.Checkout.Session) {
+  const offer = session.metadata?.aerox_offer;
+  const customer = idOf(session.customer);
+  const setupIntentId = idOf(session.setup_intent);
+  if (!isOffer(offer) || !customer || !setupIntentId) return;
+
+  const s = stripe();
+  const intent = await s.setupIntents.retrieve(setupIntentId);
+  const paymentMethod = idOf(intent.payment_method);
+  if (!paymentMethod) throw new Error(`setup intent ${setupIntentId} sans moyen de paiement`);
+  await s.customers.update(customer, { invoice_settings: { default_payment_method: paymentMethod } });
+
+  const billing = await loadBilling(db, userId);
+  // Abonnement déjà créé (installation faite) : rien n'est plus en attente.
+  if (billing?.stripe_subscription_id) return;
+  await writeBilling(db, {
+    user_id: userId,
+    stripe_customer_id: customer,
+    pending_offer: offer satisfies Offer,
+    // Date du premier choix : clé d'idempotence de la création à l'installation.
+    pending_since: billing?.pending_since ?? new Date((session.created ?? Date.now() / 1000) * 1000).toISOString(),
+  });
 }
 
 /** Traite un événement bike fitter. Lève en cas d'échec (→ 500, rejeu Stripe). */

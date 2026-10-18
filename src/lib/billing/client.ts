@@ -10,8 +10,10 @@ import type { Offer } from './logic';
 export type BillingError =
   | 'E_AUTH'
   | 'E_HAS_SUBSCRIPTION'
+  | 'E_HAS_PENDING'
   | 'E_LAUNCH_CLOSED'
-  | 'E_NEEDS_BUSINESS_ID'
+  | 'E_PARTNER'
+  | 'E_PARTNER_TOKEN'
   | 'E_ROLE'
   | 'E_TRIAL_UNAVAILABLE'
   | 'E_SERVER';
@@ -54,7 +56,11 @@ async function post(
   }
 }
 
-/** Démarre Checkout. En cas de succès, le navigateur quitte la page. */
+/**
+ * Démarre Checkout (premier abonnement : enregistrement de la carte seulement,
+ * l'essai démarre à l'installation). En cas de succès, le navigateur quitte
+ * la page.
+ */
 export async function startCheckout(offer: Offer, lang: string): Promise<BillingError | null> {
   const r = await post('/api/billing/checkout/', { offer, lang });
   if (r.ok === false) return r.error;
@@ -63,28 +69,13 @@ export async function startCheckout(offer: Offer, lang: string): Promise<Billing
   return null;
 }
 
-export type BusinessIdResult =
-  | 'granted'
-  | 'pending_review'
-  | 'already_used'
-  | 'already_granted'
-  | 'invalid'
-  | 'not_found'
-  | 'inactive'
-  | 'registry_down'
-  | 'unreachable';
-
 /**
- * Identifiant d'entreprise (SIREN, SIRET, TVA) ou site internet du studio,
- * qui ouvre l'essai de 14 jours. Vérifié côté serveur.
+ * Lien privé de l'offre partenaire : ouvre l'offre sur le compte connecté si
+ * le jeton est valide (`E_PARTNER_TOKEN` sinon).
  */
-export async function submitBusinessId(
-  id: string
-): Promise<{ error: BillingError } | { result: BusinessIdResult; name?: string }> {
-  const r = await post('/api/billing/business-id/', { id });
-  if (r.ok === false) return { error: r.error };
-  const data = r.data as { result?: BusinessIdResult; name?: string };
-  return data.result ? { result: data.result, name: data.name } : { error: 'E_SERVER' };
+export async function claimPartnerOffer(token: string): Promise<BillingError | null> {
+  const r = await post('/api/billing/partner/', { token });
+  return r.ok === false ? r.error : null;
 }
 
 export async function openPortal(lang: string): Promise<BillingError | null> {

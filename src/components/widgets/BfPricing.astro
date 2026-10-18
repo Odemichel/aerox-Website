@@ -300,7 +300,6 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
     data-err-launch={t(dict, 'bfp.err.launchClosed')}
     data-err-sub={t(dict, 'bfp.err.hasSubscription')}
     data-err-role={t(dict, 'bfp.err.role')}
-    data-err-business={t(dict, 'bfp.err.needsBusiness')}
     data-in-account={inAccount ? '1' : ''}
   >
   </div>
@@ -398,16 +397,10 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
           window.location.href = bikeFitterSignupUrl(lang, `/${lang}/bike-fitting/#tarifs`);
           return;
         }
-        if (error === 'E_HAS_SUBSCRIPTION') {
+        // Abonné, ou offre déjà choisie en attente de l'installation : la
+        // gestion se fait dans l'espace.
+        if (error === 'E_HAS_SUBSCRIPTION' || error === 'E_HAS_PENDING') {
           window.location.href = `/${lang}/inscription/dashboard/`;
-          return;
-        }
-        // Entreprise pas encore vérifiée : le formulaire est dans l'onglet
-        // Abonnement de l'espace.
-        if (error === 'E_NEEDS_BUSINESS_ID') {
-          show(cfg.dataset.errBusiness);
-          if (cfg.dataset.inAccount) window.location.hash = 'abonnement';
-          else window.location.href = `/${lang}/inscription/dashboard/#abonnement`;
           return;
         }
         show(errors[error] ?? cfg.dataset.errGeneric);

@@ -5,7 +5,7 @@ layout: '~/layouts/MarkdownLayout.astro'
 
 > **Courtesy translation.** These Terms of Use are provided in English for information purposes only. Only the [French version](/fr/terms/) is legally binding and prevails in the event of any discrepancy.
 
-_Last updated: October 15, 2026_
+_Last updated: October 18, 2026_
 
 Thank you for using **AeroX**, the solution that turns your home trainer into a virtual wind tunnel.  
 These Terms of Use govern access to and use of the AeroX service.  
@@ -67,11 +67,12 @@ These Terms of Use define the rights and obligations of AeroX and the User regar
 
 This section applies to bike fitter accounts. Where it conflicts with sections 4 and 11, it prevails.
 
-- **Plans**: **Essential**, €20 excl. VAT per month plus €15 excl. VAT per analysis, billed at the end of each monthly period; **Unlimited**, €99 excl. VAT per month or €990 excl. VAT per year. **Launch offer**, reserved for the first 20 studios and subscribed by 31 December 2026: Unlimited at €69 excl. VAT per month until 31 December 2026, then €99 excl. VAT per month, or €690 excl. VAT for the first year, then €990 excl. VAT per year. Prices exclude taxes; VAT is applied under the rules in force.
+- **Plans**: **Essential**, €20 excl. VAT per month plus €15 excl. VAT per analysis, billed at the end of each monthly period; **Unlimited**, €99 excl. VAT per month or €990 excl. VAT per year. **Launch offer**, reserved for the first 20 studios and subscribed by 31 December 2026: Unlimited at €69 excl. VAT per month until 31 December 2026, then €99 excl. VAT per month, or €690 excl. VAT for the first year, then €990 excl. VAT per year. **Partner offer**, by invitation from AeroX: Unlimited at €59 excl. VAT per month for the first 12 paid months, or €590 excl. VAT for the first year, then the standard price in force (€99 excl. VAT per month or €990 excl. VAT per year at the date of these terms). Prices exclude taxes; VAT is applied under the rules in force.
 - **Analysis**: one client analysed with AeroX, counted once per rolling 30-day period. Further sessions with the same client during that period are not counted.
-- **Free trial**: the first subscription starts with a **14-day free trial** (for a subscription made before the release of the new version of the app, on 20 October 2026, the 14 days only start counting from that release). It is reserved for companies whose identifier has been verified (EU VAT number, French SIREN or SIRET, or a website approved by AeroX), one trial per company. A valid payment method is saved when the trial starts; **nothing is charged during the trial**, and analyses made during the trial are not billed.
+- **Subscription and installation**: the bike fitter chooses a plan and saves a valid payment method; **no subscription starts and nothing is charged at this stage**. The subscription starts on the day the AeroX setup is installed at the bike fitter’s premises with the AeroX team, with a free trial. Without installation, nothing is ever charged. Before installation, the bike fitter can change plan or drop it at any time from the bike fitter account (“Drop this plan”).
+- **Free trial**: the first subscription starts with a **14-day free trial, from the day of installation**. It is reserved for professionals, one trial per studio. **Nothing is charged during the trial**, and analyses made during the trial are not billed.
 - **Availability of the plans**: bike fitter plans are made available on 1 November 2026, with the version of the app that counts analyses. Nothing is charged before that date, including for an earlier subscription.
-- **End of the trial**: **unless cancelled before the trial ends, the chosen subscription starts automatically at the end of the trial and the first payment is taken that day** from the saved payment method. The trial end date is shown when subscribing and in the bike fitter account.
+- **End of the trial**: **unless cancelled before the trial ends, the chosen subscription starts automatically at the end of the trial and the first payment is taken that day** from the saved payment method. The trial end date is shown in the bike fitter account from installation.
 - **Cancelling during the trial**: at any time before the trial ends, from the bike fitter account (“Cancel the trial”). Nothing is then charged, and access remains open until the end of the trial.
 - **Term and cancellation**: subscriptions have no minimum term and renew automatically for each period (month or year). They can be cancelled at any time from the bike fitter account; cancellation takes effect at the end of the current, already paid period, with no prorated refund.
 - **Changing plans**: moving to a higher plan is immediate, with the difference prorated; moving to a lower plan takes effect at the end of the current period.
