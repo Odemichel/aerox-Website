@@ -29,7 +29,7 @@ import {
   subscriptionOutcome,
   type Offer,
 } from './logic';
-import { loadBilling, priceIdForLookup, stripe } from './server';
+import { launchSeatsRemaining, loadBilling, priceIdForLookup, stripe } from './server';
 
 export const BILLING_EVENTS = new Set<string>([
   'checkout.session.completed',
@@ -323,6 +323,10 @@ export async function syncSubscription(db: SupabaseClient, subscriptionId: strin
       unpaid_invoice_id: debt?.id ?? null,
       unpaid_amount: debt?.amount ?? null,
       unpaid_invoice_url: debt?.url ?? null,
+      // Une offre restée en attente ne doit pas resurgir dans la liste des
+      // installations (elle rouvrirait un essai).
+      pending_offer: null,
+      pending_since: null,
     };
     // Premier traitement de cette fin d'abonnement (les rejeux et les
     // factures réglées plus tard ne réécrivent pas le CRM).
@@ -422,15 +426,34 @@ async function handleSetupCheckout(db: SupabaseClient, userId: string, session: 
   await s.customers.update(customer, { invoice_settings: { default_payment_method: paymentMethod } });
 
   const billing = await loadBilling(db, userId);
-  // Abonnement déjà créé (installation faite) : rien n'est plus en attente.
-  if (billing?.stripe_subscription_id) return;
-  await writeBilling(db, {
-    user_id: userId,
-    stripe_customer_id: customer,
-    pending_offer: offer satisfies Offer,
-    // Date du premier choix : clé d'idempotence de la création à l'installation.
-    pending_since: billing?.pending_since ?? new Date((session.created ?? Date.now() / 1000) * 1000).toISOString(),
-  });
+  // Abonnement déjà créé (installation faite) ou essai déjà utilisé (session
+  // terminée tard, rejeu) : rien ne doit repasser en attente.
+  if (!billing || billing.stripe_subscription_id || billing.trial_ends_at) return;
+
+  // Places de lancement revérifiées à l'enregistrement de la carte (la page
+  // a pu rester ouverte pendant que les dernières partaient) : sinon
+  // l'Illimité au tarif normal, que le bike fitter voit dans son espace et
+  // peut changer avant l'installation. Une offre déjà en attente garde sa place.
+  let pending: Offer = offer;
+  if (LAUNCH_OFFERS.includes(offer) && !LAUNCH_OFFERS.includes(billing.pending_offer ?? 'essential')) {
+    const open = Date.now() < LAUNCH_OFFER.switchAt && (await launchSeatsRemaining(db)) > 0;
+    if (!open) pending = offer === 'unlimited_launch_annual' ? 'unlimited_annual' : 'unlimited';
+  }
+
+  // Écriture conditionnelle : un abonnement créé entre la lecture et ici
+  // (installation simultanée) n'est pas écrasé.
+  const { error } = await db
+    .from('bf_billing')
+    .update({
+      stripe_customer_id: customer,
+      pending_offer: pending,
+      // Date du premier choix : clé d'idempotence de la création à l'installation.
+      pending_since: billing.pending_since ?? new Date((session.created ?? Date.now() / 1000) * 1000).toISOString(),
+    })
+    .eq('user_id', userId)
+    .is('stripe_subscription_id', null)
+    .is('trial_ends_at', null);
+  if (error) throw new Error(`bf_billing (attente): ${error.message}`);
 }
 
 /** Traite un événement bike fitter. Lève en cas d'échec (→ 500, rejeu Stripe). */

@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP } from '../src/lib/billing/catalog';
 import {
   DEFAULT_OFFER,
+  offerAtInstall,
   addMonths,
   partnerPriceEnd,
   PARTNER_OFFERS,
@@ -247,8 +248,19 @@ describe('offre partenaire', () => {
   it('tarif partenaire : 12 mois à partir de l’ancrage (fin de l’essai)', () => {
     const anchor = Math.floor(Date.UTC(2026, 10, 17, 9) / 1000);
     expect(partnerPriceEnd(anchor)).toBe(Math.floor(Date.UTC(2027, 10, 17, 9) / 1000));
-    // Fin de mois : Date UTC reporte sur le mois suivant comme Stripe.
     expect(addMonths(Math.floor(Date.UTC(2026, 0, 15) / 1000), 1)).toBe(Math.floor(Date.UTC(2026, 1, 15) / 1000));
+    // Fin de mois ramenée au dernier jour, comme les échéances Stripe.
+    const sec = (y: number, m: number, d: number) => Math.floor(Date.UTC(y, m, d, 9) / 1000);
+    expect(addMonths(sec(2027, 0, 31), 1)).toBe(sec(2027, 1, 28));
+    expect(addMonths(sec(2028, 1, 29), 12)).toBe(sec(2029, 1, 28));
+    expect(addMonths(sec(2026, 11, 31), 2)).toBe(sec(2027, 1, 28));
+  });
+
+  it('installation après le lancement : lancement mensuel → Illimité au tarif normal', () => {
+    expect(offerAtInstall('unlimited_launch', LAUNCH_OFFER.switchAt - 1)).toBe('unlimited_launch');
+    expect(offerAtInstall('unlimited_launch', LAUNCH_OFFER.switchAt)).toBe('unlimited');
+    expect(offerAtInstall('unlimited_launch_annual', LAUNCH_OFFER.switchAt + 1)).toBe('unlimited_launch_annual');
+    expect(offerAtInstall('unlimited_partner', LAUNCH_OFFER.switchAt + 1)).toBe('unlimited_partner');
   });
 
   it('prochaine facture : 59 € par mois, 590 € la première année puis 990 €', () => {

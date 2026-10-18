@@ -121,7 +121,7 @@ Principes :
   au tarif normal sans prorata, puis est relâché. Vérifié sur horloge Stripe
   test : 12 échéances à 59 € puis 99 € ; 590 € puis 990 €.
 - **Essai à l'installation** (2026-10-18) : premier abonnement en deux temps.
-  1. Le bike fitter (entreprise vérifiée) choisit son offre : Checkout en
+  1. Le bike fitter choisit son offre : Checkout en
      mode **`setup`** (carte, adresse, n° de TVA, CGV), aucun abonnement,
      rien n'est prélevé. Le webhook (`checkout.session.completed`, mode
      setup) pose la carte par défaut du client et `bf_billing.pending_offer`

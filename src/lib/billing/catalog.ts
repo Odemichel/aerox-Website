@@ -212,8 +212,8 @@ export const PRICES: PriceSpec[] = [
 // fitter n'enregistre que sa carte (Checkout en mode `setup`) ; l'abonnement
 // naît au bouton admin « Installation faite » (/api/billing/start-trial/),
 // payant à la fin de l'essai sauf résiliation avant (CGV, art. 5 bis). Sans
-// installation, aucun abonnement, rien n'est prélevé. Un essai par
-// entreprise (identifiant vérifié) et par compte.
+// installation, aucun abonnement, rien n'est prélevé. Un essai par compte
+// (plus de vérification d'entreprise préalable depuis le 2026-10-18).
 export const TRIAL_DAYS = 14;
 
 // Offre partenaire : durée du tarif partenaire, en mois payés à compter de

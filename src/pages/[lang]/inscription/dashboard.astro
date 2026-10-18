@@ -640,7 +640,9 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
           x.offer !== current &&
           x.offer !== s.scheduled_offer &&
           (!x.launch || launchOpen) &&
-          (!x.partner || Boolean(s.partner_offer))
+          // Partenaire : seulement avant l'installation (le serveur refuse
+          // aussi pour un abonné).
+          (!x.partner || (pending && Boolean(s.partner_offer)))
       );
       for (const target of targets) {
         // En attente de l'installation : rien n'est encore facturé, le
@@ -1364,9 +1366,13 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     const PARTNER_KEY = 'aerox-partner-token';
     function partnerToken(): string | null {
       const url = new URL(window.location.href);
-      const fromUrl = url.searchParams.get('partenaire');
+      // `#partenaire=<jeton>` (le fragment ne part pas au serveur : absent des
+      // journaux Vercel) ; `?partenaire=` accepté pour les liens déjà envoyés.
+      const fromHash = /^#partenaire=([\w-]+)$/.exec(url.hash)?.[1] ?? null;
+      const fromUrl = fromHash ?? url.searchParams.get('partenaire');
       if (fromUrl) {
         url.searchParams.delete('partenaire');
+        if (fromHash) url.hash = 'abonnement';
         history.replaceState(null, '', url.toString());
         try {
           localStorage.setItem(PARTNER_KEY, fromUrl);

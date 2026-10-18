@@ -105,8 +105,11 @@ export const POST: APIRoute = async ({ request, site }) => {
     // démarre sans essai.
     const withTrial = !billing?.trial_ends_at;
 
-    // Offre partenaire : seulement après le lien privé.
-    if (PARTNER_OFFERS.includes(offer) && !billing?.partner_offer) return json({ error: 'E_PARTNER' }, 403);
+    // Offre partenaire : seulement après le lien privé, et pour un premier
+    // abonnement (un réabonnement repartirait pour 12 mois à 59 €).
+    if (PARTNER_OFFERS.includes(offer) && (!billing?.partner_offer || !withTrial)) {
+      return json({ error: 'E_PARTNER' }, 403);
+    }
 
     // Un seul abonnement par bike fitter : changer d'offre passe par
     // /api/billing/manage/, qui modifie l'abonnement existant au lieu d'en

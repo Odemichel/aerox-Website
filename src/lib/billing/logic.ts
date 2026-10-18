@@ -47,8 +47,10 @@ export const LAUNCH_OFFERS: readonly Offer[] = ['unlimited_launch', 'unlimited_l
 
 /**
  * Offres partenaire : sur lien privé seulement (`bf_billing.partner_offer`,
- * ouvert par /api/billing/partner/). Ni la grille publique ni un changement
- * d'offre ne les proposent.
+ * ouvert par /api/billing/partner/), et pour un premier abonnement : choisies
+ * avant l'installation, le tarif partenaire court 12 mois à partir de la fin
+ * de l'essai. Jamais proposées à un abonné (changement d'offre) ni à un
+ * réabonnement : sinon 12 nouveaux mois à 59 € à chaque passage.
  */
 export const PARTNER_OFFERS: readonly Offer[] = ['unlimited_partner', 'unlimited_partner_annual'];
 
@@ -122,7 +124,13 @@ export function trialEnd(nowMs: number): number {
 /** Même instant, `months` mois calendaires plus tard (UTC), en secondes. */
 export function addMonths(seconds: number, months: number): number {
   const d = new Date(seconds * 1000);
+  const day = d.getUTCDate();
+  // Jour ramené au dernier jour du mois visé (31 janvier + 1 mois = 28 ou 29
+  // février), comme les échéances Stripe, au lieu du débordement de Date.
+  d.setUTCDate(1);
   d.setUTCMonth(d.getUTCMonth() + months);
+  const lastDay = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
+  d.setUTCDate(Math.min(day, lastDay));
   return Math.floor(d.getTime() / 1000);
 }
 
@@ -156,6 +164,16 @@ export function subscriptionStart(nowMs: number, annual: boolean, withTrial: boo
     return { billing_cycle_anchor: anchor, proration_behavior: 'none' };
   }
   return BF_AVAILABLE_AT - nowMs > 3 * DAY_MS ? { trial_end: anchor } : {};
+}
+
+/**
+ * Offre facturée à l'installation. Lancement mensuel choisi avant le
+ * 01/01/2027 mais installé après : le tarif de lancement est terminé, c'est
+ * l'Illimité au tarif normal (même règle que la bascule du lancement). Le
+ * lancement annuel garde sa première année : il a été souscrit à temps.
+ */
+export function offerAtInstall(offer: Offer, nowMs: number): Offer {
+  return offer === 'unlimited_launch' && nowMs >= LAUNCH_OFFER.switchAt ? 'unlimited' : offer;
 }
 
 /** L'offre de lancement est-elle encore ouverte à la souscription ? */
