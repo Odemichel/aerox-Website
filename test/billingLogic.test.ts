@@ -5,6 +5,8 @@ import {
   offerAtInstall,
   addMonths,
   partnerPriceEnd,
+  partnerOfferOpen,
+  PARTNER_OFFER_WINDOW_MS,
   PARTNER_OFFERS,
   suggestUpgrade,
   trialEnd,
@@ -273,5 +275,24 @@ describe('offre partenaire', () => {
     expect(isDowngrade('unlimited_partner', 'essential')).toBe(true);
     expect(isDowngrade('unlimited_partner', 'unlimited')).toBe(false);
     expect(isDowngrade('unlimited_partner_annual', 'unlimited')).toBe(true);
+  });
+});
+
+describe('offre partenaire : 24 heures', () => {
+  const now = Date.UTC(2026, 9, 19, 10);
+  const at = (ms: number) => new Date(ms).toISOString();
+
+  it('ouverte pendant les 24 h, fermée ensuite', () => {
+    const row = { partner_offer: true, partner_offer_expires_at: at(now + PARTNER_OFFER_WINDOW_MS) };
+    expect(partnerOfferOpen(row, now)).toBe(true);
+    expect(partnerOfferOpen(row, now + PARTNER_OFFER_WINDOW_MS - 1)).toBe(true);
+    expect(partnerOfferOpen(row, now + PARTNER_OFFER_WINDOW_MS)).toBe(false);
+  });
+
+  it('fermée sans lien ouvert ou sans délai', () => {
+    expect(partnerOfferOpen(null, now)).toBe(false);
+    expect(partnerOfferOpen({ partner_offer: false, partner_offer_expires_at: at(now + 1000) }, now)).toBe(false);
+    expect(partnerOfferOpen({ partner_offer: true, partner_offer_expires_at: null }, now)).toBe(false);
+    expect(partnerOfferOpen({ partner_offer: true, partner_offer_expires_at: 'nope' }, now)).toBe(false);
   });
 });

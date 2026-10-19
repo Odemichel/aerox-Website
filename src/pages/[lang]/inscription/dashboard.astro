@@ -105,6 +105,7 @@ const labels = {
       'start.partner',
       'start.partnerTitle',
       'start.partnerCta',
+      'start.partnerLeft',
       'start.monthly',
       'start.yearly',
       'start.best',
@@ -112,7 +113,7 @@ const labels = {
     ...['title', 'text', 'trial', 'trialValue', 'when', 'changeDone', 'cancel', 'cancelConfirm', 'cancelDone'].map(
       (k) => `install.${k}`
     ),
-    ...['opened', 'invalid'].map((k) => `partner.${k}`),
+    ...['opened', 'invalid', 'expired'].map((k) => `partner.${k}`),
     ...['current', 'price', 'nextDate', 'noSub'].map((k) => `plan.${k}`),
     ...['estimate', 'manage', 'manageText', 'none', 'debtRow'].map((k) => `billing.${k}`),
     ...['name', 'id', 'legal', 'none', 'verified', 'pending', 'kind.siren', 'kind.eu_vat'].map((k) => `studio.${k}`),
@@ -309,6 +310,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       // Offre partenaire ouverte (lien privé), offre en attente de
       // l'installation (carte enregistrée, pas encore d'abonnement).
       partner_offer: boolean | null;
+      partner_offer_expires_at: string | null;
       pending_offer: Offer | null;
       installed_at: string | null;
       status: string | null;
@@ -682,11 +684,20 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       return details;
     }
 
+    /** Temps restant au format h:mm:ss. */
+    function countdown(ms: number) {
+      const t = Math.max(0, Math.floor(ms / 1000));
+      const pad = (n: number) => String(n).padStart(2, '0');
+      return `${Math.floor(t / 3600)}:${pad(Math.floor(t / 60) % 60)}:${pad(t % 60)}`;
+    }
+
     /**
      * Offre partenaire (lien privé) : rythme mensuel / annuel, annuel par
-     * défaut et mis en avant, puis un seul bouton pour l'offre choisie.
+     * défaut et mis en avant, puis un seul bouton pour l'offre choisie. Compte
+     * à rebours des 24 h ; à zéro, le bouton se désactive (le serveur refuse
+     * aussi).
      */
-    function partnerChoice(primary: boolean) {
+    function partnerChoice(primary: boolean, expiresAt: string | null) {
       const T = L();
       const box = el('div', 'acct-partner');
       const price = el('p', 'acct-partner-price');
@@ -715,12 +726,36 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         price.textContent = offers[chosen].label;
       };
       toggle.append(...options.map(([, b]) => b));
+      const cta = btn(T['trial.start.partnerCta'], primary ? 'primary' : 'plain', () =>
+        startTrial(offers[chosen].offer)
+      );
+      const left = el('p', 'acct-partner-left');
+      const end = expiresAt ? Date.parse(expiresAt) : NaN;
+      const tick = () => {
+        const ms = end - Date.now();
+        if (!(ms > 0)) {
+          left.textContent = T['partner.expired'];
+          cta.disabled = true;
+          return false;
+        }
+        left.textContent = T['trial.start.partnerLeft'].replace('{time}', countdown(ms));
+        return true;
+      };
+      // Arrêté à zéro ou quand le bloc quitte la page (rechargement de l'état).
+      if (tick()) {
+        let shown = false;
+        const timer = window.setInterval(() => {
+          shown ||= box.isConnected;
+          if ((shown && !box.isConnected) || !tick()) window.clearInterval(timer);
+        }, 1000);
+      }
       box.append(
         el('h3', 'acct-plan-name', T['trial.start.partnerTitle']),
+        left,
         el('p', 'acct-lead', T['trial.start.partner']),
         toggle,
         price,
-        actions(btn(T['trial.start.partnerCta'], primary ? 'primary' : 'plain', () => startTrial(offers[chosen].offer)))
+        actions(cta)
       );
       sync();
       return box;
@@ -922,7 +957,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         // Le bike fitter choisit son offre (Essentiel par défaut, ou l'offre
         // partenaire ouverte par le lien privé) et enregistre une carte ;
         // l'essai de 14 jours démarre à l'installation.
-        if (s.partner_offer) plan.append(partnerChoice(primaryFree));
+        if (s.partner_offer) plan.append(partnerChoice(primaryFree, s.partner_offer_expires_at));
         else
           plan.append(
             el('h3', 'acct-plan-name', T['trial.start.title']),
@@ -1399,7 +1434,9 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       } catch {
         /* rien */
       }
-      return { panel: 'abonnement', text: r === null ? T['partner.opened'] : T['partner.invalid'], ok: r === null };
+      const text =
+        r === null ? T['partner.opened'] : r === 'E_PARTNER_EXPIRED' ? T['partner.expired'] : T['partner.invalid'];
+      return { panel: 'abonnement', text, ok: r === null };
     }
 
     async function init() {
@@ -1740,6 +1777,12 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
   #account .acct-switch-btn--on .acct-switch-best {
     color: #0b2239;
     background: color-mix(in srgb, #ffffff 35%, transparent);
+  }
+  #account .acct-partner-left {
+    margin-top: 0.25rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--acct-accent);
   }
   #account .acct-partner-price {
     margin-top: 0.75rem;

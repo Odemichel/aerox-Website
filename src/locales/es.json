@@ -1000,6 +1000,8 @@
   "dash.trial.start.partnerCta": "Elegir la oferta exclusiva",
   "dash.partner.opened": "Oferta partner activada en tu cuenta.",
   "dash.partner.invalid": "Este enlace partner ya no es válido. Contáctanos si lo necesitas.",
+  "dash.partner.expired": "La oferta exclusiva ya no está disponible: era válida 24 horas después de abrir el enlace.",
+  "dash.trial.start.partnerLeft": "Solo quedan {time} para aprovechar la oferta exclusiva.",
   "dash.install.title": "Oferta elegida, pendiente de instalación",
   "dash.install.text": "Tu tarjeta está registrada y no se cobra nada. Te contactaremos para instalar tu setup AeroX: tus 14 días de prueba gratuita empiezan ese día.",
   "dash.install.trial": "Prueba gratuita",

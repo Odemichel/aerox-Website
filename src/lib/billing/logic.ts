@@ -54,6 +54,18 @@ export const LAUNCH_OFFERS: readonly Offer[] = ['unlimited_launch', 'unlimited_l
  */
 export const PARTNER_OFFERS: readonly Offer[] = ['unlimited_partner', 'unlimited_partner_annual'];
 
+/** Délai pour prendre l'offre partenaire, à partir de la première ouverture du lien. */
+export const PARTNER_OFFER_WINDOW_MS = 24 * 3600 * 1000;
+
+/** Offre partenaire ouverte sur le compte et encore dans ses 24 heures. */
+export function partnerOfferOpen(
+  row: { partner_offer?: boolean | null; partner_offer_expires_at?: string | null } | null | undefined,
+  nowMs: number
+): boolean {
+  const until = row?.partner_offer_expires_at ? Date.parse(row.partner_offer_expires_at) : NaN;
+  return Boolean(row?.partner_offer) && until > nowMs;
+}
+
 /** Offres facturées à l'année. */
 export const ANNUAL_OFFERS: readonly Offer[] = [
   'unlimited_annual',

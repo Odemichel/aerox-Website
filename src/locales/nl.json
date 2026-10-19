@@ -1000,6 +1000,8 @@
   "dash.trial.start.partnerCta": "Kies het exclusieve aanbod",
   "dash.partner.opened": "Partneraanbod geactiveerd op je account.",
   "dash.partner.invalid": "Deze partnerlink is niet meer geldig. Neem zo nodig contact met ons op.",
+  "dash.partner.expired": "Het exclusieve aanbod is niet meer beschikbaar: het gold 24 uur na het openen van de link.",
+  "dash.trial.start.partnerLeft": "Nog maar {time} om het exclusieve aanbod te nemen.",
   "dash.install.title": "Abonnement gekozen, wacht op installatie",
   "dash.install.text": "Je kaart is geregistreerd en er wordt niets afgeschreven. We nemen contact op om je AeroX-setup te installeren: je gratis proefperiode van 14 dagen start die dag.",
   "dash.install.trial": "Gratis proefperiode",

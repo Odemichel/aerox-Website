@@ -14,6 +14,7 @@ export type BillingError =
   | 'E_LAUNCH_CLOSED'
   | 'E_PARTNER'
   | 'E_PARTNER_TOKEN'
+  | 'E_PARTNER_EXPIRED'
   | 'E_ROLE'
   | 'E_TRIAL_UNAVAILABLE'
   | 'E_SERVER';
@@ -70,8 +71,9 @@ export async function startCheckout(offer: Offer, lang: string): Promise<Billing
 }
 
 /**
- * Lien privé de l'offre partenaire : ouvre l'offre sur le compte connecté si
- * le jeton est valide (`E_PARTNER_TOKEN` sinon).
+ * Lien privé de l'offre partenaire : ouvre l'offre sur le compte connecté
+ * pour 24 h si le jeton est valide (`E_PARTNER_TOKEN` sinon,
+ * `E_PARTNER_EXPIRED` après les 24 h).
  */
 export async function claimPartnerOffer(token: string): Promise<BillingError | null> {
   const r = await post('/api/billing/partner/', { token });

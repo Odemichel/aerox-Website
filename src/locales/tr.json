@@ -1000,6 +1000,8 @@
   "dash.trial.start.partnerCta": "Ayrıcalıklı teklifi seç",
   "dash.partner.opened": "İş ortağı teklifi hesabınızda etkinleştirildi.",
   "dash.partner.invalid": "Bu iş ortağı bağlantısı artık geçerli değil. Gerekirse bize ulaşın.",
+  "dash.partner.expired": "Özel teklif artık geçerli değil: bağlantı açıldıktan sonra 24 saat geçerliydi.",
+  "dash.trial.start.partnerLeft": "Özel teklif için yalnızca {time} kaldı.",
   "dash.install.title": "Plan seçildi, kurulum bekleniyor",
   "dash.install.text": "Kartınız kaydedildi, ücret alınmadı. AeroX kurulumunuz için sizinle iletişime geçeceğiz: 14 günlük ücretsiz denemeniz o gün başlar.",
   "dash.install.trial": "Ücretsiz deneme",

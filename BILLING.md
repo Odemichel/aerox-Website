@@ -8,15 +8,15 @@ Depuis le 2026-10-18 : l'essai démarre à **l'installation du setup** (bouton
 admin « Installation faite »), et une **offre partenaire** sur lien privé
 (59 €/mois ou 590 €/an pendant 12 mois).
 
-| Offre              | Prix HT                                                                                                      | Stripe (`lookup_key`)                                                     |
-| ------------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
-| Essai              | 14 jours gratuits à partir de l'installation, carte enregistrée avant, puis prélèvement sauf résiliation     | `trial_end` Stripe → `bf_billing.trial_ends_at` ; un essai par entreprise |
-| Essentiel          | 20 €/mois + 15 € par analyse, facturées en fin de mois (offre par défaut de l'essai)                         | `aerox_bf_essential_base` + `aerox_bf_essential_usage` (meter)            |
-| Illimité           | 99 €/mois ou 990 €/an (2 mois offerts)                                                                       | `aerox_bf_unlimited`, `aerox_bf_unlimited_year`                           |
-| Illimité lancement | 69 €/mois jusqu'au 31/12/2026, puis le tarif normal (99 €/mois, au prorata)                                  | `aerox_bf_unlimited_launch` → `aerox_bf_unlimited` (schedule)             |
-| Lancement annuel   | 690 € la 1re année, puis le tarif normal (990 €/an) ; souscription jusqu'au 31/12/2026                       | `aerox_bf_unlimited_launch_year` → `aerox_bf_unlimited_year` (schedule)   |
-| Partenaire         | 59 €/mois ou 590 €/an pendant 12 mois payés, puis le tarif normal ; sur lien privé                           | `aerox_bf_unlimited_partner(_year)` → `aerox_bf_unlimited(_year)`         |
-| Founding Partner   | inchangé (69 $/mois, lien de paiement)                                                                       | plan `legacy`, abonnement Stripe jamais touché                            |
+| Offre              | Prix HT                                                                                                  | Stripe (`lookup_key`)                                                     |
+| ------------------ | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Essai              | 14 jours gratuits à partir de l'installation, carte enregistrée avant, puis prélèvement sauf résiliation | `trial_end` Stripe → `bf_billing.trial_ends_at` ; un essai par entreprise |
+| Essentiel          | 20 €/mois + 15 € par analyse, facturées en fin de mois (offre par défaut de l'essai)                     | `aerox_bf_essential_base` + `aerox_bf_essential_usage` (meter)            |
+| Illimité           | 99 €/mois ou 990 €/an (2 mois offerts)                                                                   | `aerox_bf_unlimited`, `aerox_bf_unlimited_year`                           |
+| Illimité lancement | 69 €/mois jusqu'au 31/12/2026, puis le tarif normal (99 €/mois, au prorata)                              | `aerox_bf_unlimited_launch` → `aerox_bf_unlimited` (schedule)             |
+| Lancement annuel   | 690 € la 1re année, puis le tarif normal (990 €/an) ; souscription jusqu'au 31/12/2026                   | `aerox_bf_unlimited_launch_year` → `aerox_bf_unlimited_year` (schedule)   |
+| Partenaire         | 59 €/mois ou 590 €/an pendant 12 mois payés, puis le tarif normal ; sur lien privé                       | `aerox_bf_unlimited_partner(_year)` → `aerox_bf_unlimited(_year)`         |
+| Founding Partner   | inchangé (69 $/mois, lien de paiement)                                                                   | plan `legacy`, abonnement Stripe jamais touché                            |
 
 Les deux offres de lancement partagent les 20 places (plan `unlimited_launch`,
 offre `unlimited_launch` ou `unlimited_launch_annual`).
@@ -109,12 +109,16 @@ Principes :
 ### Cycle de vie
 
 - **Offre partenaire** (2026-10-18) : lien privé
-  `/{lang}/inscription/dashboard/?partenaire=<jeton>`. Le jeton (variable
-  Vercel `PARTNER_OFFER_TOKEN`, 16 caractères au moins) est gardé dans le
-  navigateur pendant l'inscription, puis remis à `/api/billing/partner/`, qui
-  pose `bf_billing.partner_offer = true` : l'offre reste ouverte sur le
-  compte. Checkout et `/api/billing/manage/` refusent les offres partenaire
-  sans elle (`E_PARTNER`). Plan `unlimited` (même accès, pas de place de
+  `/{lang}/inscription/dashboard/#partenaire=<jeton>` (`?partenaire=` encore
+  accepté). Le jeton (variable Vercel `PARTNER_OFFER_TOKEN`, 16 caractères au
+  moins) est gardé dans le navigateur pendant l'inscription, puis remis à
+  `/api/billing/partner/`, qui pose `bf_billing.partner_offer = true` et, à la
+  première ouverture seulement, `partner_offer_expires_at` = maintenant + 24 h
+  (2026-10-19) : chaque bike fitter a 24 h pour la prendre, compte à rebours
+  dans son espace, `E_PARTNER_EXPIRED` ensuite. Checkout et
+  `/api/billing/manage/` refusent les offres partenaire hors de ces 24 h
+  (`E_PARTNER`, `partnerOfferOpen`) ; une offre partenaire déjà choisie
+  (carte enregistrée) reste acquise jusqu'à l'installation. Plan `unlimited` (même accès, pas de place de
   lancement), offre `unlimited_partner` / `unlimited_partner_annual`. Au
   premier passage du webhook, un schedule `aerox_schedule=partner` garde le
   prix partenaire 12 mois à compter de l'ancrage (fin de l'essai), puis passe
@@ -135,14 +139,14 @@ Principes :
      métadonnée `aerox_installed_at` (→ `bf_billing.installed_at`). Clé
      d'idempotence par offre en attente ; lancement mensuel installé après
      le 01/01/2027 → Illimité au tarif normal.
-  Sans installation, aucun abonnement n'existe : rien n'est jamais prélevé.
-  Un réabonnement (essai déjà utilisé) reste un Checkout `subscription`.
-  **Plus de vérification d'entreprise préalable** (même décision) : le choix
-  d'offre est ouvert directement, le studio est vu à l'installation ; un
-  essai par compte (`trial_ends_at`). Le formulaire SIRET / TVA / site est
-  retiré de l'espace ; `/api/billing/business-id/` et
-  `/api/billing/approve-business/` restent en place, hors parcours. Le
-  point 1 du cycle « Essai de 14 jours » ci-dessous est donc historique.
+     Sans installation, aucun abonnement n'existe : rien n'est jamais prélevé.
+     Un réabonnement (essai déjà utilisé) reste un Checkout `subscription`.
+     **Plus de vérification d'entreprise préalable** (même décision) : le choix
+     d'offre est ouvert directement, le studio est vu à l'installation ; un
+     essai par compte (`trial_ends_at`). Le formulaire SIRET / TVA / site est
+     retiré de l'espace ; `/api/billing/business-id/` et
+     `/api/billing/approve-business/` restent en place, hors parcours. Le
+     point 1 du cycle « Essai de 14 jours » ci-dessous est donc historique.
 - **Inscription** (`/inscription/inscription/?profil=bike-fitter`) :
   `handle_email_confirmed` crée l'utilisateur en `bike-fitter` actif, plan
   `trial`, `trial_state = needs_business_id`. Notification admin par

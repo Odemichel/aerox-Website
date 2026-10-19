@@ -1000,6 +1000,8 @@
   "dash.trial.start.partnerCta": "特別オファーを選ぶ",
   "dash.partner.opened": "アカウントでパートナー特典が有効になりました。",
   "dash.partner.invalid": "このパートナーリンクは無効です。必要な場合はお問い合わせください。",
+  "dash.partner.expired": "限定オファーは終了しました：リンクを開いてから24時間有効でした。",
+  "dash.trial.start.partnerLeft": "限定オファーの残り時間：{time}",
   "dash.install.title": "プラン選択済み・設置待ち",
   "dash.install.text": "カードは登録済みで、請求はありません。AeroXセットアップの設置についてご連絡します。その日から14日間の無料トライアルが始まります。",
   "dash.install.trial": "無料トライアル",
