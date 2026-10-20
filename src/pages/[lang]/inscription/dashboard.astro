@@ -285,7 +285,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     } from '~/lib/billing/logic';
     import { LAUNCH_OFFER } from '~/lib/billing/catalog';
     import { isDiagnosticAvailable } from '~/config/diagnostic';
-    import { countInMonth, monthlyCounts } from '~/lib/account/activity';
+    import { monthBounds, toMonthCounts, type MyActivity } from '~/lib/account/activity';
 
     type Business = {
       kind: 'siren' | 'eu_vat' | 'website' | 'other';
@@ -1088,10 +1088,9 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     }
 
     // ---------------------------------------------------------------------
-    // Bike fitter : Activité, les fittings enregistrés par l'application AeroX.
-    // Lecture directe sous RLS : sessions (user_id = soi), bf_clients
-    // (bf_user_id = soi). Filtre explicite sur l'utilisateur : un admin peut
-    // lire toutes les lignes.
+    // Activité (bike fitter et cycliste) : totaux et comptes par mois calculés
+    // par la base (RPC my_activity, limitée au compte connecté). Le navigateur
+    // envoie les débuts de mois locaux, aucune ligne de séance ne transite.
     // ---------------------------------------------------------------------
 
     const monthName = (year: number, month: number, style: 'long' | 'short' = 'long') =>
@@ -1104,7 +1103,13 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       return d;
     }
 
-    type Series = { label: string; dates: string[]; tone: 'info' | 'accent' | 'ok' };
+    type Series = { label: string; months: number[]; tone: 'info' | 'accent' | 'ok' };
+
+    /** Activité du compte connecté, `null` en cas d'erreur. */
+    async function fetchActivity(now: Date): Promise<MyActivity | null> {
+      const { data, error } = await supabase.rpc('my_activity', { p_bounds: monthBounds(now) });
+      return error || !data ? null : (data as MyActivity);
+    }
 
     /**
      * Barres par mois sur 12 mois. Une série : barres simples, mois en cours
@@ -1112,7 +1117,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
      */
     function monthChart(title: string, series: Series[], now: Date) {
       const T = L();
-      const counts = series.map((sr) => monthlyCounts(sr.dates, now));
+      const counts = series.map((sr) => toMonthCounts(sr.months, now));
       const months = counts[0];
       const totals = months.map((_, i) => counts.reduce((sum, c) => sum + c[i].count, 0));
       const max = Math.max(1, ...totals);
@@ -1155,67 +1160,47 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       return block;
     }
 
-    async function loadActivity(userId: string) {
+    async function loadActivity() {
       const T = L();
       const panel = body('activite');
       panel.replaceChildren(el('p', 'acct-muted', T['act.loading']));
-      const [fits, riders] = await Promise.all([
-        supabase
-          .from('sessions')
-          .select('created_at')
-          .eq('user_id', userId)
-          .eq('session_type', 'fitting')
-          .order('created_at', { ascending: false })
-          .limit(10000),
-        supabase.from('bf_clients').select('created_at').eq('bf_user_id', userId),
-      ]);
-      if (fits.error || riders.error) {
+      const now = new Date();
+      const activity = await fetchActivity(now);
+      if (!activity) {
         panel.replaceChildren(note('bad', T['act.error']));
         return;
       }
-      const dates = ((fits.data ?? []) as { created_at: string }[]).map((f) => f.created_at);
-      const clients = (riders.data ?? []) as { created_at: string }[];
-      const now = new Date();
+      const fits = activity.fittings_done;
+      const clients = activity.clients;
       const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const last = (m: number[], back = 0) => m[m.length - 1 - back] ?? 0;
 
       const stats = el('div', 'acct-stats');
       stats.append(
         stat(
           T['act.thisMonth'],
-          String(countInMonth(dates, now)),
+          String(last(fits.months)),
           T['act.prevMonth']
-            .replace('{n}', String(countInMonth(dates, prev)))
+            .replace('{n}', String(last(fits.months, 1)))
             .replace('{month}', monthName(prev.getFullYear(), prev.getMonth()))
         ),
         stat(
           T['act.total'],
-          String(dates.length),
-          dates.length ? T['act.since'].replace('{date}', dateFmt(dates[dates.length - 1])) : ''
+          String(fits.total),
+          fits.first_at ? T['act.since'].replace('{date}', dateFmt(fits.first_at)) : ''
         ),
-        stat(
-          T['act.riders'],
-          String(clients.length),
-          T['act.newRiders'].replace(
-            '{n}',
-            String(
-              countInMonth(
-                clients.map((c) => c.created_at),
-                now
-              )
-            )
-          )
-        )
+        stat(T['act.riders'], String(clients.total), T['act.newRiders'].replace('{n}', String(last(clients.months))))
       );
       panel.replaceChildren(stats);
 
-      if (!dates.length) {
+      if (!fits.total) {
         panel.append(
           el('p', 'acct-lead acct-empty', T['act.empty']),
           actions(linkBtn(T['act.emptyCta'], '#telechargement', 'plain'))
         );
         return;
       }
-      panel.append(monthChart(T['act.perMonth'], [{ label: T['act.total'], dates, tone: 'info' }], now));
+      panel.append(monthChart(T['act.perMonth'], [{ label: T['act.total'], months: fits.months, tone: 'info' }], now));
     }
 
     // ---------------------------------------------------------------------
@@ -1310,81 +1295,33 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
 
     // Activité du cycliste : entraînements, fittings réalisés chez un bike
     // fitter (séance rattachée à son compte), séances du Diagnostic.
-    async function loadRiderActivity(userId: string) {
+    async function loadRiderActivity() {
       const T = L();
       const panel = body('activite');
       panel.replaceChildren(el('p', 'acct-muted', T['act.loading']));
-      const [training, fittings, diags] = await Promise.all([
-        supabase
-          .from('sessions')
-          .select('created_at')
-          .eq('user_id', userId)
-          .eq('session_type', 'training')
-          .limit(10000),
-        supabase
-          .from('sessions')
-          .select('created_at')
-          .eq('rider_id', userId)
-          .neq('user_id', userId)
-          .eq('session_type', 'fitting')
-          .limit(10000),
-        supabase.from('diagnostic_basic').select('id').eq('user_id', userId),
-      ]);
-      if (training.error || fittings.error || diags.error) {
+      const now = new Date();
+      const activity = await fetchActivity(now);
+      if (!activity) {
         panel.replaceChildren(note('bad', T['act.error']));
         return;
       }
-      // Une séance S1 = ses positions (même index) ; une séance S2 = une ligne.
-      const diagIds = ((diags.data ?? []) as { id: string }[]).map((d) => d.id);
-      const diagDates: string[] = [];
-      if (diagIds.length) {
-        const [s1, s2] = await Promise.all([
-          supabase
-            .from('diagnostic_basic_positions')
-            .select('diagnostic_id, s1_session_index, captured_at')
-            .in('diagnostic_id', diagIds),
-          supabase.from('diagnostic_basic_s2').select('captured_at').in('diagnostic_id', diagIds),
-        ]);
-        if (s1.error || s2.error) {
-          panel.replaceChildren(note('bad', T['act.error']));
-          return;
-        }
-        const firstCapture = new Map<string, string>();
-        for (const p of (s1.data ?? []) as { diagnostic_id: string; s1_session_index: number; captured_at: string }[]) {
-          const key = `${p.diagnostic_id}:${p.s1_session_index}`;
-          const known = firstCapture.get(key);
-          if (!known || p.captured_at < known) firstCapture.set(key, p.captured_at);
-        }
-        diagDates.push(...firstCapture.values());
-        diagDates.push(...((s2.data ?? []) as { captured_at: string }[]).map((r) => r.captured_at));
-      }
-
-      const now = new Date();
-      const series: Series[] = [
-        {
-          label: T['ract.training'],
-          dates: ((training.data ?? []) as { created_at: string }[]).map((r) => r.created_at),
-          tone: 'info',
-        },
-        {
-          label: T['ract.fitting'],
-          dates: ((fittings.data ?? []) as { created_at: string }[]).map((r) => r.created_at),
-          tone: 'accent',
-        },
-        { label: T['ract.diag'], dates: diagDates, tone: 'ok' },
+      const series: (Series & { total: number })[] = [
+        { label: T['ract.training'], tone: 'info', ...activity.training },
+        { label: T['ract.fitting'], tone: 'accent', ...activity.fittings_received },
+        { label: T['ract.diag'], tone: 'ok', ...activity.diagnostics },
       ];
       const stats = el('div', 'acct-stats');
       for (const sr of series) {
         const card = stat(
           sr.label,
-          String(sr.dates.length),
-          T['ract.thisMonth'].replace('{n}', String(countInMonth(sr.dates, now)))
+          String(sr.total),
+          T['ract.thisMonth'].replace('{n}', String(sr.months[sr.months.length - 1] ?? 0))
         );
         card.prepend(el('span', `acct-swatch acct-tone--${sr.tone}`));
         stats.append(card);
       }
       panel.replaceChildren(stats);
-      if (series.every((sr) => !sr.dates.length)) {
+      if (series.every((sr) => !sr.total)) {
         panel.append(
           el('p', 'acct-lead acct-empty', T['ract.empty']),
           actions(linkBtn(T['act.emptyCta'], '#telechargement', 'plain'))
@@ -1449,13 +1386,13 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       }
       const isBf = me.role === 'bike-fitter' || me.role === 'admin';
       const partnerFlash = token && isBf ? await claimPartner(token) : undefined;
-      if (isBf) await Promise.all([loadBf(partnerFlash), loadActivity(me.id)]);
+      if (isBf) await Promise.all([loadBf(partnerFlash), loadActivity()]);
       // Compte en attente : pas de lecture des cyclistes (RLS), pas d'onglet.
       if (me.role === 'pending_bf') showSection('activite', false);
       if (me.role !== 'bike-fitter' && me.role !== 'pending_bf') {
         // Admin : facturation et activité restent celles du bike fitter.
         const rider = me.role !== 'admin';
-        await Promise.all([loadDiagnostics(me.id, rider), rider ? loadRiderActivity(me.id) : null]);
+        await Promise.all([loadDiagnostics(me.id, rider), rider ? loadRiderActivity() : null]);
       }
     }
 
