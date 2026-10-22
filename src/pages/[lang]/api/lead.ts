@@ -101,7 +101,10 @@ export const POST: APIRoute = async (context) => {
   // Un incident réseau (DNS, timeout, connexion refusée) lève avant tout statut
   // HTTP : sans ce try/catch, l'exception sortirait du chemin de réponse contrôlé.
   // Elle doit produire exactement la même réponse opaque qu'un statut non-2xx.
-  let mlRes: Response;
+  // Échec MailerLite : le lead n'est plus perdu pour autant. La notification
+  // admin part quand même (elle le signale), puis le visiteur reçoit l'erreur.
+  let mlFailed = false;
+  let mlRes: Response | undefined;
   try {
     mlRes = await fetch('https://connect.mailerlite.com/api/subscribers', {
       method: 'POST',
@@ -117,10 +120,10 @@ export const POST: APIRoute = async (context) => {
     });
   } catch (err) {
     console.error('MailerLite unreachable', err);
-    return json({ error: 'subscribe_failed' }, 502);
+    mlFailed = true;
   }
 
-  if (!mlRes.ok) {
+  if (mlRes && !mlRes.ok) {
     // Ce `text()` est hors du `try` ci-dessus, et `AbortSignal.timeout` couvre
     // aussi la lecture du corps : un amont qui rend un statut non-2xx puis
     // s'enlise sur son corps ferait rejeter cette lecture à 8 s, sans personne
@@ -129,11 +132,11 @@ export const POST: APIRoute = async (context) => {
     // journalisation, il ne doit jamais décider du code de retour.
     const detail = await mlRes.text().catch(() => '<corps illisible>');
     console.error('MailerLite error', mlRes.status, detail);
-    return json({ error: 'subscribe_failed' }, 502);
+    mlFailed = true;
   }
 
-  // La notification ne doit jamais faire échouer l'inscription du lead :
-  // le contact est déjà enregistré chez MailerLite à ce stade.
+  // La notification ne doit jamais faire échouer l'inscription du lead. Elle
+  // part aussi quand MailerLite a échoué : c'est alors la seule trace du lead.
   try {
     // Secret absent au build : l'en-tête part avec la chaîne "undefined",
     // l'Edge Function rejette en 403 et la notification est perdue. L'échec
@@ -171,9 +174,10 @@ export const POST: APIRoute = async (context) => {
           // Demande de présentation : le formulaire n'a pas de message, la
           // notification dit ce qui a été demandé et pour quel studio.
           message:
-            lead.intent === 'presentation'
-              ? `Présentation en ligne (Calendly)${lead.studio ? ` · Studio : ${lead.studio}` : ''}`
-              : lead.message,
+            (mlFailed ? '⚠ NON ENREGISTRÉ DANS MAILERLITE — à ajouter à la main. ' : '') +
+            (lead.intent === 'presentation'
+              ? `Présentation en ligne (rendez-vous Google Agenda)${lead.studio ? ` · Studio : ${lead.studio}` : ''}`
+              : (lead.message ?? '')),
         },
       }),
       // Comme pour MailerLite, le rejet du timeout vient de `fetch` : il est
@@ -185,5 +189,6 @@ export const POST: APIRoute = async (context) => {
     console.error('notify-admin-lead unreachable', err);
   }
 
+  if (mlFailed) return json({ error: 'subscribe_failed' }, 502);
   return json({ success: true }, 200);
 };

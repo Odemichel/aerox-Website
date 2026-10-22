@@ -104,7 +104,7 @@ export function makeNavigation(langInput?: string, audience: Audience = 'rider')
             text: `<span class="sm:hidden">${t('cta.bikefitter.short')}</span><span class="hidden sm:inline">${t('bf.cta.presentation')}</span>`,
             icon: 'tabler:calendar-event',
             // Présentation en ligne : sur la page bike fitter, le lien ouvre le
-            // formulaire avant Calendly (BfPresentationDialog) ; ailleurs, il y
+            // formulaire avant le rendez-vous (BfPresentationDialog) ; ailleurs, il y
             // mène et le formulaire s'ouvre à l'arrivée (#presentation).
             href: `/${lang}/bike-fitting/#presentation`,
             target: '',

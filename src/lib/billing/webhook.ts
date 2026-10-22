@@ -22,8 +22,6 @@ import {
   isOffer,
   LAUNCH_OFFERS,
   offerFromLookupKeys,
-  PARTNER_OFFERS,
-  partnerPriceEnd,
   planAfterSubscriptionEnds,
   planFromLookupKeys,
   subscriptionOutcome,
@@ -82,8 +80,7 @@ function firstYearEnd(sub: Stripe.Subscription): number {
 }
 
 /**
- * Offres de lancement et partenaire : pose le schedule qui ramène au tarif
- * normal.
+ * Offres de lancement : pose le schedule qui ramène au tarif normal.
  *  - Mensuel : 69 € → 99 € au 01/01/2027 00:00 (Paris), avec
  *    `proration_behavior: 'create_prorations'` : 99 € s'applique dès le
  *    01/01 ; le reste de la période en cours, payé à 69 €, est régularisé au
@@ -91,9 +88,6 @@ function firstYearEnd(sub: Stripe.Subscription): number {
  *    01/01 : la bascule a lieu à la fin de l'essai (rien n'a été payé à 69 €).
  *  - Annuel : 690 € la première année, 990 € par an ensuite, à la date
  *    anniversaire (échéance : pas de prorata).
- *  - Partenaire : 59 €/mois ou 590 €/an pendant 12 mois payés à compter de
- *    la fin de l'essai (ancrage de facturation), puis 99 €/mois ou 990 €/an,
- *    sans prorata (la bascule tombe sur une échéance).
  * L'abonnement passe alors sur le prix Illimité standard : offre `unlimited`
  * (ou `unlimited_annual`), et la place de lancement se libère.
  *
@@ -109,11 +103,10 @@ async function ensurePriceSchedule(sub: Stripe.Subscription) {
   // résiliation demandée par le bike fitter.
   if (sub.cancel_at_period_end || sub.cancel_at) return;
   const keys = sub.items.data.map((i) => i.price.lookup_key);
-  const partner = keys.includes(LOOKUP.unlimitedPartner) || keys.includes(LOOKUP.unlimitedPartnerYear);
-  const yearly = keys.includes(LOOKUP.unlimitedLaunchYear) || keys.includes(LOOKUP.unlimitedPartnerYear);
-  const monthly = keys.includes(LOOKUP.unlimitedLaunch) || keys.includes(LOOKUP.unlimitedPartner);
+  const yearly = keys.includes(LOOKUP.unlimitedLaunchYear);
+  const monthly = keys.includes(LOOKUP.unlimitedLaunch);
   if (!yearly && !monthly) return;
-  if (monthly && !partner && Date.now() >= LAUNCH_OFFER.switchAt) return;
+  if (monthly && Date.now() >= LAUNCH_OFFER.switchAt) return;
 
   const s = stripe();
   // Ensuite : le tarif normal (99 €/mois, 990 €/an).
@@ -153,12 +146,12 @@ async function ensurePriceSchedule(sub: Stripe.Subscription) {
 
   const current = schedule.phases[0];
   // Lancement mensuel : bascule au 01/01/2027, ou à la fin de l'essai s'il
-  // court au-delà. Partenaire : 12 mois après l'ancrage (fin de l'essai).
+  // court au-delà.
   const monthlySwitch = Math.max(Math.floor(LAUNCH_OFFER.switchAt / 1000), current.trial_end ?? 0);
-  const switchAt = partner ? partnerPriceEnd(sub.billing_cycle_anchor) : yearly ? firstYearEnd(sub) : monthlySwitch;
+  const switchAt = yearly ? firstYearEnd(sub) : monthlySwitch;
   await s.subscriptionSchedules.update(schedule.id, {
     end_behavior: 'release',
-    metadata: { aerox_schedule: partner ? 'partner' : 'launch' },
+    metadata: { aerox_schedule: 'launch' },
     phases: [
       {
         start_date: current.start_date,
@@ -172,7 +165,7 @@ async function ensurePriceSchedule(sub: Stripe.Subscription) {
       {
         items: [{ price: afterPrice, quantity: 1 }],
         duration: { interval: yearly ? 'year' : 'month', interval_count: 1 },
-        proration_behavior: yearly || partner ? 'none' : 'create_prorations',
+        proration_behavior: yearly ? 'none' : 'create_prorations',
         metadata: sub.metadata,
       },
     ],
@@ -389,7 +382,7 @@ export async function syncSubscription(db: SupabaseClient, subscriptionId: strin
   }
 
   const offer = offerFromLookupKeys(keys);
-  if (offer && [...LAUNCH_OFFERS, ...PARTNER_OFFERS].includes(offer) && outcome.status === 'active') {
+  if (offer && LAUNCH_OFFERS.includes(offer) && outcome.status === 'active') {
     await ensurePriceSchedule(sub);
   }
 }

@@ -3,7 +3,7 @@ title: 'Conditions Générales d’Utilisation'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Dernière mise à jour : 18 octobre 2026_
+_Dernière mise à jour : 22 octobre 2026_
 
 Merci d’utiliser **AeroX**, la solution qui transforme ton home-trainer en soufflerie virtuelle.  
 Ces Conditions Générales d’Utilisation (CGU) encadrent l’accès et l’usage du service AeroX.  
@@ -65,7 +65,7 @@ Les présentes CGU définissent les droits et obligations d’AeroX et de l’Ut
 
 Cet article s’applique aux comptes bike fitter. En cas de contradiction, il prévaut sur les articles 4 et 11.
 
-- **Offres** : **Essentiel**, 20 € HT par mois, plus 15 € HT par analyse, facturées à la fin de chaque période mensuelle ; **Illimité**, 99 € HT par mois ou 990 € HT par an. **Offre de lancement**, réservée aux 20 premiers studios et souscrite au plus tard le 31 décembre 2026 : l’Illimité à 69 € HT par mois jusqu’au 31 décembre 2026 puis 99 € HT par mois, ou 690 € HT la première année puis 990 € HT par an. **Offre partenaire**, sur invitation d’AeroX : l’Illimité à 59 € HT par mois pendant les 12 premiers mois payés, ou 590 € HT la première année, puis au tarif normal en vigueur (99 € HT par mois ou 990 € HT par an à la date des présentes). Les prix sont hors taxes ; la TVA est appliquée selon la réglementation en vigueur.
+- **Offres** : **Essentiel**, 20 € HT par mois, plus 15 € HT par analyse, facturées à la fin de chaque période mensuelle ; **Illimité**, 99 € HT par mois ou 990 € HT par an. **Offre de lancement**, réservée aux 20 premiers studios et souscrite au plus tard le 31 décembre 2026 : l’Illimité à 69 € HT par mois jusqu’au 31 décembre 2026 puis 99 € HT par mois, ou 690 € HT la première année puis 990 € HT par an. Les prix sont hors taxes ; la TVA est appliquée selon la réglementation en vigueur.
 - **Analyse** : un client analysé avec AeroX, décompté une fois par période glissante de 30 jours. Les nouvelles séances du même client pendant cette période ne sont pas décomptées.
 - **Souscription et installation** : le bike fitter choisit son offre et enregistre un moyen de paiement valide ; **aucun abonnement ne démarre et aucun montant n’est prélevé à ce stade**. L’abonnement démarre le jour de l’installation du setup AeroX chez le bike fitter, réalisée avec l’équipe AeroX, par un essai gratuit. Sans installation, aucun montant n’est jamais prélevé. Avant l’installation, le bike fitter peut changer d’offre ou y renoncer à tout moment depuis l’espace bike fitter (« Abandonner cette offre »).
 - **Essai gratuit** : la première souscription commence par un **essai gratuit de 14 jours, à compter du jour de l’installation**. Il est réservé aux professionnels, à raison d’un essai par studio. **Aucun montant n’est prélevé pendant l’essai**, et les analyses réalisées pendant l’essai ne sont pas facturées.

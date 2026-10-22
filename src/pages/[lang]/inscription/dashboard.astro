@@ -35,8 +35,6 @@ const labels = {
     'plan.unlimited',
     'plan.unlimited_launch',
     'plan.unlimited_launch_annual',
-    'plan.unlimited_partner',
-    'plan.unlimited_partner_annual',
     'plan.legacy',
     'status.active',
     'status.pastDue',
@@ -102,18 +100,10 @@ const labels = {
       'start.text',
       'start.cta',
       'start.others',
-      'start.partner',
-      'start.partnerTitle',
-      'start.partnerCta',
-      'start.partnerLeft',
-      'start.monthly',
-      'start.yearly',
-      'start.best',
     ].map((k) => `trial.${k}`),
     ...['title', 'text', 'trial', 'trialValue', 'when', 'changeDone', 'cancel', 'cancelConfirm', 'cancelDone'].map(
       (k) => `install.${k}`
     ),
-    ...['opened', 'invalid', 'expired'].map((k) => `partner.${k}`),
     ...['current', 'price', 'nextDate', 'noSub'].map((k) => `plan.${k}`),
     ...['estimate', 'manage', 'manageText', 'none', 'debtRow'].map((k) => `billing.${k}`),
     ...['name', 'id', 'legal', 'none', 'verified', 'pending', 'kind.siren', 'kind.eu_vat'].map((k) => `studio.${k}`),
@@ -267,14 +257,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
 
   <script>
     import { supabase } from '../../../config/supabaseClient';
-    import {
-      bikeFitterSignupUrl,
-      claimPartnerOffer,
-      manageSubscription,
-      openPortal,
-      openReceipt,
-      startCheckout,
-    } from '~/lib/billing/client';
+    import { manageSubscription, openPortal, openReceipt, startCheckout } from '~/lib/billing/client';
     import {
       DEFAULT_OFFER,
       isDowngrade,
@@ -307,10 +290,8 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         | 'card_already_used'
         | null;
       trial_ends_at: string | null;
-      // Offre partenaire ouverte (lien privé), offre en attente de
-      // l'installation (carte enregistrée, pas encore d'abonnement).
-      partner_offer: boolean | null;
-      partner_offer_expires_at: string | null;
+      // Offre en attente de l'installation (carte enregistrée, pas encore
+      // d'abonnement).
       pending_offer: Offer | null;
       installed_at: string | null;
       status: string | null;
@@ -345,11 +326,8 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       cents: number;
       unit: 'month' | 'year' | 'essential';
       launch?: boolean;
-      partner?: boolean;
     }[] = [
       { offer: 'essential', cents: 2000, unit: 'essential' },
-      { offer: 'unlimited_partner', cents: 5900, unit: 'month', partner: true },
-      { offer: 'unlimited_partner_annual', cents: 59000, unit: 'year', partner: true },
       { offer: 'unlimited_launch', cents: 6900, unit: 'month', launch: true },
       { offer: 'unlimited_launch_annual', cents: 69000, unit: 'year', launch: true },
       { offer: 'unlimited', cents: 9900, unit: 'month' },
@@ -617,10 +595,6 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
           return month(now < LAUNCH_OFFER.switchAt ? 6900 : 9900);
         case 'unlimited_launch_annual':
           return year(69000);
-        case 'unlimited_partner':
-          return month(5900);
-        case 'unlimited_partner_annual':
-          return year(59000);
       }
     }
 
@@ -638,13 +612,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       const list = el('ul', 'acct-change-list');
       const launchOpen = Date.now() < LAUNCH_OFFER.switchAt;
       const targets = CHANGE_TARGETS.filter(
-        (x) =>
-          x.offer !== current &&
-          x.offer !== s.scheduled_offer &&
-          (!x.launch || launchOpen) &&
-          // Partenaire : seulement avant l'installation (le serveur refuse
-          // aussi pour un abonné).
-          (!x.partner || (pending && Boolean(s.partner_offer)))
+        (x) => x.offer !== current && x.offer !== s.scheduled_offer && (!x.launch || launchOpen)
       );
       for (const target of targets) {
         // En attente de l'installation : rien n'est encore facturé, le
@@ -682,83 +650,6 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       }
       details.append(list);
       return details;
-    }
-
-    /** Temps restant au format h:mm:ss. */
-    function countdown(ms: number) {
-      const t = Math.max(0, Math.floor(ms / 1000));
-      const pad = (n: number) => String(n).padStart(2, '0');
-      return `${Math.floor(t / 3600)}:${pad(Math.floor(t / 60) % 60)}:${pad(t % 60)}`;
-    }
-
-    /**
-     * Offre partenaire (lien privé) : rythme mensuel / annuel, annuel par
-     * défaut et mis en avant, puis un seul bouton pour l'offre choisie. Compte
-     * à rebours des 24 h ; à zéro, le bouton se désactive (le serveur refuse
-     * aussi).
-     */
-    function partnerChoice(primary: boolean, expiresAt: string | null) {
-      const T = L();
-      const box = el('div', 'acct-partner');
-      const price = el('p', 'acct-partner-price');
-      const offers: Record<'monthly' | 'yearly', { offer: Offer; label: string }> = {
-        monthly: { offer: 'unlimited_partner', label: T['price.month'].replace('{price}', eur(5900)) },
-        yearly: { offer: 'unlimited_partner_annual', label: T['price.year'].replace('{price}', eur(59000)) },
-      };
-      let chosen: 'monthly' | 'yearly' = 'yearly';
-      const toggle = el('div', 'acct-switch');
-      toggle.setAttribute('role', 'group');
-      const options = (['monthly', 'yearly'] as const).map((k) => {
-        const b = el('button', 'acct-switch-btn', T[`trial.start.${k}`]);
-        b.type = 'button';
-        if (k === 'yearly') b.append(el('span', 'acct-switch-best', T['trial.start.best']));
-        b.addEventListener('click', () => {
-          chosen = k;
-          sync();
-        });
-        return [k, b] as const;
-      });
-      const sync = () => {
-        for (const [k, b] of options) {
-          b.classList.toggle('acct-switch-btn--on', k === chosen);
-          b.setAttribute('aria-pressed', String(k === chosen));
-        }
-        price.textContent = offers[chosen].label;
-      };
-      toggle.append(...options.map(([, b]) => b));
-      const cta = btn(T['trial.start.partnerCta'], primary ? 'primary' : 'plain', () =>
-        startTrial(offers[chosen].offer)
-      );
-      const left = el('p', 'acct-partner-left');
-      const end = expiresAt ? Date.parse(expiresAt) : NaN;
-      const tick = () => {
-        const ms = end - Date.now();
-        if (!(ms > 0)) {
-          left.textContent = T['partner.expired'];
-          cta.disabled = true;
-          return false;
-        }
-        left.textContent = T['trial.start.partnerLeft'].replace('{time}', countdown(ms));
-        return true;
-      };
-      // Arrêté à zéro ou quand le bloc quitte la page (rechargement de l'état).
-      if (tick()) {
-        let shown = false;
-        const timer = window.setInterval(() => {
-          shown ||= box.isConnected;
-          if ((shown && !box.isConnected) || !tick()) window.clearInterval(timer);
-        }, 1000);
-      }
-      box.append(
-        el('h3', 'acct-plan-name', T['trial.start.partnerTitle']),
-        left,
-        el('p', 'acct-lead', T['trial.start.partner']),
-        toggle,
-        price,
-        actions(cta)
-      );
-      sync();
-      return box;
     }
 
     function planHead(label: string, name: string, badge?: HTMLElement) {
@@ -954,19 +845,16 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
           )
         );
       } else if (canStartTrial) {
-        // Le bike fitter choisit son offre (Essentiel par défaut, ou l'offre
-        // partenaire ouverte par le lien privé) et enregistre une carte ;
-        // l'essai de 14 jours démarre à l'installation.
-        if (s.partner_offer) plan.append(partnerChoice(primaryFree, s.partner_offer_expires_at));
-        else
-          plan.append(
-            el('h3', 'acct-plan-name', T['trial.start.title']),
-            el('p', 'acct-lead', T['trial.start.text']),
-            actions(
-              btn(T['trial.start.cta'], primaryFree ? 'primary' : 'plain', () => startTrial(DEFAULT_OFFER)),
-              linkBtn(T['trial.start.others'], '#tarifs', 'link')
-            )
-          );
+        // Le bike fitter choisit son offre (Essentiel par défaut) et enregistre
+        // une carte ; l'essai de 14 jours démarre à l'installation.
+        plan.append(
+          el('h3', 'acct-plan-name', T['trial.start.title']),
+          el('p', 'acct-lead', T['trial.start.text']),
+          actions(
+            btn(T['trial.start.cta'], primaryFree ? 'primary' : 'plain', () => startTrial(DEFAULT_OFFER)),
+            linkBtn(T['trial.start.others'], '#tarifs', 'link')
+          )
+        );
       } else if (trialUsed) {
         // Essai terminé (ou abonnement arrêté) : choisir une offre, sans nouvel essai.
         plan.append(
@@ -1061,9 +949,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       if (flash) flashIn(body(flash.panel), flash.text, flash.ok);
     }
 
-    type Flash = { panel: string; text: string; ok: boolean };
-
-    async function loadBf(initialFlash?: Flash) {
+    async function loadBf() {
       const s = await fetchSummary();
       if (!s) return;
       const T = L();
@@ -1075,7 +961,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       const flash =
         billingState === 'success'
           ? { panel: 'abonnement', text: setup ? T.successSetup : T.success, ok: true }
-          : initialFlash;
+          : undefined;
       renderBf(s, flash);
       const done = (x: Summary) => Boolean(x.has_subscription || x.pending_offer);
       if (billingState === 'success' && !done(s)) {
@@ -1331,62 +1217,11 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       panel.append(monthChart(T['ract.perMonth'], series, now));
     }
 
-    // Lien privé de l'offre partenaire : `?partenaire=<jeton>`. Le jeton est
-    // gardé dans le navigateur le temps de l'inscription (confirmation de
-    // l'e-mail, connexion), puis remis au serveur qui ouvre l'offre sur le
-    // compte.
-    const PARTNER_KEY = 'aerox-partner-token';
-    function partnerToken(): string | null {
-      const url = new URL(window.location.href);
-      // `#partenaire=<jeton>` (le fragment ne part pas au serveur : absent des
-      // journaux Vercel) ; `?partenaire=` accepté pour les liens déjà envoyés.
-      const fromHash = /^#partenaire=([\w-]+)$/.exec(url.hash)?.[1] ?? null;
-      const fromUrl = fromHash ?? url.searchParams.get('partenaire');
-      if (fromUrl) {
-        url.searchParams.delete('partenaire');
-        if (fromHash) url.hash = 'abonnement';
-        history.replaceState(null, '', url.toString());
-        try {
-          localStorage.setItem(PARTNER_KEY, fromUrl);
-        } catch {
-          /* stockage indisponible : le jeton vaut pour cette visite */
-        }
-        return fromUrl;
-      }
-      try {
-        return localStorage.getItem(PARTNER_KEY);
-      } catch {
-        return null;
-      }
-    }
-
-    /** Remet le jeton au serveur ; renvoie le message à afficher dans Abonnement. */
-    async function claimPartner(token: string): Promise<Flash | undefined> {
-      const T = L();
-      const r = await claimPartnerOffer(token);
-      // Jeton refusé ou accepté : il ne sert plus. Erreur réseau : on le garde.
-      if (r === 'E_SERVER' || r === 'E_AUTH') return undefined;
-      try {
-        localStorage.removeItem(PARTNER_KEY);
-      } catch {
-        /* rien */
-      }
-      const text =
-        r === null ? T['partner.opened'] : r === 'E_PARTNER_EXPIRED' ? T['partner.expired'] : T['partner.invalid'];
-      return { panel: 'abonnement', text, ok: r === null };
-    }
-
     async function init() {
-      const token = partnerToken();
       const me = await loadProfile();
-      if (!me) {
-        // Lien partenaire sans compte : inscription bike fitter, retour ici.
-        if (token) window.location.href = bikeFitterSignupUrl(lang(), `/${lang()}/inscription/dashboard/`);
-        return;
-      }
+      if (!me) return;
       const isBf = me.role === 'bike-fitter' || me.role === 'admin';
-      const partnerFlash = token && isBf ? await claimPartner(token) : undefined;
-      if (isBf) await Promise.all([loadBf(partnerFlash), loadActivity()]);
+      if (isBf) await Promise.all([loadBf(), loadActivity()]);
       // Compte en attente : pas de lecture des cyclistes (RLS), pas d'onglet.
       if (me.role === 'pending_bf') showSection('activite', false);
       if (me.role !== 'bike-fitter' && me.role !== 'pending_bf') {
@@ -1678,54 +1513,6 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
   #account .acct-big {
     font-size: 1.5rem;
     font-weight: 700;
-  }
-
-  /* Offre partenaire : rythme mensuel / annuel (annuel mis en avant) */
-  #account .acct-switch {
-    display: inline-flex;
-    gap: 0.25rem;
-    margin-top: 0.75rem;
-    padding: 0.25rem;
-    border: 1px solid var(--acct-line);
-    border-radius: 999px;
-  }
-  #account .acct-switch-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    border-radius: 999px;
-    padding: 0.35rem 0.9rem;
-    font-size: 0.875rem;
-    color: var(--acct-muted);
-  }
-  #account .acct-switch-btn--on {
-    background: var(--acct-accent);
-    color: #0b2239;
-    font-weight: 700;
-  }
-  #account .acct-switch-best {
-    border-radius: 999px;
-    padding: 0.05rem 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--acct-accent);
-    background: color-mix(in srgb, var(--acct-accent) 16%, transparent);
-  }
-  #account .acct-switch-btn--on .acct-switch-best {
-    color: #0b2239;
-    background: color-mix(in srgb, #ffffff 35%, transparent);
-  }
-  #account .acct-partner-left {
-    margin-top: 0.25rem;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    color: var(--acct-accent);
-  }
-  #account .acct-partner-price {
-    margin-top: 0.75rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--acct-text);
   }
 
   /* Pastilles et notes */

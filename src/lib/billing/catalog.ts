@@ -41,12 +41,7 @@ export const PRODUCT_TAX_CODE = 'txcd_10103101';
 export const PRODUCT_IMAGE =
   'https://files.stripe.com/links/MDB8YWNjdF8xUmpIcFdBbXpvS3NCaUNOfGZsX2xpdmVfcXZTaGdVVW5iZ0tIZ0NScG9YcjJpY1Zi00JyhHhjAR';
 
-export type ProductKey =
-  | 'bf_essential'
-  | 'bf_essential_usage'
-  | 'bf_unlimited'
-  | 'bf_unlimited_launch'
-  | 'bf_unlimited_partner';
+export type ProductKey = 'bf_essential' | 'bf_essential_usage' | 'bf_unlimited' | 'bf_unlimited_launch';
 
 export type ProductSpec = {
   key: ProductKey;
@@ -74,11 +69,6 @@ export const PRODUCTS: ProductSpec[] = [
     key: 'bf_unlimited_launch',
     name: 'AeroX Bike Fit — Illimité, offre de lancement',
     description: 'Analyses illimitées, tarif de lancement réservé aux 20 premiers studios.',
-  },
-  {
-    key: 'bf_unlimited_partner',
-    name: 'AeroX Bike Fit — Illimité, offre partenaire',
-    description: 'Analyses illimitées, tarif partenaire sur invitation pendant 12 mois.',
   },
 ];
 
@@ -109,10 +99,6 @@ export const LOOKUP = {
   // posé par le webhook ramène les deux offres au tarif normal
   // (`unlimited`, `unlimitedYear`).
   unlimitedLaunchYear: 'aerox_bf_unlimited_launch_year',
-  // Offre partenaire, sur lien privé : 59 €/mois ou 590 €/an pendant les 12
-  // premiers mois payés, puis le tarif normal (schedule posé par le webhook).
-  unlimitedPartner: 'aerox_bf_unlimited_partner',
-  unlimitedPartnerYear: 'aerox_bf_unlimited_partner_year',
 } as const;
 
 // Clés d'anciens prix retirés de la grille : le script archive les prix qui
@@ -127,9 +113,13 @@ export const RETIRED_LOOKUP_KEYS = [
   'aerox_bf_payg',
   'aerox_bf_studio_base',
   'aerox_bf_studio_usage',
+  // Offre partenaire (59 €/mois ou 590 €/an pendant 12 mois, sur lien privé),
+  // retirée le 2026-10-22 sans avoir été souscrite.
+  'aerox_bf_unlimited_partner',
+  'aerox_bf_unlimited_partner_year',
 ];
 // Produits retirés, archivés par le script.
-export const RETIRED_PRODUCT_KEYS = ['bf_pack', 'bf_payg', 'bf_studio', 'bf_studio_usage'];
+export const RETIRED_PRODUCT_KEYS = ['bf_pack', 'bf_payg', 'bf_studio', 'bf_studio_usage', 'bf_unlimited_partner'];
 
 export const PRICES: PriceSpec[] = [
   {
@@ -187,24 +177,6 @@ export const PRICES: PriceSpec[] = [
     unit_amount: 69000,
     recurring: { interval: 'year', usage_type: 'licensed' },
   },
-  {
-    lookup_key: LOOKUP.unlimitedPartner,
-    product: 'bf_unlimited_partner',
-    nickname: 'Illimité partenaire — 59 € HT / mois pendant 12 mois',
-    currency: 'eur',
-    tax_behavior: 'exclusive',
-    unit_amount: 5900,
-    recurring: { interval: 'month', usage_type: 'licensed' },
-  },
-  {
-    lookup_key: LOOKUP.unlimitedPartnerYear,
-    product: 'bf_unlimited_partner',
-    nickname: 'Illimité partenaire annuel — 590 € HT la première année',
-    currency: 'eur',
-    tax_behavior: 'exclusive',
-    unit_amount: 59000,
-    recurring: { interval: 'year', usage_type: 'licensed' },
-  },
 ];
 
 // Essai : 14 jours gratuits sur toutes les offres, comptés à partir de
@@ -215,10 +187,6 @@ export const PRICES: PriceSpec[] = [
 // installation, aucun abonnement, rien n'est prélevé. Un essai par compte
 // (plus de vérification d'entreprise préalable depuis le 2026-10-18).
 export const TRIAL_DAYS = 14;
-
-// Offre partenaire : durée du tarif partenaire, en mois payés à compter de
-// la fin de l'essai. Ensuite, le tarif normal (99 €/mois, 990 €/an).
-export const PARTNER_OFFER_MONTHS = 12;
 
 // Essentiel : à partir de ce nombre d'analyses sur la période, l'espace
 // propose l'Illimité pour la période suivante (20 + 15 × 7 = 125 € > 99 €).

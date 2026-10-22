@@ -15,7 +15,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
  * Ce qu'un bike-fitter demande, et donc à quel point il est chaud :
  * `demo` et `devis` viennent du formulaire, `inscription` de la création de
  * compte directe, `presentation` du formulaire qui précède la réservation
- * Calendly de la présentation en ligne (page bike fitter). Toute autre valeur retombe sur `demo` plutôt que de rejeter
+ * de la présentation en ligne (page bike fitter). Toute autre valeur retombe sur `demo` plutôt que de rejeter
  * la requête : c'est un champ d'information commerciale, pas un contrôle.
  */
 export const LEAD_INTENTS = ['demo', 'devis', 'inscription', 'presentation'] as const;

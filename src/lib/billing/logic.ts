@@ -5,28 +5,13 @@
 // selon son statut. Les routes et le webhook n'y ajoutent que les appels
 // réseau ; tout ce qui décide est ici, et testé (test/billingLogic.test.ts).
 
-import {
-  BF_AVAILABLE_AT,
-  LAUNCH_OFFER,
-  LOOKUP,
-  PARTNER_OFFER_MONTHS,
-  TRIAL_DAYS,
-  UPGRADE_HINT_AT,
-  UPGRADE_HINT_AT_LAUNCH,
-} from './catalog';
+import { BF_AVAILABLE_AT, LAUNCH_OFFER, LOOKUP, TRIAL_DAYS, UPGRADE_HINT_AT, UPGRADE_HINT_AT_LAUNCH } from './catalog';
 
 // `pack` : plan historique (crédits prépayés), plus vendu ; conservé pour les
 // comptes et les crédits existants. `payg` et `studio` (grille du 24/09/2026,
 // jamais vendue) restent reconnus par la base, plus par le site.
 export type Plan = 'trial' | 'pack' | 'essential' | 'unlimited' | 'unlimited_launch' | 'legacy';
-export type Offer =
-  | 'essential'
-  | 'unlimited'
-  | 'unlimited_annual'
-  | 'unlimited_launch'
-  | 'unlimited_launch_annual'
-  | 'unlimited_partner'
-  | 'unlimited_partner_annual';
+export type Offer = 'essential' | 'unlimited' | 'unlimited_annual' | 'unlimited_launch' | 'unlimited_launch_annual';
 export type BillingStatus = 'active' | 'past_due' | 'read_only';
 
 export const OFFERS: readonly Offer[] = [
@@ -35,8 +20,6 @@ export const OFFERS: readonly Offer[] = [
   'unlimited_annual',
   'unlimited_launch',
   'unlimited_launch_annual',
-  'unlimited_partner',
-  'unlimited_partner_annual',
 ];
 
 /** Offre proposée par défaut au démarrage de l'essai. */
@@ -45,33 +28,8 @@ export const DEFAULT_OFFER: Offer = 'essential';
 /** Offres de lancement : 20 places partagées, souscription jusqu'au 31/12/2026. */
 export const LAUNCH_OFFERS: readonly Offer[] = ['unlimited_launch', 'unlimited_launch_annual'];
 
-/**
- * Offres partenaire : sur lien privé seulement (`bf_billing.partner_offer`,
- * ouvert par /api/billing/partner/), et pour un premier abonnement : choisies
- * avant l'installation, le tarif partenaire court 12 mois à partir de la fin
- * de l'essai. Jamais proposées à un abonné (changement d'offre) ni à un
- * réabonnement : sinon 12 nouveaux mois à 59 € à chaque passage.
- */
-export const PARTNER_OFFERS: readonly Offer[] = ['unlimited_partner', 'unlimited_partner_annual'];
-
-/** Délai pour prendre l'offre partenaire, à partir de la première ouverture du lien. */
-export const PARTNER_OFFER_WINDOW_MS = 24 * 3600 * 1000;
-
-/** Offre partenaire ouverte sur le compte et encore dans ses 24 heures. */
-export function partnerOfferOpen(
-  row: { partner_offer?: boolean | null; partner_offer_expires_at?: string | null } | null | undefined,
-  nowMs: number
-): boolean {
-  const until = row?.partner_offer_expires_at ? Date.parse(row.partner_offer_expires_at) : NaN;
-  return Boolean(row?.partner_offer) && until > nowMs;
-}
-
 /** Offres facturées à l'année. */
-export const ANNUAL_OFFERS: readonly Offer[] = [
-  'unlimited_annual',
-  'unlimited_launch_annual',
-  'unlimited_partner_annual',
-];
+export const ANNUAL_OFFERS: readonly Offer[] = ['unlimited_annual', 'unlimited_launch_annual'];
 
 export const isOffer = (raw: unknown): raw is Offer => typeof raw === 'string' && OFFERS.includes(raw as Offer);
 
@@ -83,8 +41,6 @@ export const OFFER_LOOKUP_KEYS: Record<Offer, string[]> = {
   unlimited_annual: [LOOKUP.unlimitedYear],
   unlimited_launch: [LOOKUP.unlimitedLaunch],
   unlimited_launch_annual: [LOOKUP.unlimitedLaunchYear],
-  unlimited_partner: [LOOKUP.unlimitedPartner],
-  unlimited_partner_annual: [LOOKUP.unlimitedPartnerYear],
 };
 
 /** Prix mesurés : pas de quantité dans Checkout ni dans un changement d'offre. */
@@ -97,12 +53,10 @@ export const METERED_LOOKUP_KEYS: readonly string[] = [LOOKUP.essentialUsage];
  */
 export const OFFER_RANK: Record<Offer, number> = {
   essential: 0,
-  unlimited_partner: 1,
   unlimited_launch: 1,
   unlimited: 2,
   // Annuel : engagement le plus long. Le quitter pour un mensuel prend
   // effet à la fin de l'année déjà payée.
-  unlimited_partner_annual: 3,
   unlimited_launch_annual: 3,
   unlimited_annual: 4,
 };
@@ -144,16 +98,6 @@ export function addMonths(seconds: number, months: number): number {
   const lastDay = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
   d.setUTCDate(Math.min(day, lastDay));
   return Math.floor(d.getTime() / 1000);
-}
-
-/**
- * Fin du tarif partenaire : 12 mois payés comptés à partir de l'ancrage de
- * facturation, c'est-à-dire de la fin de l'essai (Stripe ramène l'ancrage à
- * la fin de l'essai). Mensuel : 12 échéances à 59 € ; annuel : une année à
- * 590 €. La bascule tombe sur une échéance.
- */
-export function partnerPriceEnd(billingCycleAnchor: number): number {
-  return addMonths(billingCycleAnchor, PARTNER_OFFER_MONTHS);
 }
 
 /**
@@ -202,22 +146,13 @@ export function planFromLookupKeys(keys: (string | null | undefined)[]): Plan | 
   const set = new Set(keys.filter(Boolean));
   if (set.has(LOOKUP.essentialBase)) return 'essential';
   if (set.has(LOOKUP.unlimitedLaunch) || set.has(LOOKUP.unlimitedLaunchYear)) return 'unlimited_launch';
-  // Partenaire : même accès que l'Illimité, sans place de lancement.
-  if (
-    set.has(LOOKUP.unlimited) ||
-    set.has(LOOKUP.unlimitedYear) ||
-    set.has(LOOKUP.unlimitedPartner) ||
-    set.has(LOOKUP.unlimitedPartnerYear)
-  )
-    return 'unlimited';
+  if (set.has(LOOKUP.unlimited) || set.has(LOOKUP.unlimitedYear)) return 'unlimited';
   return null;
 }
 
 /** Offre correspondant aux prix d'un abonnement (pour comparer les rangs). */
 export function offerFromLookupKeys(keys: (string | null | undefined)[]): Offer | null {
   const set = new Set(keys.filter(Boolean));
-  if (set.has(LOOKUP.unlimitedPartnerYear)) return 'unlimited_partner_annual';
-  if (set.has(LOOKUP.unlimitedPartner)) return 'unlimited_partner';
   if (set.has(LOOKUP.unlimitedLaunchYear)) return 'unlimited_launch_annual';
   if (set.has(LOOKUP.unlimitedYear)) return 'unlimited_annual';
   if (set.has(LOOKUP.unlimitedLaunch)) return 'unlimited_launch';
@@ -317,13 +252,6 @@ export function nextInvoiceCentsForOffer(
       // Première année à 690 € (facturée à la fin de l'essai), renouvellement
       // au tarif normal (schedule du webhook).
       return inTrial ? 69000 : 99000;
-    case 'unlimited_partner':
-      // Approximation : pendant le 12e mois, l'échéance suivante est déjà au
-      // tarif normal (99 €) ; la date de bascule n'est pas dans le résumé.
-      // Après la bascule, l'offre devient `unlimited`.
-      return 5900;
-    case 'unlimited_partner_annual':
-      return inTrial ? 59000 : 99000;
   }
 }
 

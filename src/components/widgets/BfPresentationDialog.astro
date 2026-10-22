@@ -1,12 +1,12 @@
 ---
 // Formulaire court avant la réservation de la présentation en ligne (page
 // bike fitter). Chaque lien `a[data-bf-presentation]` ouvre cette fenêtre au
-// lieu d'aller directement sur Calendly : le bike fitter est d'abord
-// enregistré par /api/lead (groupe MailerLite bike-fitter, bf_intent
-// `presentation`, notification admin), puis envoyé sur Calendly avec son nom
-// et son email déjà remplis.
+// lieu d'aller directement sur la prise de rendez-vous : le bike fitter est
+// d'abord enregistré par /api/lead (groupe MailerLite bike-fitter, bf_intent
+// `presentation`, notification admin), puis envoyé sur la page de rendez-vous
+// Google Agenda.
 //
-// Sans JavaScript, le lien mène directement à Calendly (href conservé).
+// Sans JavaScript, le lien mène directement au rendez-vous (href conservé).
 // Si l'enregistrement échoue, la redirection a quand même lieu : on ne perd
 // jamais la réservation pour un incident MailerLite.
 import { BF_PRESENTATION_URL } from '~/config/links';
@@ -20,7 +20,7 @@ const inputClass =
 
 <dialog
   id="bf-presentation-dialog"
-  data-calendly={BF_PRESENTATION_URL}
+  data-booking={BF_PRESENTATION_URL}
   data-lang={lang}
   class="w-[calc(100%-2rem)] max-w-md rounded-2xl p-0 bg-white dark:bg-slate-900 text-default backdrop:bg-black/60"
   aria-labelledby="bf-presentation-title"
@@ -78,19 +78,26 @@ const inputClass =
     const dialog = document.getElementById('bf-presentation-dialog') as HTMLDialogElement | null;
     if (!dialog || dialog.dataset.bound === '1') return;
     dialog.dataset.bound = '1';
-    // Navigateur sans <dialog> : les liens gardent leur comportement (Calendly direct).
+    // Navigateur sans <dialog> : les liens gardent leur comportement (rendez-vous direct).
     if (typeof dialog.showModal !== 'function') return;
     const form = dialog.querySelector('form')!;
     const send = form.querySelector<HTMLButtonElement>('button[value="send"]')!;
-    const calendly = dialog.dataset.calendly ?? '';
+    const booking = dialog.dataset.booking ?? '';
     const lang = dialog.dataset.lang ?? 'fr';
 
-    document.querySelectorAll<HTMLAnchorElement>('a[data-bf-presentation]').forEach((a) =>
+    document.querySelectorAll<HTMLAnchorElement>('a[data-bf-presentation]').forEach((a) => {
+      // Le lien ne pointe plus vers l'agenda : un clic molette, « ouvrir dans
+      // un nouvel onglet » ou un appui long ne déclenchent pas `click` et
+      // menaient droit au rendez-vous, sans enregistrement. Ils ouvrent
+      // désormais cette page, et le formulaire s'ouvre à l'arrivée.
+      a.href = `/${lang}/bike-fitting/#presentation`;
+      a.removeAttribute('target');
+      a.removeAttribute('rel');
       a.addEventListener('click', (e) => {
         e.preventDefault();
         dialog.showModal();
-      })
-    );
+      });
+    });
 
     // Arrivée depuis le bouton du header d'une autre page.
     if (window.location.hash === '#presentation') dialog.showModal();
@@ -121,11 +128,7 @@ const inputClass =
       } catch (err) {
         console.error('bf-presentation: enregistrement impossible', err);
       }
-      // Calendly préremplit nom et email depuis l'URL.
-      const url = new URL(calendly);
-      url.searchParams.set('name', name);
-      url.searchParams.set('email', email);
-      window.location.href = url.toString();
+      window.location.href = booking;
     });
   }
 

@@ -42,10 +42,6 @@ export type BillingRow = {
   // déjà utilisé : un nouvel abonnement démarre sans essai.
   trial_ends_at?: string | null;
   unpaid_invoice_id?: string | null;
-  // Offre partenaire ouverte par le lien privé (/api/billing/partner/).
-  partner_offer?: boolean;
-  // Fin des 24 h pour la prendre (posée à la première ouverture du lien).
-  partner_offer_expires_at?: string | null;
   // Premier abonnement : offre choisie et carte enregistrée, abonnement créé
   // à l'installation (/api/billing/start-trial/).
   pending_offer?: Offer | null;

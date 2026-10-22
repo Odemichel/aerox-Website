@@ -21,8 +21,6 @@ import { authenticatedUser } from '~/lib/serverAuth';
 import {
   isOffer,
   LAUNCH_OFFERS,
-  PARTNER_OFFERS,
-  partnerOfferOpen,
   launchOfferOpen,
   METERED_LOOKUP_KEYS,
   OFFER_LOOKUP_KEYS,
@@ -105,13 +103,6 @@ export const POST: APIRoute = async ({ request, site }) => {
     // le studio est vu à l'installation). Essai déjà utilisé : l'abonnement
     // démarre sans essai.
     const withTrial = !billing?.trial_ends_at;
-
-    // Offre partenaire : dans les 24 h qui suivent l'ouverture du lien privé,
-    // et pour un premier abonnement (un réabonnement repartirait pour 12 mois
-    // à 59 €).
-    if (PARTNER_OFFERS.includes(offer) && (!partnerOfferOpen(billing, Date.now()) || !withTrial)) {
-      return json({ error: 'E_PARTNER' }, 403);
-    }
 
     // Un seul abonnement par bike fitter : changer d'offre passe par
     // /api/billing/manage/, qui modifie l'abonnement existant au lieu d'en

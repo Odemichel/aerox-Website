@@ -18,9 +18,6 @@
 // d'abonnement) : `change` remplace l'offre choisie, `cancel` l'abandonne.
 // Rien n'est demandé à Stripe.
 //
-// Les offres partenaire ne se choisissent qu'en attente de l'installation,
-// après le lien privé (`bf_billing.partner_offer`) ; jamais par un abonné.
-//
 // Après chaque action, `bf_billing` est réaligné sur Stripe par la même
 // fonction que le webhook (`syncSubscription`) : l'espace BF affiche tout de
 // suite la résiliation ou le changement programmé. Le webhook qui suit
@@ -39,8 +36,6 @@ import {
   METERED_LOOKUP_KEYS,
   offerFromLookupKeys,
   OFFER_LOOKUP_KEYS,
-  PARTNER_OFFERS,
-  partnerOfferOpen,
   type Offer,
 } from '~/lib/billing/logic';
 import type { BillingRow } from '~/lib/billing/server';
@@ -77,8 +72,6 @@ async function managePending(userId: string, billing: BillingRow, body: { action
   if (body.action !== 'change' || !isOffer(body.offer)) return json({ error: 'E_ACTION' }, 400);
   const offer: Offer = body.offer;
   if (offer === billing.pending_offer) return json({ error: 'E_SAME_OFFER' }, 400);
-  if (PARTNER_OFFERS.includes(offer) && !partnerOfferOpen(billing, Date.now()))
-    return json({ error: 'E_PARTNER' }, 403);
   // La place de lancement déjà réservée par l'offre en attente compte pour soi.
   const ownSeat = LAUNCH_OFFERS.includes(billing.pending_offer!) ? 1 : 0;
   if (LAUNCH_OFFERS.includes(offer) && !launchOfferOpen(Date.now(), (await launchSeatsRemaining(db)) + ownSeat)) {
@@ -158,9 +151,6 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (body.action !== 'change' || !isOffer(body.offer)) return json({ error: 'E_ACTION' }, 400);
     const offer = body.offer;
-    // Abonné : jamais vers une offre partenaire (elle ne se choisit qu'avant
-    // l'installation ; y revenir rouvrirait 12 mois à 59 €).
-    if (PARTNER_OFFERS.includes(offer)) return json({ error: 'E_PARTNER' }, 403);
     const current = offerFromLookupKeys(sub.items.data.map((i) => i.price.lookup_key));
     if (current === offer) return json({ error: 'E_SAME_OFFER' }, 400);
     if (LAUNCH_OFFERS.includes(offer) && !launchOfferOpen(Date.now(), await launchSeatsRemaining(db))) {

@@ -4,10 +4,6 @@ import {
   DEFAULT_OFFER,
   offerAtInstall,
   addMonths,
-  partnerPriceEnd,
-  partnerOfferOpen,
-  PARTNER_OFFER_WINDOW_MS,
-  PARTNER_OFFERS,
   suggestUpgrade,
   trialEnd,
   graceAfterPaymentFailureEnd,
@@ -237,19 +233,17 @@ describe('offre de lancement annuelle', () => {
   });
 });
 
-describe('offre partenaire', () => {
-  it('prix partenaire : plan Illimité (pas de place de lancement), offre exacte', () => {
-    expect(planFromLookupKeys([LOOKUP.unlimitedPartner])).toBe('unlimited');
-    expect(planFromLookupKeys([LOOKUP.unlimitedPartnerYear])).toBe('unlimited');
-    expect(offerFromLookupKeys([LOOKUP.unlimitedPartner])).toBe('unlimited_partner');
-    expect(offerFromLookupKeys([LOOKUP.unlimitedPartnerYear])).toBe('unlimited_partner_annual');
-    expect(PARTNER_OFFERS).toEqual(['unlimited_partner', 'unlimited_partner_annual']);
-    expect(isOffer('unlimited_partner')).toBe(true);
+describe('offre partenaire retirée (2026-10-22)', () => {
+  it('n’est plus une offre', () => {
+    expect(isOffer('unlimited_partner')).toBe(false);
+    expect(isOffer('unlimited_partner_annual')).toBe(false);
+    expect(offerFromLookupKeys(['aerox_bf_unlimited_partner'])).toBeNull();
+    expect(planFromLookupKeys(['aerox_bf_unlimited_partner_year'])).toBeNull();
   });
+});
 
-  it('tarif partenaire : 12 mois à partir de l’ancrage (fin de l’essai)', () => {
-    const anchor = Math.floor(Date.UTC(2026, 10, 17, 9) / 1000);
-    expect(partnerPriceEnd(anchor)).toBe(Math.floor(Date.UTC(2027, 10, 17, 9) / 1000));
+describe('dates', () => {
+  it('mois calendaires', () => {
     expect(addMonths(Math.floor(Date.UTC(2026, 0, 15) / 1000), 1)).toBe(Math.floor(Date.UTC(2026, 1, 15) / 1000));
     // Fin de mois ramenée au dernier jour, comme les échéances Stripe.
     const sec = (y: number, m: number, d: number) => Math.floor(Date.UTC(y, m, d, 9) / 1000);
@@ -262,37 +256,5 @@ describe('offre partenaire', () => {
     expect(offerAtInstall('unlimited_launch', LAUNCH_OFFER.switchAt - 1)).toBe('unlimited_launch');
     expect(offerAtInstall('unlimited_launch', LAUNCH_OFFER.switchAt)).toBe('unlimited');
     expect(offerAtInstall('unlimited_launch_annual', LAUNCH_OFFER.switchAt + 1)).toBe('unlimited_launch_annual');
-    expect(offerAtInstall('unlimited_partner', LAUNCH_OFFER.switchAt + 1)).toBe('unlimited_partner');
-  });
-
-  it('prochaine facture : 59 € par mois, 590 € la première année puis 990 €', () => {
-    expect(nextInvoiceCentsForOffer('unlimited_partner', 0, NOW, null, true)).toBe(5900);
-    expect(nextInvoiceCentsForOffer('unlimited_partner_annual', 0, NOW, null, true)).toBe(59000);
-    expect(nextInvoiceCentsForOffer('unlimited_partner_annual', 0, NOW, null, false)).toBe(99000);
-  });
-
-  it('rangs : partenaire au niveau du lancement', () => {
-    expect(isDowngrade('unlimited_partner', 'essential')).toBe(true);
-    expect(isDowngrade('unlimited_partner', 'unlimited')).toBe(false);
-    expect(isDowngrade('unlimited_partner_annual', 'unlimited')).toBe(true);
-  });
-});
-
-describe('offre partenaire : 24 heures', () => {
-  const now = Date.UTC(2026, 9, 19, 10);
-  const at = (ms: number) => new Date(ms).toISOString();
-
-  it('ouverte pendant les 24 h, fermée ensuite', () => {
-    const row = { partner_offer: true, partner_offer_expires_at: at(now + PARTNER_OFFER_WINDOW_MS) };
-    expect(partnerOfferOpen(row, now)).toBe(true);
-    expect(partnerOfferOpen(row, now + PARTNER_OFFER_WINDOW_MS - 1)).toBe(true);
-    expect(partnerOfferOpen(row, now + PARTNER_OFFER_WINDOW_MS)).toBe(false);
-  });
-
-  it('fermée sans lien ouvert ou sans délai', () => {
-    expect(partnerOfferOpen(null, now)).toBe(false);
-    expect(partnerOfferOpen({ partner_offer: false, partner_offer_expires_at: at(now + 1000) }, now)).toBe(false);
-    expect(partnerOfferOpen({ partner_offer: true, partner_offer_expires_at: null }, now)).toBe(false);
-    expect(partnerOfferOpen({ partner_offer: true, partner_offer_expires_at: 'nope' }, now)).toBe(false);
   });
 });
