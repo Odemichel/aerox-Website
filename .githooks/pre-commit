@@ -1,0 +1,31 @@
+#!/bin/sh
+# Pré-commit : le job « check » de la CI (prettier --check, eslint) échouait
+# à chaque commit de fichier non formaté. Les fichiers indexés sont formatés
+# et corrigés ici, puis réindexés ; un commit qui laisse une erreur ESLint
+# est refusé. Activé par `npm install` (script prepare → core.hooksPath).
+set -e
+# Chemins pris littéralement (src/pages/[lang]/… n'est pas un motif).
+export GIT_LITERAL_PATHSPECS=1
+
+staged() { git diff --cached --name-only -z --diff-filter=ACMR "$@"; }
+
+[ -z "$(staged | tr -d '\0')" ] && exit 0
+
+# Fichiers indexés en partie : les réindexer embarquerait des modifications
+# non voulues.
+partial=$(staged | xargs -0 git diff --name-only --)
+if [ -n "$partial" ]; then
+  echo "pre-commit : fichiers indexés en partie, formatage non appliqué :" >&2
+  echo "$partial" >&2
+  echo "→ « npx prettier -w <fichier> » puis « git add », ou indexez tout le fichier." >&2
+  exit 1
+fi
+
+# Prettier sur ce qu'il sait formater (le reste et .prettierignore sont ignorés).
+staged | xargs -0 npx --no-install prettier --write --ignore-unknown --log-level warn
+
+# ESLint (avec correction) sur le code ; une erreur restante bloque le commit.
+staged | grep -zE '\.(js|mjs|cjs|ts|tsx|astro)$' |
+  xargs -0 -r npx --no-install eslint --fix --no-warn-ignored
+
+staged | xargs -0 git add --

@@ -38,7 +38,9 @@ function escapeHtml(value: unknown): string {
 
 // Sujet d'e-mail : une seule ligne.
 function oneLine(value: unknown): string {
-  return String(value ?? '').replace(/[\r\n]+/g, ' ').trim();
+  return String(value ?? '')
+    .replace(/[\r\n]+/g, ' ')
+    .trim();
 }
 
 Deno.serve(async (req) => {

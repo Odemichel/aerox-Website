@@ -266,6 +266,14 @@ npm run check:astro      # Types Astro uniquement
 npm run fix              # Auto-fix ESLint + Prettier
 ```
 
+**Avant tout commit (CI « check » bloquante)** : le hook `.githooks/pre-commit`
+(activé par `npm install` via le script `prepare`) formate les fichiers indexés
+avec Prettier, corrige ESLint et refuse le commit s'il reste une erreur. Ne
+jamais le contourner (`--no-verify`). Sans `node_modules` (worktree neuf), lancer
+`npm ci` d'abord. Les copies de code dont la source est ailleurs
+(`supabase/functions/insta-scheduler`, source `aerox-insta-stats`) sont exclues
+dans `eslint.config.js` et `.prettierignore`.
+
 ---
 
 ## Stack technique

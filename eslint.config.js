@@ -54,6 +54,16 @@ export default [
     },
   },
   {
-    ignores: ['dist', 'node_modules', '.github', 'types.generated.d.ts', '.astro', '.vercel'],
+    // supabase/functions/insta-scheduler : copie de la fonction déployée,
+    // source de vérité dans aerox-insta-stats (ne pas la réécrire ici).
+    ignores: [
+      'dist',
+      'node_modules',
+      '.github',
+      'types.generated.d.ts',
+      '.astro',
+      '.vercel',
+      'supabase/functions/insta-scheduler',
+    ],
   },
 ];

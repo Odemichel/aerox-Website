@@ -9,3 +9,6 @@ node_modules
 # Contenu rédactionnel : MDX multilingue que Prettier ne sait pas parser
 src/data/post
 docs
+
+# Copie de la fonction déployée, source de vérité dans aerox-insta-stats
+supabase/functions/insta-scheduler
