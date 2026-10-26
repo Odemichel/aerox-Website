@@ -194,6 +194,10 @@ function oneLine(value: unknown): string {
     .trim();
 }
 
+// Une seule adresse, sans séparateur ni nom affiché (nodemailer accepte
+// une liste « a@x, b@y » dans `to`).
+const SINGLE_ADDRESS = /^[^\s,;<>@"]+@[^\s,;<>@"]+\.[^\s,;<>@"]+$/;
+
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 });
@@ -206,7 +210,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { client_id, bf_user_id } = await req.json();
+    const { client_id, bf_user_id, email } = await req.json();
 
     if (!client_id || !bf_user_id) {
       return Response.json({ message: 'Missing client_id or bf_user_id' }, { status: 400 });
@@ -234,8 +238,15 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Client does not belong to this bike fitter' }, { status: 403 });
     }
 
-    if (!client.email) {
+    // Destinataire : l'adresse inscrite au journal par le trigger (plafonds
+    // calculés sur elle), à défaut celle de la fiche. Une seule adresse
+    // simple, jamais une liste.
+    const recipient = String(email ?? client.email ?? '').trim();
+    if (!recipient) {
       return Response.json({ message: 'Client has no email, skipping' }, { status: 200 });
+    }
+    if (!SINGLE_ADDRESS.test(recipient)) {
+      return Response.json({ error: 'Invalid recipient' }, { status: 400 });
     }
 
     // Fetch BF user info (including lang for email locale)
@@ -254,7 +265,7 @@ Deno.serve(async (req) => {
     const { data: existingUser } = await supabase
       .from('users')
       .select('id, lang')
-      .eq('email', client.email)
+      .eq('email', recipient)
       .limit(1)
       .maybeSingle();
 
@@ -334,7 +345,7 @@ Deno.serve(async (req) => {
 
     const info = await transporter.sendMail({
       from: SMTP_FROM,
-      to: client.email,
+      to: recipient,
       subject,
       html: htmlBody,
     });
