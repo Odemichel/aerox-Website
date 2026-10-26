@@ -1,0 +1,2 @@
+-- secrets Vault billing_hook_secret et bf_notify_secret posés ; valeurs retirées de l'historique
+-- (posés avec vault.create_secret(<valeur>, '<nom>') ; valeurs jamais versionnées).

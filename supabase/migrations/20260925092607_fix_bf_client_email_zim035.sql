@@ -1,0 +1,3 @@
+-- Correction ponctuelle de données : e-mail d'une fiche client saisi avec
+-- « # » au lieu de « @ » (UPDATE public.bf_clients SET email = …).
+-- Valeur non reproduite ici (donnée personnelle) ; sans effet sur le schéma.
