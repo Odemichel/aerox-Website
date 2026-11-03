@@ -41,6 +41,13 @@ const steps = [1, 2, 3].map((i) => ({
 const inputClass =
   'w-full rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-3 text-default focus:border-primary focus:outline-none';
 const labelClass = 'flex flex-col gap-1.5 text-sm font-semibold';
+const cardClass = 'rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900/60 p-5 md:p-6';
+const legendClass = 'flex items-center gap-2 px-1 text-base font-bold';
+const stepBadge = 'flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-bold text-white';
+const optClass = 'ml-1 font-normal text-muted';
+const errClass = 'field-err hidden text-xs font-semibold text-red-500';
+const chipClass =
+  'inline-block rounded-full border border-gray-300 dark:border-slate-600 px-4 py-2 text-sm font-semibold transition-colors hover:border-primary peer-checked:border-primary peer-checked:bg-primary peer-checked:text-[#0b2239] peer-focus-visible:ring-2 peer-focus-visible:ring-primary';
 ---
 
 <Layout metadata={metadata}>
@@ -166,7 +173,7 @@ const labelClass = 'flex flex-col gap-1.5 text-sm font-semibold';
     </div>
   </section>
 
-  <!-- Candidature -->
+  <!-- Candidature : 3 blocs courts, champs obligatoires sans astérisque, facultatifs signalés. -->
   <section id="candidature" class="not-prose scroll-mt-[72px]">
     <div class="mx-auto max-w-2xl px-4 md:px-6 py-12 md:py-16">
       <h2 class="text-center text-2xl md:text-3xl font-bold">{t(dict, 'influencer.form.title')}</h2>
@@ -174,84 +181,157 @@ const labelClass = 'flex flex-col gap-1.5 text-sm font-semibold';
 
       <form
         id="influencer-form"
-        class="mt-8 grid gap-5 sm:grid-cols-2"
+        class="mt-8 space-y-6"
         novalidate
         data-lang={lang}
         data-sending={t(dict, 'influencer.form.sending')}
-        data-success={t(dict, 'influencer.form.success')}
         data-error={t(dict, 'influencer.form.error')}
+        data-err-name={t(dict, 'influencer.form.errName')}
+        data-err-email={t(dict, 'influencer.form.errEmail')}
         data-err-instagram={t(dict, 'influencer.form.errInstagram')}
         data-err-followers={t(dict, 'influencer.form.errFollowers')}
-        data-err-required={t(dict, 'influencer.form.errRequired')}
+        data-err-discipline={t(dict, 'influencer.form.errDiscipline')}
       >
-        <label class={labelClass}>
-          {t(dict, 'influencer.form.name')} *
-          <input type="text" name="name" required maxlength="120" autocomplete="name" class={inputClass} />
-        </label>
-        <label class={labelClass}>
-          {t(dict, 'influencer.form.email')} *
-          <input type="email" name="email" required maxlength="200" autocomplete="email" class={inputClass} />
-        </label>
-        <label class={`${labelClass} sm:col-span-2`}>
-          {t(dict, 'influencer.form.instagram')} *
-          <input
-            type="text"
-            name="instagram"
-            required
-            maxlength="200"
-            autocapitalize="off"
-            spellcheck="false"
-            placeholder={t(dict, 'influencer.form.instagramPh')}
-            class={inputClass}
-          />
-        </label>
-        <label class={labelClass}>
-          {t(dict, 'influencer.form.followers')} *
-          <input type="number" name="followers" required min="0" step="1" inputmode="numeric" class={inputClass} />
-        </label>
-        <label class={labelClass}>
-          {t(dict, 'influencer.form.avgViews')}
-          <input type="number" name="avgViews" min="0" step="1" inputmode="numeric" class={inputClass} />
-          <span class="text-xs font-normal text-muted">{t(dict, 'influencer.form.avgViewsHint')}</span>
-        </label>
-        <label class={labelClass}>
-          {t(dict, 'influencer.form.discipline')} *
-          <select name="discipline" required class={inputClass}>
-            <option value="" disabled selected>{t(dict, 'influencer.form.choose')}</option>
-            {INFLUENCER_DISCIPLINES.map((d) => <option value={d}>{t(dict, `influencer.discipline.${d}`)}</option>)}
-          </select>
-        </label>
-        <label class={labelClass}>
-          {t(dict, 'influencer.form.country')}
-          <input type="text" name="country" maxlength="100" autocomplete="country-name" class={inputClass} />
-        </label>
-        <fieldset class="sm:col-span-2 border-0 p-0 m-0">
-          <legend class="mb-2 text-sm font-semibold">{t(dict, 'influencer.form.trainer')}</legend>
-          <div class="flex gap-6">
-            <label class="inline-flex items-center gap-2 text-sm">
-              <input type="radio" name="trainer" value="oui" />
-              {t(dict, 'influencer.form.yes')}
+        <!-- 1. Toi -->
+        <fieldset class={cardClass}>
+          <legend class={legendClass}>
+            <span class={stepBadge}>1</span>
+            {t(dict, 'influencer.form.step1')}
+          </legend>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class={labelClass}>
+              {t(dict, 'influencer.form.name')}
+              <input type="text" name="name" maxlength="120" autocomplete="name" class={inputClass} />
+              <span class={errClass} data-err-for="name"></span>
             </label>
-            <label class="inline-flex items-center gap-2 text-sm">
-              <input type="radio" name="trainer" value="non" />
-              {t(dict, 'influencer.form.no')}
+            <label class={labelClass}>
+              {t(dict, 'influencer.form.email')}
+              <input type="email" name="email" maxlength="200" autocomplete="email" class={inputClass} />
+              <span class={errClass} data-err-for="email"></span>
             </label>
           </div>
         </fieldset>
-        <label class={`${labelClass} sm:col-span-2`}>
-          {t(dict, 'influencer.form.otherLink')}
-          <input
-            type="text"
-            name="otherLink"
-            maxlength="300"
-            placeholder={t(dict, 'influencer.form.otherLinkPh')}
-            class={inputClass}
-          />
-        </label>
-        <label class={`${labelClass} sm:col-span-2`}>
-          {t(dict, 'influencer.form.message')}
-          <textarea name="message" rows="4" maxlength="2000" class={inputClass}></textarea>
-        </label>
+
+        <!-- 2. Compte Instagram -->
+        <fieldset class={cardClass}>
+          <legend class={legendClass}>
+            <span class={stepBadge}>2</span>
+            {t(dict, 'influencer.form.step2')}
+          </legend>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class={`${labelClass} sm:col-span-2`}>
+              {t(dict, 'influencer.form.instagram')}
+              <span class="relative flex items-center">
+                <span class="pointer-events-none absolute left-3 text-muted">@</span>
+                <input
+                  type="text"
+                  name="instagram"
+                  maxlength="200"
+                  autocapitalize="off"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder={t(dict, 'influencer.form.instagramPh')}
+                  class={`${inputClass} pl-8 pr-10`}
+                />
+                <Icon
+                  name="tabler:circle-check-filled"
+                  class="insta-ok absolute right-3 hidden h-5 w-5 text-green-500"
+                />
+              </span>
+              <a
+                class="insta-preview hidden text-xs font-normal text-primary underline"
+                target="_blank"
+                rel="noopener"
+                href="#"></a>
+              <span class={errClass} data-err-for="instagram"></span>
+            </label>
+            <label class={labelClass}>
+              {t(dict, 'influencer.form.followers')}
+              <input type="number" name="followers" min="0" step="1" inputmode="numeric" class={inputClass} />
+              <span class={errClass} data-err-for="followers"></span>
+            </label>
+            <label class={labelClass}>
+              <span>
+                {t(dict, 'influencer.form.avgViews')}
+                <span class={optClass}>({t(dict, 'influencer.form.optional')})</span>
+              </span>
+              <input type="number" name="avgViews" min="0" step="1" inputmode="numeric" class={inputClass} />
+              <span class="text-xs font-normal text-muted">{t(dict, 'influencer.form.avgViewsHint')}</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- 3. Profil -->
+        <fieldset class={cardClass}>
+          <legend class={legendClass}>
+            <span class={stepBadge}>3</span>
+            {t(dict, 'influencer.form.step3')}
+          </legend>
+          <div class="space-y-5">
+            <div>
+              <p class="text-sm font-semibold">{t(dict, 'influencer.form.discipline')}</p>
+              <div class="mt-2 flex flex-wrap gap-2" role="radiogroup">
+                {
+                  INFLUENCER_DISCIPLINES.map((d) => (
+                    <label class="cursor-pointer">
+                      <input type="radio" name="discipline" value={d} class="peer sr-only" />
+                      <span class={chipClass}>{t(dict, `influencer.discipline.${d}`)}</span>
+                    </label>
+                  ))
+                }
+              </div>
+              <span class={errClass} data-err-for="discipline"></span>
+            </div>
+
+            <div>
+              <p class="text-sm font-semibold">
+                {t(dict, 'influencer.form.trainer')}
+                <span class={optClass}>({t(dict, 'influencer.form.optional')})</span>
+              </p>
+              <div class="mt-2 flex gap-2" role="radiogroup">
+                <label class="cursor-pointer">
+                  <input type="radio" name="trainer" value="oui" class="peer sr-only" />
+                  <span class={chipClass}>{t(dict, 'influencer.form.yes')}</span>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="trainer" value="non" class="peer sr-only" />
+                  <span class={chipClass}>{t(dict, 'influencer.form.no')}</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+              <label class={labelClass}>
+                <span>
+                  {t(dict, 'influencer.form.country')}
+                  <span class={optClass}>({t(dict, 'influencer.form.optional')})</span>
+                </span>
+                <input type="text" name="country" maxlength="100" autocomplete="country-name" class={inputClass} />
+              </label>
+              <label class={labelClass}>
+                <span>
+                  {t(dict, 'influencer.form.otherLink')}
+                  <span class={optClass}>({t(dict, 'influencer.form.optional')})</span>
+                </span>
+                <input
+                  type="text"
+                  name="otherLink"
+                  maxlength="300"
+                  placeholder={t(dict, 'influencer.form.otherLinkPh')}
+                  class={inputClass}
+                />
+              </label>
+            </div>
+
+            <label class={labelClass}>
+              <span>
+                {t(dict, 'influencer.form.message')}
+                <span class={optClass}>({t(dict, 'influencer.form.optional')})</span>
+              </span>
+              <textarea name="message" rows="3" maxlength="2000" class={inputClass}></textarea>
+            </label>
+          </div>
+        </fieldset>
 
         {/* Honeypot : invisible pour l'humain, rempli par les bots. */}
         <input
@@ -263,12 +343,27 @@ const labelClass = 'flex flex-col gap-1.5 text-sm font-semibold';
           class="absolute left-[-9999px] w-px h-px opacity-0"
         />
 
-        <p class="sm:col-span-2 text-xs text-muted">{t(dict, 'influencer.form.consent')}</p>
-        <button type="submit" class="sm:col-span-2 btn-primary w-full px-8 py-3 text-lg font-semibold">
+        <button type="submit" class="btn-primary w-full px-8 py-3 text-lg font-semibold">
           {t(dict, 'influencer.form.submit')}
         </button>
-        <p class="influencer-msg sm:col-span-2 hidden text-center font-semibold" role="status"></p>
+        <p class="text-center text-xs text-muted">{t(dict, 'influencer.form.consent')}</p>
+        <p class="influencer-msg hidden text-center font-semibold text-red-600" role="alert"></p>
       </form>
+
+      <!-- Après l'envoi : remerciement à la place du formulaire. -->
+      <div
+        id="influencer-done"
+        class="mt-8 hidden rounded-2xl border border-green-500/40 bg-green-500/10 p-8 text-center"
+        role="status"
+        tabindex="-1"
+      >
+        <Icon name="tabler:circle-check-filled" class="mx-auto h-12 w-12 text-green-500" />
+        <h3 class="mt-4 text-2xl font-bold">{t(dict, 'influencer.form.successTitle')}</h3>
+        <p class="mt-2 text-muted">{t(dict, 'influencer.form.success')}</p>
+        <a href={`/${lang}/`} class="mt-6 inline-block font-semibold text-primary underline hover:no-underline">
+          {t(dict, 'influencer.hero.site')}
+        </a>
+      </div>
     </div>
   </section>
 </Layout>
@@ -326,28 +421,79 @@ const labelClass = 'flex flex-col gap-1.5 text-sm font-semibold';
     const form = document.getElementById('influencer-form') as HTMLFormElement | null;
     if (!form || form.dataset.bound === '1') return;
     form.dataset.bound = '1';
+    const done = document.getElementById('influencer-done');
     const msg = form.querySelector<HTMLParagraphElement>('.influencer-msg');
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
     const initialLabel = button?.textContent ?? '';
+    const ds = form.dataset;
 
-    const show = (text: string | undefined, ok: boolean) => {
-      if (!msg) return;
-      msg.textContent = text ?? '';
-      msg.classList.remove('hidden', 'text-red-600', 'text-green-600');
-      msg.classList.add(ok ? 'text-green-600' : 'text-red-600');
+    // Même règle que le serveur (parseInstagram) : @pseudo, pseudo ou lien du profil.
+    const instaHandle = (raw: string) => {
+      const v = raw.trim();
+      const m = v.match(/^(?:https?:\/\/)?(?:www\.|m\.)?instagram\.com\/([A-Za-z0-9._]{1,30})\/?(?:[?#].*)?$/i);
+      const h = (m ? m[1] : v.replace(/^@/, '')).toLowerCase();
+      if (!/^[a-z0-9._]{1,30}$/.test(h) || /^\.|\.$/.test(h)) return null;
+      return ['p', 'reel', 'reels', 'stories', 'explore', 'accounts'].includes(h) ? null : h;
     };
+    const emailOk = (v: string) => /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(v.trim());
+
+    const setErr = (field: string, text: string) => {
+      const el = form.querySelector<HTMLElement>(`[data-err-for="${field}"]`);
+      if (!el) return;
+      el.textContent = text;
+      el.classList.toggle('hidden', !text);
+      form
+        .querySelectorAll<HTMLInputElement>(`[name="${field}"]`)
+        .forEach((i) => i.setAttribute('aria-invalid', text ? 'true' : 'false'));
+    };
+    // Une erreur s'efface dès que le champ est corrigé.
+    form.addEventListener('input', (e) => {
+      const name = (e.target as HTMLInputElement).name;
+      if (name) setErr(name, '');
+    });
+    form.addEventListener('change', (e) => {
+      const name = (e.target as HTMLInputElement).name;
+      if (name) setErr(name, '');
+    });
+
+    // Compte Instagram : coche verte et lien du profil pour vérifier.
+    const insta = form.querySelector<HTMLInputElement>('input[name="instagram"]');
+    const instaOk = form.querySelector<SVGElement>('.insta-ok');
+    const instaPreview = form.querySelector<HTMLAnchorElement>('.insta-preview');
+    insta?.addEventListener('input', () => {
+      const h = insta.value.trim() ? instaHandle(insta.value) : null;
+      instaOk?.classList.toggle('hidden', !h);
+      if (instaPreview) {
+        instaPreview.classList.toggle('hidden', !h);
+        if (h) {
+          instaPreview.href = `https://www.instagram.com/${h}/`;
+          instaPreview.textContent = `instagram.com/${h}`;
+        }
+      }
+    });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!button) return;
       const data = new FormData(form);
       const get = (k: string) => String(data.get(k) ?? '').trim();
-      if (!get('name') || !get('email') || !get('instagram') || !get('followers') || !get('discipline')) {
-        return show(form.dataset.errRequired, false);
+      msg?.classList.add('hidden');
+
+      // Vérifications avant envoi, message sous chaque champ concerné.
+      const errors: [string, string][] = [];
+      if (!get('name')) errors.push(['name', ds.errName ?? '']);
+      if (!emailOk(get('email'))) errors.push(['email', ds.errEmail ?? '']);
+      if (!instaHandle(get('instagram'))) errors.push(['instagram', ds.errInstagram ?? '']);
+      if (!/^\d+$/.test(get('followers'))) errors.push(['followers', ds.errFollowers ?? '']);
+      if (!get('discipline')) errors.push(['discipline', ds.errDiscipline ?? '']);
+      errors.forEach(([f, text]) => setErr(f, text));
+      if (errors.length) {
+        form.querySelector<HTMLElement>(`[name="${errors[0][0]}"]`)?.focus();
+        return;
       }
 
       button.disabled = true;
-      button.textContent = form.dataset.sending ?? '…';
+      button.textContent = ds.sending ?? '…';
       const trainer = get('trainer');
       const payload = {
         topic: 'influencer',
@@ -367,7 +513,7 @@ const labelClass = 'flex flex-col gap-1.5 text-sm font-semibold';
       let ok = false;
       let error = '';
       try {
-        const res = await fetch(`/${form.dataset.lang ?? 'fr'}/api/lead/`, {
+        const res = await fetch(`/${ds.lang ?? 'fr'}/api/lead/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -378,19 +524,23 @@ const labelClass = 'flex flex-col gap-1.5 text-sm font-semibold';
       } catch {
         ok = false;
       }
-
-      if (ok) {
-        show(form.dataset.success, true);
-        form.reset();
-      } else if (error === 'invalid_instagram') {
-        show(form.dataset.errInstagram, false);
-      } else if (error === 'invalid_followers') {
-        show(form.dataset.errFollowers, false);
-      } else {
-        show(form.dataset.error, false);
-      }
       button.textContent = initialLabel;
       button.disabled = false;
+
+      if (ok) {
+        form.classList.add('hidden');
+        done?.classList.remove('hidden');
+        done?.focus();
+        done?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        return;
+      }
+      if (error === 'invalid_instagram') return setErr('instagram', ds.errInstagram ?? '');
+      if (error === 'invalid_followers') return setErr('followers', ds.errFollowers ?? '');
+      if (error === 'invalid_email') return setErr('email', ds.errEmail ?? '');
+      if (msg) {
+        msg.textContent = ds.error ?? '';
+        msg.classList.remove('hidden');
+      }
     });
   }
 
