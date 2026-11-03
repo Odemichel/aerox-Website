@@ -9,8 +9,8 @@ describe('téléchargements suspendus jusqu’à la nouvelle version', () => {
     expect(compareVersions('2.0', '1.9.9')).toBeGreaterThan(0);
   });
 
-  it('ouverture le 20 octobre 2026 à 00:00, heure de Paris', () => {
-    expect(new Date(NEXT_RELEASE.opensAt).toISOString()).toBe('2026-10-31T23:00:00.000Z');
+  it('ouverture le 7 novembre 2026 à 00:00, heure de Paris', () => {
+    expect(new Date(NEXT_RELEASE.opensAt).toISOString()).toBe('2026-11-06T23:00:00.000Z');
   });
 
   it('liens encore en 1.0.0 : fermé, même après la date', () => {
