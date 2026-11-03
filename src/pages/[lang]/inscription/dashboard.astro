@@ -107,6 +107,10 @@ const labels = {
     ...['current', 'price', 'nextDate', 'noSub'].map((k) => `plan.${k}`),
     ...['estimate', 'manage', 'manageText', 'none', 'debtRow'].map((k) => `billing.${k}`),
     ...[
+      'specialties',
+      'experience',
+      'certifications',
+      'bio',
       'name',
       'id',
       'legal',
@@ -699,7 +703,12 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       phonenumber: string | null;
       studio_address: string | null;
       website: string | null;
+      specialties: string | null;
+      experience_years: number | null;
+      bio: string | null;
+      certifications: string | null;
     };
+    // Mêmes champs que l'encart « infos pro » du desktop (pro_data_box.dart).
     const STUDIO_FIELDS: { key: keyof StudioRow; label: string; type: string; max: number; auto: string }[] = [
       { key: 'studio_name', label: 'studio.name', type: 'text', max: 120, auto: 'organization' },
       { key: 'firstname', label: 'studio.firstname', type: 'text', max: 80, auto: 'given-name' },
@@ -707,6 +716,10 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       { key: 'phonenumber', label: 'studio.phone', type: 'tel', max: 30, auto: 'tel' },
       { key: 'studio_address', label: 'studio.address', type: 'text', max: 300, auto: 'street-address' },
       { key: 'website', label: 'studio.website', type: 'url', max: 200, auto: 'url' },
+      { key: 'specialties', label: 'studio.specialties', type: 'text', max: 500, auto: 'off' },
+      { key: 'experience_years', label: 'studio.experience', type: 'number', max: 2, auto: 'off' },
+      { key: 'certifications', label: 'studio.certifications', type: 'text', max: 500, auto: 'off' },
+      { key: 'bio', label: 'studio.bio', type: 'textarea', max: 2000, auto: 'off' },
     ];
     const LOGO_BUCKET = 'studio-logos';
     const LOGO_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
@@ -716,10 +729,10 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       const T = L();
       const { data } = await supabase
         .from('users')
-        .select('studio_name, firstname, name, phonenumber, studio_address, website')
+        .select(STUDIO_FIELDS.map((f) => f.key).join(', '))
         .eq('id', userId)
         .maybeSingle();
-      const current = (data ?? {}) as Partial<StudioRow>;
+      const current = (data ?? {}) as unknown as Partial<StudioRow>;
 
       const box = el('div', 'acct-studio');
       box.append(el('h3', 'acct-subtitle', T['studio.profile']));
@@ -778,15 +791,30 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       // Champs texte.
       const form = el('form', 'acct-studio-form');
       form.noValidate = true;
-      const inputs = new Map<keyof StudioRow, HTMLInputElement>();
+      const inputs = new Map<keyof StudioRow, HTMLInputElement | HTMLTextAreaElement>();
       for (const f of STUDIO_FIELDS) {
-        const label = el('label', 'acct-field');
-        const input = el('input', 'acct-input');
-        input.type = f.type;
+        const label = el('label', f.type === 'textarea' ? 'acct-field acct-field--wide' : 'acct-field');
+        let input: HTMLInputElement | HTMLTextAreaElement;
+        if (f.type === 'textarea') {
+          input = el('textarea', 'acct-input');
+          input.rows = 4;
+          input.maxLength = f.max;
+        } else {
+          const i = el('input', 'acct-input');
+          i.type = f.type;
+          if (f.type === 'number') {
+            i.min = '0';
+            i.max = '80';
+            i.step = '1';
+            i.inputMode = 'numeric';
+          } else {
+            i.maxLength = f.max;
+          }
+          input = i;
+        }
         input.name = f.key;
-        input.maxLength = f.max;
         input.setAttribute('autocomplete', f.auto);
-        input.value = current[f.key] ?? '';
+        input.value = current[f.key] == null ? '' : String(current[f.key]);
         if (f.key === 'website') input.placeholder = 'https://';
         inputs.set(f.key, input);
         label.append(el('span', 'acct-field-label', T[f.label]), input);
@@ -803,6 +831,10 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
           STUDIO_FIELDS.map((f) => {
             let v = inputs.get(f.key)!.value.trim();
             if (f.key === 'website' && v && !/^https?:\/\//i.test(v)) v = `https://${v}`;
+            if (f.type === 'number') {
+              const n = Number.parseInt(v, 10);
+              return [f.key, Number.isFinite(n) && n >= 0 && n <= 80 ? n : null];
+            }
             return [f.key, v || null];
           })
         ) as StudioRow;
@@ -1812,6 +1844,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     #account .acct-studio-form {
       grid-template-columns: 1fr 1fr;
     }
+    #account .acct-studio-form .acct-field--wide,
     #account .acct-studio-form .acct-actions,
     #account .acct-studio-form .acct-flash {
       grid-column: 1 / -1;
