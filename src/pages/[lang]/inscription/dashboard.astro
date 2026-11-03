@@ -157,6 +157,25 @@ const labels = {
     ...['training', 'fitting', 'diag', 'thisMonth', 'perMonth', 'empty'].map((k) => `ract.${k}`),
     ...['item', 'paid', 'refunded', 'partRefund', 'receipt', 'empty', 'error'].map((k) => `rbill.${k}`),
   ]),
+  ...pick('dash.preview.', [
+    'label',
+    'hint',
+    'real',
+    'none',
+    'pending',
+    'trialUnlimited',
+    'trialEssential',
+    'activeUnlimited',
+    'activeEssential',
+    'upgrade',
+    'canceling',
+    'scheduled',
+    'pastDue',
+    'readOnly',
+    'trialEnded',
+    'legacy',
+    'action',
+  ]),
   notLogged: t(dict, 'dashboard.notLogged'),
   profileNotFound: t(dict, 'dashboard.profileNotFound'),
   vat: t(dict, 'bfp.vat'),
@@ -580,7 +599,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         )
       );
       if (p.role === 'rider') joinNewsletter(user.id);
-      return { id: user.id, role: p.role, name };
+      return { id: user.id, role: p.role, name, email };
     }
 
     // Cycliste : groupe MailerLite « AeroX Global » de sa langue (e-mail de
@@ -936,6 +955,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         offer?: Offer,
         when?: 'next_period'
       ) => {
+        if (preview) return previewBlocked();
         flashIn(body('abonnement'), T.updating, true);
         let r = await manageSubscription(action, offer, when);
         // Offre de lancement complète entre-temps : l'Illimité au tarif normal.
@@ -964,7 +984,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         const box = el('div', 'acct-banner acct-banner--warn');
         box.append(
           el('p', '', T.pastDue.replace('{date}', dateFmt(s.grace_until))),
-          btn(T.portal, 'primary', () => openPortal(lang()))
+          btn(T.portal, 'primary', () => (preview ? previewBlocked() : openPortal(lang())))
         );
         alert.append(box);
       } else if (s.access === 'read_only') {
@@ -1092,6 +1112,9 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
           el('h3', 'acct-plan-name', T['trial.ended'].replace('{date}', dateFmt(s.trial_ends_at))),
           el('p', 'acct-lead', T['trial.endedText'])
         );
+      } else if (noSub) {
+        // Jamais abonné : une ligne, les cartes de prix suivent.
+        plan.append(el('p', 'acct-lead', T['plan.noSub']));
       }
 
       // --- Utilisation -----------------------------------------------------
@@ -1142,7 +1165,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
           row(
             T['billing.manage'],
             T['billing.manageText'],
-            btn(T.portal, 'plain', () => openPortal(lang()))
+            btn(T.portal, 'plain', () => (preview ? previewBlocked() : openPortal(lang())))
           )
         );
       }
@@ -1182,8 +1205,152 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       if (flash) flashIn(body(flash.panel), flash.text, flash.ok);
     }
 
+    // ---------------------------------------------------------------------
+    // Aperçu des états de l'abonnement (équipe AeroX : adresses
+    // @aeroxbefaster.com et admins). Données fictives rendues par le même
+    // code que les vraies ; aucune action réelle pendant l'aperçu (Stripe,
+    // portail, changement d'offre, achat depuis les cartes).
+    // ---------------------------------------------------------------------
+    let preview = false;
+    let realSummary: Summary | null = null;
+    function previewBlocked() {
+      flashIn(body('abonnement'), L()['preview.action'], false);
+    }
+    function previewSummaries(now: number): Record<string, Summary> {
+      const day = 86_400_000;
+      const iso = (ms: number) => new Date(ms).toISOString();
+      const base: Summary = {
+        plan: 'trial',
+        offer: null,
+        trial_state: null,
+        trial_ends_at: null,
+        pending_offer: null,
+        installed_at: null,
+        status: 'active',
+        access: 'full',
+        grace_until: null,
+        current_period_start: null,
+        current_period_end: null,
+        cancel_at: null,
+        scheduled_offer: null,
+        scheduled_at: null,
+        unpaid_amount: null,
+        unpaid_invoice_url: null,
+        has_stripe_customer: false,
+        has_subscription: false,
+        business: null,
+        analyses_in_period: 0,
+        billable_in_period: 0,
+      };
+      const sub = (plan: Plan, offer: Offer, extra: Partial<Summary> = {}): Summary => ({
+        ...base,
+        plan,
+        offer,
+        has_stripe_customer: true,
+        has_subscription: true,
+        installed_at: iso(now - 20 * day),
+        trial_ends_at: iso(now - 6 * day),
+        current_period_start: iso(now - 6 * day),
+        current_period_end: iso(now + 24 * day),
+        ...extra,
+      });
+      const annual = { current_period_end: iso(now + 359 * day) };
+      const inTrial = {
+        installed_at: iso(now - 4 * day),
+        trial_ends_at: iso(now + 10 * day),
+        current_period_start: iso(now - 4 * day),
+        current_period_end: iso(now + 10 * day),
+      };
+      return {
+        none: base,
+        pending: {
+          ...base,
+          has_stripe_customer: true,
+          pending_offer: 'unlimited_launch_annual',
+        },
+        trialUnlimited: sub('unlimited_launch', 'unlimited_launch_annual', { ...inTrial, analyses_in_period: 3 }),
+        trialEssential: sub('essential', 'essential', { ...inTrial, analyses_in_period: 2 }),
+        activeUnlimited: sub('unlimited_launch', 'unlimited_launch_annual', { ...annual, analyses_in_period: 12 }),
+        activeEssential: sub('essential', 'essential', { analyses_in_period: 3, billable_in_period: 3 }),
+        upgrade: sub('essential', 'essential', { analyses_in_period: 8, billable_in_period: 8 }),
+        canceling: sub('unlimited_launch', 'unlimited_launch_annual', {
+          ...annual,
+          cancel_at: annual.current_period_end,
+        }),
+        scheduled: sub('unlimited', 'unlimited', {
+          scheduled_offer: 'essential',
+          scheduled_at: iso(now + 24 * day),
+        }),
+        pastDue: sub('unlimited', 'unlimited', {
+          status: 'past_due',
+          grace_until: iso(now + 5 * day),
+          unpaid_amount: 9900,
+          unpaid_invoice_url: '#',
+        }),
+        readOnly: {
+          ...base,
+          has_stripe_customer: true,
+          trial_ends_at: iso(now - 60 * day),
+          status: 'past_due',
+          access: 'read_only',
+          unpaid_amount: 9900,
+          unpaid_invoice_url: '#',
+        },
+        trialEnded: { ...base, has_stripe_customer: true, trial_ends_at: iso(now - 30 * day) },
+        legacy: { ...base, plan: 'legacy' },
+      };
+    }
+    function setupPreview() {
+      const head = document.querySelector<HTMLElement>('#abonnement .acct-section-head');
+      if (!head || head.querySelector('.acct-preview')) return;
+      const T = L();
+      const box = el('label', 'acct-preview');
+      const select = el('select', 'acct-input');
+      const keys = [
+        'real',
+        'none',
+        'pending',
+        'trialUnlimited',
+        'trialEssential',
+        'activeUnlimited',
+        'activeEssential',
+        'upgrade',
+        'canceling',
+        'scheduled',
+        'pastDue',
+        'readOnly',
+        'trialEnded',
+        'legacy',
+      ];
+      for (const k of keys) {
+        const o = el('option', '', T[`preview.${k}`]);
+        o.value = k;
+        select.append(o);
+      }
+      select.addEventListener('change', () => {
+        preview = select.value !== 'real';
+        // Achats depuis les cartes de prix : bloqués pendant l'aperçu.
+        document.querySelectorAll<HTMLButtonElement>('#bf-offers .bf-buy').forEach((b) => (b.disabled = preview));
+        const s = preview ? previewSummaries(Date.now())[select.value] : realSummary;
+        if (s) renderBf(s);
+        else {
+          // Compte sans ligne de facturation : rien de réel à redessiner.
+          body('abonnement').replaceChildren();
+          offers.bf = true;
+          syncOffers();
+        }
+      });
+      box.append(
+        el('span', 'acct-field-label', T['preview.label']),
+        select,
+        el('span', 'acct-muted acct-small', T['preview.hint'])
+      );
+      head.append(box);
+    }
+
     async function loadBf() {
       const s = await fetchSummary();
+      realSummary = s;
       if (!s) return;
       const T = L();
       // Retour de Checkout : le webhook arrive en général quelques secondes après.
@@ -1456,6 +1623,8 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       const isBf = me.role === 'bike-fitter' || me.role === 'admin';
       if (isBf || me.role === 'pending_bf') renderStudioForm(me.id);
       if (isBf) await Promise.all([loadBf(), loadActivity()]);
+      // Équipe AeroX : aperçu des états de l'onglet Abonnement.
+      if (isBf && (me.role === 'admin' || /@aeroxbefaster\.com$/i.test(me.email))) setupPreview();
       // Compte en attente : pas de lecture des cyclistes (RLS), pas d'onglet.
       if (me.role === 'pending_bf') showSection('activite', false);
       if (me.role !== 'bike-fitter' && me.role !== 'pending_bf') {
@@ -1478,6 +1647,8 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       offers.rider = false;
       studioForm = null;
       studioLegal = null;
+      preview = false;
+      realSummary = null;
       nav.addEventListener('click', onNavClick);
       init();
     }
@@ -1862,6 +2033,17 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
   }
   #account .acct-meter-track.is-over .acct-meter-fill {
     background: linear-gradient(90deg, var(--acct-accent), var(--acct-warn));
+  }
+
+  /* Aperçu des états de l'abonnement (équipe AeroX) */
+  #account .acct-preview {
+    margin-top: 1rem;
+    display: grid;
+    gap: 0.375rem;
+    max-width: 26rem;
+    padding: 0.75rem 1rem;
+    border: 1px dashed var(--acct-accent);
+    border-radius: 0.75rem;
   }
 
   /* Studio : fiche modifiable et logo */
