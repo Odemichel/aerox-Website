@@ -106,7 +106,34 @@ const labels = {
     ),
     ...['current', 'price', 'nextDate', 'noSub'].map((k) => `plan.${k}`),
     ...['estimate', 'manage', 'manageText', 'none', 'debtRow'].map((k) => `billing.${k}`),
-    ...['name', 'id', 'legal', 'none', 'verified', 'pending', 'kind.siren', 'kind.eu_vat'].map((k) => `studio.${k}`),
+    ...[
+      'name',
+      'id',
+      'legal',
+      'none',
+      'verified',
+      'pending',
+      'kind.siren',
+      'kind.eu_vat',
+      'profile',
+      'logo',
+      'logoHint',
+      'logoAdd',
+      'logoReplace',
+      'logoRemove',
+      'logoTooBig',
+      'logoType',
+      'logoDone',
+      'firstname',
+      'lastname',
+      'phone',
+      'address',
+      'website',
+      'save',
+      'saved',
+      'error',
+      'legalTitle',
+    ].map((k) => `studio.${k}`),
     ...['email', 'role', 'signout', 'licence'].map((k) => `account.${k}`),
     ...['purchased', 'preorder', 'available', 'consumed', 'refunded', 'empty'].map((k) => `diag.${k}`),
     ...[
@@ -654,6 +681,150 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       return head;
     }
 
+    // --- Studio : fiche du bike fitter (users) et logo (bucket studio-logos) --
+    // Mêmes colonnes que l'app desktop (studio_name, phonenumber, website…) et
+    // même fichier de logo `<id>/logo`, lu par les cartes de partage et le PDF.
+    let studioForm: HTMLElement | null = null;
+    let studioLegal: HTMLElement | null = null;
+    function paintStudio() {
+      const panel = document.querySelector<HTMLElement>('#studio [data-body]');
+      if (!panel) return;
+      panel.replaceChildren(...[studioForm, studioLegal].filter((n): n is HTMLElement => Boolean(n)));
+    }
+
+    type StudioRow = {
+      studio_name: string | null;
+      firstname: string | null;
+      name: string | null;
+      phonenumber: string | null;
+      studio_address: string | null;
+      website: string | null;
+    };
+    const STUDIO_FIELDS: { key: keyof StudioRow; label: string; type: string; max: number; auto: string }[] = [
+      { key: 'studio_name', label: 'studio.name', type: 'text', max: 120, auto: 'organization' },
+      { key: 'firstname', label: 'studio.firstname', type: 'text', max: 80, auto: 'given-name' },
+      { key: 'name', label: 'studio.lastname', type: 'text', max: 80, auto: 'family-name' },
+      { key: 'phonenumber', label: 'studio.phone', type: 'tel', max: 30, auto: 'tel' },
+      { key: 'studio_address', label: 'studio.address', type: 'text', max: 300, auto: 'street-address' },
+      { key: 'website', label: 'studio.website', type: 'url', max: 200, auto: 'url' },
+    ];
+    const LOGO_BUCKET = 'studio-logos';
+    const LOGO_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
+    const LOGO_MAX = 1024 * 1024;
+
+    async function renderStudioForm(userId: string) {
+      const T = L();
+      const { data } = await supabase
+        .from('users')
+        .select('studio_name, firstname, name, phonenumber, studio_address, website')
+        .eq('id', userId)
+        .maybeSingle();
+      const current = (data ?? {}) as Partial<StudioRow>;
+
+      const box = el('div', 'acct-studio');
+      box.append(el('h3', 'acct-subtitle', T['studio.profile']));
+
+      // Logo : aperçu, ajout / remplacement, suppression.
+      const logoRow = el('div', 'acct-logo-row');
+      const preview = el('div', 'acct-logo');
+      const logoActions = el('div', 'acct-logo-actions');
+      const file = el('input', 'hidden');
+      file.type = 'file';
+      file.accept = LOGO_TYPES.join(',');
+      const logoMsg = el('p', 'acct-muted acct-small');
+      const publicUrl = supabase.storage.from(LOGO_BUCKET).getPublicUrl(`${userId}/logo`).data.publicUrl;
+
+      async function paintLogo() {
+        const { data: files } = await supabase.storage.from(LOGO_BUCKET).list(userId);
+        const logo = files?.find((f) => f.name === 'logo');
+        preview.replaceChildren();
+        logoActions.replaceChildren();
+        if (logo) {
+          const img = el('img');
+          img.src = `${publicUrl}?v=${encodeURIComponent(logo.updated_at ?? logo.created_at ?? '')}`;
+          img.alt = T['studio.logo'];
+          preview.append(img);
+        } else {
+          preview.textContent = initials(current.studio_name || T['studio.logo']);
+        }
+        logoActions.append(btn(logo ? T['studio.logoReplace'] : T['studio.logoAdd'], 'plain', () => file.click()));
+        if (logo) {
+          logoActions.append(
+            btn(T['studio.logoRemove'], 'danger', async () => {
+              const { error } = await supabase.storage.from(LOGO_BUCKET).remove([`${userId}/logo`]);
+              logoMsg.textContent = error ? T['studio.error'] : '';
+              await paintLogo();
+            })
+          );
+        }
+      }
+      file.addEventListener('change', async () => {
+        const f = file.files?.[0];
+        file.value = '';
+        if (!f) return;
+        if (!LOGO_TYPES.includes(f.type)) return void (logoMsg.textContent = T['studio.logoType']);
+        if (f.size > LOGO_MAX) return void (logoMsg.textContent = T['studio.logoTooBig']);
+        const { error } = await supabase.storage
+          .from(LOGO_BUCKET)
+          .upload(`${userId}/logo`, f, { upsert: true, contentType: f.type, cacheControl: '300' });
+        logoMsg.textContent = error ? T['studio.error'] : T['studio.logoDone'];
+        await paintLogo();
+      });
+      const logoText = el('div');
+      logoText.append(el('p', 'acct-field-label', T['studio.logo']), logoActions, logoMsg);
+      logoRow.append(preview, logoText, file);
+      box.append(logoRow, el('p', 'acct-muted acct-small', T['studio.logoHint']));
+
+      // Champs texte.
+      const form = el('form', 'acct-studio-form');
+      form.noValidate = true;
+      const inputs = new Map<keyof StudioRow, HTMLInputElement>();
+      for (const f of STUDIO_FIELDS) {
+        const label = el('label', 'acct-field');
+        const input = el('input', 'acct-input');
+        input.type = f.type;
+        input.name = f.key;
+        input.maxLength = f.max;
+        input.setAttribute('autocomplete', f.auto);
+        input.value = current[f.key] ?? '';
+        if (f.key === 'website') input.placeholder = 'https://';
+        inputs.set(f.key, input);
+        label.append(el('span', 'acct-field-label', T[f.label]), input);
+        form.append(label);
+      }
+      const save = el('button', 'acct-btn acct-btn--primary', T['studio.save']);
+      save.type = 'submit';
+      const formActions = actions(save);
+      form.append(formActions);
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        save.disabled = true;
+        const patch = Object.fromEntries(
+          STUDIO_FIELDS.map((f) => {
+            let v = inputs.get(f.key)!.value.trim();
+            if (f.key === 'website' && v && !/^https?:\/\//i.test(v)) v = `https://${v}`;
+            return [f.key, v || null];
+          })
+        ) as StudioRow;
+        const { error } = await supabase.from('users').update(patch).eq('id', userId);
+        save.disabled = false;
+        flashIn(form, error ? T['studio.error'] : T['studio.saved'], !error);
+        if (!error) {
+          Object.assign(current, patch);
+          inputs.get('website')!.value = patch.website ?? '';
+          if (patch.studio_name) {
+            document.getElementById('acct-name')!.textContent = patch.studio_name;
+            document.getElementById('acct-avatar')!.textContent = initials(patch.studio_name);
+          }
+        }
+      });
+      box.append(form);
+
+      studioForm = box;
+      paintStudio();
+      await paintLogo();
+    }
+
     function renderBf(s: Summary, flash?: { panel: string; text: string; ok: boolean }) {
       const T = L();
       const now = Date.now();
@@ -890,8 +1061,8 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       }
       billing.replaceChildren(billItems.length ? rows(...billItems) : el('p', 'acct-muted', T['billing.none']));
 
-      // --- Studio ----------------------------------------------------------
-      const items = [row(T['studio.name'], document.getElementById('acct-name')?.textContent ?? '')];
+      // --- Studio : identité légale (lecture seule) sous la fiche modifiable --
+      const items: HTMLElement[] = [];
       if (s.business) {
         const b = s.business;
         const idText =
@@ -910,7 +1081,10 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       } else {
         items.push(row(T['studio.id'], T['studio.none']));
       }
-      body('studio').replaceChildren(rows(...items));
+      const legal = el('div', 'acct-studio-legal');
+      legal.append(el('h3', 'acct-subtitle', T['studio.legalTitle']), rows(...items));
+      studioLegal = legal;
+      paintStudio();
 
       // Offres BF payables depuis l'espace (onglet Abonnement), tant qu'aucun
       // abonnement n'est en cours.
@@ -1193,6 +1367,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       const me = await loadProfile();
       if (!me) return;
       const isBf = me.role === 'bike-fitter' || me.role === 'admin';
+      if (isBf || me.role === 'pending_bf') renderStudioForm(me.id);
       if (isBf) await Promise.all([loadBf(), loadActivity()]);
       // Compte en attente : pas de lecture des cyclistes (RLS), pas d'onglet.
       if (me.role === 'pending_bf') showSection('activite', false);
@@ -1583,6 +1758,67 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
   }
   #account .acct-meter-track.is-over .acct-meter-fill {
     background: linear-gradient(90deg, var(--acct-accent), var(--acct-warn));
+  }
+
+  /* Studio : fiche modifiable et logo */
+  #account .acct-subtitle {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+  #account .acct-studio-legal {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--acct-line);
+  }
+  #account .acct-logo-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  #account .acct-logo {
+    width: 4.5rem;
+    height: 4.5rem;
+    flex: none;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    border: 1px solid var(--acct-line);
+    background: var(--acct-inset);
+    color: var(--acct-muted);
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+  #account .acct-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #fff;
+  }
+  #account .acct-logo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    margin-top: 0.375rem;
+  }
+  #account .acct-studio-form {
+    margin-top: 1.25rem;
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 768px) {
+    #account .acct-studio-form {
+      grid-template-columns: 1fr 1fr;
+    }
+    #account .acct-studio-form .acct-actions,
+    #account .acct-studio-form .acct-flash {
+      grid-column: 1 / -1;
+    }
+  }
+  #account .acct-studio-form .acct-actions {
+    margin-top: 0;
   }
 
   /* Déblocage de l'essai */
