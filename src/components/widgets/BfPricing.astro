@@ -72,11 +72,11 @@ type Feature = string | { launch: string; standard: string };
 const unlimitedFeatures: Feature[] = [
   t(dict, 'bfp.value.realtime'),
   t(dict, 'bfp.value.positions'),
-  t(dict, 'bfp.value.share'),
-  t(dict, 'bfp.value.learn'),
+  t(dict, 'bfp.value.interface'),
+  t(dict, 'bfp.value.setup'),
+  t(dict, 'bfp.value.trial'),
   t(dict, 'bfp.value.clients'),
-  t(dict, 'bfp.inc.setup'),
-  t(dict, 'bfp.unlimited.f3'),
+  t(dict, 'bfp.value.share'),
 ];
 const guide = [
   {
@@ -114,7 +114,6 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
         id="bf-unlimited"
         class={`${cardClass} relative border-2 border-primary`}
         data-switch-at={LAUNCH_OFFER.switchAt}
-        data-seats-template={t(dict, 'bfp.launch.seats')}
       >
         <span class="absolute -top-3 left-6 flex gap-2">
           <span
@@ -146,30 +145,22 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
         </div>
 
         <div class="bf-launch-only mt-4 hidden">
-          <!-- Prix de lancement, puis tarif normal : dit en toutes lettres, sans prix barré. -->
+          <!-- Prix de lancement, tarif normal barré (décision du 2026-11-03). -->
           <p class="flex flex-wrap items-baseline gap-x-2">
+            <span class="text-2xl font-semibold text-muted line-through">{eur(99)}</span>
             <span class="text-4xl font-bold">{eur(69)}</span>
             <span class="text-sm text-muted">{priceSuffix(t(dict, 'bfp.perMonth'))}</span>
           </p>
-          <p class="mt-1 text-sm">{t(dict, 'bfp.launch.until')}</p>
-          <p class="mt-1 text-sm font-semibold text-primary">{per('bfp.per.at20', 3.45)}</p>
-          <p class="mt-2 text-sm">
-            {t(dict, 'bfp.launch.text')}
-            <span class="bf-launch-seats font-semibold text-primary" aria-live="polite"></span>
-          </p>
+          <p class="mt-1 text-sm">{t(dict, 'bfp.launch.short')}</p>
         </div>
 
         <div class="bf-launchyearly-only mt-4">
           <p class="flex flex-wrap items-baseline gap-x-2">
+            <span class="text-2xl font-semibold text-muted line-through">{eur(990)}</span>
             <span class="text-4xl font-bold">{eur(690)}</span>
             <span class="text-sm text-muted">{priceSuffix(t(dict, 'bfp.perYear'))}</span>
           </p>
-          <p class="mt-1 text-sm">{t(dict, 'bfp.launch.yearUntil')}</p>
-          <p class="mt-1 text-sm font-semibold text-primary">{t(dict, 'bfp.billing.save')}</p>
-          <p class="mt-2 text-sm">
-            {t(dict, 'bfp.launch.text')}
-            <span class="bf-launch-seats font-semibold text-primary" aria-live="polite"></span>
-          </p>
+          <p class="mt-1 text-sm">{t(dict, 'bfp.launch.short')}</p>
         </div>
 
         <div class="bf-standard-only mt-4 hidden">
@@ -381,8 +372,7 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
   // Offre de lancement : date limite et places restantes, lues en direct.
   async function refreshLaunch() {
     const card = document.getElementById('bf-unlimited');
-    const seatsEls = document.querySelectorAll<HTMLElement>('.bf-launch-seats');
-    if (!card || !seatsEls.length) return;
+    if (!card) return;
 
     if (Date.now() >= Number(card.dataset.switchAt)) {
       state.launchOpen = false;
@@ -391,8 +381,9 @@ const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shado
     }
     const { data, error } = await supabase.rpc('bf_launch_seats_remaining');
     if (error || typeof data !== 'number') return; // rien plutôt qu'un chiffre faux
+    // Places restantes : plus affichées (décision du 2026-11-03), mais l'offre
+    // se ferme toujours quand elles sont épuisées.
     if (data <= 0) state.launchOpen = false;
-    else seatsEls.forEach((el) => (el.textContent = (card.dataset.seatsTemplate ?? '').replace('{n}', String(data))));
     render();
   }
 

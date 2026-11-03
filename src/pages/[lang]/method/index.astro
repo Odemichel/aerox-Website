@@ -248,16 +248,22 @@ const metadata = {
         const hp = (form.elements.namedItem('hp') as HTMLInputElement | null)?.value ?? '';
 
         const lang = window.location.pathname.split('/')[1] || 'fr';
-        const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, phone, hp, source: 'method' }),
-        });
-
-        const data = await res.json();
+        // Réseau coupé ou réponse non JSON (page d'erreur de la plateforme) :
+        // le visiteur voit le message d'erreur au lieu d'un formulaire muet.
+        let ok = false;
+        try {
+          const res = await fetch(`/${lang}/telechargement/api/subscribe-livre/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, phone, hp, source: 'method' }),
+          });
+          ok = Boolean(((await res.json()) as { success?: boolean }).success);
+        } catch {
+          ok = false;
+        }
         msg?.classList.remove('hidden', 'text-red-600', 'text-green-600');
 
-        if (data.success) {
+        if (ok) {
           msg!.textContent = form?.dataset.success ?? '';
           msg?.classList.add('text-green-600');
           form.reset();

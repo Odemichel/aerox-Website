@@ -257,15 +257,8 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
 
   <script>
     import { supabase } from '../../../config/supabaseClient';
-    import { manageSubscription, openPortal, openReceipt, startCheckout } from '~/lib/billing/client';
-    import {
-      DEFAULT_OFFER,
-      isDowngrade,
-      nextInvoiceCentsForOffer,
-      suggestUpgrade,
-      type Offer,
-      type Plan,
-    } from '~/lib/billing/logic';
+    import { manageSubscription, openPortal, openReceipt } from '~/lib/billing/client';
+    import { isDowngrade, nextInvoiceCentsForOffer, suggestUpgrade, type Offer, type Plan } from '~/lib/billing/logic';
     import { LAUNCH_OFFER } from '~/lib/billing/catalog';
     import { isDiagnosticAvailable } from '~/config/diagnostic';
     import { monthBounds, toMonthCounts, type MyActivity } from '~/lib/account/activity';
@@ -661,15 +654,6 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       return head;
     }
 
-    /** Démarre l'essai (Checkout avec carte) ; en cas d'échec, message dans le panneau. */
-    async function startTrial(offer: Offer) {
-      const T = L();
-      const panel = body('abonnement');
-      flashIn(panel, T.redirecting, true);
-      const error = await startCheckout(offer, lang());
-      if (error) flashIn(panel, T.error, false);
-    }
-
     function renderBf(s: Summary, flash?: { panel: string; text: string; ok: boolean }) {
       const T = L();
       const now = Date.now();
@@ -684,9 +668,6 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       const noSub = !subscribed && s.plan !== 'legacy';
       // Carte enregistrée, abonnement créé à l'installation du setup.
       const awaitingInstall = noSub && !s.has_subscription && Boolean(s.pending_offer);
-      // Premier abonnement : choix de l'offre ouvert directement (plus de
-      // vérification d'entreprise préalable depuis le 2026-10-18).
-      const canStartTrial = noSub && !trialUsed && !awaitingInstall;
       // Une seule action orange à la fois : régler une facture passe avant tout.
       const primaryFree = !s.unpaid_amount;
 
@@ -844,23 +825,14 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
             )
           )
         );
-      } else if (canStartTrial) {
-        // Le bike fitter choisit son offre (Essentiel par défaut) et enregistre
-        // une carte ; l'essai de 14 jours démarre à l'installation.
-        plan.append(
-          el('h3', 'acct-plan-name', T['trial.start.title']),
-          el('p', 'acct-lead', T['trial.start.text']),
-          actions(
-            btn(T['trial.start.cta'], primaryFree ? 'primary' : 'plain', () => startTrial(DEFAULT_OFFER)),
-            linkBtn(T['trial.start.others'], '#tarifs', 'link')
-          )
-        );
       } else if (trialUsed) {
-        // Essai terminé (ou abonnement arrêté) : choisir une offre, sans nouvel essai.
+        // Essai terminé (ou abonnement arrêté) : choisir une offre, sans nouvel
+        // essai, dans les cartes de prix affichées juste dessous.
+        // Sans abonnement ni essai utilisé : aucun bloc, les cartes de prix
+        // suffisent (décision du 2026-11-03).
         plan.append(
           el('h3', 'acct-plan-name', T['trial.ended'].replace('{date}', dateFmt(s.trial_ends_at))),
-          el('p', 'acct-lead', T['trial.endedText']),
-          actions(linkBtn(T['trial.choose'], '#tarifs', primaryFree ? 'primary' : 'plain'))
+          el('p', 'acct-lead', T['trial.endedText'])
         );
       }
 
@@ -1436,6 +1408,9 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
   #account .acct-section-head p {
     font-size: 0.9375rem;
     margin-top: 0.125rem;
+  }
+  #account .acct-panel:empty {
+    display: none;
   }
   #account .acct-panel {
     background: var(--acct-surface);

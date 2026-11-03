@@ -15,7 +15,7 @@ export const DOWNLOADS = {
 // au moins égale à `minVersion` (même seuil que `version.min_required` en
 // base) : une sortie en retard ne rouvre jamais l'ancienne version.
 export const NEXT_RELEASE = {
-  opensAt: Date.UTC(2026, 9, 31, 23, 0, 0), // 01/11/2026 00:00, Paris (décalée du 20/10 le 2026-10-18)
+  opensAt: Date.UTC(2026, 10, 6, 23, 0, 0), // 07/11/2026 00:00, Paris (décalée du 20/10 le 2026-10-18, puis du 01/11 le 2026-11-03)
   minVersion: '1.4.0',
 };
 
