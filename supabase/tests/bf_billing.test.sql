@@ -22,7 +22,7 @@ insert into auth.users (id, email, raw_user_meta_data) values
 update auth.users set email_confirmed_at = now() where id = '00000000-0000-0000-0000-0000000000b1';
 select pg_temp.check((select role from users where id = '00000000-0000-0000-0000-0000000000b1') = 'bike-fitter', 'BF actif immédiatement');
 select pg_temp.check((select is_active from users where id = '00000000-0000-0000-0000-0000000000b1'), 'BF is_active');
-select pg_temp.check((select studio_name from users where id = '00000000-0000-0000-0000-0000000000b1') = 'Studio 1', 'studio_name repris');
+select pg_temp.check((select studio_name from bf_profiles where user_id = '00000000-0000-0000-0000-0000000000b1') = 'Studio 1', 'studio_name repris dans bf_profiles');
 select pg_temp.check((select plan from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1') = 'trial', 'plan trial');
 select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b1'), 'aucune analyse offerte avant l''identifiant');
 select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1') = 'needs_business_id', 'en attente de l''identifiant d''entreprise');

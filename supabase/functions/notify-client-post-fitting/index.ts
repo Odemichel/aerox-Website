@@ -250,16 +250,17 @@ Deno.serve(async (req) => {
     }
 
     // Fetch BF user info (including lang for email locale)
-    const { data: bfUser, error: bfErr } = await supabase
-      .from('users')
-      .select('studio_name, firstname, name, lang')
-      .eq('id', bf_user_id)
-      .single();
+    // Identité dans users, nom du studio dans bf_profiles (source unique).
+    const [{ data: bfIdentity, error: bfErr }, { data: bfStudio }] = await Promise.all([
+      supabase.from('users').select('firstname, name, lang').eq('id', bf_user_id).single(),
+      supabase.from('bf_profiles').select('studio_name').eq('user_id', bf_user_id).maybeSingle(),
+    ]);
 
-    if (bfErr || !bfUser) {
+    if (bfErr || !bfIdentity) {
       console.error('BF user fetch error:', bfErr);
       return Response.json({ error: 'BF user not found' }, { status: 400 });
     }
+    const bfUser = { ...bfIdentity, studio_name: (bfStudio?.studio_name as string | null) ?? null };
 
     // Check if client has an AeroX account (and get their lang preference)
     const { data: existingUser } = await supabase

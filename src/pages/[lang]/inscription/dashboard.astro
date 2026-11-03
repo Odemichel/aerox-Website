@@ -508,8 +508,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         return null;
       }
       const user = userData.user;
-      const read = () =>
-        supabase.from('users').select('role, is_active, licencetype, studio_name').eq('id', user.id).maybeSingle();
+      const read = () => supabase.from('users').select('role, is_active, licencetype').eq('id', user.id).maybeSingle();
       let { data: profile } = await read();
       if (!profile) {
         // Profil créé par un trigger à la confirmation de l'e-mail.
@@ -522,6 +521,15 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       }
       const p = profile as Profile;
       const isBf = p.role === 'bike-fitter' || p.role === 'pending_bf';
+      if (isBf) {
+        // Nom du studio : fiche bf_profiles (source unique).
+        const { data: studio } = await supabase
+          .from('bf_profiles')
+          .select('studio_name')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        p.studio_name = (studio?.studio_name as string | null) ?? null;
+      }
       const email = user.email ?? '';
       const name = (isBf && p.studio_name) || email;
       const roleLabel = T[`role.${p.role}`] ?? p.role ?? '';
@@ -685,9 +693,10 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       return head;
     }
 
-    // --- Studio : fiche du bike fitter (users) et logo (bucket studio-logos) --
-    // Mêmes colonnes que l'app desktop (studio_name, phonenumber, website…) et
-    // même fichier de logo `<id>/logo`, lu par les cartes de partage et le PDF.
+    // --- Studio : fiche du bike fitter et logo (bucket studio-logos) ---------
+    // Identité (prénom, nom, téléphone) dans `users`, fiche studio dans
+    // `bf_profiles` (source unique, lue aussi par le desktop et My Companion),
+    // logo `<id>/logo` lu par les cartes de partage et le PDF.
     let studioForm: HTMLElement | null = null;
     let studioLegal: HTMLElement | null = null;
     function paintStudio() {
@@ -708,31 +717,64 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       bio: string | null;
       certifications: string | null;
     };
+    type StudioField = {
+      key: keyof StudioRow;
+      table: 'users' | 'bf_profiles';
+      label: string;
+      type: string;
+      max: number;
+      auto: string;
+    };
     // Mêmes champs que l'encart « infos pro » du desktop (pro_data_box.dart).
-    const STUDIO_FIELDS: { key: keyof StudioRow; label: string; type: string; max: number; auto: string }[] = [
-      { key: 'studio_name', label: 'studio.name', type: 'text', max: 120, auto: 'organization' },
-      { key: 'firstname', label: 'studio.firstname', type: 'text', max: 80, auto: 'given-name' },
-      { key: 'name', label: 'studio.lastname', type: 'text', max: 80, auto: 'family-name' },
-      { key: 'phonenumber', label: 'studio.phone', type: 'tel', max: 30, auto: 'tel' },
-      { key: 'studio_address', label: 'studio.address', type: 'text', max: 300, auto: 'street-address' },
-      { key: 'website', label: 'studio.website', type: 'url', max: 200, auto: 'url' },
-      { key: 'specialties', label: 'studio.specialties', type: 'text', max: 500, auto: 'off' },
-      { key: 'experience_years', label: 'studio.experience', type: 'number', max: 2, auto: 'off' },
-      { key: 'certifications', label: 'studio.certifications', type: 'text', max: 500, auto: 'off' },
-      { key: 'bio', label: 'studio.bio', type: 'textarea', max: 2000, auto: 'off' },
+    const STUDIO_FIELDS: StudioField[] = [
+      { key: 'studio_name', table: 'bf_profiles', label: 'studio.name', type: 'text', max: 120, auto: 'organization' },
+      { key: 'firstname', table: 'users', label: 'studio.firstname', type: 'text', max: 80, auto: 'given-name' },
+      { key: 'name', table: 'users', label: 'studio.lastname', type: 'text', max: 80, auto: 'family-name' },
+      { key: 'phonenumber', table: 'users', label: 'studio.phone', type: 'tel', max: 30, auto: 'tel' },
+      {
+        key: 'studio_address',
+        table: 'bf_profiles',
+        label: 'studio.address',
+        type: 'text',
+        max: 300,
+        auto: 'street-address',
+      },
+      { key: 'website', table: 'bf_profiles', label: 'studio.website', type: 'url', max: 200, auto: 'url' },
+      { key: 'specialties', table: 'bf_profiles', label: 'studio.specialties', type: 'text', max: 500, auto: 'off' },
+      {
+        key: 'experience_years',
+        table: 'bf_profiles',
+        label: 'studio.experience',
+        type: 'number',
+        max: 2,
+        auto: 'off',
+      },
+      {
+        key: 'certifications',
+        table: 'bf_profiles',
+        label: 'studio.certifications',
+        type: 'text',
+        max: 500,
+        auto: 'off',
+      },
+      { key: 'bio', table: 'bf_profiles', label: 'studio.bio', type: 'textarea', max: 2000, auto: 'off' },
     ];
+    const studioCols = (table: StudioField['table']) =>
+      STUDIO_FIELDS.filter((f) => f.table === table).map((f) => f.key);
     const LOGO_BUCKET = 'studio-logos';
     const LOGO_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
     const LOGO_MAX = 1024 * 1024;
 
     async function renderStudioForm(userId: string) {
       const T = L();
-      const { data } = await supabase
-        .from('users')
-        .select(STUDIO_FIELDS.map((f) => f.key).join(', '))
-        .eq('id', userId)
-        .maybeSingle();
-      const current = (data ?? {}) as unknown as Partial<StudioRow>;
+      const [{ data: identity }, { data: studio }] = await Promise.all([
+        supabase.from('users').select(studioCols('users').join(', ')).eq('id', userId).maybeSingle(),
+        supabase.from('bf_profiles').select(studioCols('bf_profiles').join(', ')).eq('user_id', userId).maybeSingle(),
+      ]);
+      const current = {
+        ...((identity ?? {}) as object),
+        ...((studio ?? {}) as object),
+      } as Partial<StudioRow>;
 
       const box = el('div', 'acct-studio');
       box.append(el('h3', 'acct-subtitle', T['studio.profile']));
@@ -838,7 +880,12 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
             return [f.key, v || null];
           })
         ) as StudioRow;
-        const { error } = await supabase.from('users').update(patch).eq('id', userId);
+        const pick = (table: StudioField['table']) => Object.fromEntries(studioCols(table).map((k) => [k, patch[k]]));
+        const [{ error: e1 }, { error: e2 }] = await Promise.all([
+          supabase.from('users').update(pick('users')).eq('id', userId),
+          supabase.from('bf_profiles').upsert({ user_id: userId, ...pick('bf_profiles') }, { onConflict: 'user_id' }),
+        ]);
+        const error = e1 ?? e2;
         save.disabled = false;
         flashIn(form, error ? T['studio.error'] : T['studio.saved'], !error);
         if (!error) {

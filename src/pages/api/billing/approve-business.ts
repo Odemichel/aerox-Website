@@ -41,11 +41,12 @@ const escapeHtml = (v: unknown) =>
 
 async function pending(user: string) {
   const db = supabaseAdmin();
-  const [{ data: id }, { data: profile }] = await Promise.all([
+  const [{ data: id }, { data: profile }, { data: studio }] = await Promise.all([
     db.from('bf_business_ids').select('id_key, status, website, email_domain_match').eq('user_id', user).maybeSingle(),
-    db.from('users').select('email, studio_name').eq('id', user).maybeSingle(),
+    db.from('users').select('email').eq('id', user).maybeSingle(),
+    db.from('bf_profiles').select('studio_name').eq('user_id', user).maybeSingle(),
   ]);
-  return { id, profile };
+  return { id, profile: { email: profile?.email, studio_name: studio?.studio_name } };
 }
 
 export const GET: APIRoute = async ({ url }) => {
