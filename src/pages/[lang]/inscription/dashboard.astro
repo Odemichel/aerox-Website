@@ -137,6 +137,8 @@ const labels = {
       'saved',
       'error',
       'legalTitle',
+      'edit',
+      'cancel',
     ].map((k) => `studio.${k}`),
     ...['email', 'role', 'signout', 'licence'].map((k) => `account.${k}`),
     ...['purchased', 'preorder', 'available', 'consumed', 'refunded', 'empty'].map((k) => `diag.${k}`),
@@ -807,8 +809,17 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         ...((studio ?? {}) as object),
       } as Partial<StudioRow>;
 
+      // Lecture par défaut : toutes les valeurs ; le crayon ouvre l'édition.
       const box = el('div', 'acct-studio');
-      box.append(el('h3', 'acct-subtitle', T['studio.profile']));
+      const head = el('div', 'acct-studio-head');
+      const editBtn = el('button', 'acct-icon-btn');
+      editBtn.type = 'button';
+      editBtn.setAttribute('aria-label', T['studio.edit']);
+      editBtn.dataset.tip = T['studio.edit'];
+      editBtn.innerHTML =
+        '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4l10.5-10.5a2.828 2.828 0 1 0-4-4L4 16v4"/><path d="M13.5 6.5l4 4"/></svg>';
+      head.append(el('h3', 'acct-subtitle', T['studio.profile']), editBtn);
+      box.append(head);
 
       // Logo : aperçu, ajout / remplacement, suppression.
       const logoRow = el('div', 'acct-logo-row');
@@ -857,9 +868,36 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         await paintLogo();
       });
       const logoText = el('div');
-      logoText.append(el('p', 'acct-field-label', T['studio.logo']), logoActions, logoMsg);
+      const logoEdit = el('div', 'hidden');
+      logoEdit.append(logoActions, el('p', 'acct-muted acct-small', T['studio.logoHint']));
+      logoText.append(el('p', 'acct-field-label', T['studio.logo']), logoEdit, logoMsg);
       logoRow.append(preview, logoText, file);
-      box.append(logoRow, el('p', 'acct-muted acct-small', T['studio.logoHint']));
+      box.append(logoRow);
+
+      // Vue en lecture : chaque champ, « — » quand il est vide.
+      const view = el('div', 'acct-studio-view');
+      function paintView() {
+        view.replaceChildren(
+          rows(
+            ...STUDIO_FIELDS.map((f) => {
+              const v = current[f.key];
+              const text = v == null || v === '' ? '—' : String(v);
+              if (f.key === 'website' && text !== '—') {
+                const a = el('a', 'acct-link', text.replace(/^https?:\/\//, ''));
+                a.href = text;
+                a.target = '_blank';
+                a.rel = 'noopener';
+                return row(T[f.label], a);
+              }
+              const r = row(T[f.label], text);
+              if (f.type === 'textarea') r.classList.add('acct-row--multiline');
+              return r;
+            })
+          )
+        );
+      }
+      paintView();
+      box.append(view);
 
       // Champs texte.
       const form = el('form', 'acct-studio-form');
@@ -895,8 +933,28 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       }
       const save = el('button', 'acct-btn acct-btn--primary', T['studio.save']);
       save.type = 'submit';
-      const formActions = actions(save);
+      const cancel = el('button', 'acct-btn', T['studio.cancel']);
+      cancel.type = 'button';
+      const formActions = actions(save, cancel);
       form.append(formActions);
+      form.classList.add('hidden');
+
+      function setEditing(on: boolean) {
+        form.classList.toggle('hidden', !on);
+        logoEdit.classList.toggle('hidden', !on);
+        view.classList.toggle('hidden', on);
+        editBtn.classList.toggle('hidden', on);
+        form.querySelector(':scope > .acct-flash')?.remove();
+        if (on) {
+          // Valeurs enregistrées, pas une saisie abandonnée.
+          for (const f of STUDIO_FIELDS) {
+            inputs.get(f.key)!.value = current[f.key] == null ? '' : String(current[f.key]);
+          }
+          inputs.get('studio_name')?.focus();
+        }
+      }
+      editBtn.addEventListener('click', () => setEditing(true));
+      cancel.addEventListener('click', () => setEditing(false));
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         save.disabled = true;
@@ -918,10 +976,13 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         ]);
         const error = e1 ?? e2;
         save.disabled = false;
-        flashIn(form, error ? T['studio.error'] : T['studio.saved'], !error);
-        if (!error) {
+        if (error) {
+          flashIn(form, T['studio.error'], false);
+        } else {
           Object.assign(current, patch);
-          inputs.get('website')!.value = patch.website ?? '';
+          paintView();
+          setEditing(false);
+          flashIn(box, T['studio.saved'], true);
           if (patch.studio_name) {
             document.getElementById('acct-name')!.textContent = patch.studio_name;
             document.getElementById('acct-avatar')!.textContent = initials(patch.studio_name);
@@ -2069,6 +2130,65 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     font-size: 1.0625rem;
     font-weight: 700;
     margin-bottom: 0.75rem;
+  }
+  #account .acct-studio-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  #account .acct-studio-head .acct-subtitle {
+    margin-bottom: 0;
+  }
+  #account .acct-studio-view {
+    margin-top: 1rem;
+  }
+  #account .acct-row--multiline .acct-row-value {
+    white-space: pre-wrap;
+  }
+  /* Bouton icône avec infobulle (data-tip) */
+  #account .acct-icon-btn {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: none;
+    border-radius: 999px;
+    border: 1px solid var(--acct-line);
+    background: transparent;
+    color: var(--acct-text);
+    cursor: pointer;
+  }
+  #account .acct-icon-btn:hover,
+  #account .acct-icon-btn:focus-visible {
+    border-color: var(--acct-accent);
+    color: var(--acct-accent);
+  }
+  #account .acct-icon-btn[data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.5rem);
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.375rem;
+    background: var(--acct-text);
+    color: var(--acct-surface);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(0.25rem);
+    transition:
+      opacity 0.15s,
+      transform 0.15s;
+  }
+  #account .acct-icon-btn[data-tip]:hover::after,
+  #account .acct-icon-btn[data-tip]:focus-visible::after {
+    opacity: 1;
+    transform: none;
   }
   #account .acct-studio-legal {
     margin-top: 2rem;

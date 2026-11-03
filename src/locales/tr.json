@@ -1038,6 +1038,8 @@
   "dash.studio.saved": "Profil kaydedildi.",
   "dash.studio.error": "Kaydedilemedi, lütfen tekrar deneyin.",
   "dash.studio.legalTitle": "Şirket bilgileri",
+  "dash.studio.edit": "Düzenle",
+  "dash.studio.cancel": "İptal",
   "dash.preview.label": "Preview (AeroX team)",
   "dash.preview.hint": "Sample data: nothing is saved or charged.",
   "dash.preview.real": "My real account",

@@ -1128,6 +1128,8 @@
   "dash.studio.saved": "Fiche enregistrée.",
   "dash.studio.error": "Enregistrement impossible, réessayez.",
   "dash.studio.legalTitle": "Identité de l'entreprise",
+  "dash.studio.edit": "Modifier",
+  "dash.studio.cancel": "Annuler",
   "dash.preview.label": "Aperçu (équipe AeroX)",
   "dash.preview.hint": "Données fictives : rien n'est enregistré ni facturé.",
   "dash.preview.real": "Mon compte réel",

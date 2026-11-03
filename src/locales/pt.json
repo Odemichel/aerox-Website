@@ -1038,6 +1038,8 @@
   "dash.studio.saved": "Ficha salva.",
   "dash.studio.error": "Não foi possível salvar, tente novamente.",
   "dash.studio.legalTitle": "Dados da empresa",
+  "dash.studio.edit": "Editar",
+  "dash.studio.cancel": "Cancelar",
   "dash.preview.label": "Preview (AeroX team)",
   "dash.preview.hint": "Sample data: nothing is saved or charged.",
   "dash.preview.real": "My real account",

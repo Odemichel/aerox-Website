@@ -1111,6 +1111,8 @@
   "dash.studio.saved": "Profile saved.",
   "dash.studio.error": "Couldn't save, please try again.",
   "dash.studio.legalTitle": "Business identity",
+  "dash.studio.edit": "Edit",
+  "dash.studio.cancel": "Cancel",
   "dash.preview.label": "Preview (AeroX team)",
   "dash.preview.hint": "Sample data: nothing is saved or charged.",
   "dash.preview.real": "My real account",
