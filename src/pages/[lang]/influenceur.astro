@@ -76,6 +76,44 @@ const labelClass = 'flex flex-col gap-1.5 text-sm font-semibold';
             {t(dict, 'influencer.hero.site')}
           </a>
         </div>
+
+        <!-- Option légère : être prévenu de la sortie (groupes MailerLite de la sortie). -->
+        <form
+          id="influencer-notify"
+          class="mt-8 max-w-md"
+          novalidate
+          data-lang={lang}
+          data-success={t(dict, 'influencer.notify.success')}
+          data-error={t(dict, 'influencer.notify.error')}
+        >
+          <label for="influencer-notify-email" class="text-sm font-semibold">
+            {t(dict, 'influencer.notify.title')}
+          </label>
+          <div class="mt-2 flex gap-2">
+            <input
+              id="influencer-notify-email"
+              type="email"
+              name="email"
+              required
+              maxlength="200"
+              autocomplete="email"
+              placeholder={t(dict, 'influencer.notify.placeholder')}
+              class="min-w-0 flex-1 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-default focus:border-primary focus:outline-none"
+            />
+            <button type="submit" class="btn-secondary shrink-0 px-4 py-2 font-semibold">
+              {t(dict, 'influencer.notify.cta')}
+            </button>
+          </div>
+          <input
+            type="text"
+            name="hp"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+            class="absolute left-[-9999px] w-px h-px opacity-0"
+          />
+          <p class="notify-msg mt-2 hidden text-sm font-semibold" role="status"></p>
+        </form>
       </div>
 
       <figure class="relative mx-auto w-full max-w-[16rem]">
@@ -250,6 +288,38 @@ const labelClass = 'flex flex-col gap-1.5 text-sm font-semibold';
         sound.querySelector('.sound-on')?.classList.toggle('hidden', video.muted);
         const label = sound.querySelector('.sound-label');
         if (label) label.textContent = (video.muted ? sound.dataset.on : sound.dataset.off) ?? '';
+      });
+    }
+
+    const notify = document.getElementById('influencer-notify') as HTMLFormElement | null;
+    if (notify && notify.dataset.bound !== '1') {
+      notify.dataset.bound = '1';
+      const nmsg = notify.querySelector<HTMLParagraphElement>('.notify-msg');
+      const nbtn = notify.querySelector<HTMLButtonElement>('button[type="submit"]');
+      notify.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = new FormData(notify);
+        const email = String(data.get('email') ?? '').trim();
+        if (!email) return;
+        if (nbtn) nbtn.disabled = true;
+        let ok = false;
+        try {
+          const res = await fetch('/api/release-notify/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, lang: notify.dataset.lang, hp: String(data.get('hp') ?? '') }),
+          });
+          ok = res.ok && (await res.json().catch(() => ({})))?.success === true;
+        } catch {
+          ok = false;
+        }
+        if (nmsg) {
+          nmsg.textContent = (ok ? notify.dataset.success : notify.dataset.error) ?? '';
+          nmsg.classList.remove('hidden', 'text-red-600', 'text-green-600');
+          nmsg.classList.add(ok ? 'text-green-600' : 'text-red-600');
+        }
+        if (ok) notify.reset();
+        if (nbtn) nbtn.disabled = false;
       });
     }
 
