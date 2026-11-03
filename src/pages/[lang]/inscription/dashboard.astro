@@ -184,7 +184,8 @@ const labels = {
 // Sections : [ancre, titre, description, type de compte]. Une section commune
 // aux deux comptes peut avoir une description par type : [bike fitter, cycliste].
 const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'all'][] = [
-  ['abonnement', t(dict, 'dash.nav.plan'), t(dict, 'dash.sec.plan'), 'bf'],
+  // Abonnement : pas de phrase sous le titre (décision du 2026-11-03).
+  ['abonnement', t(dict, 'dash.nav.plan'), '', 'bf'],
   ['diagnostics', t(dict, 'dash.nav.diag'), t(dict, 'dash.sec.diag'), 'rider'],
   ['activite', t(dict, 'dash.nav.activity'), [t(dict, 'dash.sec.activity'), t(dict, 'dash.sec.activityRider')], 'all'],
   ['utilisation', t(dict, 'dash.nav.usage'), t(dict, 'dash.sec.usage'), 'bf'],
@@ -229,7 +230,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
               <div class="acct-section-head">
                 <h2 id={`${id}-title`}>{title}</h2>
                 {typeof desc === 'string' ? (
-                  <p class="acct-muted">{desc}</p>
+                  desc && <p class="acct-muted">{desc}</p>
                 ) : (
                   <>
                     <p class="acct-muted" data-for-text="bf">
