@@ -4,6 +4,7 @@ import Logo from '~/components/Logo.astro';
 import ToggleMenu from '~/components/common/ToggleMenu.astro';
 import ToggleTheme from '~/components/common/ToggleTheme.astro';
 import Button from '~/components/ui/Button.astro';
+import { getDict, t, type Locale } from '~/lib/i18n';
 
 import type { CallToAction } from '~/types';
 
@@ -99,6 +100,14 @@ function langHref(target: string): string {
 }
 
 const currentLangObj = LANGS.find((l) => l.code === currentLang) ?? LANGS[0];
+
+// Accès au compte depuis toutes les pages (bike fitter, cycliste, autre) :
+// connexion, ou l'espace si une session existe déjà dans ce navigateur.
+const dict = getDict(currentLang as Locale);
+const loginLabel = t(dict, 'nav.login');
+const accountLabel = t(dict, 'dash.acct.title');
+const loginHref = `/${currentLang}/inscription/connexion/`;
+const accountHref = `/${currentLang}/inscription/dashboard/`;
 ---
 
 <header
@@ -239,7 +248,17 @@ const currentLangObj = LANGS.find((l) => l.code === currentLang) ?? LANGS[0];
         'self-center sm:flex items-center sm:mb-0 w-full sm:w-auto sm:static justify-end left-0 rtl:left-auto rtl:right-0 p-3 sm:p-0 sm:justify-self-end',
       ]}
     >
-      <div class="items-center flex justify-between w-auto z-60">
+      <div class="items-center flex justify-end gap-1 w-auto z-60">
+        <a
+          href={loginHref}
+          class="aw-account inline-flex items-center justify-center w-10 h-10 shrink-0 rounded-full text-default hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-link dark:hover:text-white"
+          aria-label={loginLabel}
+          title={loginLabel}
+          data-account-href={accountHref}
+          data-account-label={accountLabel}
+        >
+          <Icon name="tabler:user-circle" class="w-6 h-6" />
+        </a>
         {
           actions?.length ? (
             <span class="sm:ml-4 rtl:ml-0 rtl:sm:mr-4" data-header-actions>
@@ -256,6 +275,30 @@ const currentLangObj = LANGS.find((l) => l.code === currentLang) ?? LANGS[0];
     </div>
   </div>
 </header>
+<script>
+  // Session Supabase enregistrée par supabase-js (clé « sb-<projet>-auth-token ») :
+  // l'icône mène directement à l'espace. Lecture seule de localStorage, sans
+  // charger le client Supabase sur chaque page ; une session expirée est
+  // renvoyée vers la connexion par l'espace lui-même.
+  function initAccountLink() {
+    let signedIn = false;
+    try {
+      signedIn = Object.keys(localStorage).some((k) => /^sb-.+-auth-token$/.test(k));
+    } catch {
+      return;
+    }
+    if (!signedIn) return;
+    document.querySelectorAll<HTMLAnchorElement>('a.aw-account').forEach((a) => {
+      if (a.dataset.accountHref) a.href = a.dataset.accountHref;
+      if (a.dataset.accountLabel) {
+        a.setAttribute('aria-label', a.dataset.accountLabel);
+        a.title = a.dataset.accountLabel;
+      }
+    });
+  }
+  initAccountLink();
+  document.addEventListener('astro:page-load', initAccountLink);
+</script>
 <style>
   @keyframes floatBook1 {
     0% {
