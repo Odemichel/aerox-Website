@@ -92,9 +92,10 @@ const faq = [1, 2, 3, 4, 5, 6].map((i) => ({ q: t(dict, `bfp.faq.q${i}`), a: t(d
 const cardClass = 'flex flex-col rounded-xl bg-white dark:bg-slate-900 p-6 shadow';
 ---
 
-<section id="tarifs" class="not-prose scroll-mt-[72px] bg-gray-50 dark:bg-slate-900/40">
-  <div class="mx-auto max-w-6xl px-4 md:px-6 py-12 md:py-16">
-    <div class="mx-auto max-w-3xl text-center mb-10">
+<section id="tarifs" class:list={['not-prose scroll-mt-[72px]', { 'bg-gray-50 dark:bg-slate-900/40': !inAccount }]}>
+  <!-- Espace compte : dans la colonne de l'onglet Abonnement, sans fond ni grand titre. -->
+  <div class:list={['mx-auto', inAccount ? 'pt-6' : 'max-w-6xl px-4 md:px-6 py-12 md:py-16']}>
+    <div class:list={['mx-auto max-w-3xl text-center mb-10', { hidden: inAccount }]}>
       <p class="text-sm font-bold uppercase tracking-wide text-primary">{t(dict, 'bfp.eyebrow')}</p>
       <h2 class="mt-2 text-2xl md:text-3xl font-bold">{t(dict, 'bfp.title')}</h2>
       <p class="mt-3 text-lg text-muted">{t(dict, 'bfp.subtitle')}</p>

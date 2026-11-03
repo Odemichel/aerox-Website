@@ -267,6 +267,13 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
               ) : (
                 <div class="acct-panel" data-body />
               )}
+              {id === 'abonnement' && (
+                // Bike fitter sans abonnement : les offres, payables d'ici,
+                // dans la colonne de l'onglet (affichées par le script).
+                <div id="bf-offers" class="acct-offers hidden">
+                  <BfPricing lang={lang as Locale} inAccount />
+                </div>
+              )}
             </section>
           ))
         }
@@ -275,13 +282,11 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
   </section>
 
   <!--
-    Offres, selon le compte (affichées par le script) : bike fitter sans
-    abonnement → offres BF payables d'ici ; cycliste → Diagnostic. Jamais
-    l'une chez l'autre (les routes de paiement refusent aussi le mauvais rôle).
+    Offres cycliste (Diagnostic), sous la page dans l'onglet Diagnostics.
+    Les offres bike fitter sont dans l'onglet Abonnement, à côté du menu.
+    Jamais l'une chez l'autre (les routes de paiement refusent aussi le
+    mauvais rôle).
   -->
-  <div id="bf-offers" class="hidden">
-    <BfPricing lang={lang as Locale} inAccount />
-  </div>
   <div id="rider-offers" class="hidden">
     <PricingSection riderOnly />
   </div>
