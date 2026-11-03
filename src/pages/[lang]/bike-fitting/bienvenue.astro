@@ -83,7 +83,11 @@ const steps = [1, 2, 3, 4].map((i) => ({ i, title: t(dict, `onb.s${i}.title`), d
     </ol>
 
     <p class="mt-10 text-center">
-      <a href={`/${lang}/inscription/dashboard/`} class="font-semibold text-primary underline hover:no-underline">
+      <a
+        href={`/${lang}/inscription/dashboard/`}
+        data-astro-reload
+        class="font-semibold text-primary underline hover:no-underline"
+      >
         {t(dict, 'onb.account')}
       </a>
     </p>

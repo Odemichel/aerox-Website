@@ -477,14 +477,17 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       if (updateUrl) history.replaceState(null, '', `#${id}`);
       syncOffers();
     }
-    document.getElementById('acct-nav')?.addEventListener('click', (e) => {
+    function onNavClick(e: Event) {
       const a = (e.target as HTMLElement).closest('a');
       if (!a) return;
       e.preventDefault();
       openTab(a.getAttribute('href')!.slice(1), true);
       document.getElementById('account')?.scrollIntoView({ block: 'start' });
+    }
+    // Écouteur global posé une fois : sans espace compte affiché, rien à faire.
+    window.addEventListener('hashchange', () => {
+      if (document.getElementById('account')) openTab(location.hash.slice(1));
     });
-    window.addEventListener('hashchange', () => openTab(location.hash.slice(1)));
     // Message après une action, en bas du panneau concerné.
     function flashIn(panel: HTMLElement, text: string, ok: boolean) {
       panel.querySelector(':scope > .acct-flash')?.remove();
@@ -1462,7 +1465,24 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       }
     }
 
-    init();
+    // Le site navigue sans recharger la page (ClientRouter) : ce module n'est
+    // évalué qu'une fois, l'espace est donc (ré)initialisé à chaque arrivée
+    // sur la page (chargement complet ou navigation, ex. icône compte du
+    // header), une seule fois par page grâce au marqueur du menu.
+    function boot() {
+      const nav = document.getElementById('acct-nav');
+      if (!nav || nav.dataset.bound === '1') return;
+      nav.dataset.bound = '1';
+      currentTab = '';
+      offers.bf = false;
+      offers.rider = false;
+      studioForm = null;
+      studioLegal = null;
+      nav.addEventListener('click', onNavClick);
+      init();
+    }
+    boot();
+    document.addEventListener('astro:page-load', boot);
   </script>
 </Layout>
 
