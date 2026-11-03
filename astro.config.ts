@@ -148,7 +148,9 @@ export default defineConfig({
         !/\/404/.test(page) &&
         !/\/tri-dijon\//.test(page) &&
         !/\/method\/inscription_ML\//.test(page) &&
-        !/\/periode-test\//.test(page),
+        !/\/periode-test\//.test(page) &&
+        // Page des candidatures influenceurs : accessible depuis Instagram seulement.
+        !/\/influenceur\//.test(page),
     }),
     mdx(),
     astroIcon({

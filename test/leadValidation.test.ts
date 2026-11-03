@@ -108,7 +108,7 @@ describe('validateLead', () => {
   });
 
   it('expose la liste blanche des topics', () => {
-    expect(LEAD_TOPICS).toEqual(['test-period', 'bike-fitter']);
+    expect(LEAD_TOPICS).toEqual(['test-period', 'bike-fitter', 'influencer']);
   });
 
   it('refuse un email de plus de 2000 caractères', () => {
@@ -257,5 +257,58 @@ describe('studio', () => {
   it('refuse un studio non texte ou trop long', () => {
     expect(validateLead({ ...base, studio: 42 })).toEqual({ ok: false, error: 'invalid_field' });
     expect(validateLead({ ...base, studio: 'x'.repeat(2001) })).toEqual({ ok: false, error: 'field_too_long' });
+  });
+});
+
+describe('candidature influenceur', () => {
+  const inf = { topic: 'influencer', name: 'Léa', email: 'lea@example.com', followers: '12 500' };
+
+  it('accepte @pseudo, pseudo ou lien de profil, normalisés', () => {
+    for (const instagram of [
+      '@Lea.Rides',
+      'lea.rides',
+      'https://www.instagram.com/lea.rides/?hl=fr',
+      'instagram.com/Lea.Rides',
+    ]) {
+      const r = validateLead({ ...inf, instagram });
+      expect(r.ok).toBe(true);
+      if (r.ok) {
+        expect(r.lead.influencer?.handle).toBe('lea.rides');
+        expect(r.lead.influencer?.url).toBe('https://www.instagram.com/lea.rides/');
+        expect(r.lead.influencer?.followers).toBe(12500);
+      }
+    }
+  });
+
+  it('refuse un lien de publication, un pseudo invalide ou absent', () => {
+    for (const instagram of ['https://www.instagram.com/p/Cxyz123/', 'lea rides', '', undefined, '@']) {
+      expect(validateLead({ ...inf, instagram })).toEqual({ ok: false, error: 'invalid_instagram' });
+    }
+  });
+
+  it('abonnés obligatoires et numériques', () => {
+    expect(validateLead({ ...inf, instagram: 'lea', followers: '' })).toEqual({
+      ok: false,
+      error: 'invalid_followers',
+    });
+    expect(validateLead({ ...inf, instagram: 'lea', followers: 'beaucoup' })).toEqual({
+      ok: false,
+      error: 'invalid_followers',
+    });
+  });
+
+  it('champs de tri facultatifs, discipline inconnue → other', () => {
+    const r = validateLead({ ...inf, instagram: 'lea', discipline: 'curling', avgViews: 3000, country: 'France' });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.lead.influencer?.discipline).toBe('other');
+      expect(r.lead.influencer?.avgViews).toBe(3000);
+      expect(r.lead.influencer?.country).toBe('France');
+    }
+  });
+
+  it("les autres sujets n'ont pas de bloc influenceur", () => {
+    const r = validateLead({ topic: 'bike-fitter', name: 'A', email: 'a@example.com' });
+    expect(r.ok && r.lead.influencer).toBe(null);
   });
 });

@@ -1,0 +1,324 @@
+---
+// Candidatures influenceurs AeroX (décision du 2026-11-03).
+//
+// Page accessible depuis Instagram seulement : aucun lien depuis le site,
+// exclue du sitemap (astro.config.ts) et non indexée. Elle renvoie en
+// revanche vers le site (header, footer, lien « Découvrir AeroX »).
+//
+// Présentation façon hero de l'accueil (texte + Reel vertical), puis le
+// formulaire : inscription MailerLite (groupe global de la langue + groupe
+// « Influenceurs Insta ») via /api/lead/ (topic `influencer`), avec le compte
+// Instagram, les abonnés et de quoi trier les profils.
+import type { GetStaticPaths } from 'astro';
+import { Icon } from 'astro-icon/components';
+import { getImage } from 'astro:assets';
+import Layout from '~/layouts/PageLayout.astro';
+import { SUPPORTED_LOCALES, type Locale, getDict, t } from '~/lib/i18n';
+import { INFLUENCER_DISCIPLINES } from '~/lib/leadValidation';
+import reel from '~/assets/videos/aerox_influencer_reel.mp4';
+import posterSrc from '~/assets/images/influencer_poster.jpg';
+
+export const prerender = true;
+
+export const getStaticPaths: GetStaticPaths = async () => SUPPORTED_LOCALES.map((lang) => ({ params: { lang } }));
+
+const lang = (Astro.params.lang as Locale) ?? 'fr';
+const dict = getDict(lang);
+const poster = (await getImage({ src: posterSrc, width: 540, format: 'webp' })).src;
+
+const metadata = {
+  title: t(dict, 'influencer.meta.title'),
+  description: t(dict, 'influencer.meta.description'),
+  robots: { index: false, follow: true },
+};
+
+const points = [1, 2, 3].map((i) => t(dict, `influencer.hero.point${i}`));
+const steps = [1, 2, 3].map((i) => ({
+  i,
+  title: t(dict, `influencer.how.s${i}.title`),
+  desc: t(dict, `influencer.how.s${i}.desc`),
+}));
+const inputClass =
+  'w-full rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-3 text-default focus:border-primary focus:outline-none';
+const labelClass = 'flex flex-col gap-1.5 text-sm font-semibold';
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero : présentation d'AeroX et le Reel -->
+  <section class="not-prose relative overflow-hidden">
+    <div
+      class="mx-auto grid max-w-6xl items-center gap-10 px-4 md:px-6 py-10 md:py-16 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]"
+    >
+      <div>
+        <p class="text-sm font-bold uppercase tracking-wide text-primary">{t(dict, 'influencer.hero.eyebrow')}</p>
+        <h1 class="mt-3 text-4xl md:text-5xl font-bold leading-tight">{t(dict, 'influencer.hero.title')}</h1>
+        <p class="mt-5 text-lg text-muted">{t(dict, 'influencer.hero.subtitle')}</p>
+        <ul class="mt-6 space-y-3">
+          {
+            points.map((p) => (
+              <li class="flex items-start gap-3">
+                <Icon name="tabler:circle-check" class="mt-0.5 h-6 w-6 shrink-0 text-primary" />
+                <span>{p}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="mt-8 flex flex-wrap items-center gap-4">
+          <a href="#candidature" class="btn-primary px-8 py-3 text-lg font-semibold">
+            {t(dict, 'influencer.hero.cta')}
+          </a>
+          <a href={`/${lang}/`} class="font-semibold text-primary underline hover:no-underline">
+            {t(dict, 'influencer.hero.site')}
+          </a>
+        </div>
+      </div>
+
+      <figure class="relative mx-auto w-full max-w-[22rem]">
+        <video
+          id="influencer-reel"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          poster={poster}
+          class="aspect-[9/16] w-full rounded-2xl bg-slate-900 object-cover shadow-2xl"
+          aria-label={t(dict, 'influencer.video.aria')}
+        >
+          <source src={reel} type="video/mp4" />
+        </video>
+        <button
+          type="button"
+          id="influencer-sound"
+          class="absolute bottom-3 right-3 inline-flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur hover:bg-black/75"
+          data-on={t(dict, 'influencer.video.soundOn')}
+          data-off={t(dict, 'influencer.video.soundOff')}
+          aria-pressed="false"
+        >
+          <Icon name="tabler:volume-off" class="sound-off h-5 w-5" />
+          <Icon name="tabler:volume" class="sound-on hidden h-5 w-5" />
+          <span class="sound-label">{t(dict, 'influencer.video.soundOn')}</span>
+        </button>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Comment ça marche -->
+  <section class="not-prose bg-gray-50 dark:bg-slate-900/40">
+    <div class="mx-auto max-w-5xl px-4 md:px-6 py-12 md:py-16">
+      <h2 class="text-center text-2xl md:text-3xl font-bold">{t(dict, 'influencer.how.title')}</h2>
+      <ol class="mt-10 grid gap-6 md:grid-cols-3">
+        {
+          steps.map((s) => (
+            <li class="rounded-xl bg-white dark:bg-slate-900 p-6 shadow">
+              <span class="flex h-9 w-9 items-center justify-center rounded-full bg-primary font-bold text-white">
+                {s.i}
+              </span>
+              <h3 class="mt-4 text-lg font-bold">{s.title}</h3>
+              <p class="mt-2 text-muted">{s.desc}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Candidature -->
+  <section id="candidature" class="not-prose scroll-mt-[72px]">
+    <div class="mx-auto max-w-2xl px-4 md:px-6 py-12 md:py-16">
+      <h2 class="text-center text-2xl md:text-3xl font-bold">{t(dict, 'influencer.form.title')}</h2>
+      <p class="mt-3 text-center text-muted">{t(dict, 'influencer.form.subtitle')}</p>
+
+      <form
+        id="influencer-form"
+        class="mt-8 grid gap-5 sm:grid-cols-2"
+        novalidate
+        data-lang={lang}
+        data-sending={t(dict, 'influencer.form.sending')}
+        data-success={t(dict, 'influencer.form.success')}
+        data-error={t(dict, 'influencer.form.error')}
+        data-err-instagram={t(dict, 'influencer.form.errInstagram')}
+        data-err-followers={t(dict, 'influencer.form.errFollowers')}
+        data-err-required={t(dict, 'influencer.form.errRequired')}
+      >
+        <label class={labelClass}>
+          {t(dict, 'influencer.form.name')} *
+          <input type="text" name="name" required maxlength="120" autocomplete="name" class={inputClass} />
+        </label>
+        <label class={labelClass}>
+          {t(dict, 'influencer.form.email')} *
+          <input type="email" name="email" required maxlength="200" autocomplete="email" class={inputClass} />
+        </label>
+        <label class={`${labelClass} sm:col-span-2`}>
+          {t(dict, 'influencer.form.instagram')} *
+          <input
+            type="text"
+            name="instagram"
+            required
+            maxlength="200"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder={t(dict, 'influencer.form.instagramPh')}
+            class={inputClass}
+          />
+        </label>
+        <label class={labelClass}>
+          {t(dict, 'influencer.form.followers')} *
+          <input type="number" name="followers" required min="0" step="1" inputmode="numeric" class={inputClass} />
+        </label>
+        <label class={labelClass}>
+          {t(dict, 'influencer.form.avgViews')}
+          <input type="number" name="avgViews" min="0" step="1" inputmode="numeric" class={inputClass} />
+          <span class="text-xs font-normal text-muted">{t(dict, 'influencer.form.avgViewsHint')}</span>
+        </label>
+        <label class={labelClass}>
+          {t(dict, 'influencer.form.discipline')} *
+          <select name="discipline" required class={inputClass}>
+            <option value="" disabled selected>{t(dict, 'influencer.form.choose')}</option>
+            {INFLUENCER_DISCIPLINES.map((d) => <option value={d}>{t(dict, `influencer.discipline.${d}`)}</option>)}
+          </select>
+        </label>
+        <label class={labelClass}>
+          {t(dict, 'influencer.form.country')}
+          <input type="text" name="country" maxlength="100" autocomplete="country-name" class={inputClass} />
+        </label>
+        <fieldset class="sm:col-span-2 border-0 p-0 m-0">
+          <legend class="mb-2 text-sm font-semibold">{t(dict, 'influencer.form.trainer')}</legend>
+          <div class="flex gap-6">
+            <label class="inline-flex items-center gap-2 text-sm">
+              <input type="radio" name="trainer" value="oui" />
+              {t(dict, 'influencer.form.yes')}
+            </label>
+            <label class="inline-flex items-center gap-2 text-sm">
+              <input type="radio" name="trainer" value="non" />
+              {t(dict, 'influencer.form.no')}
+            </label>
+          </div>
+        </fieldset>
+        <label class={`${labelClass} sm:col-span-2`}>
+          {t(dict, 'influencer.form.otherLink')}
+          <input
+            type="text"
+            name="otherLink"
+            maxlength="300"
+            placeholder={t(dict, 'influencer.form.otherLinkPh')}
+            class={inputClass}
+          />
+        </label>
+        <label class={`${labelClass} sm:col-span-2`}>
+          {t(dict, 'influencer.form.message')}
+          <textarea name="message" rows="4" maxlength="2000" class={inputClass}></textarea>
+        </label>
+
+        {/* Honeypot : invisible pour l'humain, rempli par les bots. */}
+        <input
+          type="text"
+          name="hp"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+          class="absolute left-[-9999px] w-px h-px opacity-0"
+        />
+
+        <p class="sm:col-span-2 text-xs text-muted">{t(dict, 'influencer.form.consent')}</p>
+        <button type="submit" class="sm:col-span-2 btn-primary w-full px-8 py-3 text-lg font-semibold">
+          {t(dict, 'influencer.form.submit')}
+        </button>
+        <p class="influencer-msg sm:col-span-2 hidden text-center font-semibold" role="status"></p>
+      </form>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Attache idempotente : premier rendu + navigations ClientRouter.
+  function initInfluencerPage() {
+    const video = document.getElementById('influencer-reel') as HTMLVideoElement | null;
+    const sound = document.getElementById('influencer-sound') as HTMLButtonElement | null;
+    if (video && sound && sound.dataset.bound !== '1') {
+      sound.dataset.bound = '1';
+      sound.addEventListener('click', () => {
+        video.muted = !video.muted;
+        if (!video.muted) video.play().catch(() => {});
+        sound.setAttribute('aria-pressed', String(!video.muted));
+        sound.querySelector('.sound-off')?.classList.toggle('hidden', !video.muted);
+        sound.querySelector('.sound-on')?.classList.toggle('hidden', video.muted);
+        const label = sound.querySelector('.sound-label');
+        if (label) label.textContent = (video.muted ? sound.dataset.on : sound.dataset.off) ?? '';
+      });
+    }
+
+    const form = document.getElementById('influencer-form') as HTMLFormElement | null;
+    if (!form || form.dataset.bound === '1') return;
+    form.dataset.bound = '1';
+    const msg = form.querySelector<HTMLParagraphElement>('.influencer-msg');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const initialLabel = button?.textContent ?? '';
+
+    const show = (text: string | undefined, ok: boolean) => {
+      if (!msg) return;
+      msg.textContent = text ?? '';
+      msg.classList.remove('hidden', 'text-red-600', 'text-green-600');
+      msg.classList.add(ok ? 'text-green-600' : 'text-red-600');
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!button) return;
+      const data = new FormData(form);
+      const get = (k: string) => String(data.get(k) ?? '').trim();
+      if (!get('name') || !get('email') || !get('instagram') || !get('followers') || !get('discipline')) {
+        return show(form.dataset.errRequired, false);
+      }
+
+      button.disabled = true;
+      button.textContent = form.dataset.sending ?? '…';
+      const trainer = get('trainer');
+      const payload = {
+        topic: 'influencer',
+        name: get('name'),
+        email: get('email'),
+        instagram: get('instagram'),
+        followers: get('followers'),
+        avgViews: get('avgViews'),
+        discipline: get('discipline'),
+        country: get('country'),
+        otherLink: get('otherLink'),
+        trainer: trainer === 'oui' ? 'Oui' : trainer === 'non' ? 'Non' : '',
+        message: get('message'),
+        hp: get('hp'),
+      };
+
+      let ok = false;
+      let error = '';
+      try {
+        const res = await fetch(`/${form.dataset.lang ?? 'fr'}/api/lead/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const body = await res.json().catch(() => ({}));
+        ok = res.ok && body?.success === true;
+        error = typeof body?.error === 'string' ? body.error : '';
+      } catch {
+        ok = false;
+      }
+
+      if (ok) {
+        show(form.dataset.success, true);
+        form.reset();
+      } else if (error === 'invalid_instagram') {
+        show(form.dataset.errInstagram, false);
+      } else if (error === 'invalid_followers') {
+        show(form.dataset.errFollowers, false);
+      } else {
+        show(form.dataset.error, false);
+      }
+      button.textContent = initialLabel;
+      button.disabled = false;
+    });
+  }
+
+  initInfluencerPage();
+  document.addEventListener('astro:page-load', initInfluencerPage);
+</script>

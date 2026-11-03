@@ -1,4 +1,4 @@
-export const LEAD_TOPICS = ['test-period', 'bike-fitter'] as const;
+export const LEAD_TOPICS = ['test-period', 'bike-fitter', 'influencer'] as const;
 export type LeadTopic = (typeof LEAD_TOPICS)[number];
 
 const MAX_FIELD_LENGTH = 2000;
@@ -35,7 +35,56 @@ export type LeadInput = {
   source?: unknown;
   results?: unknown;
   hp?: unknown;
+  // Candidature influenceur (page /influenceur/).
+  instagram?: unknown;
+  followers?: unknown;
+  avgViews?: unknown;
+  discipline?: unknown;
+  country?: unknown;
+  otherLink?: unknown;
 };
+
+/** Discipline principale d'un créateur de contenu (tri des candidatures). */
+export const INFLUENCER_DISCIPLINES = ['road', 'triathlon', 'tt', 'gravel', 'indoor', 'other'] as const;
+export type InfluencerDiscipline = (typeof INFLUENCER_DISCIPLINES)[number];
+
+export type InfluencerInfo = {
+  handle: string;
+  url: string;
+  followers: number;
+  avgViews: number | null;
+  discipline: InfluencerDiscipline;
+  country: string;
+  otherLink: string;
+};
+
+const INSTAGRAM_HANDLE_RE = /^[a-z0-9._]{1,30}$/;
+const INSTAGRAM_URL_RE = /^(?:https?:\/\/)?(?:www\.|m\.)?instagram\.com\/([A-Za-z0-9._]{1,30})\/?(?:[?#].*)?$/i;
+
+/**
+ * Compte Instagram saisi en « @pseudo », « pseudo » ou lien du profil :
+ * pseudo normalisé (minuscules, Instagram n'en tient pas compte) et lien
+ * canonique. Un lien de publication (/p/…, /reel/…) n'est pas un profil.
+ */
+export function parseInstagram(raw: unknown): { handle: string; url: string } | null {
+  if (typeof raw !== 'string') return null;
+  const value = raw.trim();
+  const fromUrl = value.match(INSTAGRAM_URL_RE);
+  const handle = (fromUrl ? fromUrl[1] : value.replace(/^@/, '')).toLowerCase();
+  if (!INSTAGRAM_HANDLE_RE.test(handle) || /^[.]|[.]$/.test(handle)) return null;
+  if (['p', 'reel', 'reels', 'stories', 'explore', 'accounts'].includes(handle)) return null;
+  return { handle, url: `https://www.instagram.com/${handle}/` };
+}
+
+/** Entier positif borné (abonnés, vues) : nombre, ou texte « 12 500 ». */
+export function parseCount(raw: unknown, max = 1_000_000_000): number | null {
+  let n: number;
+  if (typeof raw === 'number') n = raw;
+  else if (typeof raw === 'string' && /^\s*[\d\s.,\u202f\u00a0]+\s*$/.test(raw)) n = Number(raw.replace(/[^\d]/g, ''));
+  else return null;
+  if (!Number.isFinite(n) || n < 0 || n > max) return null;
+  return Math.floor(n);
+}
 
 export type Lead = {
   topic: LeadTopic;
@@ -48,6 +97,7 @@ export type Lead = {
   intent: LeadIntent;
   phone: string;
   studio: string;
+  influencer: InfluencerInfo | null;
 };
 
 export type LeadResult = { ok: true; honeypot: boolean; lead: Lead } | { ok: false; error: string };
@@ -143,6 +193,30 @@ export function validateLead(input: LeadInput): LeadResult {
   if (studio === null) return { ok: false, error: 'invalid_field' };
   if (studio.length > MAX_FIELD_LENGTH) return { ok: false, error: 'field_too_long' };
 
+  // Candidature influenceur : compte Instagram et abonnés obligatoires, le
+  // reste sert au tri et reste facultatif.
+  let influencer: InfluencerInfo | null = null;
+  if (topic === 'influencer') {
+    const insta = parseInstagram(input.instagram);
+    if (!insta) return { ok: false, error: 'invalid_instagram' };
+    const followers = parseCount(input.followers);
+    if (followers === null) return { ok: false, error: 'invalid_followers' };
+    const avgViewsRaw = input.avgViews;
+    const avgViews =
+      avgViewsRaw === undefined || avgViewsRaw === null || avgViewsRaw === '' ? null : parseCount(avgViewsRaw);
+    if (avgViews === null && !(avgViewsRaw === undefined || avgViewsRaw === null || avgViewsRaw === '')) {
+      return { ok: false, error: 'invalid_field' };
+    }
+    const discipline = (INFLUENCER_DISCIPLINES as readonly unknown[]).includes(input.discipline)
+      ? (input.discipline as InfluencerDiscipline)
+      : 'other';
+    const country = asText(input.country);
+    const otherLink = asText(input.otherLink);
+    if (country === null || otherLink === null) return { ok: false, error: 'invalid_field' };
+    if (country.length > 100 || otherLink.length > 300) return { ok: false, error: 'field_too_long' };
+    influencer = { ...insta, followers, avgViews, discipline, country, otherLink };
+  }
+
   // Le honeypot se déclenche sur toute valeur non vide, quel que soit son type :
   // un bot qui poste `hp: 1` ou `hp: ['x']` ne doit pas passer au travers du
   // filtre simplement parce que ce n'est pas une chaîne.
@@ -151,7 +225,19 @@ export function validateLead(input: LeadInput): LeadResult {
   return {
     ok: true,
     honeypot,
-    lead: { topic: topic as LeadTopic, name, email, message, availability, trainer, webcam, intent, phone, studio },
+    lead: {
+      topic: topic as LeadTopic,
+      name,
+      email,
+      message,
+      availability,
+      trainer,
+      webcam,
+      intent,
+      phone,
+      studio,
+      influencer,
+    },
   };
 }
 

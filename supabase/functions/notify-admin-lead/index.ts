@@ -9,6 +9,7 @@ const SMTP_FROM = '"AeroX BeFaster" <no-reply@aeroxbefaster.com>';
 const TOPIC_LABELS: Record<string, string> = {
   'test-period': 'Demande de période de test',
   'bike-fitter': 'Demande Bike-Fitter',
+  influencer: 'Candidature influenceur',
 };
 
 const FIELD_LABELS: Record<string, string> = {
@@ -19,6 +20,12 @@ const FIELD_LABELS: Record<string, string> = {
   trainer: 'Home-trainer',
   webcam: 'Webcam',
   message: 'Message',
+  instagram: 'Instagram',
+  followers: 'Abonnés',
+  avg_views: 'Vues moyennes / Reel',
+  discipline: 'Discipline',
+  country: 'Pays',
+  other_link: 'Autre chaîne',
 };
 
 // Comparaison à temps constant : le coût ne dépend pas de la longueur du

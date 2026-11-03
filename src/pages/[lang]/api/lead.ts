@@ -9,10 +9,13 @@ const GROUP_GLOBAL_EN = '180113595562985140';
 const GROUP_GLOBAL_FR = '180112371932464856';
 const GROUP_TEST_PERIOD = '199304591375861616';
 const GROUP_BIKE_FITTER = '199304591996618152';
+// Candidatures de la page /influenceur/ (accessible depuis Instagram seulement).
+const GROUP_INFLUENCER = '203141367309797063';
 
 const TOPIC_GROUPS: Record<Lead['topic'], string> = {
   'test-period': GROUP_TEST_PERIOD,
   'bike-fitter': GROUP_BIKE_FITTER,
+  influencer: GROUP_INFLUENCER,
 };
 
 const NOTIFY_URL = 'https://agvksgrjqskpetokudda.supabase.co/functions/v1/notify-admin-lead';
@@ -77,7 +80,7 @@ export const POST: APIRoute = async (context) => {
   // française serait pire que de l'envoyer dans la liste anglophone.
   const groups = [TOPIC_GROUPS[lead.topic], lang === 'fr' ? GROUP_GLOBAL_FR : GROUP_GLOBAL_EN];
 
-  const fields: Record<string, string> = { name: lead.name };
+  const fields: Record<string, string | number> = { name: lead.name };
   if (lead.message) fields.message = lead.message;
   if (lead.availability) fields.dispos = lead.availability;
   if (lead.trainer) fields.home_trainer = lead.trainer;
@@ -96,6 +99,21 @@ export const POST: APIRoute = async (context) => {
     fields.bf_status = lead.intent === 'inscription' ? 'trial' : 'lead';
     if (lead.intent === 'inscription') fields.bf_plan = 'trial';
     fields.bf_signup = new Date().toISOString().slice(0, 10);
+  }
+
+  // Candidature influenceur : de quoi trier dans MailerLite (abonnés et vues
+  // en champs numériques, filtrables).
+  const inf = lead.influencer;
+  if (inf) {
+    fields.insta_handle = inf.handle;
+    fields.insta_url = inf.url;
+    fields.insta_followers = inf.followers;
+    if (inf.avgViews !== null) fields.insta_avg_views = inf.avgViews;
+    fields.discipline = inf.discipline;
+    if (inf.country) fields.country = inf.country;
+    if (inf.otherLink) fields.other_link = inf.otherLink;
+    fields.influencer_signup = new Date().toISOString().slice(0, 10);
+    fields.lang = lang;
   }
 
   // Un incident réseau (DNS, timeout, connexion refusée) lève avant tout statut
@@ -171,6 +189,16 @@ export const POST: APIRoute = async (context) => {
           availability: lead.availability,
           trainer: lead.trainer,
           webcam: lead.webcam,
+          ...(inf
+            ? {
+                instagram: `@${inf.handle} — ${inf.url}`,
+                followers: inf.followers.toLocaleString('fr-FR'),
+                avg_views: inf.avgViews === null ? '' : inf.avgViews.toLocaleString('fr-FR'),
+                discipline: inf.discipline,
+                country: inf.country,
+                other_link: inf.otherLink,
+              }
+            : {}),
           // Demande de présentation : le formulaire n'a pas de message, la
           // notification dit ce qui a été demandé et pour quel studio.
           message:
