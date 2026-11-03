@@ -101,13 +101,22 @@ function langHref(target: string): string {
 
 const currentLangObj = LANGS.find((l) => l.code === currentLang) ?? LANGS[0];
 
-// Accès au compte depuis toutes les pages (bike fitter, cycliste, autre) :
-// connexion, ou l'espace si une session existe déjà dans ce navigateur.
+// Menu du compte sur toutes les pages (bike fitter, cycliste, autre) :
+// déconnecté → se connecter / créer un compte ; connecté → mon espace / se
+// déconnecter (choisi dans le navigateur selon la session enregistrée).
 const dict = getDict(currentLang as Locale);
-const loginLabel = t(dict, 'nav.login');
-const accountLabel = t(dict, 'dash.acct.title');
-const loginHref = `/${currentLang}/inscription/connexion/`;
-const accountHref = `/${currentLang}/inscription/dashboard/`;
+const accountMenu = {
+  label: t(dict, 'nav.account.menu'),
+  signin: t(dict, 'nav.account.signin'),
+  signup: t(dict, 'nav.account.signup'),
+  dashboard: t(dict, 'nav.account.dashboard'),
+  signout: t(dict, 'nav.account.signout'),
+};
+const signinHref = `/${currentLang}/inscription/connexion/`;
+const signupHref = `/${currentLang}/inscription/inscription/`;
+const dashboardHref = `/${currentLang}/inscription/dashboard/`;
+const menuItem =
+  'flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800 rounded';
 ---
 
 <header
@@ -249,17 +258,44 @@ const accountHref = `/${currentLang}/inscription/dashboard/`;
       ]}
     >
       <div class="items-center flex justify-end gap-1 w-auto z-60">
-        <a
-          href={loginHref}
-          class="aw-account inline-flex items-center justify-center w-10 h-10 shrink-0 rounded-full text-default hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-link dark:hover:text-white"
-          aria-label={loginLabel}
-          title={loginLabel}
-          data-account-href={accountHref}
-          data-astro-reload
-          data-account-label={accountLabel}
-        >
-          <Icon name="tabler:user-circle" class="w-6 h-6" />
-        </a>
+        <details class="aw-account relative" data-lang={currentLang}>
+          <summary
+            class="list-none inline-flex items-center justify-center w-10 h-10 shrink-0 rounded-full text-default hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-link dark:hover:text-white cursor-pointer select-none [&::-webkit-details-marker]:hidden"
+            aria-label={accountMenu.label}
+            title={accountMenu.label}
+          >
+            <Icon name="tabler:user-circle" class="w-6 h-6" />
+          </summary>
+          <ul
+            class="absolute right-0 mt-2 w-52 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg p-1 z-50 text-default"
+            role="menu"
+          >
+            <li role="none" data-when="out">
+              <a role="menuitem" href={signinHref} class={menuItem} data-astro-reload>
+                <Icon name="tabler:login-2" class="w-4 h-4" />
+                {accountMenu.signin}
+              </a>
+            </li>
+            <li role="none" data-when="out">
+              <a role="menuitem" href={signupHref} class={menuItem} data-astro-reload>
+                <Icon name="tabler:user-plus" class="w-4 h-4" />
+                {accountMenu.signup}
+              </a>
+            </li>
+            <li role="none" data-when="in" class="hidden">
+              <a role="menuitem" href={dashboardHref} class={menuItem} data-astro-reload>
+                <Icon name="tabler:layout-dashboard" class="w-4 h-4" />
+                {accountMenu.dashboard}
+              </a>
+            </li>
+            <li role="none" data-when="in" class="hidden">
+              <button type="button" role="menuitem" class={menuItem} data-signout>
+                <Icon name="tabler:logout" class="w-4 h-4" />
+                {accountMenu.signout}
+              </button>
+            </li>
+          </ul>
+        </details>
         {
           actions?.length ? (
             <span class="sm:ml-4 rtl:ml-0 rtl:sm:mr-4" data-header-actions>
@@ -278,27 +314,52 @@ const accountHref = `/${currentLang}/inscription/dashboard/`;
 </header>
 <script>
   // Session Supabase enregistrée par supabase-js (clé « sb-<projet>-auth-token ») :
-  // l'icône mène directement à l'espace. Lecture seule de localStorage, sans
-  // charger le client Supabase sur chaque page ; une session expirée est
-  // renvoyée vers la connexion par l'espace lui-même.
-  function initAccountLink() {
-    let signedIn = false;
+  // lecture seule de localStorage pour choisir les entrées du menu, sans
+  // charger le client Supabase sur chaque page (il n'est chargé qu'au clic sur
+  // « Se déconnecter »). Une session expirée est renvoyée vers la connexion
+  // par l'espace lui-même.
+  function hasSession() {
     try {
-      signedIn = Object.keys(localStorage).some((k) => /^sb-.+-auth-token$/.test(k));
+      return Object.keys(localStorage).some((k) => /^sb-.+-auth-token$/.test(k));
     } catch {
-      return;
+      return false;
     }
-    if (!signedIn) return;
-    document.querySelectorAll<HTMLAnchorElement>('a.aw-account').forEach((a) => {
-      if (a.dataset.accountHref) a.href = a.dataset.accountHref;
-      if (a.dataset.accountLabel) {
-        a.setAttribute('aria-label', a.dataset.accountLabel);
-        a.title = a.dataset.accountLabel;
-      }
+  }
+
+  function initAccountMenu() {
+    const signedIn = hasSession();
+    document.querySelectorAll<HTMLDetailsElement>('details.aw-account').forEach((menu) => {
+      menu.querySelectorAll<HTMLElement>('[data-when]').forEach((li) => {
+        li.classList.toggle('hidden', (li.dataset.when === 'in') !== signedIn);
+      });
+      if (menu.dataset.bound === '1') return;
+      menu.dataset.bound = '1';
+      menu.querySelector<HTMLButtonElement>('[data-signout]')?.addEventListener('click', async (e) => {
+        const b = e.currentTarget as HTMLButtonElement;
+        b.disabled = true;
+        try {
+          const { supabase } = await import('~/config/supabaseClient');
+          await supabase.auth.signOut();
+        } finally {
+          window.location.href = `/${menu.dataset.lang ?? 'fr'}/`;
+        }
+      });
     });
   }
-  initAccountLink();
-  document.addEventListener('astro:page-load', initAccountLink);
+
+  // Fermeture du menu : clic ailleurs ou Échap (écouteurs posés une fois).
+  document.addEventListener('click', (e) => {
+    document.querySelectorAll<HTMLDetailsElement>('details.aw-account[open]').forEach((d) => {
+      if (!d.contains(e.target as Node)) d.open = false;
+    });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll<HTMLDetailsElement>('details.aw-account[open]').forEach((d) => (d.open = false));
+  });
+
+  initAccountMenu();
+  document.addEventListener('astro:page-load', initAccountMenu);
 </script>
 <style>
   @keyframes floatBook1 {

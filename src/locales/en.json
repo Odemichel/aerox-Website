@@ -258,6 +258,11 @@
   "nav.blog": "Aero Blog",
   "nav.book": "AeroX Method",
   "nav.login": "Sign in",
+  "nav.account.menu": "Account",
+  "nav.account.signin": "Sign in",
+  "nav.account.signup": "Create account",
+  "nav.account.dashboard": "My account",
+  "nav.account.signout": "Sign out",
 
   "footer.contact.title": "Contact",
   "footer.team": "Team",

@@ -261,6 +261,11 @@
   "nav.blog": "Blog Aéro",
   "nav.book": "La Méthode AeroX",
   "nav.login": "Connexion",
+  "nav.account.menu": "Compte",
+  "nav.account.signin": "Se connecter",
+  "nav.account.signup": "Créer un compte",
+  "nav.account.dashboard": "Mon espace",
+  "nav.account.signout": "Se déconnecter",
 
   "footer.contact.title": "Contact",
   "footer.team": "Équipe",
