@@ -2045,6 +2045,20 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     border: 1px dashed var(--acct-accent);
     border-radius: 0.75rem;
   }
+  /* Liste déroulante lisible dans les deux thèmes : les options natives
+     prennent sinon le fond clair du système avec le texte clair du thème. */
+  #account select.acct-input {
+    color-scheme: dark;
+    appearance: auto;
+    cursor: pointer;
+  }
+  html:not(.dark) #account select.acct-input {
+    color-scheme: light;
+  }
+  #account select.acct-input option {
+    background: var(--acct-surface);
+    color: var(--acct-text);
+  }
 
   /* Studio : fiche modifiable et logo */
   #account .acct-subtitle {
