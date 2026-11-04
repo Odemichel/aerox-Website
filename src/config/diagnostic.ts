@@ -5,6 +5,6 @@
 // téléchargement (la version de l'application qui ouvre le diagnostic n'est
 // pas encore publiée). Les acheteurs reçoivent un email MailerLite 7 jours
 // avant. À partir de cette date, la page annonce un diagnostic débloqué.
-export const DIAGNOSTIC_AVAILABLE_AT = new Date('2026-11-01T00:00:00+01:00');
+export const DIAGNOSTIC_AVAILABLE_AT = new Date('2026-12-01T00:00:00+01:00');
 
 export const isDiagnosticAvailable = (now: Date = new Date()) => now >= DIAGNOSTIC_AVAILABLE_AT;

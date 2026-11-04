@@ -54,6 +54,16 @@ const lang = (Astro.params.lang as Locale) ?? 'fr';
 // Méthode garde le sien).
 const guideTexts = { eyebrow: 'home.guide.eyebrow', title: 'home.guide.title', text: 'book.hero.text' };
 const dict = getDict(lang);
+// Allemand et néerlandais : mots composés trop longs pour un écran de
+// téléphone, coupés avec un trait d'union plutôt qu'au milieu sans repère.
+const hyphenateTitle = lang === 'de' || lang === 'nl';
+// Fin du titre du hero, qui tourne (voir initHeroRotation plus bas).
+const heroRotatingTexts = [
+  t(dict, 'home.hero.title.l2'),
+  t(dict, 'home.hero.title.l2.alt1'),
+  t(dict, 'home.hero.title.l2.alt2'),
+  t(dict, 'home.hero.title.l2.alt3'),
+];
 
 const metadata = {
   title: t(dict, 'home.meta.title'),
@@ -66,7 +76,7 @@ const metadata = {
 // bike-fitter (voir /bike-fitting/).
 const Link_preorder = localizedHref(lang, '/#pricing');
 // Offre du schéma SoftwareApplication, figée au build : Diagnostic en
-// précommande jusqu'au 1er novembre, 49 € jusqu'au 15 novembre puis 79 €.
+// précommande jusqu'au 1er décembre, 49 € jusqu'au 15 décembre puis 79 €.
 const phaseNow = offerPhase();
 const diagnosticOffer = {
   '@type': 'Offer',
@@ -124,21 +134,34 @@ const Link_bikeFitting = localizedHref(lang, '/bike-fitting/');
     </Fragment>
 
     <Fragment slot="title">
-      <span class="font-bold">
+      <span class:list={['font-bold [overflow-wrap:anywhere]', { 'hyphens-auto': hyphenateTitle }]}>
         {t(dict, 'home.hero.title.l1')}
         <span class="italic font-normal">{t(dict, 'home.hero.title.verb')}</span><br />
-        <span
-          id="hero-rotating"
-          class="text-5xl md:text-6xl text-primary inline-block relative"
-          data-text={t(dict, 'home.hero.title.l2')}
-          data-texts={JSON.stringify([
-            t(dict, 'home.hero.title.l2'),
-            t(dict, 'home.hero.title.l2.alt1'),
-            t(dict, 'home.hero.title.l2.alt2'),
-            t(dict, 'home.hero.title.l2.alt3'),
-          ])}
-        >
-          {t(dict, 'home.hero.title.l2')}
+        {
+          /* Les phrases n'ont pas le même nombre de lignes : toutes sont posées,
+            invisibles, dans la même case de grille, qui prend la hauteur de la
+            plus longue. La phrase affichée tourne par-dessus sans faire bouger
+            la page. */
+        }
+        <span class="grid justify-items-center">
+          {
+            heroRotatingTexts.map((txt) => (
+              <span
+                aria-hidden="true"
+                class="text-4xl min-[380px]:text-5xl md:text-6xl inline-block max-w-full [overflow-wrap:anywhere] invisible [grid-area:1/1] pointer-events-none select-none"
+              >
+                {txt}
+              </span>
+            ))
+          }
+          <span
+            id="hero-rotating"
+            class="text-4xl min-[380px]:text-5xl md:text-6xl text-primary inline-block max-w-full [overflow-wrap:anywhere] relative [grid-area:1/1] self-center"
+            data-text={heroRotatingTexts[0]}
+            data-texts={JSON.stringify(heroRotatingTexts)}
+          >
+            {heroRotatingTexts[0]}
+          </span>
         </span>
       </span>
     </Fragment>

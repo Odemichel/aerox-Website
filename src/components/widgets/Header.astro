@@ -129,28 +129,33 @@ const menuItem =
 >
   <div class="absolute inset-0 pointer-events-none -z-10"></div>
   <div
-    class="relative text-default py-3 px-3 sm:px-6 mx-auto w-full max-w-7xl
-           grid grid-cols-[auto_1fr_auto] items-center gap-3"
+    class="relative text-default py-3 px-2 sm:px-6 mx-auto w-full max-w-7xl
+           grid grid-cols-[auto_1fr_auto] items-center gap-1 sm:gap-3"
   >
-    <div class:list={[{ 'mr-auto rtl:mr-0 rtl:ml-auto': position === 'right' }, 'flex justify-between']}>
+    <div
+      class:list={[
+        { 'mr-auto rtl:mr-0 rtl:ml-auto': position === 'right' },
+        'flex items-center gap-0.5 sm:gap-0 sm:justify-between',
+      ]}
+    >
       <a class="flex items-center" href={`/${currentLang}/`}>
         <Logo />
       </a>
 
       {
         (isHomePage || showLanguageMenu) && (
-          <details class="relative group">
+          <details class="relative group shrink-0">
             <summary
-              class="list-none inline-flex items-center gap-1 px-2 sm:px-6 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer select-none"
+              class="list-none inline-flex items-center gap-1 px-1 sm:px-6 py-1.5 [&::-webkit-details-marker]:hidden rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer select-none"
               aria-label={`Change language: ${currentLangObj.label}`}
             >
               <Icon name="fluent-emoji-flat:globe-showing-europe-africa" class="w-5 h-5" />
               <span class="text-sm font-medium">{currentLangObj.label}</span>
-              <Icon name="tabler:chevron-down" class="w-4 h-4" />
+              <Icon name="tabler:chevron-down" class="hidden sm:inline-block w-4 h-4" />
             </summary>
 
             <ul
-              class="absolute right-0 mt-2 w-40 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg py-1 z-50"
+              class="absolute left-0 sm:left-auto sm:right-0 mt-2 w-40 max-w-[calc(100vw-1rem)] rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg py-1 z-50"
               role="menu"
             >
               {LANGS.map(({ code, label, flag }) => (
@@ -177,12 +182,14 @@ const menuItem =
         )
       }
 
-      <div class="flex ml-3">
+      <div class="flex sm:ml-3">
         {showToggleTheme && <ToggleTheme iconClass="w-4 h-4 sm:w-5 sm:h-5 sm:inline-block z-60" />}
       </div>
 
       <div class="flex items-center sm:hidden">
-        <ToggleMenu />
+        <ToggleMenu
+          class="flex flex-col h-11 w-10 sm:h-12 sm:w-12 rounded justify-center items-center cursor-pointer group"
+        />
       </div>
     </div>
 
@@ -254,13 +261,13 @@ const menuItem =
     <div
       class:list={[
         { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' },
-        'self-center sm:flex items-center sm:mb-0 w-full sm:w-auto sm:static justify-end left-0 rtl:left-auto rtl:right-0 p-3 sm:p-0 sm:justify-self-end',
+        'self-center sm:flex items-center sm:mb-0 w-full sm:w-auto sm:static justify-end left-0 rtl:left-auto rtl:right-0 p-0 sm:justify-self-end',
       ]}
     >
-      <div class="items-center flex justify-end gap-1 w-auto z-60">
+      <div class="items-center flex justify-end gap-0.5 sm:gap-1 w-auto z-60">
         <details class="aw-account relative" data-lang={currentLang}>
           <summary
-            class="list-none inline-flex items-center justify-center w-10 h-10 shrink-0 rounded-full text-default hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-link dark:hover:text-white cursor-pointer select-none [&::-webkit-details-marker]:hidden"
+            class="list-none inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-full text-default hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-link dark:hover:text-white cursor-pointer select-none [&::-webkit-details-marker]:hidden"
             aria-label={accountMenu.label}
             title={accountMenu.label}
           >
@@ -302,7 +309,7 @@ const menuItem =
               {actions.map((btnProps) => (
                 <Button
                   {...btnProps}
-                  class="sm:ml-2 py-1 px-3 sm:px-6 sm:py-2 font-semibold shadow-none text-sm md:text-base w-auto whitespace-nowrap"
+                  class="sm:ml-2 py-1 px-2.5 sm:px-6 sm:py-2 font-semibold shadow-none text-sm md:text-base w-auto whitespace-nowrap [&_svg]:hidden sm:[&_svg]:inline-block"
                 />
               ))}
             </span>
