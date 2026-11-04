@@ -1333,5 +1333,9 @@
   "bfx.growth.g3.title": "Una página web para presentar tu análisis aerodinámico",
   "bfx.growth.g3.desc": "Una plantilla de página lista para adaptar y presentar tu servicio a tus clientes: qué mide, cómo y con qué límites.",
   "bfx.steps.s4.title": "Entrega el informe aerodinámico",
-  "bfx.steps.s4.desc": "Posición inicial, posición elegida, diferencia en vatios, en km/h y en tiempo: tu cliente se va con sus cifras."
+  "bfx.steps.s4.desc": "Posición inicial, posición elegida, diferencia en vatios, en km/h y en tiempo: tu cliente se va con sus cifras.",
+  "login.unconfirmed": "Tu dirección de correo aún no está confirmada. Haz clic en el enlace que te enviamos (revisa también la carpeta de spam).",
+  "login.resend": "Reenviar el correo de confirmación",
+  "login.resent": "¡Correo enviado! Revisa tu bandeja de entrada y el spam.",
+  "login.resendError": "No se pudo enviar ahora. Inténtalo de nuevo en un minuto."
 }

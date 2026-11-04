@@ -1333,5 +1333,9 @@
   "bfx.growth.g3.title": "Aero analizini tanıtmak için bir web sayfası",
   "bfx.growth.g3.desc": "Hizmetini müşterilerine tanıtmak için uyarlanmaya hazır bir sayfa şablonu: neyi, nasıl ve hangi sınırlarla ölçtüğün.",
   "bfx.steps.s4.title": "Aero raporunu teslim et",
-  "bfx.steps.s4.desc": "Başlangıç pozisyonu, seçilen pozisyon, watt, km/s ve süre cinsinden fark: müşterin kendi rakamlarıyla ayrılır."
+  "bfx.steps.s4.desc": "Başlangıç pozisyonu, seçilen pozisyon, watt, km/s ve süre cinsinden fark: müşterin kendi rakamlarıyla ayrılır.",
+  "login.unconfirmed": "E-posta adresin henüz doğrulanmadı. Gönderdiğimiz e-postadaki bağlantıya tıkla (spam klasörünü de kontrol et).",
+  "login.resend": "Doğrulama e-postasını yeniden gönder",
+  "login.resent": "E-posta gönderildi! Gelen kutunu ve spam klasörünü kontrol et.",
+  "login.resendError": "Şu anda gönderilemedi. Bir dakika sonra tekrar dene."
 }

@@ -1333,5 +1333,9 @@
   "bfx.growth.g3.title": "Uma página web para apresentar a tua análise aero",
   "bfx.growth.g3.desc": "Um modelo de página pronto para adaptar, para apresentar o teu serviço aos teus clientes: o que medes, como e com quais limites.",
   "bfx.steps.s4.title": "Entrega o relatório aero",
-  "bfx.steps.s4.desc": "Posição inicial, posição escolhida, diferença em watts, em km/h e em tempo: o teu cliente sai com os números dele."
+  "bfx.steps.s4.desc": "Posição inicial, posição escolhida, diferença em watts, em km/h e em tempo: o teu cliente sai com os números dele.",
+  "login.unconfirmed": "O teu endereço de e-mail ainda não está confirmado. Clica no link que te enviámos (verifica também o spam).",
+  "login.resend": "Reenviar o e-mail de confirmação",
+  "login.resent": "E-mail enviado! Verifica a caixa de entrada e o spam.",
+  "login.resendError": "Não foi possível enviar agora. Tenta novamente daqui a um minuto."
 }

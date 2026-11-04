@@ -1406,5 +1406,9 @@
   "bfx.growth.g3.title": "A web page to present your aero analysis",
   "bfx.growth.g3.desc": "A ready-to-adapt page template to present your service to clients: what you measure, how, and with what limits.",
   "bfx.steps.s4.title": "Deliver the aero report",
-  "bfx.steps.s4.desc": "Starting position, chosen position, difference in watts, km/h and time: your client leaves with their numbers."
+  "bfx.steps.s4.desc": "Starting position, chosen position, difference in watts, km/h and time: your client leaves with their numbers.",
+  "login.unconfirmed": "Your email address isn't confirmed yet. Click the link we emailed you (check your spam folder too).",
+  "login.resend": "Resend the confirmation email",
+  "login.resent": "Email sent! Check your inbox and spam folder.",
+  "login.resendError": "Couldn't send it right now. Try again in a minute."
 }

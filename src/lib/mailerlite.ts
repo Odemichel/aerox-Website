@@ -39,13 +39,13 @@ export async function upsertMailerLiteFields(email: string, fields: Record<strin
 }
 
 /**
- * Inscrit l'abonné dans un groupe (upsert par e-mail, avec des champs). Une
+ * Inscrit l'abonné dans un ou plusieurs groupes (upsert par e-mail, avec des champs). Une
  * automatisation « rejoint le groupe » peut s'y déclencher. Ne lève jamais,
  * comme `upsertMailerLiteFields`.
  */
 export async function addToMailerLiteGroup(
   email: string,
-  groupId: string,
+  groupId: string | string[],
   fields: Record<string, string> = {}
 ): Promise<boolean> {
   const key = import.meta.env.MAILERLITE_API_KEY as string | undefined;
@@ -57,7 +57,7 @@ export async function addToMailerLiteGroup(
     const res = await fetch('https://connect.mailerlite.com/api/subscribers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
-      body: JSON.stringify({ email, fields, groups: [groupId] }),
+      body: JSON.stringify({ email, fields, groups: Array.isArray(groupId) ? groupId : [groupId] }),
       signal: AbortSignal.timeout(MAILERLITE_TIMEOUT_MS),
     });
     if (!res.ok) {

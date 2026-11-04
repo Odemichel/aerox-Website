@@ -17,7 +17,16 @@ const metadata = {
     <h1 class="text-3xl font-bold mb-6 text-primary">{t(dict, 'login.title')}</h1>
     <p class="mb-8 text-black dark:text-white" set:html={t(dict, 'login.subtitle')} />
 
-    <form id="login-form" data-lang={lang} class="flex flex-col gap-4 text-left">
+    <form
+      id="login-form"
+      data-lang={lang}
+      data-missing={t(dict, 'login.errors.missingFields')}
+      data-success={t(dict, 'login.success')}
+      data-unconfirmed={t(dict, 'login.unconfirmed')}
+      data-resent={t(dict, 'login.resent')}
+      data-resend-error={t(dict, 'login.resendError')}
+      class="flex flex-col gap-4 text-left"
+    >
       <label for="email" class="font-medium">{t(dict, 'login.email.label')}</label>
       <input
         type="email"
@@ -58,6 +67,14 @@ const metadata = {
     </div>
 
     <p id="message" class="mt-6 text-sm"></p>
+    <button
+      type="button"
+      id="resend-confirmation"
+      hidden
+      class="mt-3 text-sm font-semibold underline text-primary hover:text-primary/80"
+    >
+      {t(dict, 'login.resend')}
+    </button>
   </section>
 
   <script>
@@ -91,6 +108,25 @@ const metadata = {
         message.classList.add(isError ? 'text-red-600' : 'text-green-600');
       }
 
+      const resendBtn = document.getElementById('resend-confirmation') as HTMLButtonElement | null;
+      resendBtn?.addEventListener('click', async () => {
+        const email = resendBtn.dataset.email;
+        if (!email) return;
+        resendBtn.disabled = true;
+        const { error } = await supabase.auth.resend({
+          type: 'signup',
+          email,
+          options: { emailRedirectTo: `https://aeroxbefaster.com/${lang}/inscription/connexion/` },
+        });
+        resendBtn.disabled = false;
+        if (error) {
+          showMessage('❌ ' + (form.dataset.resendError ?? error.message));
+        } else {
+          showMessage('✅ ' + (form.dataset.resent ?? ''), false);
+          resendBtn.hidden = true;
+        }
+      });
+
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -101,16 +137,27 @@ const metadata = {
         const password = passwordEl?.value.trim() ?? '';
 
         if (!email || !password) {
-          showMessage('❌ login.errors.missingFields');
+          showMessage('❌ ' + (form.dataset.missing ?? ''));
           return;
         }
 
+        if (resendBtn) resendBtn.hidden = true;
         const { error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
-          showMessage('❌ ' + error.message);
+          // Compte créé mais e-mail jamais confirmé (mail perdu, en spam…) :
+          // on le dit clairement et on propose de renvoyer le lien.
+          if (error.code === 'email_not_confirmed') {
+            showMessage('❌ ' + (form.dataset.unconfirmed ?? error.message));
+            if (resendBtn) {
+              resendBtn.dataset.email = email;
+              resendBtn.hidden = false;
+            }
+          } else {
+            showMessage('❌ ' + error.message);
+          }
         } else {
-          showMessage('✅ login.success', false);
+          showMessage('✅ ' + (form.dataset.success ?? ''), false);
           await supabase.auth.getSession();
 
           const requested = new URLSearchParams(window.location.search).get('redirect');

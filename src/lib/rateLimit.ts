@@ -69,3 +69,6 @@ export const releaseNotifyRateLimiter = createRateLimiter({ limit: 5, windowMs: 
 // Compteur du calculateur de CdA : large (on calcule souvent plusieurs fois),
 // borné pour qu'un script ne gonfle pas les statistiques.
 export const cdaEventRateLimiter = createRateLimiter({ limit: 60, windowMs: 10 * 60 * 1000 });
+
+// Création de compte cycliste (/api/rider-signup/) : fiche MailerLite.
+export const riderSignupRateLimiter = createRateLimiter({ limit: 5, windowMs: 10 * 60 * 1000 });

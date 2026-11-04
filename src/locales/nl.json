@@ -1333,5 +1333,9 @@
   "bfx.growth.g3.title": "Een webpagina om je aeroanalyse voor te stellen",
   "bfx.growth.g3.desc": "Een paginasjabloon, klaar om aan te passen, om je dienst aan je klanten voor te stellen: wat je meet, hoe, en met welke beperkingen.",
   "bfx.steps.s4.title": "Bezorg het aerorapport",
-  "bfx.steps.s4.desc": "Beginpositie, gekozen positie, verschil in watt, in km/u en in tijd: je klant vertrekt met zijn cijfers."
+  "bfx.steps.s4.desc": "Beginpositie, gekozen positie, verschil in watt, in km/u en in tijd: je klant vertrekt met zijn cijfers.",
+  "login.unconfirmed": "Je e-mailadres is nog niet bevestigd. Klik op de link in onze e-mail (kijk ook in je spammap).",
+  "login.resend": "Bevestigingsmail opnieuw versturen",
+  "login.resent": "E-mail verstuurd! Kijk in je inbox en spammap.",
+  "login.resendError": "Versturen lukt nu niet. Probeer het over een minuut opnieuw."
 }

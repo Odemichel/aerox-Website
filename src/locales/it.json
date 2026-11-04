@@ -1333,5 +1333,9 @@
   "bfx.growth.g3.title": "Una pagina web per presentare la tua analisi aerodinamica",
   "bfx.growth.g3.desc": "Un modello di pagina pronto da adattare per presentare il tuo servizio ai clienti: che cosa misura, come, con quali limiti.",
   "bfx.steps.s4.title": "Consegna il report aerodinamico",
-  "bfx.steps.s4.desc": "Posizione di partenza, posizione scelta, differenza in watt, in km/h e in tempo: il tuo cliente se ne va con i suoi numeri."
+  "bfx.steps.s4.desc": "Posizione di partenza, posizione scelta, differenza in watt, in km/h e in tempo: il tuo cliente se ne va con i suoi numeri.",
+  "login.unconfirmed": "Il tuo indirizzo email non è ancora confermato. Clicca sul link che ti abbiamo inviato (controlla anche lo spam).",
+  "login.resend": "Invia di nuovo l'email di conferma",
+  "login.resent": "Email inviata! Controlla la posta in arrivo e lo spam.",
+  "login.resendError": "Invio non riuscito. Riprova tra un minuto."
 }
