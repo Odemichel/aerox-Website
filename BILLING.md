@@ -5,8 +5,13 @@ d'essai gratuit sur toutes les offres, facturée par Stripe, activation
 automatique du compte, comptage des analyses côté serveur.
 
 Depuis le 2026-10-18 : l'essai démarre à **l'installation du setup** (bouton
-admin « Installation faite »), et une **offre partenaire** sur lien privé
-(59 €/mois ou 590 €/an pendant 12 mois).
+admin « Installation faite »). L'**offre partenaire** sur lien privé
+(59 €/mois ou 590 €/an pendant 12 mois) a été retirée le 2026-10-22.
+
+Depuis le 2026-11-08 : **plus de validation manuelle d'un bike fitter**, ni
+sur le site ni dans l'app desktop (voir « Inscription » plus bas). Parcours :
+inscription → offre et carte dans l'espace (rien n'est prélevé) →
+installation (bouton admin) → 14 jours d'essai → premier prélèvement.
 
 | Offre              | Prix HT                                                                                                  | Stripe (`lookup_key`)                                                     |
 | ------------------ | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
@@ -15,7 +20,7 @@ admin « Installation faite »), et une **offre partenaire** sur lien privé
 | Illimité           | 99 €/mois ou 990 €/an (2 mois offerts)                                                                   | `aerox_bf_unlimited`, `aerox_bf_unlimited_year`                           |
 | Illimité lancement | 69 €/mois jusqu'au 31/12/2026, puis le tarif normal (99 €/mois, au prorata)                              | `aerox_bf_unlimited_launch` → `aerox_bf_unlimited` (schedule)             |
 | Lancement annuel   | 690 € la 1re année, puis le tarif normal (990 €/an) ; souscription jusqu'au 31/12/2026                   | `aerox_bf_unlimited_launch_year` → `aerox_bf_unlimited_year` (schedule)   |
-| Partenaire         | 59 €/mois ou 590 €/an pendant 12 mois payés, puis le tarif normal ; sur lien privé                       | `aerox_bf_unlimited_partner(_year)` → `aerox_bf_unlimited(_year)`         |
+| Partenaire         | retirée le 2026-10-22 (59 €/mois ou 590 €/an pendant 12 mois, sur lien privé)                            | `aerox_bf_unlimited_partner(_year)` → `aerox_bf_unlimited(_year)`         |
 | Founding Partner   | inchangé (69 $/mois, lien de paiement)                                                                   | plan `legacy`, abonnement Stripe jamais touché                            |
 
 Les deux offres de lancement partagent les 20 places (plan `unlimited_launch`,
@@ -108,7 +113,8 @@ Principes :
 
 ### Cycle de vie
 
-- **Offre partenaire** (2026-10-18) : lien privé
+- **Offre partenaire** (2026-10-18, **retirée le 2026-10-22**, route
+  `/api/billing/partner/` et bloc de l'espace supprimés ; historique) : lien privé
   `/{lang}/inscription/dashboard/#partenaire=<jeton>` (`?partenaire=` encore
   accepté). Le jeton (variable Vercel `PARTNER_OFFER_TOKEN`, 16 caractères au
   moins) est gardé dans le navigateur pendant l'inscription, puis remis à
@@ -149,8 +155,18 @@ Principes :
      point 1 du cycle « Essai de 14 jours » ci-dessous est donc historique.
 - **Inscription** (`/inscription/inscription/?profil=bike-fitter`) :
   `handle_email_confirmed` crée l'utilisateur en `bike-fitter` actif, plan
-  `trial`, `trial_state = needs_business_id`. Notification admin par
-  `notify-admin-new-bf`.
+  `trial` (`trial_state = needs_business_id`, valeur historique que plus rien
+  ne lit). Notification admin par `notify-admin-new-bf`.
+- **Inscription depuis l'app desktop** (2026-11-08, migration
+  `20261108095345_bf_role_direct_from_app.sql`) : choisir « bike fitter » à
+  l'onboarding appelle `request_bike_fitter_role`, qui donne **`bike-fitter`
+  tout de suite** (avant : `pending_bf` en attente d'une validation manuelle
+  de l'admin, sans accès au choix d'offre, Checkout refusé `E_ROLE`). Les
+  déclencheurs font le reste : `bf_billing_on_role_granted` (fiche de
+  facturation), `notify_admin_new_bf`, `crm_on_bf_signup`. Un compte encore
+  `pending_bf` est converti à l'ouverture de l'app (pas de mise à jour en
+  masse). L'app affiche sur l'accueil du BF la carte « Démarrer avec AeroX »
+  (offre et carte → installation → essai), d'après `bf_usage_summary()`.
 - **Essai de 14 jours** (décision du 2026-09-27, modèle « à la Zwift ») :
   1. le BF fait vérifier son entreprise, dans un seul champ de son espace
      (`/api/billing/business-id/`, `src/lib/billing/businessId.ts`) :
