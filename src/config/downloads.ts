@@ -4,8 +4,8 @@
 // téléchargement, l'espace compte et l'onboarding bike fitter. Un seul endroit
 // à changer à chaque nouvelle version : les liens ET `version`.
 export const DOWNLOADS = {
-  version: '1.0.0',
-  mac: 'https://github.com/Odemichel/AeroX-release/releases/download/MacOs_V1.0.0/AeroX.zip',
+  version: '2.0.0',
+  mac: 'https://github.com/Odemichel/AeroX-release/releases/download/MacOs/AeroX-2.0.0.dmg',
   windows: 'https://github.com/Odemichel/AeroX-release/releases/download/Windows/AeroX-2.0.0-setup.exe',
 };
 
@@ -16,7 +16,7 @@ export const DOWNLOADS = {
 // base) : une sortie en retard ne rouvre jamais l'ancienne version.
 export const NEXT_RELEASE = {
   opensAt: Date.UTC(2026, 10, 6, 23, 0, 0), // 07/11/2026 00:00, Paris (décalée du 20/10 le 2026-10-18, puis du 01/11 le 2026-11-03)
-  minVersion: '1.4.0',
+  minVersion: '2.0.0',
 };
 
 // Groupes MailerLite des personnes à prévenir de la sortie (FR, autres langues).
