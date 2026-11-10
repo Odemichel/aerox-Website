@@ -1186,8 +1186,6 @@
   "dash.download.mobileRider": "Während Ihrer Einheiten ergänzt sie die Desktop-App für ein optimales AeroX-Erlebnis. Scannen Sie den QR-Code mit Ihrem Smartphone, um sie zu installieren.",
   "dash.download.qrAlt": "QR-Code der mobilen AeroX-App",
   "dash.download.optional": "optional",
-  "dash.download.desktopShotAlt": "Die AeroX-Desktop-App während einer Analyse: Stirnfläche, Geschwindigkeit und Gewinne in Echtzeit",
-  "dash.download.mobileShotAlt": "Die AeroX-Diagnose auf einem Smartphone",
   "bfx.meta.title": "AeroX für Bike-Fitter – Miss die Aerodynamik deiner Kunden während der Sitzung",
   "bfx.meta.description": "Miss die Stirnfläche deiner Kunden während der Sitzung und beziffere jede Einstellung in Watt und km/h. Was das Tool misst, seine Grenzen, seine Preise. 14 Tage kostenlos testen.",
   "bfx.definition": "AeroX ist eine Software zur aerodynamischen Messung für Bike-Fitter. Eine Webcam filmt den Radfahrer frontal auf seinem Rad; AeroX berechnet seine Stirnfläche Bild für Bild und übersetzt den Unterschied zwischen zwei Positionen in Watt und km/h. Es ergänzt die posturale Analyse, ohne sie zu ersetzen.",

@@ -1186,8 +1186,6 @@
   "dash.download.mobileRider": "セッション中はデスクトップアプリと併用すると、AeroXを最大限に活用できます。スマートフォンでQRコードを読み取ってインストールしてください。",
   "dash.download.qrAlt": "AeroXモバイルアプリのQRコード",
   "dash.download.optional": "任意",
-  "dash.download.desktopShotAlt": "分析中の AeroX デスクトップアプリ：前面投影面積、速度、効果をリアルタイム表示",
-  "dash.download.mobileShotAlt": "スマートフォンに表示された AeroX 診断",
   "bfx.meta.title": "バイクフィッター向けAeroX – セッション中にお客様のエアロを測定",
   "bfx.meta.description": "セッション中にお客様の前面投影面積を測定し、各調整をワットとkm/hで数値化します。ツールが測定するもの、その限界、料金。14日間の無料トライアル。",
   "bfx.definition": "AeroXはバイクフィッター向けの空力測定ソフトウェアです。Webカメラでバイクに乗ったサイクリストを正面から撮影し、AeroXがフレームごとに前面投影面積を算出して、2つのポジションの差をワットとkm/hに換算します。ポジショナルフィッティングを補完するものであり、置き換えるものではありません。",

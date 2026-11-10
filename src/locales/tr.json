@@ -1186,8 +1186,6 @@
   "dash.download.mobileRider": "Seanslarında masaüstü uygulamasını tamamlayarak en iyi AeroX deneyimini sunar. Kurmak için QR kodunu akıllı telefonunla tara.",
   "dash.download.qrAlt": "AeroX mobil uygulaması QR kodu",
   "dash.download.optional": "isteğe bağlı",
-  "dash.download.desktopShotAlt": "Analiz sırasında AeroX masaüstü uygulaması: ön alan, hız ve kazançlar gerçek zamanlı",
-  "dash.download.mobileShotAlt": "Akıllı telefonda AeroX analizi",
   "bfx.meta.title": "Bike fitter'lar için AeroX – Müşterilerinin aerodinamiğini seans sırasında ölç",
   "bfx.meta.description": "Müşterilerinin ön cephe alanını seans sırasında ölç ve her ayarlamayı watt ve km/s cinsinden sayıya dök. Aracın neyi ölçtüğü, sınırları, fiyatları. 14 gün ücretsiz deneme.",
   "bfx.definition": "AeroX, bike fitter'lar için bir aerodinamik ölçüm yazılımıdır. Bir web kamerası bisikletçiyi bisikletinin üzerinde önden çeker; AeroX ön cephe alanını kare kare hesaplar ve iki pozisyon arasındaki farkı watt ve km/s cinsinden ifade eder. Postüral fitting'i tamamlar, onun yerini almaz.",
