@@ -19,8 +19,6 @@ import { DOWNLOADS } from '~/config/downloads';
 // statique : même cible que le QR affiché par l'application desktop.
 import companionQr from '~/assets/images/companion-qr.svg?raw';
 
-const COMPANION_URL = 'https://mycompanion.aeroxbefaster.com';
-
 // Tuiles de téléchargement : logo, système et icône de téléchargement.
 const platforms = [
   { key: 'mac', icon: 'tabler:brand-apple-filled', os: 'macOS', href: DOWNLOADS.mac, label: 'dash.download.mac' },
@@ -248,7 +246,8 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         {
           sections.map(([id, title, desc, who]) => (
             <section id={id} class="acct-section hidden" data-for={who} aria-labelledby={`${id}-title`}>
-              <div class="acct-section-head">
+              {/* Téléchargement : titre gardé pour les lecteurs d'écran seulement. */}
+              <div class:list={['acct-section-head', { 'dl-sr-only': id === 'telechargement' }]}>
                 <h2 id={`${id}-title`}>{title}</h2>
                 {typeof desc === 'string' ? (
                   desc && <p class="acct-muted">{desc}</p>
@@ -267,16 +266,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
                 <div class="dl">
                   <div class="dl-card dl-desktop">
                     <div class="dl-desktop-main">
-                      <div class="dl-head">
-                        <span class="dl-head-icon" aria-hidden="true">
-                          <Icon name="tabler:device-desktop" />
-                        </span>
-                        <div>
-                          <p class="dl-eyebrow">{t(dict, 'dash.download.desktop')}</p>
-                          <h3 class="dl-title">{t(dict, 'dash.download.heroTitle')}</h3>
-                          <p class="acct-muted">{t(dict, 'dash.download.installText')}</p>
-                        </div>
-                      </div>
+                      <h3 class="dl-eyebrow dl-card-title">{t(dict, 'dash.download.installTitle')}</h3>
                       <DownloadGate lang={lang} trialNote="bf">
                         <div class="dl-platforms">
                           {platforms.map((p) => (
@@ -284,7 +274,10 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
                               <span class="dl-platform-logo">
                                 <Icon name={p.icon} class="dl-logo" />
                               </span>
-                              <span class="dl-os">{p.os}</span>
+                              <span class="dl-platform-text">
+                                <span class="dl-os">{p.os}</span>
+                                <span class="dl-badge hidden">{t(dict, 'dash.download.detected')}</span>
+                              </span>
                               <span class="dl-cta" aria-hidden="true">
                                 <Icon name="tabler:download" />
                               </span>
@@ -318,15 +311,9 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
                       loading="lazy"
                     />
                     <div>
-                      <div class="dl-head dl-head--inline">
-                        <span class="dl-head-icon" aria-hidden="true">
-                          <Icon name="tabler:device-mobile" />
-                        </span>
-                        <h3 class="dl-title">
-                          {t(dict, 'dash.download.mobileTitle')}{' '}
-                          <span class="dl-optional">({t(dict, 'dash.download.optional')})</span>
-                        </h3>
-                      </div>
+                      <h3 class="dl-eyebrow dl-card-title">
+                        {t(dict, 'dash.download.mobileTitle')} ({t(dict, 'dash.download.optional')})
+                      </h3>
                       <p class="acct-lead" data-for-text="bf">
                         {t(dict, 'dash.download.mobileBf')}
                       </p>
@@ -340,13 +327,6 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
                           aria-label={t(dict, 'dash.download.qrAlt')}
                           set:html={companionQr}
                         />
-                        <p class="acct-muted acct-small">
-                          {t(dict, 'dash.download.or')}
-                          <br />
-                          <a class="acct-link" href={COMPANION_URL}>
-                            {COMPANION_URL.replace('https://', '')}
-                          </a>
-                        </p>
                       </div>
                     </div>
                   </div>
@@ -1792,6 +1772,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
   if (os) {
     document.querySelectorAll<HTMLElement>(`.dl-platform[data-os="${os}"]`).forEach((tile) => {
       tile.classList.add('is-detected');
+      tile.querySelector('.dl-badge')?.classList.remove('hidden');
     });
   }
 </script>
@@ -2440,41 +2421,12 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       padding: 1.75rem 2rem;
     }
   }
-  #account .dl-head {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    margin-bottom: 1.25rem;
-  }
-  #account .dl-head--inline {
-    align-items: center;
-    margin-bottom: 0.5rem;
-  }
-  #account .dl-head-icon {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 0.75rem;
-    background: color-mix(in srgb, var(--acct-accent) 16%, transparent);
-    color: var(--acct-accent);
-  }
-  #account .dl-head-icon svg {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
   #account .dl-eyebrow {
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--acct-accent);
-  }
-  #account .dl-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    line-height: 1.3;
   }
   #account .dl-desktop {
     display: grid;
@@ -2532,12 +2484,39 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     width: 1.5rem;
     height: 1.5rem;
   }
-  #account .dl-os {
+  #account .dl-platform-text {
     flex: 1;
     min-width: 0;
+    display: grid;
+    justify-items: start;
+    gap: 0.25rem;
+  }
+  #account .dl-os {
+    max-width: 100%;
     font-weight: 700;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  #account .dl-badge {
+    max-width: 100%;
+    padding: 0.0625rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.4;
+    background: color-mix(in srgb, var(--acct-ok) 18%, transparent);
+    color: var(--acct-ok);
+  }
+  #account .dl-card-title {
+    margin-bottom: 1rem;
+  }
+  #account .dl-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
     white-space: nowrap;
   }
   #account .dl-cta {
@@ -2665,11 +2644,6 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     display: block;
     width: 100%;
     height: auto;
-  }
-  #account .dl-optional {
-    font-size: 0.8125rem;
-    font-weight: 500;
-    color: var(--acct-muted);
   }
   #account .acct-change {
     flex-basis: 100%;
