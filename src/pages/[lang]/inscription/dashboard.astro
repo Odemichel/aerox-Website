@@ -16,7 +16,7 @@ import { DOWNLOADS } from '~/config/downloads';
 // statique : même cible que le QR affiché par l'application desktop.
 import companionQr from '~/assets/images/companion-qr.svg?raw';
 
-// Tuiles de téléchargement : logo, système et icône de téléchargement.
+// Tuiles de téléchargement : « AeroX pour macOS », pastille, gros logo.
 const platforms = [
   { key: 'mac', icon: 'tabler:brand-apple-filled', os: 'macOS', href: DOWNLOADS.mac, label: 'dash.download.mac' },
   {
@@ -30,6 +30,13 @@ const platforms = [
 
 const { lang } = Astro.params;
 const dict = getDict(lang);
+
+// Procédure d'utilisation (PDF dans public/docs) : français pour le site
+// français, anglais pour toutes les autres langues.
+const guide =
+  lang === 'fr'
+    ? { pdf: '/docs/aerox-procedure-utilisation-fr.pdf', thumb: '/docs/aerox-procedure-fr-thumb.jpg' }
+    : { pdf: '/docs/aerox-operating-procedure-en.pdf', thumb: '/docs/aerox-procedure-en-thumb.jpg' };
 
 const metadata = {
   title: t(dict, 'dashboard.meta.title'),
@@ -261,21 +268,60 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
               </div>
               {id === 'telechargement' ? (
                 <div class="dl">
-                  <div class="dl-card">
-                    <h3 class="dl-eyebrow dl-card-title">{t(dict, 'dash.download.installTitle')}</h3>
+                  <div class="dl-card dl-guide">
+                    <button
+                      type="button"
+                      class="dl-guide-thumb"
+                      data-guide-open
+                      aria-label={t(dict, 'dash.download.guideOpen')}
+                    >
+                      <img src={guide.thumb} alt="" width="453" height="640" loading="lazy" />
+                      <span class="dl-guide-zoom" aria-hidden="true">
+                        <Icon name="tabler:zoom-in" />
+                      </span>
+                    </button>
+                    <div>
+                      <h3 class="dl-card-title">{t(dict, 'dash.download.guideTitle')}</h3>
+                      <p class="dl-guide-warn">
+                        <Icon name="tabler:alert-triangle" />
+                        {t(dict, 'dash.download.guideWarn')}
+                      </p>
+                      <div class="dl-guide-actions">
+                        <button type="button" class="acct-btn acct-btn--primary" data-guide-open>
+                          {t(dict, 'dash.download.guideOpen')}
+                        </button>
+                        <a class="acct-btn" href={guide.pdf} download>
+                          {t(dict, 'dash.download.guideDownload')}
+                        </a>
+                      </div>
+                    </div>
+                    <dialog
+                      class="dl-guide-dialog"
+                      data-pdf={guide.pdf}
+                      aria-label={t(dict, 'dash.download.guideTitle')}
+                    >
+                      <button
+                        type="button"
+                        class="dl-guide-close"
+                        data-guide-close
+                        aria-label={t(dict, 'dash.download.guideClose')}
+                      >
+                        <Icon name="tabler:x" />
+                      </button>
+                      <iframe title={t(dict, 'dash.download.guideTitle')} />
+                    </dialog>
+                  </div>
+
+                  <div class="dl-card dl-install">
+                    <h3 class="dl-card-title">{t(dict, 'dash.download.installTitle')}</h3>
                     <DownloadGate lang={lang} trialNote="bf">
                       <div class="dl-platforms">
                         {platforms.map((p) => (
                           <a class="dl-platform" href={p.href} download data-os={p.key} aria-label={t(dict, p.label)}>
+                            <span class="dl-os">{t(dict, 'dash.download.forOs').replace('{os}', p.os)}</span>
+                            <span class="dl-badge is-off">{t(dict, 'dash.download.detected')}</span>
                             <span class="dl-platform-logo">
                               <Icon name={p.icon} class="dl-logo" />
-                            </span>
-                            <span class="dl-platform-text">
-                              <span class="dl-os">{p.os}</span>
-                              <span class="dl-badge hidden">{t(dict, 'dash.download.detected')}</span>
-                            </span>
-                            <span class="dl-cta" aria-hidden="true">
-                              <Icon name="tabler:download" />
                             </span>
                           </a>
                         ))}
@@ -285,7 +331,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
 
                   <div class="dl-card dl-mobile">
                     <div>
-                      <h3 class="dl-eyebrow dl-card-title">
+                      <h3 class="dl-eyebrow dl-mobile-title">
                         {t(dict, 'dash.download.mobileTitle')} ({t(dict, 'dash.download.optional')})
                       </h3>
                       <p class="acct-lead" data-for-text="bf">
@@ -1732,6 +1778,24 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
 </Layout>
 
 <script>
+  // Onglet Téléchargement : procédure d'utilisation ouverte dans la page. Le
+  // PDF n'est chargé qu'à la première ouverture.
+  const guideDialog = document.querySelector<HTMLDialogElement>('.dl-guide-dialog');
+  if (guideDialog) {
+    const frame = guideDialog.querySelector('iframe');
+    document.querySelectorAll('[data-guide-open]').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        if (frame && !frame.src) frame.src = `${guideDialog.dataset.pdf}#view=FitH`;
+        guideDialog.showModal();
+      })
+    );
+    guideDialog.querySelector('[data-guide-close]')?.addEventListener('click', () => guideDialog.close());
+    // Clic sur le fond (hors du document) : ferme aussi.
+    guideDialog.addEventListener('click', (e) => {
+      if (e.target === guideDialog) guideDialog.close();
+    });
+  }
+
   // Onglet Téléchargement : met en avant la tuile du système du visiteur.
   const nav = navigator as Navigator & { userAgentData?: { platform?: string } };
   const platform = (nav.userAgentData?.platform || navigator.platform || navigator.userAgent).toLowerCase();
@@ -1739,7 +1803,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
   if (os) {
     document.querySelectorAll<HTMLElement>(`.dl-platform[data-os="${os}"]`).forEach((tile) => {
       tile.classList.add('is-detected');
-      tile.querySelector('.dl-badge')?.classList.remove('hidden');
+      tile.querySelector('.dl-badge')?.classList.remove('is-off');
     });
   }
 </script>
@@ -2395,18 +2459,151 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     text-transform: uppercase;
     color: var(--acct-accent);
   }
+  #account .dl-card-title {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--acct-text);
+  }
+  #account .dl-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  /* Procédure d'utilisation */
+  #account .dl-guide {
+    display: grid;
+    gap: 1.25rem;
+    align-items: center;
+  }
+  @media (min-width: 640px) {
+    #account .dl-guide {
+      grid-template-columns: 7.5rem minmax(0, 1fr);
+      gap: 1.75rem;
+    }
+  }
+  #account .dl-guide-thumb {
+    position: relative;
+    display: block;
+    width: 7.5rem;
+    padding: 0;
+    border: 1px solid var(--acct-line);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #fff;
+    cursor: zoom-in;
+    box-shadow: 0 10px 24px -12px rgb(0 0 0 / 0.55);
+    transition: transform 0.15s ease;
+  }
+  #account .dl-guide-thumb:hover,
+  #account .dl-guide-thumb:focus-visible {
+    transform: translateY(-2px) rotate(-1deg);
+  }
+  #account .dl-guide-thumb img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  #account .dl-guide-zoom {
+    position: absolute;
+    right: 0.375rem;
+    bottom: 0.375rem;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 999px;
+    background: var(--acct-accent);
+    color: var(--acct-on-accent);
+  }
+  #account .dl-guide-zoom svg {
+    width: 1rem;
+    height: 1rem;
+  }
+  #account .dl-guide-warn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: -0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: color-mix(in srgb, var(--acct-warn) 16%, transparent);
+    color: var(--acct-warn);
+  }
+  #account .dl-guide-warn svg {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+  }
+  #account .dl-guide-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  #account .dl-guide-dialog {
+    width: min(64rem, 100vw - 2rem);
+    height: min(90vh, 100dvh - 2rem);
+    padding: 0;
+    border: 0;
+    border-radius: 0.75rem;
+    background: #fff;
+    overflow: hidden;
+  }
+  #account .dl-guide-dialog::backdrop {
+    background: rgb(5 12 20 / 0.75);
+  }
+  #account .dl-guide-dialog iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  #account .dl-guide-close {
+    position: absolute;
+    top: 0.625rem;
+    right: 0.625rem;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    border-radius: 999px;
+    background: rgb(16 32 47 / 0.85);
+    color: #fff;
+    cursor: pointer;
+  }
+  #account .dl-guide-close svg {
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+  /* Téléchargement de l'application */
+  #account .dl-install {
+    text-align: center;
+  }
+  #account .dl-install .dl-gate-closed {
+    text-align: left;
+  }
   #account .dl-platforms {
-    max-width: 36rem;
+    max-width: 30rem;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
   }
   #account .dl-platform {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
     min-width: 0;
-    padding: 0.75rem;
+    padding: 1.25rem 0.75rem;
     border: 1px solid var(--acct-line);
     border-radius: 0.875rem;
     background: var(--acct-inset);
@@ -2426,37 +2623,10 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
   #account .dl-platform.is-detected {
     border-color: color-mix(in srgb, var(--acct-accent) 60%, var(--acct-line));
   }
-  #account .dl-platform-logo {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 0.625rem;
-    background: #fff;
-    color: #000;
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
-  }
-  #account .dl-logo {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-  #account .dl-platform-text {
-    flex: 1;
-    min-width: 0;
-    display: grid;
-    justify-items: start;
-    gap: 0.25rem;
-  }
   #account .dl-os {
-    max-width: 100%;
     font-weight: 700;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
   #account .dl-badge {
-    max-width: 100%;
     padding: 0.0625rem 0.5rem;
     border-radius: 999px;
     font-size: 0.6875rem;
@@ -2465,62 +2635,38 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     background: color-mix(in srgb, var(--acct-ok) 18%, transparent);
     color: var(--acct-ok);
   }
-  #account .dl-card-title {
-    margin-bottom: 1rem;
+  /* Pastille hors du système détecté : place gardée, tuiles alignées. */
+  #account .dl-badge.is-off {
+    visibility: hidden;
   }
-  #account .dl-sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-  #account .dl-cta {
-    flex: none;
+  #account .dl-platform-logo {
     display: grid;
     place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 999px;
-    background: var(--acct-accent);
-    color: var(--acct-on-accent);
+    width: 5rem;
+    height: 5rem;
+    margin-top: 0.25rem;
+    border-radius: 1.25rem;
+    background: #fff;
+    color: #000;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
   }
-  #account .dl-cta svg {
-    width: 1.125rem;
-    height: 1.125rem;
+  #account .dl-logo {
+    width: 3rem;
+    height: 3rem;
   }
-  /* Petit écran : les deux tuiles restent sur la même ligne, en plus serré. */
   @media (max-width: 479px) {
     #account .dl-card {
-      padding: 1.25rem 0.75rem;
+      padding: 1.25rem 1rem;
     }
     #account .dl-platforms {
       gap: 0.5rem;
     }
-    #account .dl-platform {
-      gap: 0.375rem;
-      padding: 0.5rem 0.375rem 0.5rem 0.625rem;
-    }
-    #account .dl-platform-logo {
-      width: auto;
-      height: auto;
-      background: none;
-      box-shadow: none;
-      color: inherit;
-    }
-    #account .dl-cta {
-      width: 1.875rem;
-      height: 1.875rem;
-    }
-    #account .dl-logo,
-    #account .dl-cta svg {
-      width: 1.125rem;
-      height: 1.125rem;
-    }
     #account .dl-os {
       font-size: 0.875rem;
     }
+  }
+  #account .dl-mobile-title {
+    margin-bottom: 1rem;
   }
   #account .dl-mobile {
     display: grid;
