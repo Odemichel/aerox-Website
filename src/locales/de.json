@@ -380,6 +380,7 @@
   "reset.badCode": "Falscher oder abgelaufener Code. Fordern Sie einen neuen an.",
   "reset.error": "Derzeit nicht möglich. Versuchen Sie es in einer Minute erneut.",
   "reset.done": "Passwort geändert! Weiterleitung zu Ihrem Konto…",
+  "reset.same": "Das ist bereits Ihr aktuelles Passwort, es gibt nichts zu ändern. Weiterleitung zu Ihrem Konto…",
   "login.noAccount.text": "Noch kein Konto?",
   "login.noAccount.link": "Konto erstellen",
   "login.errors.missingFields": "Bitte alle Felder ausfüllen.",

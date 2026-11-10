@@ -380,6 +380,7 @@
   "reset.badCode": "Código incorrecto o caducado. Solicita uno nuevo.",
   "reset.error": "No es posible ahora. Inténtalo de nuevo en un minuto.",
   "reset.done": "¡Contraseña cambiada! Te llevamos a tu cuenta…",
+  "reset.same": "Ya es tu contraseña actual: no hay nada que cambiar. Te llevamos a tu cuenta…",
   "login.noAccount.text": "¿Aún no tienes cuenta?",
   "login.noAccount.link": "Crear una cuenta",
   "login.errors.missingFields": "Por favor, rellena todos los campos.",

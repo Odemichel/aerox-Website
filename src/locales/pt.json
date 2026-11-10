@@ -380,6 +380,7 @@
   "reset.badCode": "Código incorreto ou expirado. Peça um novo.",
   "reset.error": "Não é possível agora. Tente novamente dentro de um minuto.",
   "reset.done": "Palavra-passe alterada! A levá-lo para a sua conta…",
+  "reset.same": "Já é a sua palavra-passe atual: não há nada a alterar. A levá-lo para a sua conta…",
   "login.noAccount.text": "Ainda não tem conta?",
   "login.noAccount.link": "Criar uma conta",
   "login.errors.missingFields": "Por favor, preencha todos os campos.",

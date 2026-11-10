@@ -380,6 +380,7 @@
   "reset.badCode": "Kod hatalı veya süresi dolmuş. Yeni bir kod isteyin.",
   "reset.error": "Şu anda mümkün değil. Bir dakika sonra tekrar deneyin.",
   "reset.done": "Şifre değiştirildi! Hesabınıza yönlendiriliyorsunuz…",
+  "reset.same": "Bu zaten mevcut şifreniz, değiştirilecek bir şey yok. Hesabınıza yönlendiriliyorsunuz…",
   "login.noAccount.text": "Henüz hesabın yok mu?",
   "login.noAccount.link": "Hesap oluştur",
   "login.errors.missingFields": "Lütfen tüm alanları doldurun.",

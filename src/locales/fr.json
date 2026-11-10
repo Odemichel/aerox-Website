@@ -422,6 +422,7 @@
   "reset.badCode": "Code incorrect ou expiré. Demandez-en un nouveau.",
   "reset.error": "Impossible pour le moment. Réessayez dans une minute.",
   "reset.done": "Mot de passe modifié ! Redirection vers votre espace…",
+  "reset.same": "C'est déjà votre mot de passe actuel : rien à changer. Redirection vers votre espace…",
   "login.noAccount.text": "Pas encore de compte ?",
   "login.noAccount.link": "Créer un compte",
   "login.errors.missingFields": "Merci de remplir tous les champs.",

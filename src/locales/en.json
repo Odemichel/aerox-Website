@@ -416,6 +416,7 @@
   "reset.badCode": "Wrong or expired code. Request a new one.",
   "reset.error": "Not possible right now. Try again in a minute.",
   "reset.done": "Password changed! Taking you to your account…",
+  "reset.same": "That's already your current password, so nothing to change. Taking you to your account…",
   "login.noAccount.text": "Don't have an account yet?",
   "login.noAccount.link": "Sign up",
   "login.errors.missingFields": "Please fill in all fields.",

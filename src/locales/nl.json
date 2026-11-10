@@ -380,6 +380,7 @@
   "reset.badCode": "Onjuiste of verlopen code. Vraag een nieuwe aan.",
   "reset.error": "Nu niet mogelijk. Probeer het over een minuut opnieuw.",
   "reset.done": "Wachtwoord gewijzigd! We brengen je naar je account…",
+  "reset.same": "Dit is al je huidige wachtwoord, er hoeft niets te veranderen. We brengen je naar je account…",
   "login.noAccount.text": "Nog geen account?",
   "login.noAccount.link": "Account aanmaken",
   "login.errors.missingFields": "Vul alle velden in.",
