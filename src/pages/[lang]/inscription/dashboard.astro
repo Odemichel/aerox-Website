@@ -306,7 +306,10 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
                         <li class="dl-step">
                           <span class="dl-step-num">{n}</span>
                           <span>
-                            <span class="dl-step-title">{t(dict, `dash.download.step${n}Title`)}</span>
+                            <span class="dl-step-title">
+                              {t(dict, `dash.download.step${n}Title`)}
+                              {n === 3 && <span class="dl-optional">({t(dict, 'dash.download.optional')})</span>}
+                            </span>
                             <span class="dl-step-text">{t(dict, `dash.download.step${n}Text`)}</span>
                           </span>
                         </li>
@@ -321,7 +324,10 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
                         <span class="dl-head-icon" aria-hidden="true">
                           <Icon name="tabler:device-mobile" />
                         </span>
-                        <h3 class="dl-title">{t(dict, 'dash.download.mobileTitle')}</h3>
+                        <h3 class="dl-title">
+                          {t(dict, 'dash.download.mobileTitle')}{' '}
+                          <span class="dl-optional">({t(dict, 'dash.download.optional')})</span>
+                        </h3>
                       </div>
                       <p class="acct-lead" data-for-text="bf">
                         {t(dict, 'dash.download.mobileBf')}
@@ -2628,23 +2634,28 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
   }
   @media (min-width: 640px) {
     #account .dl-mobile {
-      grid-template-columns: 10rem minmax(0, 1fr);
-      gap: 2rem;
+      grid-template-columns: 6.5rem minmax(0, 1fr);
+      gap: 1.5rem;
     }
   }
   #account .dl-qr {
-    width: 10rem;
-    padding: 0.625rem;
-    border-radius: 1rem;
+    width: 6.5rem;
+    padding: 0.375rem;
+    border-radius: 0.75rem;
     background: #fff;
     box-shadow:
-      0 0 0 4px color-mix(in srgb, var(--acct-accent) 35%, transparent),
+      0 0 0 3px color-mix(in srgb, var(--acct-accent) 35%, transparent),
       0 12px 30px -14px rgb(0 0 0 / 0.5);
   }
   #account .dl-qr svg {
     display: block;
     width: 100%;
     height: auto;
+  }
+  #account .dl-optional {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--acct-muted);
   }
   #account .dl-mobile-or {
     margin-top: 0.75rem;

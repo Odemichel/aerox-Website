@@ -1195,6 +1195,7 @@
   "dash.download.step2Text": "Use o mesmo e-mail e a mesma palavra-passe deste site.",
   "dash.download.step3Title": "Adicionar o smartphone",
   "dash.download.step3Text": "Leia o código QR abaixo para abrir a app móvel.",
+  "dash.download.optional": "opcional",
   "bfx.meta.title": "AeroX para bike fitters – Mede a aerodinâmica dos teus clientes durante a sessão",
   "bfx.meta.description": "Mede a área frontal dos teus clientes durante a sessão e quantifica cada ajuste em watts e em km/h. O que a ferramenta mede, seus limites, seus preços. Teste grátis de 14 dias.",
   "bfx.definition": "AeroX é um software de medição aerodinâmica para bike fitters. Uma webcam filma o ciclista de frente, na bicicleta; o AeroX calcula sua área frontal imagem por imagem e traduz a diferença entre duas posições em watts e em km/h. Ele complementa o estudo postural, sem substituí-lo.",
