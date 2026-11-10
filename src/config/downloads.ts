@@ -6,7 +6,7 @@
 export const DOWNLOADS = {
   version: '2.0.0',
   mac: 'https://github.com/Odemichel/AeroX-release/releases/download/MacOs/AeroX-2.0.1.dmg',
-  windows: 'https://github.com/Odemichel/AeroX-release/releases/download/Windows/AeroX-2.0.0-setup.exe',
+  windows: 'https://github.com/Odemichel/AeroX-release/releases/download/Windows/AeroX-2.0.1-setup.exe',
 };
 
 // Téléchargements suspendus jusqu'à la nouvelle version (décision du
