@@ -1,0 +1,50 @@
+---
+// Boutons de téléchargement de l'application desktop, style « badge de store »
+// (logo Apple / Windows sur fond noir). Partagés par la page de succès de
+// paiement et l'onglet Téléchargement de l'espace compte. À placer dans un
+// <DownloadGate> : ce composant n'applique pas lui-même l'ouverture.
+import { Icon } from 'astro-icon/components';
+import { getDict, t } from '~/lib/i18n';
+import { DOWNLOADS } from '~/config/downloads';
+
+export interface Props {
+  lang: string;
+  /** Centrés (page de succès) ou alignés à gauche (espace compte). */
+  align?: 'center' | 'start';
+}
+
+const { lang, align = 'center' } = Astro.props;
+const dict = getDict(lang);
+
+const buttons = [
+  { href: DOWNLOADS.mac, icon: 'tabler:brand-apple-filled', suffix: 'success.download2mac', os: 'macOS' },
+  { href: DOWNLOADS.windows, icon: 'tabler:brand-windows-filled', suffix: 'success.download2win', os: 'Windows' },
+];
+---
+
+<div
+  class:list={[
+    'flex flex-col sm:flex-row gap-4',
+    align === 'center' ? 'items-center justify-center' : 'items-stretch sm:items-center justify-start',
+  ]}
+>
+  {
+    buttons.map((b) => (
+      <a
+        href={b.href}
+        class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition no-underline"
+        download
+      >
+        <Icon name={b.icon} class="w-10 h-10" />
+        <span class="text-left">
+          <span class="block text-xs leading-none pb-1">
+            {t(dict, 'success.download1')}
+            <span class="text-primary font-bold">AeroX</span>
+            {t(dict, b.suffix)}
+          </span>
+          <span class="block text-base font-semibold leading-none">{b.os}</span>
+        </span>
+      </a>
+    ))
+  }
+</div>
