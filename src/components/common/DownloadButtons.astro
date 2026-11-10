@@ -1,9 +1,9 @@
 ---
 // Boutons de téléchargement de l'application desktop, style « badge de store »
-// (logo Apple / Windows coloré sur fond noir). Partagés par la page de succès de
+// (logo Apple / Windows sur fond noir). Partagés par la page de succès de
 // paiement et l'onglet Téléchargement de l'espace compte. À placer dans un
 // <DownloadGate> : ce composant n'applique pas lui-même l'ouverture.
-import OsLogo from './OsLogo.astro';
+import { Icon } from 'astro-icon/components';
 import { getDict, t } from '~/lib/i18n';
 import { DOWNLOADS } from '~/config/downloads';
 
@@ -17,8 +17,8 @@ const { lang, align = 'center' } = Astro.props;
 const dict = getDict(lang);
 
 const buttons = [
-  { href: DOWNLOADS.mac, logo: 'mac' as const, suffix: 'success.download2mac', os: 'macOS' },
-  { href: DOWNLOADS.windows, logo: 'windows' as const, suffix: 'success.download2win', os: 'Windows' },
+  { href: DOWNLOADS.mac, icon: 'tabler:brand-apple-filled', suffix: 'success.download2mac', os: 'macOS' },
+  { href: DOWNLOADS.windows, icon: 'tabler:brand-windows-filled', suffix: 'success.download2win', os: 'Windows' },
 ];
 ---
 
@@ -35,7 +35,7 @@ const buttons = [
         class="inline-flex items-center justify-center gap-3 bg-black hover:bg-neutral-800 text-white rounded-xl px-5 py-3 shadow-md transition no-underline"
         download
       >
-        <OsLogo os={b.logo} class="w-10 h-10" />
+        <Icon name={b.icon} class="w-10 h-10" />
         <span class="text-left">
           <span class="block text-xs leading-none pb-1">
             {t(dict, 'success.download1')}

@@ -10,7 +10,9 @@ import BfPricing from '~/components/widgets/BfPricing.astro';
 import Layout from '../../../layouts/PageLayout.astro';
 import { getDict, t, type Locale } from '~/lib/i18n';
 import DownloadGate from '~/components/common/DownloadGate.astro';
-import OsLogo from '~/components/common/OsLogo.astro';
+import { Image } from 'astro:assets';
+import desktopAppShot from '~/assets/images/download/desktop-app.png';
+import mobileHandShot from '~/assets/images/download/mobile-hand.png';
 import { Icon } from 'astro-icon/components';
 import { DOWNLOADS } from '~/config/downloads';
 // QR code de l'application mobile (webapp companion), généré une fois en SVG
@@ -28,8 +30,14 @@ const fileMeta = (href: string) => {
   return [version && `v${version}`, ext && `.${ext}`].filter(Boolean).join(' · ');
 };
 const platforms = [
-  { key: 'mac' as const, os: 'macOS', href: DOWNLOADS.mac, meta: fileMeta(DOWNLOADS.mac) },
-  { key: 'windows' as const, os: 'Windows', href: DOWNLOADS.windows, meta: fileMeta(DOWNLOADS.windows) },
+  { key: 'mac', icon: 'tabler:brand-apple-filled', os: 'macOS', href: DOWNLOADS.mac, meta: fileMeta(DOWNLOADS.mac) },
+  {
+    key: 'windows',
+    icon: 'tabler:brand-windows-filled',
+    os: 'Windows',
+    href: DOWNLOADS.windows,
+    meta: fileMeta(DOWNLOADS.windows),
+  },
 ];
 
 const { lang } = Astro.params;
@@ -265,22 +273,37 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
               {id === 'telechargement' ? (
                 <div class="dl">
                   <div class="dl-card">
-                    <div class="dl-head">
-                      <span class="dl-head-icon" aria-hidden="true">
-                        <Icon name="tabler:device-desktop" />
-                      </span>
-                      <div>
-                        <p class="dl-eyebrow">{t(dict, 'dash.download.desktop')}</p>
-                        <h3 class="dl-title">{t(dict, 'dash.download.heroTitle')}</h3>
-                        <p class="acct-muted">{t(dict, 'dash.download.desktopText')}</p>
+                    <div class="dl-desktop-top">
+                      <div class="dl-head">
+                        <span class="dl-head-icon" aria-hidden="true">
+                          <Icon name="tabler:device-desktop" />
+                        </span>
+                        <div>
+                          <p class="dl-eyebrow">{t(dict, 'dash.download.desktop')}</p>
+                          <h3 class="dl-title">{t(dict, 'dash.download.heroTitle')}</h3>
+                          <p class="acct-muted">{t(dict, 'dash.download.desktopText')}</p>
+                        </div>
                       </div>
+                      <figure class="dl-monitor">
+                        <div class="dl-monitor-screen">
+                          <Image
+                            src={desktopAppShot}
+                            alt={t(dict, 'dash.download.desktopShotAlt')}
+                            widths={[400, 800]}
+                            sizes="(min-width: 1024px) 24rem, 90vw"
+                            loading="lazy"
+                          />
+                        </div>
+                        <span class="dl-monitor-neck" aria-hidden="true" />
+                        <span class="dl-monitor-foot" aria-hidden="true" />
+                      </figure>
                     </div>
                     <DownloadGate lang={lang} trialNote="bf">
                       <div class="dl-platforms">
                         {platforms.map((p) => (
                           <a class="dl-platform" href={p.href} download data-os={p.key}>
                             <span class="dl-platform-logo">
-                              <OsLogo os={p.key} class="dl-logo" />
+                              <Icon name={p.icon} class="dl-logo" />
                             </span>
                             <span class="dl-platform-text">
                               <span class="dl-os">
@@ -318,7 +341,14 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
                   </div>
 
                   <div class="dl-card dl-mobile">
-                    <div class="dl-qr" role="img" aria-label={t(dict, 'dash.download.qrAlt')} set:html={companionQr} />
+                    <Image
+                      class="dl-phone"
+                      src={mobileHandShot}
+                      alt={t(dict, 'dash.download.mobileShotAlt')}
+                      widths={[280, 560]}
+                      sizes="12rem"
+                      loading="lazy"
+                    />
                     <div>
                       <div class="dl-head dl-head--inline">
                         <span class="dl-head-icon" aria-hidden="true">
@@ -335,12 +365,21 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
                       <p class="acct-lead hidden" data-for-text="rider">
                         {t(dict, 'dash.download.mobileRider')}
                       </p>
-                      <p class="acct-muted acct-small dl-mobile-or">
-                        {t(dict, 'dash.download.or')}{' '}
-                        <a class="acct-link" href={COMPANION_URL}>
-                          {COMPANION_URL.replace('https://', '')}
-                        </a>
-                      </p>
+                      <div class="dl-mobile-qr">
+                        <div
+                          class="dl-qr"
+                          role="img"
+                          aria-label={t(dict, 'dash.download.qrAlt')}
+                          set:html={companionQr}
+                        />
+                        <p class="acct-muted acct-small">
+                          {t(dict, 'dash.download.or')}
+                          <br />
+                          <a class="acct-link" href={COMPANION_URL}>
+                            {COMPANION_URL.replace('https://', '')}
+                          </a>
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2511,6 +2550,7 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     height: 3.25rem;
     border-radius: 0.75rem;
     background: #fff;
+    color: #000;
     box-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
   }
   #account .dl-logo {
@@ -2627,18 +2667,88 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     font-size: 0.875rem;
     color: var(--acct-muted);
   }
-  #account .dl-mobile {
+  #account .dl-desktop-top {
     display: grid;
     gap: 1.25rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  #account .dl-desktop-top .dl-head {
+    margin-bottom: 0;
+  }
+  @media (min-width: 1024px) {
+    #account .dl-desktop-top {
+      grid-template-columns: minmax(0, 1fr) 24rem;
+      gap: 2rem;
+    }
+  }
+  /* Cadre d'écran d'ordinateur autour de la capture de l'application. */
+  #account .dl-monitor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 24rem;
+    margin: 0 auto;
+  }
+  #account .dl-monitor-screen {
+    width: 100%;
+    padding: 0.5rem 0.5rem 0.875rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #2b2f36, #111317);
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.08) inset,
+      0 18px 40px -18px rgb(0 0 0 / 0.65);
+  }
+  #account .dl-monitor-screen img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 0.25rem;
+  }
+  #account .dl-monitor-neck {
+    width: 18%;
+    height: 1.25rem;
+    background: linear-gradient(90deg, #9aa3ad, #d7dce1 50%, #9aa3ad);
+    clip-path: polygon(12% 0, 88% 0, 100% 100%, 0 100%);
+  }
+  #account .dl-monitor-foot {
+    width: 38%;
+    height: 0.375rem;
+    border-radius: 999px 999px 0.25rem 0.25rem;
+    background: linear-gradient(90deg, #8b949e, #cfd5db 50%, #8b949e);
+  }
+  #account .dl-mobile {
+    display: grid;
+    gap: 1.5rem;
     align-items: center;
   }
   @media (min-width: 640px) {
     #account .dl-mobile {
-      grid-template-columns: 6.5rem minmax(0, 1fr);
-      gap: 1.5rem;
+      grid-template-columns: 12rem minmax(0, 1fr);
+      gap: 2rem;
     }
   }
+  #account .dl-phone {
+    display: block;
+    width: 100%;
+    max-width: 12rem;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 1rem;
+  }
+  #account .dl-mobile-qr {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  #account .dl-mobile-qr p {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
   #account .dl-qr {
+    flex: none;
     width: 6.5rem;
     padding: 0.375rem;
     border-radius: 0.75rem;
@@ -2656,9 +2766,6 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     font-size: 0.8125rem;
     font-weight: 500;
     color: var(--acct-muted);
-  }
-  #account .dl-mobile-or {
-    margin-top: 0.75rem;
   }
   #account .acct-change {
     flex-basis: 100%;
