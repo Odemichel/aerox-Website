@@ -13,10 +13,10 @@ describe('téléchargements suspendus jusqu’à la nouvelle version', () => {
     expect(new Date(NEXT_RELEASE.opensAt).toISOString()).toBe('2026-11-06T23:00:00.000Z');
   });
 
-  it('liens encore en 1.0.0 : fermé, même après la date', () => {
-    expect(DOWNLOADS.version).toBe('1.0.0');
-    expect(releaseLinksReady()).toBe(false);
-    expect(downloadsOpen(NEXT_RELEASE.opensAt + 86_400_000)).toBe(false);
-    expect(downloadsOpen(Date.UTC(2026, 8, 28))).toBe(false);
+  it('liens en 2.0.0 (= min_required) : fermé avant la date, ouvert après', () => {
+    expect(compareVersions(DOWNLOADS.version, NEXT_RELEASE.minVersion)).toBeGreaterThanOrEqual(0);
+    expect(releaseLinksReady()).toBe(true);
+    expect(downloadsOpen(NEXT_RELEASE.opensAt - 1)).toBe(false);
+    expect(downloadsOpen(NEXT_RELEASE.opensAt + 86_400_000)).toBe(true);
   });
 });
