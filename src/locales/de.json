@@ -1364,5 +1364,14 @@
   "login.unconfirmed": "Deine E-Mail-Adresse ist noch nicht bestätigt. Klicke auf den Link in unserer E-Mail (schau auch im Spam-Ordner nach).",
   "login.resend": "Bestätigungs-E-Mail erneut senden",
   "login.resent": "E-Mail gesendet! Sieh in deinem Posteingang und Spam-Ordner nach.",
-  "login.resendError": "Senden gerade nicht möglich. Versuch es in einer Minute erneut."
+  "login.resendError": "Senden gerade nicht möglich. Versuch es in einer Minute erneut.",
+  "strava.meta.title": "Strava-Verbindung",
+  "strava.ok.title": "Strava ist verbunden ✅",
+  "strava.ok.text": "Deine AeroX-Einheiten werden an Strava gesendet. Du kannst diese Seite schließen und zu AeroX zurückkehren.",
+  "strava.denied.title": "Verbindung abgelehnt",
+  "strava.denied.text": "AeroX braucht die Berechtigung „Deine Aktivitäten hochladen“, um deine Einheiten zu senden. Starte die Verbindung erneut in AeroX und lass das Kästchen aktiviert.",
+  "strava.error.title": "Verbindung fehlgeschlagen",
+  "strava.error.text": "Der Link ist abgelaufen oder Strava hat nicht geantwortet. Starte die Verbindung erneut in AeroX.",
+  "strava.ok.account": "Verbundenes AeroX-Konto:",
+  "strava.ok.notYou": "Nicht dein AeroX-Konto? Entziehe AeroX in Strava den Zugriff (Einstellungen → Meine Apps) und sag uns Bescheid."
 }

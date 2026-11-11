@@ -149,6 +149,7 @@ export default defineConfig({
         !/\/tri-dijon\//.test(page) &&
         !/\/method\/inscription_ML\//.test(page) &&
         !/\/periode-test\//.test(page) &&
+        !/\/strava\//.test(page) &&
         // Page des candidatures influenceurs : accessible depuis Instagram seulement.
         !/\/influenceur\//.test(page),
     }),

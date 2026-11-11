@@ -1364,5 +1364,14 @@
   "login.unconfirmed": "メールアドレスがまだ確認されていません。お送りしたメールのリンクをクリックしてください（迷惑メールフォルダもご確認ください）。",
   "login.resend": "確認メールを再送信",
   "login.resent": "メールを送信しました。受信トレイと迷惑メールフォルダをご確認ください。",
-  "login.resendError": "現在送信できません。1分後にもう一度お試しください。"
+  "login.resendError": "現在送信できません。1分後にもう一度お試しください。",
+  "strava.meta.title": "Strava連携",
+  "strava.ok.title": "Stravaと連携しました ✅",
+  "strava.ok.text": "AeroXのセッションがStravaに送信されます。このページを閉じてAeroXに戻ってください。",
+  "strava.denied.title": "連携が拒否されました",
+  "strava.denied.text": "セッションを送信するには「アクティビティのアップロード」の許可が必要です。AeroXから再度連携し、その項目をオンのままにしてください。",
+  "strava.error.title": "連携できませんでした",
+  "strava.error.text": "リンクの有効期限が切れたか、Stravaから応答がありませんでした。AeroXから再度連携してください。",
+  "strava.ok.account": "連携したAeroXアカウント：",
+  "strava.ok.notYou": "ご自身のAeroXアカウントではありませんか？Strava（設定 → マイアプリ）でAeroXのアクセスを取り消し、ご連絡ください。"
 }

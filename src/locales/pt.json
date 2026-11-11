@@ -1364,5 +1364,14 @@
   "login.unconfirmed": "O teu endereço de e-mail ainda não está confirmado. Clica no link que te enviámos (verifica também o spam).",
   "login.resend": "Reenviar o e-mail de confirmação",
   "login.resent": "E-mail enviado! Verifica a caixa de entrada e o spam.",
-  "login.resendError": "Não foi possível enviar agora. Tenta novamente daqui a um minuto."
+  "login.resendError": "Não foi possível enviar agora. Tenta novamente daqui a um minuto.",
+  "strava.meta.title": "Conexão Strava",
+  "strava.ok.title": "Strava conectado ✅",
+  "strava.ok.text": "Suas sessões AeroX serão enviadas ao Strava. Você pode fechar esta página e voltar ao AeroX.",
+  "strava.denied.title": "Conexão recusada",
+  "strava.denied.text": "O AeroX precisa da permissão “Enviar suas atividades” para enviar suas sessões. Refaça a conexão pelo AeroX e deixe essa opção marcada.",
+  "strava.error.title": "Falha na conexão",
+  "strava.error.text": "O link expirou ou o Strava não respondeu. Refaça a conexão pelo AeroX.",
+  "strava.ok.account": "Conta AeroX conectada:",
+  "strava.ok.notYou": "Não é sua conta AeroX? Remova o acesso do AeroX no Strava (Configurações → Meus aplicativos) e nos avise."
 }

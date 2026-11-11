@@ -1364,5 +1364,14 @@
   "login.unconfirmed": "E-posta adresin henüz doğrulanmadı. Gönderdiğimiz e-postadaki bağlantıya tıkla (spam klasörünü de kontrol et).",
   "login.resend": "Doğrulama e-postasını yeniden gönder",
   "login.resent": "E-posta gönderildi! Gelen kutunu ve spam klasörünü kontrol et.",
-  "login.resendError": "Şu anda gönderilemedi. Bir dakika sonra tekrar dene."
+  "login.resendError": "Şu anda gönderilemedi. Bir dakika sonra tekrar dene.",
+  "strava.meta.title": "Strava bağlantısı",
+  "strava.ok.title": "Strava bağlandı ✅",
+  "strava.ok.text": "AeroX antrenmanların Strava'ya gönderilecek. Bu sayfayı kapatıp AeroX'e dönebilirsin.",
+  "strava.denied.title": "Bağlantı reddedildi",
+  "strava.denied.text": "AeroX'in antrenmanlarını gönderebilmesi için “Aktivitelerini yükle” iznine ihtiyacı var. Bağlantıyı AeroX'ten yeniden başlat ve o kutuyu işaretli bırak.",
+  "strava.error.title": "Bağlantı kurulamadı",
+  "strava.error.text": "Bağlantının süresi doldu ya da Strava yanıt vermedi. Bağlantıyı AeroX'ten yeniden başlat.",
+  "strava.ok.account": "Bağlanan AeroX hesabı:",
+  "strava.ok.notYou": "Senin AeroX hesabın değil mi? Strava'da (Ayarlar → Uygulamalarım) AeroX erişimini kaldır ve bize haber ver."
 }

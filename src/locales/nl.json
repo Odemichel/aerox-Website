@@ -1364,5 +1364,14 @@
   "login.unconfirmed": "Je e-mailadres is nog niet bevestigd. Klik op de link in onze e-mail (kijk ook in je spammap).",
   "login.resend": "Bevestigingsmail opnieuw versturen",
   "login.resent": "E-mail verstuurd! Kijk in je inbox en spammap.",
-  "login.resendError": "Versturen lukt nu niet. Probeer het over een minuut opnieuw."
+  "login.resendError": "Versturen lukt nu niet. Probeer het over een minuut opnieuw.",
+  "strava.meta.title": "Strava-koppeling",
+  "strava.ok.title": "Strava is gekoppeld ✅",
+  "strava.ok.text": "Je AeroX-sessies worden naar Strava gestuurd. Je kunt deze pagina sluiten en teruggaan naar AeroX.",
+  "strava.denied.title": "Koppeling geweigerd",
+  "strava.denied.text": "AeroX heeft de toestemming „Je activiteiten uploaden” nodig om je sessies te versturen. Start de koppeling opnieuw vanuit AeroX en laat dat vakje aangevinkt.",
+  "strava.error.title": "Koppelen mislukt",
+  "strava.error.text": "De link is verlopen of Strava reageerde niet. Start de koppeling opnieuw vanuit AeroX.",
+  "strava.ok.account": "Gekoppeld AeroX-account:",
+  "strava.ok.notYou": "Niet jouw AeroX-account? Trek de toegang van AeroX in via Strava (Instellingen → Mijn apps) en laat het ons weten."
 }
