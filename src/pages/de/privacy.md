@@ -73,7 +73,7 @@ AeroX verwendet Ihre Daten, um:
 - Ihre Zahlungen und Abonnements abzuwickeln,
 - Sie zu kontaktieren (E-Mail, Benachrichtigungen, Support),
 - Sie über Neuigkeiten, Angebote oder Updates zu informieren (sofern Sie nicht widersprechen),
-- die Nutzung des Dienstes zu analysieren, um unsere Funktionen zu verbessern,
+- die Nutzung des Dienstes zu analysieren, um unsere Funktionen zu verbessern (ausgenommen Strava-Daten, siehe „Verbundene Dienste“),
 - unseren gesetzlichen Verpflichtungen nachzukommen.
 
 ---
@@ -92,6 +92,7 @@ Wir bewahren Ihre personenbezogenen Daten nur so lange auf, wie es für die oben
 Ihre Daten können in folgenden Fällen weitergegeben werden:
 
 - **An unsere Dienstleister** (Hosting-Anbieter, Zahlungsdienstleister wie Stripe, Analysetools).
+- **An die Plattformen, die Sie verbinden** (Strava, Intervals.icu), auf Ihren Wunsch, um Ihre Einheiten dorthin zu senden und Ihre geplanten Einheiten auf Intervals.icu zu lesen (siehe „Verbundene Dienste“).
 - **Im Falle einer Fusion oder Geschäftsübertragung** können Ihre Daten zusammen mit AeroX übertragen werden.
 - **Aufgrund gesetzlicher Verpflichtungen**, insbesondere im Rahmen von Anfragen zuständiger Behörden.
 - **Mit Ihrer Einwilligung** für jeden anderen spezifischen Zweck.
@@ -125,6 +126,24 @@ AeroX betreibt ein eigenes professionelles Instagram-Konto, **@aerox_befaster**,
 
 ---
 
+## Verbundene Dienste (Strava, Intervals.icu)
+
+Die AeroX-App kann Ihre Einheiten mit zwei Trainingsplattformen von Drittanbietern austauschen, **Strava** und **Intervals.icu**. Es wird nichts ausgetauscht, solange Sie die Plattform nicht selbst unter **Konto → Verbundene Apps** verbunden haben, indem Sie AeroX auf der Website der Plattform autorisieren (OAuth).
+
+**Gesendete Datei**: Am Ende einer Einheit (automatischer Upload, abschaltbar) oder wenn Sie auf die Upload-Schaltfläche klicken, überträgt AeroX eine Aktivitätsdatei (FIT) der Einheit: Datum und Uhrzeit, Dauer, Leistung, Geschwindigkeit, Trittfrequenz, Herzfrequenz und Distanz, sekundengenau, sowie Ihre aerodynamischen Messwerte (CdA, Stirnfläche, Aero-Score, W/m²), mit einem Titel und einer kurzen Beschreibung (durchschnittlicher CdA, Zeit in Aero-Position, Score). Die Datei enthält keine GPS-Position. Ihr Video und Ihre Bilder werden nie gesendet.
+
+**Strava**: Wir fordern die Berechtigung an, Aktivitäten hinzuzufügen (`activity:write`) und Ihre Aktivitäten zu lesen (`activity:read_all`). Dieser Lesezugriff wird nur in zwei Fällen genutzt: Wenn Strava meldet, dass die Einheit bereits existiert (zum Beispiel auch von Zwift oder Ihrer Uhr aufgezeichnet), liest AeroX die Beschreibung dieser Aktivität und hängt seine Zusammenfassung am Ende an, ohne etwas zu ersetzen; und wenn Strava uns einen Widerruf des Zugriffs oder die Löschung einer Aktivität meldet, fragt AeroX bei Strava nach (Ihr Profil oder die Aktivität), um das Ereignis zu bestätigen, bevor etwas gelöscht wird. Nichts von dem Gelesenen wird gespeichert. Wir speichern auf unseren Servern die Kennung Ihres Strava-Kontos, die Zugriffstoken und Ihre Einstellung zum automatischen Upload; Ihren Namen speichern wir nicht. Für jede gesendete Einheit werden die Strava-Kennungen des Uploads und der Aktivität 7 Tage nach dem letzten Upload gelöscht; es bleibt nur die Information, dass die Einheit gesendet wurde, damit sie nicht doppelt gesendet wird. Wenn Sie die Aktivität auf Strava löschen, wird dieser Eintrag gelöscht und die Einheit kann erneut gesendet werden.
+
+**Intervals.icu**: AeroX lädt Ihre abgeschlossenen Einheiten als FIT-Dateien hoch und liest die geplanten Einheiten in Ihrem Intervals.icu-Kalender, um sie Ihnen in der App anzubieten. Das Zugriffstoken bleibt auf Ihrem Computer: Es wird nicht auf unseren Servern gespeichert. Es wird widerrufen, wenn Sie die Verbindung trennen.
+
+**Besondere Zusagen für Strava**: Die Daten, die wir von Strava erhalten, dienen ausschließlich dem Hochladen Ihrer Einheiten. Sie werden nie für Analysen oder Statistiken verwendet, nie mit anderen Daten verknüpft, nie zum Trainieren, Bewerten oder Betreiben eines Systems künstlicher Intelligenz verwendet und nie an Dritte weitergegeben. Wenn Sie Strava in AeroX trennen, den Zugriff von AeroX in Strava widerrufen oder Ihr Strava-Konto löschen, löschen wir sofort die Verbindung und alle Ihre Strava-Daten. AeroX und Strava sind voneinander unabhängige Verantwortliche; für Strava-Daten hat die [Datenschutzerklärung von Strava](https://www.strava.com/legal/privacy) bei Widersprüchen zu dieser Richtlinie Vorrang. Strava kann Nutzungsdaten seiner API im Zusammenhang mit AeroX überwachen und erheben und für eigene Zwecke verwenden, insbesondere zur Verbesserung seiner Dienste, für den Support und zur Überprüfung der Einhaltung seiner Bedingungen.
+
+**Rechtsgrundlage**: Erfüllung des Dienstes, den Sie durch die Verbindung der Plattform anfordern (Art. 6 Abs. 1 lit. b DSGVO).
+
+**Zugriff widerrufen**: Sie können den Zugriff von AeroX auch in den Einstellungen von Strava oder Intervals.icu widerrufen. Bereits gesendete Aktivitäten verbleiben auf der Plattform: Sie können sie dort löschen, und es gilt die [Datenschutzerklärung von Strava](https://www.strava.com/legal/privacy) bzw. die von [Intervals.icu](https://intervals.icu/privacy-policy.html).
+
+---
+
 ## Löschung Ihrer Daten
 
 Sie können jederzeit die Löschung oder Berichtigung Ihrer personenbezogenen Daten verlangen:
@@ -132,7 +151,17 @@ Sie können jederzeit die Löschung oder Berichtigung Ihrer personenbezogenen Da
 - über Ihren Benutzerbereich,
 - oder indem Sie uns direkt kontaktieren (siehe Abschnitt „Kontakt").
 
+Wir bestätigen Ihnen per E-Mail, dass die Löschung erfolgt ist.
+
 Bestimmte Daten müssen jedoch aufbewahrt werden, wenn dies gesetzlich vorgeschrieben ist (Rechnungsstellung, buchhalterische Pflichten).
+
+---
+
+## Ihre Rechte
+
+Nach der DSGVO haben Sie das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch in Bezug auf Ihre personenbezogenen Daten sowie das Recht, Ihre Einwilligung jederzeit zu widerrufen. Insbesondere können Sie eine Kopie der Daten erhalten, die wir über Sie gespeichert haben, einschließlich der Daten zu verbundenen Diensten. Zur Ausübung dieser Rechte schreiben Sie an contact@aeroxbefaster.com; wir antworten innerhalb eines Monats.
+
+Wenn Sie der Ansicht sind, dass Ihre Rechte nicht gewahrt werden, können Sie Beschwerde bei der CNIL, der französischen Datenschutzbehörde ([www.cnil.fr](https://www.cnil.fr)), oder bei der Datenschutzbehörde Ihres Landes einlegen.
 
 ---
 

@@ -73,7 +73,7 @@ AeroX usa tus datos para:
 - tramitar tus pagos y suscripciones,
 - contactarte (correo electrónico, notificaciones, soporte),
 - informarte de novedades, ofertas o actualizaciones (salvo que te opongas),
-- analizar el uso del servicio para mejorar sus funciones,
+- analizar el uso del servicio para mejorar sus funciones (excepto los datos de Strava, ver «Servicios conectados»),
 - cumplir nuestras obligaciones legales.
 
 ---
@@ -92,6 +92,7 @@ Conservamos tus datos personales solo durante el tiempo necesario para los fines
 Tus datos pueden compartirse en los siguientes casos:
 
 - **Con nuestros proveedores de servicios** (alojamiento, procesadores de pago como Stripe, herramientas de analítica).
+- **Con las plataformas que conectas** (Strava, Intervals.icu), a petición tuya, para enviarles tus sesiones y leer tus sesiones previstas en Intervals.icu (ver «Servicios conectados»).
 - **En caso de fusión o transmisión de la actividad**, tus datos pueden transferirse junto con AeroX.
 - **Cuando la ley lo exija**, por ejemplo en respuesta a solicitudes de autoridades competentes.
 - **Con tu consentimiento**, para cualquier otra finalidad específica.
@@ -125,6 +126,24 @@ AeroX gestiona su propia cuenta profesional de Instagram, **@aerox_befaster**, c
 
 ---
 
+## Servicios conectados (Strava, Intervals.icu)
+
+La aplicación AeroX puede intercambiar tus sesiones con dos plataformas de entrenamiento de terceros, **Strava** e **Intervals.icu**. No se intercambia nada hasta que tú mismo conectas la plataforma desde **Cuenta → Aplicaciones conectadas**, autorizando a AeroX en el sitio web de la plataforma (OAuth).
+
+**Archivo enviado**: al final de una sesión (envío automático, que puedes desactivar) o cuando pulsas el botón de envío, AeroX transmite un archivo de actividad (FIT) de la sesión: fecha y hora, duración, potencia, velocidad, cadencia, frecuencia cardíaca y distancia, segundo a segundo, además de tus medidas aerodinámicas (CdA, superficie frontal, puntuación aero, W/m²), con un título y una breve descripción (CdA medio, tiempo en posición aero, puntuación). El archivo no contiene ninguna posición GPS. Tu vídeo y tus imágenes nunca se envían.
+
+**Strava**: pedimos permiso para añadir actividades (`activity:write`) y para leer tus actividades (`activity:read_all`). Esta lectura solo se usa en dos casos: cuando Strava indica que la sesión ya existe (por ejemplo, grabada también por Zwift o tu reloj), AeroX lee la descripción de esa actividad y añade su resumen al final, sin sustituir nada; y cuando Strava nos notifica una revocación de acceso o la eliminación de una actividad, AeroX consulta a Strava (tu perfil o la actividad) para confirmar el evento antes de borrar nada. Nada de lo que se lee se guarda. Guardamos en nuestros servidores el identificador de tu cuenta de Strava, los tokens de acceso y tu ajuste de envío automático; no guardamos tu nombre. Para cada sesión enviada, los identificadores de Strava del envío y de la actividad se borran 7 días después del último envío; solo queda constancia de que la sesión se envió, para no enviarla dos veces. Si eliminas la actividad en Strava, esa constancia se borra y la sesión puede volver a enviarse.
+
+**Intervals.icu**: AeroX envía tus sesiones terminadas como archivos FIT y lee las sesiones previstas en tu calendario de Intervals.icu para proponértelas en la aplicación. El token de acceso permanece en tu ordenador: no se guarda en nuestros servidores. Se revoca cuando te desconectas.
+
+**Compromisos específicos de Strava**: los datos que recibimos de Strava solo se usan para enviar tus sesiones. Nunca se usan para análisis ni estadísticas, ni se cruzan con otros datos, ni se usan para entrenar, evaluar o hacer funcionar un sistema de inteligencia artificial, ni se comunican a terceros. Cuando desconectas Strava desde AeroX, revocas el acceso de AeroX desde Strava o eliminas tu cuenta de Strava, eliminamos inmediatamente la conexión y todos tus datos de Strava. AeroX y Strava son responsables del tratamiento independientes; para los datos de Strava, la [Política de privacidad de Strava](https://www.strava.com/legal/privacy) prevalece en caso de contradicción con la presente política. Strava puede supervisar y recoger datos de uso de su API relacionados con AeroX y utilizarlos para sus propios fines, en particular para mejorar sus servicios, prestar soporte y verificar el cumplimiento de sus condiciones.
+
+**Base jurídica**: la ejecución del servicio que solicitas al conectar la plataforma (artículo 6.1.b del RGPD).
+
+**Retirar el acceso**: también puedes revocar el acceso de AeroX desde los ajustes de Strava o de Intervals.icu. Las actividades ya enviadas permanecen en la plataforma: puedes eliminarlas allí, y se rigen por la [Política de privacidad de Strava](https://www.strava.com/legal/privacy) o la de [Intervals.icu](https://intervals.icu/privacy-policy.html).
+
+---
+
 ## Supresión de tus datos
 
 Puedes solicitar en cualquier momento la supresión o la rectificación de tus datos personales:
@@ -132,7 +151,17 @@ Puedes solicitar en cualquier momento la supresión o la rectificación de tus d
 - desde tu cuenta de usuario,
 - o contactándonos directamente (ver la sección "Contacto").
 
+Te confirmamos por correo electrónico que la supresión se ha realizado.
+
 Algunos datos pueden tener que conservarse si la ley lo exige (obligaciones de facturación y contabilidad).
+
+---
+
+## Tus derechos
+
+De acuerdo con el RGPD, tienes derecho de acceso, rectificación, supresión, limitación, portabilidad y oposición respecto de tus datos personales, así como derecho a retirar tu consentimiento en cualquier momento. En particular, puedes obtener una copia de los datos que tenemos sobre ti, incluidos los relacionados con los servicios conectados. Para ejercer estos derechos, escribe a contact@aeroxbefaster.com; te respondemos en el plazo de un mes.
+
+Si consideras que tus derechos no se respetan, puedes presentar una reclamación ante la CNIL, la autoridad francesa de protección de datos ([www.cnil.fr](https://www.cnil.fr)), o ante la autoridad de protección de datos de tu país.
 
 ---
 

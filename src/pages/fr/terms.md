@@ -3,7 +3,7 @@ title: 'Conditions Générales d’Utilisation'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Dernière mise à jour : 22 octobre 2026_
+_Dernière mise à jour : 15 novembre 2026_
 
 Merci d’utiliser **AeroX**, la solution qui transforme ton home-trainer en soufflerie virtuelle.  
 Ces Conditions Générales d’Utilisation (CGU) encadrent l’accès et l’usage du service AeroX.  
@@ -137,6 +137,7 @@ L’Utilisateur s’engage à :
 - Les mesures fournies par AeroX (surface frontale, CdA, scores) sont des estimations. Leur qualité dépend aussi d’éléments qui échappent à AeroX, notamment la caméra, le matériel de l’Utilisateur (ordinateur, home-trainer, capteurs), l’éclairage et l’installation. AeroX n’est pas responsable d’une mauvaise interprétation des résultats, ni d’une utilisation du Service non conforme à sa destination ou aux présentes CGU.
 - AeroX n’est pas responsable des dommages indirects.
 - À l’égard d’un Utilisateur professionnel, la responsabilité d’AeroX est limitée au montant payé pour la période en cours.
+- **Services tiers connectés** (Strava, Intervals.icu) : ces services sont fournis par des tiers, selon leurs propres conditions. Au nom de ces tiers, toute garantie à leur égard est exclue, y compris les garanties implicites de qualité marchande, d'adéquation à un usage particulier et d'absence de contrefaçon, et ces tiers ne sont pas responsables envers l'Utilisateur des dommages indirects, consécutifs, spéciaux ou punitifs liés à l'utilisation de ces services via AeroX.
 - **Clause expresse** : aucune stipulation des présentes CGU n’a pour effet d’écarter ni de limiter la garantie légale de conformité (article 9), la garantie des vices cachés (articles 1641 et suivants du Code civil), la responsabilité d’AeroX en cas de dommage corporel, ni sa responsabilité en cas de faute lourde ou de dol.
 
 ---

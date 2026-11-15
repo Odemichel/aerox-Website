@@ -73,7 +73,7 @@ AeroX utilise vos données pour :
 - traiter vos paiements et abonnements,
 - vous contacter (email, notifications, support),
 - vous informer d’actualités, d’offres ou de mises à jour (sauf opposition de votre part),
-- analyser l’utilisation du service afin d’améliorer nos fonctionnalités,
+- analyser l’utilisation du service afin d’améliorer nos fonctionnalités (hors données Strava, voir « Services connectés »),
 - respecter nos obligations légales.
 
 ---
@@ -92,6 +92,7 @@ Nous conservons vos données personnelles uniquement le temps nécessaire aux fi
 Vos données peuvent être partagées dans les cas suivants :
 
 - **Avec nos prestataires** (hébergeurs, prestataires de paiement comme Stripe, outils d’analyse).
+- **Avec les plateformes que vous connectez** (Strava, Intervals.icu), à votre demande, pour y envoyer vos séances et lire vos séances prévues sur Intervals.icu (voir « Services connectés »).
 - **En cas de fusion ou de transfert d’activité**, vos données peuvent être transférées avec AeroX.
 - **Sur obligation légale**, notamment dans le cadre de demandes d’autorités compétentes.
 - **Avec votre consentement**, pour toute autre finalité spécifique.
@@ -125,6 +126,24 @@ AeroX gère son propre compte professionnel Instagram, **@aerox_befaster**, avec
 
 ---
 
+## Services connectés (Strava, Intervals.icu)
+
+L'application AeroX peut échanger vos séances avec deux plateformes d'entraînement tierces, **Strava** et **Intervals.icu**. Rien n'est échangé tant que vous n'avez pas connecté vous-même la plateforme depuis **Compte → Applications connectées**, en autorisant AeroX sur le site de la plateforme (OAuth).
+
+**Fichier envoyé** : à la fin d'une séance (envoi automatique, désactivable) ou quand vous cliquez sur le bouton d'envoi, AeroX transmet un fichier d'activité (FIT) de la séance : date et heure, durée, puissance, vitesse, cadence, fréquence cardiaque et distance, seconde par seconde, ainsi que vos mesures aérodynamiques (CdA, surface frontale, score aéro, W/m²), avec un titre et une courte description (CdA moyen, temps en position aéro, score). Le fichier ne contient aucune position GPS. Votre vidéo et vos images ne sont jamais envoyées.
+
+**Strava** : nous demandons le droit d'ajouter des activités (`activity:write`) et de lire vos activités (`activity:read_all`). Cette lecture sert dans deux cas seulement : quand Strava signale que la séance existe déjà (par exemple enregistrée aussi par Zwift ou votre montre), AeroX lit la description de cette activité et y ajoute son résumé à la fin, sans rien remplacer ; et quand Strava nous notifie un retrait d'accès ou la suppression d'une activité, AeroX interroge Strava (votre profil ou l'activité) pour confirmer l'événement avant d'effacer quoi que ce soit. Rien de ce qui est lu n'est enregistré. Nous conservons sur nos serveurs l'identifiant de votre compte Strava, les jetons d'accès et votre réglage d'envoi automatique ; nous n'enregistrons pas votre nom. Pour chaque séance envoyée, les identifiants Strava de l'envoi et de l'activité sont effacés 7 jours après le dernier envoi ; seul reste le fait que la séance a été envoyée, pour ne pas l'envoyer deux fois. Si vous supprimez l'activité sur Strava, cette trace est effacée et la séance peut être renvoyée.
+
+**Intervals.icu** : AeroX envoie vos séances terminées sous forme de fichiers FIT et lit les séances prévues dans votre calendrier Intervals.icu pour vous les proposer dans l'application. Le jeton d'accès reste sur votre ordinateur : il n'est pas stocké sur nos serveurs. Il est révoqué quand vous vous déconnectez.
+
+**Engagements propres à Strava** : les données reçues de Strava servent uniquement à envoyer vos séances. Elles ne sont jamais utilisées pour des analyses ou des statistiques, ni croisées avec d'autres données, ni utilisées pour entraîner, évaluer ou faire fonctionner un système d'intelligence artificielle, ni transmises à des tiers. Quand vous déconnectez Strava depuis AeroX, quand vous retirez l'accès d'AeroX depuis Strava ou quand vous supprimez votre compte Strava, nous supprimons immédiatement la connexion et toutes vos données Strava. AeroX et Strava sont des responsables de traitement indépendants ; pour les données Strava, la [Politique de confidentialité de Strava](https://www.strava.com/legal/privacy) prévaut en cas de contradiction avec la présente politique. Strava peut surveiller et collecter des données d'usage de son API liées à AeroX et les utiliser pour ses propres besoins, notamment pour améliorer ses services, assurer le support et vérifier le respect de ses conditions.
+
+**Base légale** : l'exécution du service que vous demandez en connectant la plateforme (article 6.1.b du RGPD).
+
+**Retirer l'accès** : vous pouvez aussi retirer l'accès d'AeroX depuis les réglages de Strava ou d'Intervals.icu. Les activités déjà envoyées restent sur la plateforme : vous pouvez les y supprimer, et elles relèvent de la [Politique de confidentialité de Strava](https://www.strava.com/legal/privacy) ou de celle d'[Intervals.icu](https://intervals.icu/privacy-policy.html).
+
+---
+
 ## Suppression de vos Données
 
 Vous pouvez demander à tout moment la suppression ou la rectification de vos données personnelles :
@@ -132,7 +151,17 @@ Vous pouvez demander à tout moment la suppression ou la rectification de vos do
 - depuis votre espace utilisateur,
 - ou en nous contactant directement (voir section "Nous contacter").
 
+Nous vous confirmons par e-mail que la suppression a bien été effectuée.
+
 Certaines données doivent toutefois être conservées si la loi l’exige (facturation, obligations comptables).
+
+---
+
+## Vos Droits
+
+Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, de portabilité et d'opposition sur vos données personnelles, ainsi que du droit de retirer votre consentement à tout moment. Vous pouvez notamment obtenir une copie des données que nous détenons sur vous, y compris celles liées aux services connectés. Pour exercer ces droits, écrivez à contact@aeroxbefaster.com ; nous vous répondons dans un délai d'un mois.
+
+Si vous estimez que vos droits ne sont pas respectés, vous pouvez introduire une réclamation auprès de la CNIL ([www.cnil.fr](https://www.cnil.fr)) ou de l'autorité de protection des données de votre pays.
 
 ---
 

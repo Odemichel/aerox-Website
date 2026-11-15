@@ -7,7 +7,7 @@ layout: '~/layouts/MarkdownLayout.astro'
 
 > **Courtesy translation.** These Terms of Use are provided in English for information purposes only. Only the [French version](/fr/terms/) is legally binding and prevails in the event of any discrepancy.
 
-_Last updated: October 22, 2026_
+_Last updated: November 15, 2026_
 
 Thank you for using **AeroX**, the solution that turns your home trainer into a virtual wind tunnel.  
 These Terms of Use govern access to and use of the AeroX service.  
@@ -141,6 +141,7 @@ The User agrees to:
 - The measurements provided by AeroX (frontal area, CdA, scores) are estimates. Their quality also depends on factors beyond AeroX’s control, in particular the camera, the User’s equipment (computer, home trainer, sensors), lighting and setup. AeroX is not liable for any misinterpretation of the results, nor for any use of the Service that does not comply with its intended purpose or with these Terms of Use.
 - AeroX is not liable for indirect damage.
 - Towards a User acting as a professional, AeroX’s liability is limited to the amount paid for the current period.
+- **Connected third-party services** (Strava, Intervals.icu): these services are provided by third parties, under their own terms. On behalf of these third parties, all warranties regarding them are disclaimed, including implied warranties of merchantability, fitness for a particular purpose and non-infringement, and these third parties are not liable to the User for any indirect, consequential, special or punitive damages arising from the use of these services through AeroX.
 - **Express clause**: no provision of these Terms of Use excludes or limits the legal guarantee of conformity (Section 9), the warranty against hidden defects (Articles 1641 et seq. of the French Civil Code), AeroX’s liability for personal injury, or its liability for gross negligence or wilful misconduct.
 
 ---

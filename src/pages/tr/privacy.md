@@ -73,7 +73,7 @@ AeroX, verilerinizi şu amaçlarla kullanır:
 - ödemelerinizi ve aboneliklerinizi işlemek,
 - sizinle iletişim kurmak (e-posta, bildirimler, destek),
 - haberler, teklifler veya güncellemeler hakkında sizi bilgilendirmek (itiraz etmediğiniz sürece),
-- hizmet kullanımını analiz ederek özelliklerimizi geliştirmek,
+- hizmet kullanımını analiz ederek özelliklerimizi geliştirmek (Strava verileri hariç, bkz. "Bağlı Hizmetler"),
 - yasal yükümlülüklerimizi yerine getirmek.
 
 ---
@@ -92,6 +92,7 @@ Kişisel verilerinizi yalnızca yukarıda açıklanan amaçlar için gerekli ola
 Verileriniz aşağıdaki durumlarda paylaşılabilir:
 
 - **Hizmet sağlayıcılarımızla** (barındırma sağlayıcıları, Stripe gibi ödeme hizmet sağlayıcıları, analiz araçları).
+- **Bağladığınız platformlarla** (Strava, Intervals.icu), talebiniz üzerine, seanslarınızı oraya göndermek ve Intervals.icu'daki planlanmış seanslarınızı okumak için (bkz. "Bağlı Hizmetler").
 - **Birleşme veya faaliyet devri halinde**, verileriniz AeroX ile birlikte aktarılabilir.
 - **Yasal yükümlülük gereği**, özellikle yetkili makamların talepleri doğrultusunda.
 - **Sizin onayınızla**, başka herhangi bir özel amaç için.
@@ -125,6 +126,24 @@ AeroX, kendi profesyonel Instagram hesabı **@aerox_befaster**'ı, Instagram API
 
 ---
 
+## Bağlı Hizmetler (Strava, Intervals.icu)
+
+AeroX uygulaması seanslarınızı iki üçüncü taraf antrenman platformuyla, **Strava** ve **Intervals.icu** ile paylaşabilir. Platformu **Hesap → Bağlı uygulamalar** bölümünden, AeroX'e platformun web sitesinde yetki vererek (OAuth) kendiniz bağlamadığınız sürece hiçbir veri paylaşılmaz.
+
+**Gönderilen dosya**: Bir seansın sonunda (kapatılabilen otomatik yükleme) veya yükleme düğmesine tıkladığınızda AeroX, seansın etkinlik dosyasını (FIT) iletir: tarih ve saat, süre, güç, hız, kadans, kalp atış hızı ve mesafe (saniye saniye) ile aerodinamik ölçümleriniz (CdA, ön yüzey alanı, aero puanı, W/m²); bir başlık ve kısa bir açıklama eklenir (ortalama CdA, aero pozisyonda geçen süre, puan). Dosyada GPS konumu yoktur. Videonuz ve görüntüleriniz asla gönderilmez.
+
+**Strava**: Etkinlik ekleme (`activity:write`) ve etkinliklerinizi okuma (`activity:read_all`) iznini isteriz. Bu okuma yalnızca iki durumda kullanılır: Strava seansın zaten var olduğunu bildirdiğinde (örneğin Zwift veya saatiniz tarafından da kaydedildiyse) AeroX o etkinliğin açıklamasını okur ve hiçbir şeyi değiştirmeden özetini sonuna ekler; Strava bize erişimin iptal edildiğini veya bir etkinliğin silindiğini bildirdiğinde ise AeroX herhangi bir şeyi silmeden önce olayı doğrulamak için Strava'ya (profilinize veya etkinliğe) sorar. Okunan hiçbir şey saklanmaz. Sunucularımızda Strava hesap kimliğinizi, erişim belirteçlerini ve otomatik yükleme ayarınızı saklarız; adınızı saklamayız. Gönderilen her seans için yüklemenin ve etkinliğin Strava kimlikleri son gönderimden 7 gün sonra silinir; seansın iki kez gönderilmemesi için yalnızca gönderildiği bilgisi kalır. Etkinliği Strava'da silerseniz bu kayıt da silinir ve seans yeniden gönderilebilir.
+
+**Intervals.icu**: AeroX tamamlanan seanslarınızı FIT dosyası olarak gönderir ve size uygulamada sunmak için Intervals.icu takviminizdeki planlanmış seansları okur. Erişim belirteci bilgisayarınızda kalır: sunucularımızda saklanmaz. Bağlantıyı kestiğinizde iptal edilir.
+
+**Strava'ya özel taahhütler**: Strava'dan aldığımız veriler yalnızca seanslarınızı göndermek için kullanılır. Hiçbir zaman analiz veya istatistik için kullanılmaz, başka verilerle birleştirilmez, bir yapay zekâ sistemini eğitmek, değerlendirmek veya çalıştırmak için kullanılmaz ve üçüncü taraflara aktarılmaz. Strava bağlantısını AeroX'ten kestiğinizde, AeroX'in erişimini Strava'dan iptal ettiğinizde veya Strava hesabınızı sildiğinizde, bağlantıyı ve tüm Strava verilerinizi hemen sileriz. AeroX ve Strava bağımsız veri sorumlularıdır; Strava verileri için, bu politikayla çelişki olması durumunda [Strava Gizlilik Politikası](https://www.strava.com/legal/privacy) geçerlidir. Strava, AeroX ile ilgili API kullanım verilerini izleyebilir, toplayabilir ve özellikle hizmetlerini iyileştirmek, destek sağlamak ve koşullarına uyulduğunu doğrulamak gibi kendi amaçları için kullanabilir.
+
+**Hukuki dayanak**: Platformu bağlayarak talep ettiğiniz hizmetin ifası (GDPR madde 6/1-b).
+
+**Erişimi iptal etme**: AeroX'in erişimini Strava veya Intervals.icu ayarlarından da iptal edebilirsiniz. Daha önce gönderilen etkinlikler platformda kalır: Bunları orada silebilirsiniz ve bunlar [Strava Gizlilik Politikası](https://www.strava.com/legal/privacy) veya [Intervals.icu Gizlilik Politikası](https://intervals.icu/privacy-policy.html) kapsamındadır.
+
+---
+
 ## Verilerinizin Silinmesi
 
 Kişisel verilerinizin silinmesini veya düzeltilmesini istediğiniz zaman talep edebilirsiniz:
@@ -132,7 +151,17 @@ Kişisel verilerinizin silinmesini veya düzeltilmesini istediğiniz zaman talep
 - kullanıcı alanınızdan,
 - veya doğrudan bizimle iletişime geçerek (bkz. "İletişim" bölümü).
 
+Silme işleminin tamamlandığını size e-posta ile onaylarız.
+
 Ancak, yasa gerektiriyorsa belirli verilerin saklanması zorunludur (faturalandırma, muhasebe yükümlülükleri).
+
+---
+
+## Haklarınız
+
+GDPR uyarınca kişisel verilerinizle ilgili erişim, düzeltme, silme, işlemeyi kısıtlama, veri taşınabilirliği ve itiraz haklarına, ayrıca onayınızı istediğiniz zaman geri çekme hakkına sahipsiniz. Özellikle, bağlı hizmetlerle ilgili veriler dahil olmak üzere hakkınızda tuttuğumuz verilerin bir kopyasını alabilirsiniz. Bu hakları kullanmak için contact@aeroxbefaster.com adresine yazın; bir ay içinde yanıt veririz.
+
+Haklarınıza uyulmadığını düşünüyorsanız, Fransız veri koruma otoritesi CNIL'e ([www.cnil.fr](https://www.cnil.fr)) veya ülkenizdeki veri koruma otoritesine şikâyette bulunabilirsiniz.
 
 ---
 

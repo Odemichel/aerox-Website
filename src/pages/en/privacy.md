@@ -73,7 +73,7 @@ AeroX uses your data to:
 - process your payments and subscriptions,
 - contact you (email, notifications, support),
 - inform you about news, offers, or updates (unless you opt out),
-- analyze service usage to improve functionality,
+- analyze service usage to improve functionality (excluding Strava data, see "Connected Services"),
 - comply with our legal obligations.
 
 ---
@@ -92,6 +92,7 @@ We retain your personal data only as long as necessary for the purposes describe
 Your data may be shared in the following cases:
 
 - **With our service providers** (hosting, payment processors such as Stripe, analytics tools).
+- **With the platforms you connect** (Strava, Intervals.icu), at your request, to upload your sessions and read your planned workouts on Intervals.icu (see "Connected Services").
 - **In case of merger or business transfer**, your data may be transferred along with AeroX.
 - **When legally required**, such as in response to requests from competent authorities.
 - **With your consent**, for any other specific purpose.
@@ -125,6 +126,24 @@ AeroX runs its own Instagram professional account, **@aerox_befaster**, with an 
 
 ---
 
+## Connected Services (Strava, Intervals.icu)
+
+The AeroX app can exchange your sessions with two third-party training platforms, **Strava** and **Intervals.icu**. Nothing is exchanged until you connect the platform yourself from **Account → Connected apps**, by authorizing AeroX on the platform's own website (OAuth).
+
+**File sent**: at the end of a session (automatic upload, which you can turn off) or when you click the upload button, AeroX sends an activity file (FIT) of the session: date and time, duration, power, speed, cadence, heart rate and distance, second by second, plus your aerodynamic measurements (CdA, frontal area, aero score, W/m²), with a title and a short description (average CdA, time in aero position, score). The file contains no GPS location. Your video and images are never sent.
+
+**Strava**: we request permission to add activities (`activity:write`) and to read your activities (`activity:read_all`). This read access is used in two cases only: when Strava reports that the session already exists (for example also recorded by Zwift or your watch), AeroX reads that activity's description and appends its summary at the end, without replacing anything; and when Strava notifies us of a revoked access or a deleted activity, AeroX queries Strava (your profile or the activity) to confirm the event before deleting anything. Nothing that is read is stored. We keep on our servers your Strava account ID, the access tokens and your automatic upload setting; we do not store your name. For each session sent, the Strava upload and activity IDs are erased 7 days after the last upload; only the fact that the session was sent remains, so that it is not sent twice. If you delete the activity on Strava, this record is erased and the session can be sent again.
+
+**Intervals.icu**: AeroX uploads your completed sessions as FIT files and reads the planned workouts in your Intervals.icu calendar to offer them to you in the app. The access token stays on your computer: it is not stored on our servers. It is revoked when you disconnect.
+
+**Strava-specific commitments**: the data we receive from Strava is used only to upload your sessions. It is never used for analytics or statistics, never combined with other data, never used to train, evaluate or operate any artificial intelligence system, and never passed on to third parties. When you disconnect Strava from AeroX, revoke AeroX's access from Strava or delete your Strava account, we immediately delete the connection and all your Strava data. AeroX and Strava are independent data controllers; for Strava data, [Strava's Privacy Policy](https://www.strava.com/legal/privacy) prevails in the event of any conflict with this policy. Strava may monitor and collect usage data of its API relating to AeroX and use it for its own purposes, including improving its services, providing support and ensuring compliance with its terms.
+
+**Legal basis**: performance of the service you request by connecting the platform (Article 6(1)(b) GDPR).
+
+**Revoking access**: you can also revoke AeroX's access from your Strava or Intervals.icu settings. Activities already sent remain on the platform: you can delete them there, and they are governed by [Strava's Privacy Policy](https://www.strava.com/legal/privacy) or [Intervals.icu's Privacy Policy](https://intervals.icu/privacy-policy.html).
+
+---
+
 ## Deletion of Your Data
 
 You can request deletion or correction of your personal data at any time:
@@ -132,7 +151,17 @@ You can request deletion or correction of your personal data at any time:
 - from your user account,
 - or by contacting us directly (see “Contact Us” section).
 
+We confirm by email once the deletion has been completed.
+
 Some data may need to be retained if required by law (billing, accounting obligations).
+
+---
+
+## Your Rights
+
+Under the GDPR, you have the right to access, rectify, erase, restrict, port and object to the processing of your personal data, as well as the right to withdraw your consent at any time. In particular, you can obtain a copy of the data we hold about you, including data related to connected services. To exercise these rights, write to contact@aeroxbefaster.com; we reply within one month.
+
+If you believe your rights are not being respected, you can lodge a complaint with the CNIL, the French data protection authority ([www.cnil.fr](https://www.cnil.fr)), or with the data protection authority of your country.
 
 ---
 

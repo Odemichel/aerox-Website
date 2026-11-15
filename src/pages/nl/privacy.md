@@ -73,7 +73,7 @@ AeroX gebruikt uw gegevens om:
 - uw betalingen en abonnementen te verwerken,
 - contact met u op te nemen (e-mail, meldingen, ondersteuning),
 - u te informeren over nieuws, aanbiedingen of updates (tenzij u bezwaar maakt),
-- het gebruik van de dienst te analyseren om onze functies te verbeteren,
+- het gebruik van de dienst te analyseren om onze functies te verbeteren (met uitzondering van Strava-gegevens, zie "Gekoppelde diensten"),
 - te voldoen aan onze wettelijke verplichtingen.
 
 ---
@@ -92,6 +92,7 @@ Wij bewaren uw persoonsgegevens uitsluitend zo lang als nodig is voor de hierbov
 Uw gegevens kunnen in de volgende gevallen worden gedeeld:
 
 - **Met onze dienstverleners** (hostingproviders, betalingsdienstverleners zoals Stripe, analysetools).
+- **Met de platforms die u koppelt** (Strava, Intervals.icu), op uw verzoek, om er uw sessies naartoe te sturen en uw geplande sessies op Intervals.icu te lezen (zie "Gekoppelde diensten").
 - **In geval van een fusie of bedrijfsoverdracht** kunnen uw gegevens samen met AeroX worden overgedragen.
 - **Op grond van wettelijke verplichtingen**, met name in het kader van verzoeken van bevoegde autoriteiten.
 - **Met uw toestemming** voor elk ander specifiek doeleinde.
@@ -125,6 +126,24 @@ AeroX beheert een eigen professioneel Instagram-account, **@aerox_befaster**, me
 
 ---
 
+## Gekoppelde diensten (Strava, Intervals.icu)
+
+De AeroX-app kan uw sessies uitwisselen met twee trainingsplatforms van derden, **Strava** en **Intervals.icu**. Er wordt niets uitgewisseld zolang u het platform niet zelf hebt gekoppeld via **Account → Gekoppelde apps**, door AeroX toestemming te geven op de website van het platform (OAuth).
+
+**Verstuurd bestand**: aan het einde van een sessie (automatisch uploaden, uit te schakelen) of wanneer u op de uploadknop klikt, verstuurt AeroX een activiteitenbestand (FIT) van de sessie: datum en tijd, duur, vermogen, snelheid, cadans, hartslag en afstand, per seconde, plus uw aerodynamische metingen (CdA, frontaal oppervlak, aeroscore, W/m²), met een titel en een korte beschrijving (gemiddelde CdA, tijd in aerohouding, score). Het bestand bevat geen GPS-locatie. Uw video en beelden worden nooit verstuurd.
+
+**Strava**: we vragen het recht om activiteiten toe te voegen (`activity:write`) en om uw activiteiten te lezen (`activity:read_all`). Dit leesrecht wordt alleen in twee gevallen gebruikt: wanneer Strava meldt dat de sessie al bestaat (bijvoorbeeld ook opgenomen door Zwift of uw horloge), leest AeroX de beschrijving van die activiteit en voegt het zijn samenvatting aan het einde toe, zonder iets te vervangen; en wanneer Strava ons een intrekking van de toegang of de verwijdering van een activiteit meldt, vraagt AeroX dit na bij Strava (uw profiel of de activiteit) om de gebeurtenis te bevestigen voordat er iets wordt gewist. Niets van wat wordt gelezen, wordt opgeslagen. We bewaren op onze servers de ID van uw Strava-account, de toegangstokens en uw instelling voor automatisch uploaden; uw naam slaan we niet op. Voor elke verstuurde sessie worden de Strava-ID's van de upload en de activiteit 7 dagen na de laatste upload gewist; alleen het feit dat de sessie is verstuurd blijft bewaard, zodat ze niet twee keer wordt verstuurd. Als u de activiteit op Strava verwijdert, wordt deze registratie gewist en kan de sessie opnieuw worden verstuurd.
+
+**Intervals.icu**: AeroX uploadt uw voltooide sessies als FIT-bestanden en leest de geplande sessies in uw Intervals.icu-agenda om ze u in de app aan te bieden. Het toegangstoken blijft op uw computer: het wordt niet op onze servers opgeslagen. Het wordt ingetrokken wanneer u ontkoppelt.
+
+**Specifieke toezeggingen voor Strava**: de gegevens die we van Strava ontvangen worden alleen gebruikt om uw sessies te uploaden. Ze worden nooit gebruikt voor analyses of statistieken, nooit gecombineerd met andere gegevens, nooit gebruikt om een systeem voor kunstmatige intelligentie te trainen, te evalueren of te laten werken, en nooit aan derden doorgegeven. Wanneer u Strava ontkoppelt in AeroX, de toegang van AeroX intrekt via Strava of uw Strava-account verwijdert, verwijderen we direct de koppeling en al uw Strava-gegevens. AeroX en Strava zijn onafhankelijke verwerkingsverantwoordelijken; voor Strava-gegevens heeft het [Privacybeleid van Strava](https://www.strava.com/legal/privacy) voorrang bij strijdigheid met dit beleid. Strava kan gebruiksgegevens van zijn API met betrekking tot AeroX monitoren en verzamelen en voor eigen doeleinden gebruiken, met name om zijn diensten te verbeteren, ondersteuning te bieden en de naleving van zijn voorwaarden te controleren.
+
+**Rechtsgrond**: de uitvoering van de dienst die u vraagt door het platform te koppelen (artikel 6, lid 1, onder b, AVG).
+
+**Toegang intrekken**: u kunt de toegang van AeroX ook intrekken in de instellingen van Strava of Intervals.icu. Reeds verstuurde activiteiten blijven op het platform staan: u kunt ze daar verwijderen, en daarop is het [Privacybeleid van Strava](https://www.strava.com/legal/privacy) of dat van [Intervals.icu](https://intervals.icu/privacy-policy.html) van toepassing.
+
+---
+
 ## Verwijdering van uw Gegevens
 
 U kunt op elk moment verzoeken om verwijdering of correctie van uw persoonsgegevens:
@@ -132,7 +151,17 @@ U kunt op elk moment verzoeken om verwijdering of correctie van uw persoonsgegev
 - via uw gebruikersruimte,
 - of door rechtstreeks contact met ons op te nemen (zie het gedeelte "Contact").
 
+We bevestigen u per e-mail dat de verwijdering is uitgevoerd.
+
 Bepaalde gegevens moeten echter worden bewaard als de wet dit vereist (facturering, boekhoudkundige verplichtingen).
+
+---
+
+## Uw Rechten
+
+Op grond van de AVG hebt u recht op inzage, rectificatie, wissing, beperking, overdraagbaarheid en bezwaar met betrekking tot uw persoonsgegevens, evenals het recht om uw toestemming op elk moment in te trekken. U kunt met name een kopie krijgen van de gegevens die we over u bewaren, inclusief gegevens over gekoppelde diensten. Om deze rechten uit te oefenen, schrijft u naar contact@aeroxbefaster.com; we antwoorden binnen een maand.
+
+Als u vindt dat uw rechten niet worden gerespecteerd, kunt u een klacht indienen bij de CNIL, de Franse toezichthouder voor gegevensbescherming ([www.cnil.fr](https://www.cnil.fr)), of bij de toezichthouder van uw land.
 
 ---
 

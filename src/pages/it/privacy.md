@@ -73,7 +73,7 @@ AeroX utilizza i tuoi dati per:
 - elaborare i tuoi pagamenti e abbonamenti,
 - contattarti (email, notifiche, assistenza),
 - informarti su novità, offerte o aggiornamenti (salvo tua opposizione),
-- analizzare l'uso del servizio per migliorarne le funzionalità,
+- analizzare l'uso del servizio per migliorarne le funzionalità (esclusi i dati Strava, vedi «Servizi collegati»),
 - adempiere ai nostri obblighi di legge.
 
 ---
@@ -92,6 +92,7 @@ Conserviamo i tuoi dati personali solo per il tempo necessario alle finalità so
 I tuoi dati possono essere condivisi nei seguenti casi:
 
 - **Con i nostri fornitori di servizi** (hosting, processori di pagamento come Stripe, strumenti di analisi).
+- **Con le piattaforme che colleghi** (Strava, Intervals.icu), su tua richiesta, per inviarvi le tue sessioni e leggere le sessioni previste su Intervals.icu (vedi «Servizi collegati»).
 - **In caso di fusione o cessione dell'attività**, i tuoi dati possono essere trasferiti insieme ad AeroX.
 - **Quando richiesto dalla legge**, ad esempio in risposta a richieste delle autorità competenti.
 - **Con il tuo consenso**, per qualsiasi altra finalità specifica.
@@ -125,6 +126,24 @@ AeroX gestisce il proprio account professionale Instagram, **@aerox_befaster**, 
 
 ---
 
+## Servizi collegati (Strava, Intervals.icu)
+
+L'app AeroX può scambiare le tue sessioni con due piattaforme di allenamento di terze parti, **Strava** e **Intervals.icu**. Non viene scambiato nulla finché non colleghi tu stesso la piattaforma da **Account → App collegate**, autorizzando AeroX sul sito della piattaforma (OAuth).
+
+**File inviato**: alla fine di una sessione (invio automatico, disattivabile) o quando clicchi sul pulsante di invio, AeroX trasmette un file di attività (FIT) della sessione: data e ora, durata, potenza, velocità, cadenza, frequenza cardiaca e distanza, secondo per secondo, oltre alle tue misure aerodinamiche (CdA, superficie frontale, punteggio aero, W/m²), con un titolo e una breve descrizione (CdA medio, tempo in posizione aero, punteggio). Il file non contiene alcuna posizione GPS. Il tuo video e le tue immagini non vengono mai inviati.
+
+**Strava**: chiediamo il permesso di aggiungere attività (`activity:write`) e di leggere le tue attività (`activity:read_all`). Questa lettura serve solo in due casi: quando Strava segnala che la sessione esiste già (ad esempio registrata anche da Zwift o dal tuo orologio), AeroX legge la descrizione di quell'attività e vi aggiunge il suo riepilogo in fondo, senza sostituire nulla; e quando Strava ci notifica una revoca dell'accesso o l'eliminazione di un'attività, AeroX interroga Strava (il tuo profilo o l'attività) per confermare l'evento prima di cancellare qualsiasi cosa. Nulla di ciò che viene letto è conservato. Conserviamo sui nostri server l'identificativo del tuo account Strava, i token di accesso e la tua impostazione di invio automatico; non conserviamo il tuo nome. Per ogni sessione inviata, gli identificativi Strava dell'invio e dell'attività sono cancellati 7 giorni dopo l'ultimo invio; resta solo il fatto che la sessione è stata inviata, per non inviarla due volte. Se elimini l'attività su Strava, questa traccia viene cancellata e la sessione può essere inviata di nuovo.
+
+**Intervals.icu**: AeroX invia le tue sessioni completate come file FIT e legge le sessioni previste nel tuo calendario Intervals.icu per proportele nell'app. Il token di accesso resta sul tuo computer: non viene conservato sui nostri server. Viene revocato quando ti scolleghi.
+
+**Impegni specifici per Strava**: i dati che riceviamo da Strava servono solo a inviare le tue sessioni. Non sono mai usati per analisi o statistiche, né incrociati con altri dati, né usati per addestrare, valutare o far funzionare un sistema di intelligenza artificiale, né comunicati a terzi. Quando scolleghi Strava da AeroX, revochi l'accesso di AeroX da Strava o elimini il tuo account Strava, cancelliamo immediatamente il collegamento e tutti i tuoi dati Strava. AeroX e Strava sono titolari del trattamento indipendenti; per i dati Strava, l'[Informativa sulla privacy di Strava](https://www.strava.com/legal/privacy) prevale in caso di contrasto con la presente informativa. Strava può monitorare e raccogliere dati di utilizzo della sua API relativi ad AeroX e usarli per i propri scopi, in particolare per migliorare i suoi servizi, fornire assistenza e verificare il rispetto delle sue condizioni.
+
+**Base giuridica**: l'esecuzione del servizio che richiedi collegando la piattaforma (articolo 6.1.b del GDPR).
+
+**Revocare l'accesso**: puoi anche revocare l'accesso di AeroX dalle impostazioni di Strava o di Intervals.icu. Le attività già inviate restano sulla piattaforma: puoi eliminarle lì, e sono soggette all'[Informativa sulla privacy di Strava](https://www.strava.com/legal/privacy) o a quella di [Intervals.icu](https://intervals.icu/privacy-policy.html).
+
+---
+
 ## Cancellazione dei tuoi dati
 
 Puoi chiedere in qualsiasi momento la cancellazione o la rettifica dei tuoi dati personali:
@@ -132,7 +151,17 @@ Puoi chiedere in qualsiasi momento la cancellazione o la rettifica dei tuoi dati
 - dal tuo account utente,
 - oppure contattandoci direttamente (vedi la sezione "Contattaci").
 
+Ti confermiamo via e-mail che la cancellazione è stata effettuata.
+
 Alcuni dati potrebbero dover essere conservati se previsto dalla legge (obblighi di fatturazione e contabilità).
+
+---
+
+## I tuoi diritti
+
+Ai sensi del GDPR, hai diritto di accesso, rettifica, cancellazione, limitazione, portabilità e opposizione riguardo ai tuoi dati personali, nonché il diritto di revocare il consenso in qualsiasi momento. In particolare, puoi ottenere una copia dei dati che deteniamo su di te, compresi quelli relativi ai servizi collegati. Per esercitare questi diritti, scrivi a contact@aeroxbefaster.com; ti rispondiamo entro un mese.
+
+Se ritieni che i tuoi diritti non siano rispettati, puoi proporre reclamo alla CNIL, l'autorità francese per la protezione dei dati ([www.cnil.fr](https://www.cnil.fr)), o all'autorità di protezione dei dati del tuo paese.
 
 ---
 
