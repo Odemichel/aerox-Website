@@ -146,8 +146,8 @@ async function currentRow(db: SupabaseClient, userId: string): Promise<Integrati
 
 /** Supprime la connexion, sauf si ses jetons ont changé depuis [row]
  * (renouvelée ou reconnectée par un autre appel), puis purge les données
- * venues de Strava. */
-export async function dropIntegration(db: SupabaseClient, row: Integration): Promise<void> {
+ * venues de Strava. `true` si la connexion a été supprimée. */
+export async function dropIntegration(db: SupabaseClient, row: Integration): Promise<boolean> {
   const { data } = await db
     .from('user_integrations')
     .delete()
@@ -155,7 +155,9 @@ export async function dropIntegration(db: SupabaseClient, row: Integration): Pro
     .eq('provider', 'strava')
     .eq('refresh_token', row.refresh_token)
     .select('user_id');
-  if (data?.length) await purgeStravaExports(db, row.user_id);
+  if (!data?.length) return false;
+  await purgeStravaExports(db, row.user_id);
+  return true;
 }
 
 /** Données venues de Strava d'un utilisateur déconnecté (Strava API

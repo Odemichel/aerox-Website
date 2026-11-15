@@ -9,7 +9,7 @@
 //   3 tentatives), traitement en arrière-plan :
 //   * athlète, `authorized: "false"` : l'athlète a retiré l'accès depuis
 //     Strava → connexion supprimée (jetons, identifiant, nom de l'athlète)
-//     et envois de séances purgés ;
+//     et envois de séances purgés, confirmation écrite par e-mail ;
 //   * activité supprimée sur Strava → l'envoi de la séance correspondante
 //     est effacé (la séance redevient envoyable).
 //
@@ -32,6 +32,7 @@ import {
   StravaUnauthorized,
   type Integration,
 } from '../_shared/strava.ts';
+import { sendStravaDeletionEmail } from '../_shared/strava_email.ts';
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 
 declare const EdgeRuntime: { waitUntil(promise: Promise<unknown>): void };
@@ -124,8 +125,10 @@ async function onDeauthorized(db: SupabaseClient, integration: Integration): Pro
     console.warn('strava webhook : désautorisation non confirmée', res.status);
   } catch (e) {
     if (!(e instanceof StravaUnauthorized)) throw e;
-    await dropIntegration(db, integration);
-    console.info('strava webhook : connexion et envois purgés');
+    if (await dropIntegration(db, integration)) {
+      console.info('strava webhook : connexion et envois purgés');
+      await sendStravaDeletionEmail(db, integration.user_id);
+    }
   }
 }
 
