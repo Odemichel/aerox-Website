@@ -13,6 +13,7 @@ import type { APIRoute } from 'astro';
 import { RELEASE_NOTIFY_GROUPS } from '~/config/downloads';
 import { validateBookSubscriber } from '~/lib/leadValidation';
 import { addToMailerLiteGroup } from '~/lib/mailerlite';
+import { origineField } from '~/lib/signupOrigin';
 import { releaseNotifyRateLimiter } from '~/lib/rateLimit';
 import { emailDigest, isJsonRequest, rateLimitKey } from '~/lib/requestGuards';
 import { SUPPORTED_LOCALES } from '~/lib/i18n';
@@ -42,6 +43,6 @@ export const POST: APIRoute = async (context) => {
   const lang = (SUPPORTED_LOCALES as readonly string[]).includes(String(body.lang)) ? String(body.lang) : 'en';
   // Français vers le groupe FR ; toute autre langue reçoit le message en anglais.
   const group = lang === 'fr' ? RELEASE_NOTIFY_GROUPS.fr : RELEASE_NOTIFY_GROUPS.en;
-  const ok = await addToMailerLiteGroup(result.subscriber.email, group, { lang });
+  const ok = await addToMailerLiteGroup(result.subscriber.email, group, { lang, ...origineField(request) });
   return ok ? json({ success: true }, 200) : json({ error: 'subscribe_failed' }, 502);
 };

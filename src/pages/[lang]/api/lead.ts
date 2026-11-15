@@ -1,5 +1,6 @@
 export const prerender = false;
 
+import { signupOrigin } from '~/lib/signupOrigin';
 import type { APIRoute } from 'astro';
 import { validateLead, type Lead } from '~/lib/leadValidation';
 import { leadRateLimiter } from '~/lib/rateLimit';
@@ -81,6 +82,8 @@ export const POST: APIRoute = async (context) => {
   const groups = [TOPIC_GROUPS[lead.topic], lang === 'fr' ? GROUP_GLOBAL_FR : GROUP_GLOBAL_EN];
 
   const fields: Record<string, string | number> = { name: lead.name };
+  const origine = signupOrigin(request);
+  if (origine) fields.origine = origine;
   if (lead.message) fields.message = lead.message;
   if (lead.availability) fields.dispos = lead.availability;
   if (lead.trainer) fields.home_trainer = lead.trainer;

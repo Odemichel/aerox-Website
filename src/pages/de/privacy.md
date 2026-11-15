@@ -126,6 +126,12 @@ AeroX betreibt ein eigenes professionelles Instagram-Konto, **@aerox_befaster**,
 
 ---
 
+## Herkunft Ihrer Anmeldung
+
+Wenn Sie sich auf unserer Website anmelden (Buch, CdA-Rechner, AeroX-Anmeldung, Kontaktformular), speichern wir zusammen mit Ihrer Anmeldung in unserem E-Mail-Tool MailerLite, wie Sie bei diesem Besuch auf die Website gekommen sind: über einen Link, den wir Ihnen geschickt haben (Direktnachricht oder Link in der Instagram-Bio, mit dem betreffenden Beitrag), oder die Art der Website, von der Sie kamen (zum Beispiel „google“, „instagram“, „chatgpt“ oder „direct“). Wir speichern weder die vollständige Adresse der Herkunftsseite noch Ihren Browserverlauf, und dafür wird nichts auf Ihrem Gerät gespeichert: Die Information besteht nur für die Dauer des Besuchs.
+
+**Zweck und Rechtsgrundlage**: zu erkennen, welche Inhalte und Kanäle Anmeldungen bringen, auf Grundlage unseres berechtigten Interesses. **Speicherdauer**: so lange wie Ihre Anmeldung. **Widerspruch**: Schreiben Sie an contact@aeroxbefaster.com, und wir entfernen diese Information.
+
 ## Verbundene Dienste (Strava, Intervals.icu)
 
 Die AeroX-App kann Ihre Einheiten mit zwei Trainingsplattformen von Drittanbietern austauschen, **Strava** und **Intervals.icu**. Es wird nichts ausgetauscht, solange Sie die Plattform nicht selbst unter **Konto → Verbundene Apps** verbunden haben, indem Sie AeroX auf der Website der Plattform autorisieren (OAuth).

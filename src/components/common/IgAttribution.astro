@@ -7,6 +7,12 @@
 // ce navigateur (localStorage, rien de personnel), on compte l'arrivée, puis
 // window.aeroxIgConvert('calc' | 'book' | 'signup') compte une conversion, une
 // seule fois par type. Si le stockage est bloqué, rien ne se passe.
+//
+// Origine de l'inscription (src/lib/signupOrigin.ts) : calculée une fois par
+// visite à partir du lien d'arrivée (utm) ou de la famille du site d'origine,
+// gardée en mémoire seulement (la navigation du site ne recharge pas la page),
+// puis ajoutée en en-tête X-Aerox-Origin aux envois des formulaires
+// d'inscription. Rien n'est écrit sur l'appareil pour cela.
 ---
 
 <script is:inline>
@@ -71,6 +77,67 @@
       }
     } catch {
       // URL illisible
+    }
+    if (!window.aeroxOrigin) {
+      const clean = (v, n) =>
+        (v || '')
+          .toLowerCase()
+          .replace(/[^a-z0-9-]/g, '')
+          .slice(0, n);
+      const FAMILIES = [
+        ['instagram', /instagram/],
+        ['gmail', /android\.gm|mail\.google/],
+        ['gemini', /gemini\.google/],
+        ['google', /(^|\.)google\.|googlequicksearchbox/],
+        ['chatgpt', /chatgpt|openai/],
+        ['perplexity', /perplexity/],
+        ['claude', /claude\.ai/],
+        ['bing', /bing\.|copilot/],
+        ['duckduckgo', /duckduckgo/],
+        ['reddit', /reddit/],
+        ['facebook', /facebook|(^|\.)fb\./],
+        ['youtube', /youtube|youtu\.be/],
+        ['strava', /strava/],
+        ['linkedin', /linkedin|lnkd\.in/],
+      ];
+      let origin = null;
+      try {
+        const q = new URLSearchParams(location.search);
+        const src = clean(q.get('utm_source'), 30);
+        const med = q.get('utm_medium') || '';
+        const content = clean(q.get('utm_content'), 40);
+        if (src === 'instagram' && med === 'dm') origin = 'instagram-dm' + (content ? '/' + content : '');
+        else if (src === 'instagram' && med === 'bio') origin = 'instagram-bio' + (content ? '/' + content : '');
+        else if (src) origin = 'campagne/' + src;
+        else {
+          const host = document.referrer ? new URL(document.referrer).hostname.toLowerCase() : '';
+          if (!host) origin = 'direct';
+          else if (host !== location.hostname) {
+            const f = FAMILIES.find(([, re]) => re.test(host));
+            origin = f ? f[0] : 'autre-site';
+          }
+        }
+      } catch {
+        // URL ou référent illisible : origine inconnue
+      }
+      window.aeroxOrigin = () => origin;
+      const SIGNUP = /\/(api\/lead|api\/rider-signup|api\/release-notify|telechargement\/api\/subscribe-livre)\/?$/;
+      const fetch0 = window.fetch.bind(window);
+      window.fetch = (input, init) => {
+        try {
+          const url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url, location.href);
+          if (origin && url.origin === location.origin && SIGNUP.test(url.pathname)) {
+            const headers = new Headers(
+              (init && init.headers) || (input instanceof Request ? input.headers : undefined)
+            );
+            headers.set('X-Aerox-Origin', origin);
+            init = { ...(init || {}), headers };
+          }
+        } catch {
+          // envoi inchangé
+        }
+        return fetch0(input, init);
+      };
     }
     window.aeroxIgConvert = (kind) => {
       const a = read();

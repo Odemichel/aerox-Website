@@ -126,6 +126,12 @@ AeroX runs its own Instagram professional account, **@aerox_befaster**, with an 
 
 ---
 
+## Origin of Your Sign-up
+
+When you sign up on our website (book, CdA calculator, AeroX sign-up, contact form), we record with your sign-up, in our e-mailing tool MailerLite, how you arrived on the site during that visit: a link we sent you (private message or Instagram bio link, with the post concerned) or the kind of site you came from (for example “google”, “instagram”, “chatgpt” or “direct”). We do not record the full address of the page you came from or your browsing history, and nothing is stored on your device for this: the information only exists for the duration of the visit.
+
+**Purpose and legal basis**: knowing which content and channels bring sign-ups, based on our legitimate interest. **Retention**: as long as your sign-up. **Objection**: write to contact@aeroxbefaster.com and we will remove this information.
+
 ## Connected Services (Strava, Intervals.icu)
 
 The AeroX app can exchange your sessions with two third-party training platforms, **Strava** and **Intervals.icu**. Nothing is exchanged until you connect the platform yourself from **Account → Connected apps**, by authorizing AeroX on the platform's own website (OAuth).

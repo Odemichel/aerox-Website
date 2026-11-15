@@ -126,6 +126,12 @@ AeroX, kendi profesyonel Instagram hesabı **@aerox_befaster**'ı, Instagram API
 
 ---
 
+## Kaydınızın Kaynağı
+
+Web sitemizde kayıt olduğunuzda (kitap, CdA hesaplayıcı, AeroX kaydı, iletişim formu), kaydınızla birlikte e-posta aracımız MailerLite'ta bu ziyarette siteye nasıl geldiğinizi kaydederiz: size gönderdiğimiz bir bağlantı (özel mesaj veya Instagram bio bağlantısı, ilgili gönderiyle birlikte) ya da geldiğiniz sitenin türü (örneğin “google”, “instagram”, “chatgpt” veya “direct”). Geldiğiniz sayfanın tam adresini veya tarama geçmişinizi kaydetmeyiz ve bunun için cihazınızda hiçbir şey saklanmaz: bilgi yalnızca ziyaret süresince vardır.
+
+**Amaç ve hukuki dayanak**: hangi içeriklerin ve kanalların kayıt getirdiğini bilmek, meşru menfaatimize dayanarak. **Saklama süresi**: kaydınız sürdüğü müddetçe. **İtiraz**: contact@aeroxbefaster.com adresine yazın, bu bilgiyi kaldıralım.
+
 ## Bağlı Hizmetler (Strava, Intervals.icu)
 
 AeroX uygulaması seanslarınızı iki üçüncü taraf antrenman platformuyla, **Strava** ve **Intervals.icu** ile paylaşabilir. Platformu **Hesap → Bağlı uygulamalar** bölümünden, AeroX'e platformun web sitesinde yetki vererek (OAuth) kendiniz bağlamadığınız sürece hiçbir veri paylaşılmaz.

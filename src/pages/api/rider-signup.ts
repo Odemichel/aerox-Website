@@ -12,6 +12,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { validateBookSubscriber } from '~/lib/leadValidation';
 import { addToMailerLiteGroup } from '~/lib/mailerlite';
+import { origineField } from '~/lib/signupOrigin';
 import { riderSignupRateLimiter } from '~/lib/rateLimit';
 import { emailDigest, isJsonRequest, rateLimitKey } from '~/lib/requestGuards';
 import { SUPPORTED_LOCALES } from '~/lib/i18n';
@@ -48,6 +49,7 @@ export const POST: APIRoute = async (context) => {
   const ok = await addToMailerLiteGroup(result.subscriber.email, groups, {
     lang,
     rider_signup: new Date().toISOString().slice(0, 10),
+    ...origineField(request),
   });
   return ok ? json({ success: true }, 200) : json({ error: 'subscribe_failed' }, 502);
 };

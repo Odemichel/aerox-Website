@@ -1,5 +1,6 @@
 export const prerender = false;
 
+import { signupOrigin } from '~/lib/signupOrigin';
 import { SUPPORTED_LOCALES } from '~/lib/i18n';
 import type { APIRoute } from 'astro';
 import { type CdaResults, validateBookSubscriber } from '~/lib/leadValidation';
@@ -94,6 +95,8 @@ export const POST: APIRoute = async (context) => {
   // Formulaire d'origine (sidebar, article_end, calculator, home…) et langue de
   // la page : `[lang]` n'est retenu que s'il fait partie des langues du site.
   if (source) fields.signup_source = source;
+  const origine = signupOrigin(request);
+  if (origine) fields.origine = origine;
   if ((SUPPORTED_LOCALES as readonly string[]).includes(params.lang ?? '')) fields.lang = params.lang as string;
   if (results) Object.assign(fields, cdaResultFields(results, fr));
 

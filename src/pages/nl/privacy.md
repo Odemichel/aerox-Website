@@ -126,6 +126,12 @@ AeroX beheert een eigen professioneel Instagram-account, **@aerox_befaster**, me
 
 ---
 
+## Herkomst van uw inschrijving
+
+Wanneer u zich op onze website inschrijft (boek, CdA-calculator, AeroX-inschrijving, contactformulier), registreren we bij uw inschrijving, in onze e-mailtool MailerLite, hoe u tijdens dat bezoek op de site bent gekomen: via een link die wij u hebben gestuurd (privébericht of link in de Instagram-bio, met het betreffende bericht) of het soort site waar u vandaan kwam (bijvoorbeeld „google”, „instagram”, „chatgpt” of „direct”). We registreren niet het volledige adres van de pagina van herkomst of uw browsegeschiedenis, en hiervoor wordt niets op uw apparaat opgeslagen: de informatie bestaat alleen tijdens het bezoek.
+
+**Doel en rechtsgrond**: weten welke inhoud en kanalen inschrijvingen opleveren, op basis van ons gerechtvaardigd belang. **Bewaartermijn**: zolang uw inschrijving bestaat. **Bezwaar**: schrijf naar contact@aeroxbefaster.com en wij verwijderen deze informatie.
+
 ## Gekoppelde diensten (Strava, Intervals.icu)
 
 De AeroX-app kan uw sessies uitwisselen met twee trainingsplatforms van derden, **Strava** en **Intervals.icu**. Er wordt niets uitgewisseld zolang u het platform niet zelf hebt gekoppeld via **Account → Gekoppelde apps**, door AeroX toestemming te geven op de website van het platform (OAuth).
