@@ -310,6 +310,8 @@ const riderHref = withRedirect(`/${lang}/inscription/inscription/`);
             }).catch(() => undefined);
           }
 
+          // Arrivée par un lien de DM Instagram : conversion « signup » (keepalive : la page change juste après).
+          (window as { aeroxIgConvert?: (k: string) => void }).aeroxIgConvert?.('signup');
           window.location.href = `/${lang}/inscription/confirmation/`;
         }
       });

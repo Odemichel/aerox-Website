@@ -1,0 +1,71 @@
+---
+// Attribution des DM Instagram (voir /api/ig-event/ et src/lib/igDmEvents.ts).
+// Un lien de DM d'AeroX Studio arrive avec ?utm_source=instagram&utm_medium=dm
+// &utm_campaign=<ressource>&utm_content=<reel> : on garde le reel 30 jours dans
+// ce navigateur (localStorage, rien de personnel), on compte l'arrivée, puis
+// window.aeroxIgConvert('calc' | 'book' | 'signup') compte une conversion, une
+// seule fois par type. Si le stockage est bloqué, rien ne se passe.
+---
+
+<script is:inline>
+  (() => {
+    const KEY = 'aerox_ig_dm';
+    const DAYS = 30;
+    const CAMPAIGNS = ['calculator', 'guide', 'signup'];
+    const send = (kind, a) => {
+      try {
+        fetch('/api/ig-event/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ kind, campaign: a.campaign, content: a.content }),
+          keepalive: true,
+        }).catch(() => undefined);
+      } catch {
+        // stockage ou réseau indisponible : on ne compte rien
+      }
+    };
+    const read = () => {
+      try {
+        const a = JSON.parse(localStorage.getItem(KEY) || 'null');
+        if (a && Date.now() - a.t < DAYS * 864e5) return a;
+      } catch {
+        // localStorage bloqué
+      }
+      return null;
+    };
+    const save = (a) => {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(a));
+      } catch {
+        // localStorage bloqué
+      }
+    };
+    try {
+      const q = new URLSearchParams(location.search);
+      const content = (q.get('utm_content') || '').toLowerCase();
+      const campaign = q.get('utm_campaign') || '';
+      if (
+        q.get('utm_source') === 'instagram' &&
+        q.get('utm_medium') === 'dm' &&
+        /^[a-z0-9][a-z0-9-]{0,62}$/.test(content) &&
+        CAMPAIGNS.includes(campaign)
+      ) {
+        const prev = read();
+        if (!prev || prev.content !== content) {
+          const a = { content, campaign, t: Date.now(), done: [] };
+          save(a);
+          send('visit', a);
+        }
+      }
+    } catch {
+      // URL illisible
+    }
+    window.aeroxIgConvert = (kind) => {
+      const a = read();
+      if (!a || (a.done || []).includes(kind)) return;
+      a.done = [...(a.done || []), kind];
+      save(a);
+      send(kind, a);
+    };
+  })();
+</script>

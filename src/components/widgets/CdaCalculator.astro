@@ -272,6 +272,8 @@ const inputClass =
           body: JSON.stringify({ kind, lang: d.lang, ...(bike ? { bike } : {}) }),
           keepalive: true,
         }).catch(() => undefined);
+        // Arrivée par un lien de DM Instagram : conversion « calc », une fois (IgAttribution.astro).
+        if (kind === 'calc') (window as { aeroxIgConvert?: (k: string) => void }).aeroxIgConvert?.('calc');
       };
 
       // Encart « recevoir mes résultats » : il reprend la dernière analyse.

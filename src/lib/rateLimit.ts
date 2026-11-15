@@ -70,5 +70,8 @@ export const releaseNotifyRateLimiter = createRateLimiter({ limit: 5, windowMs: 
 // borné pour qu'un script ne gonfle pas les statistiques.
 export const cdaEventRateLimiter = createRateLimiter({ limit: 60, windowMs: 10 * 60 * 1000 });
 
+// Attribution des DM Instagram (/api/ig-event/) : une arrivée et quelques conversions par visiteur.
+export const igEventRateLimiter = createRateLimiter({ limit: 20, windowMs: 10 * 60 * 1000 });
+
 // Création de compte cycliste (/api/rider-signup/) : fiche MailerLite.
 export const riderSignupRateLimiter = createRateLimiter({ limit: 5, windowMs: 10 * 60 * 1000 });

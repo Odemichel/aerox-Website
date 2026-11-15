@@ -264,6 +264,7 @@ const metadata = {
         msg?.classList.remove('hidden', 'text-red-600', 'text-green-600');
 
         if (ok) {
+          (window as { aeroxIgConvert?: (k: string) => void }).aeroxIgConvert?.('book');
           msg!.textContent = form?.dataset.success ?? '';
           msg?.classList.add('text-green-600');
           form.reset();
