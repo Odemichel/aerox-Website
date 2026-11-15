@@ -93,7 +93,9 @@ Deno.serve(async (req) => {
       user_id: st.user_id,
       provider: 'strava',
       provider_athlete_id: athleteId,
-      athlete_name: [t.athlete.firstname, t.athlete.lastname].filter(Boolean).join(' ') || null,
+      // Nom de l'athlète non conservé : donnée Strava, pas nécessaire à
+      // l'envoi (API Agreement, Retention : 7 jours de cache au plus).
+      athlete_name: null,
       access_token: t.access_token,
       refresh_token: t.refresh_token,
       expires_at: new Date(t.expires_at * 1000).toISOString(),

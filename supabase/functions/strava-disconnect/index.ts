@@ -1,10 +1,19 @@
 // supabase/functions/strava-disconnect/index.ts
 //
 // Déconnexion Strava (feat-strava-sync) : révoque l'autorisation chez Strava
-// (au mieux) puis supprime les jetons.
+// (au mieux), supprime la connexion (jetons, identifiant et nom de
+// l'athlète) puis les envois de séances (identifiants d'activité Strava).
 //
 //   supabase functions deploy strava-disconnect
-import { adminClient, callerId, deauthorize, freshAccessToken, json, type Integration } from '../_shared/strava.ts';
+import {
+  adminClient,
+  callerId,
+  deauthorize,
+  freshAccessToken,
+  json,
+  purgeStravaExports,
+  type Integration,
+} from '../_shared/strava.ts';
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
@@ -29,6 +38,13 @@ Deno.serve(async (req) => {
     }
     const { error } = await db.from('user_integrations').delete().eq('user_id', userId).eq('provider', 'strava');
     if (error) return json({ error: 'internal' }, 500);
+  }
+  // Aussi sans connexion : envois restés d'une déconnexion antérieure.
+  try {
+    await purgeStravaExports(db, userId);
+  } catch (e) {
+    console.error('strava disconnect', (e as Error).message);
+    return json({ error: 'internal' }, 500);
   }
   return json({ disconnected: true });
 });

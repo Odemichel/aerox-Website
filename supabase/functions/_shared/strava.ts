@@ -145,14 +145,26 @@ async function currentRow(db: SupabaseClient, userId: string): Promise<Integrati
 }
 
 /** Supprime la connexion, sauf si ses jetons ont changé depuis [row]
- * (renouvelée ou reconnectée par un autre appel). */
+ * (renouvelée ou reconnectée par un autre appel), puis purge les données
+ * venues de Strava. */
 export async function dropIntegration(db: SupabaseClient, row: Integration): Promise<void> {
-  await db
+  const { data } = await db
     .from('user_integrations')
     .delete()
     .eq('user_id', row.user_id)
     .eq('provider', 'strava')
-    .eq('refresh_token', row.refresh_token);
+    .eq('refresh_token', row.refresh_token)
+    .select('user_id');
+  if (data?.length) await purgeStravaExports(db, row.user_id);
+}
+
+/** Données venues de Strava d'un utilisateur déconnecté (Strava API
+ * Agreement : suppression à la révocation) : la connexion emporte jetons,
+ * identifiant et nom de l'athlète ; restent les envois de séances, qui
+ * portent les identifiants d'upload et d'activité Strava. */
+export async function purgeStravaExports(db: SupabaseClient, userId: string): Promise<void> {
+  const { error } = await db.from('session_exports').delete().eq('user_id', userId).eq('provider', 'strava');
+  if (error) throw new Error(`Purge des envois Strava : ${error.message}`);
 }
 
 /** Permissions accordées, réduites aux valeurs connues. */
