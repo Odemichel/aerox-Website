@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { validateIgDmEvent } from '~/lib/igDmEvents';
+import { isBotUserAgent, validateIgDmEvent } from '~/lib/igDmEvents';
 
 describe('validateIgDmEvent', () => {
   it('accepts a visit and each conversion', () => {
@@ -41,5 +41,28 @@ describe('validateIgDmEvent', () => {
     expect(validateIgDmEvent({ kind: 'visit', campaign: 'guide' })).toBeNull();
     expect(validateIgDmEvent(null)).toBeNull();
     expect(validateIgDmEvent([])).toBeNull();
+  });
+});
+
+describe('isBotUserAgent', () => {
+  it('keeps real browsers, including the Instagram in-app browser', () => {
+    expect(
+      isBotUserAgent(
+        'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 350.0.0.0'
+      )
+    ).toBe(false);
+    expect(
+      isBotUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130.0 Safari/537.36')
+    ).toBe(false);
+  });
+
+  it('drops link checkers, previews and headless browsers', () => {
+    expect(isBotUserAgent('facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)')).toBe(true);
+    expect(isBotUserAgent('meta-externalagent/1.1')).toBe(true);
+    expect(
+      isBotUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 HeadlessChrome/130.0 Safari/537.36')
+    ).toBe(true);
+    expect(isBotUserAgent('')).toBe(true);
+    expect(isBotUserAgent(null)).toBe(true);
   });
 });

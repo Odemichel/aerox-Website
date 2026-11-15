@@ -33,3 +33,15 @@ export function validateIgDmEvent(input: unknown): IgDmEvent | null {
     content,
   };
 }
+
+/**
+ * Robots qui ouvrent les liens (contrôle des liens de bio par Meta, aperçus,
+ * navigateurs automatisés) : ils exécutent la page sans être des visiteurs.
+ * Vercel Web Analytics les écarte déjà ; on fait de même avant d'écrire.
+ */
+export const IG_BOT_UA =
+  /bot|crawl|spider|slurp|headless|externalhit|external-?agent|facebookcatalog|preview|lighthouse|phantom|puppeteer|playwright|selenium/i;
+
+export function isBotUserAgent(ua: string | null | undefined): boolean {
+  return !ua || IG_BOT_UA.test(ua);
+}

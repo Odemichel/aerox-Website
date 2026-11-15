@@ -8,7 +8,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { supabaseAdmin } from '~/lib/billing/server';
-import { validateIgDmEvent } from '~/lib/igDmEvents';
+import { isBotUserAgent, validateIgDmEvent } from '~/lib/igDmEvents';
 import { igEventRateLimiter } from '~/lib/rateLimit';
 import { isJsonRequest, rateLimitKey } from '~/lib/requestGuards';
 
@@ -21,6 +21,8 @@ export const POST: APIRoute = async (context) => {
   const event = validateIgDmEvent(await request.json().catch(() => null));
   if (!event) return empty(400);
 
+  // Robot (contrôle de lien, aperçu) : accepté sans être compté.
+  if (isBotUserAgent(request.headers.get('user-agent'))) return empty(204);
   if (!igEventRateLimiter.check(rateLimitKey(context))) return empty(204);
 
   const { error } = await supabaseAdmin().from('ig_dm_events').insert(event);

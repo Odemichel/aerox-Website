@@ -43,6 +43,12 @@
         // localStorage bloqué
       }
     };
+    // navigateur automatisé ou robot (contrôle des liens de bio par Meta…) : rien n'est compté
+    const BOT =
+      navigator.webdriver ||
+      /bot|crawl|spider|slurp|headless|externalhit|external-?agent|facebookcatalog|preview|lighthouse|phantom|puppeteer|playwright|selenium/i.test(
+        navigator.userAgent || ''
+      );
     try {
       const q = new URLSearchParams(location.search);
       const medium = q.get('utm_medium') || '';
@@ -50,6 +56,7 @@
       const content = (q.get('utm_content') || dflt).toLowerCase();
       const campaign = q.get('utm_campaign') || dflt;
       if (
+        !BOT &&
         q.get('utm_source') === 'instagram' &&
         MEDIUMS.includes(medium) &&
         /^[a-z0-9][a-z0-9-]{0,62}$/.test(content) &&
