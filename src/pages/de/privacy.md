@@ -3,7 +3,7 @@ title: 'Datenschutzrichtlinie'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Letzte Aktualisierung_: 15. Oktober 2026
+_Letzte Aktualisierung_: 15. November 2026
 
 Diese Datenschutzrichtlinie beschreibt unsere Praktiken hinsichtlich der Erhebung, Nutzung und des Schutzes Ihrer personenbezogenen Daten bei der Nutzung des Dienstes **AeroX**.
 Sie erläutert außerdem Ihre Rechte und wie das Gesetz Sie schützt.
@@ -104,6 +104,24 @@ Wir verkaufen Ihre personenbezogenen Daten niemals.
 
 Ihre Daten können außerhalb der Europäischen Union verarbeitet werden (z. B.: Cloud-Dienste, Zahlungsdienstleister).
 In diesem Fall stellen wir sicher, dass geeignete Garantien (Standardvertragsklauseln, DSGVO-Konformität) vorhanden sind.
+
+---
+
+## Instagram-Daten
+
+AeroX betreibt ein eigenes professionelles Instagram-Konto, **@aerox_befaster**, mit einem internen Tool, das mit der Instagram-API (Meta) verbunden ist. Dieses Tool wird nur vom AeroX-Team und nur für unser eigenes Konto verwendet.
+
+**Was wir verarbeiten**: Wenn Sie einen unserer Beiträge kommentieren oder @aerox_befaster eine Direktnachricht senden, können wir Ihren Instagram-Benutzernamen, Ihre Instagram-ID (von Meta vergeben), den Text Ihres Kommentars oder Ihrer Nachricht und dessen Datum verarbeiten.
+
+**Warum**: um Ihre Anfrage zu beantworten. Wenn Sie zum Beispiel ein Stichwort wie „CDA“ unter einem Reel kommentieren, senden wir Ihnen die gewünschte Ressource (Leitfaden, Rechner oder Link) in einer privaten Nachricht und veröffentlichen gegebenenfalls eine kurze öffentliche Antwort. Außerdem sehen wir uns die zusammengefassten Statistiken unserer eigenen Beiträge an (Aufrufe, Likes, Teilungen), um unsere nächsten Themen zu wählen.
+
+**Rechtsgrundlage**: unser berechtigtes Interesse, die Anfragen zu beantworten, die Sie an uns richten (Art. 6 Abs. 1 lit. f DSGVO).
+
+**Was wir nicht tun**: Wir senden keine unaufgeforderten Nachrichten oder Massennachrichten, verkaufen Ihre Daten nicht, nutzen sie nicht für Werbung und geben sie an niemanden weiter außer an Meta (Betreiber von Instagram) und unsere technischen Dienstleister.
+
+**Aufbewahrung**: Der Text von Kommentaren und Nachrichten wird im Moment der Verarbeitung gelesen und nicht in unsere Systeme kopiert. Wir speichern nur die Kennung des Kommentars oder der Unterhaltung und das Datum unserer Antwort, damit wir Ihnen nie doppelt antworten, höchstens 12 Monate lang.
+
+**Löschung Ihrer Instagram-Daten**: Senden Sie eine E-Mail an contact@aeroxbefaster.com mit dem Betreff „Löschung Instagram-Daten“ und Ihrem Instagram-Benutzernamen. Wir löschen alle Sie betreffenden Daten innerhalb von 30 Tagen und bestätigen dies per E-Mail. Sie können Ihren Kommentar oder Ihre Nachricht auch jederzeit direkt in Instagram löschen. Für Daten bei Meta gilt die [Datenschutzrichtlinie von Meta](https://privacycenter.instagram.com/policy).
 
 ---
 

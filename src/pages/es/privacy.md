@@ -3,7 +3,7 @@ title: 'Política de Privacidad'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Última actualización_: 15 de octubre de 2026
+_Última actualización_: 15 de noviembre de 2026
 
 Esta Política de Privacidad describe nuestras prácticas de recogida, uso y protección de tus datos personales cuando utilizas el servicio **AeroX**.  
 También explica tus derechos y cómo te protege la ley.
@@ -104,6 +104,24 @@ Nunca vendemos tus datos personales.
 
 Tus datos pueden tratarse fuera de la Unión Europea (por ejemplo: servicios en la nube, proveedores de pago).  
 En esos casos, garantizamos que existen salvaguardas adecuadas (cláusulas contractuales tipo, cumplimiento del RGPD).
+
+---
+
+## Datos de Instagram
+
+AeroX gestiona su propia cuenta profesional de Instagram, **@aerox_befaster**, con una herramienta interna conectada a la API de Instagram (Meta). Esta herramienta la utiliza únicamente el equipo de AeroX y solo para nuestra propia cuenta.
+
+**Qué tratamos**: cuando comentas una de nuestras publicaciones o envías un mensaje directo a @aerox_befaster, podemos tratar tu nombre de usuario de Instagram, tu identificador de Instagram (asignado por Meta), el texto de tu comentario o mensaje y su fecha.
+
+**Para qué**: para responder a tu solicitud. Por ejemplo, cuando comentas una palabra clave como «CDA» bajo un Reel, te enviamos el recurso solicitado (guía, calculadora o enlace) en un mensaje privado y podemos publicar una breve respuesta pública. También consultamos las estadísticas globales de nuestras propias publicaciones (visualizaciones, me gusta, compartidos) para elegir nuestros próximos temas.
+
+**Base jurídica**: nuestro interés legítimo en responder a las solicitudes que nos envías (artículo 6.1.f del RGPD).
+
+**Lo que no hacemos**: no enviamos mensajes no solicitados ni masivos, no vendemos tus datos, no los usamos con fines publicitarios y no los compartimos con nadie salvo Meta (que gestiona Instagram) y nuestros proveedores técnicos.
+
+**Conservación**: el texto de los comentarios y mensajes se lee en el momento del tratamiento y no se copia en nuestros sistemas. Solo conservamos el identificador del comentario o de la conversación y la fecha de nuestra respuesta, para no responderte nunca dos veces, durante 12 meses como máximo.
+
+**Suprimir tus datos de Instagram**: envía un correo a contact@aeroxbefaster.com con el asunto «Supresión datos Instagram» y tu nombre de usuario de Instagram. Suprimimos todos los datos que te conciernen en un plazo de 30 días y te lo confirmamos por correo. También puedes eliminar tu comentario o mensaje directamente en Instagram en cualquier momento. Los datos que conserva Meta se rigen por la [Política de privacidad de Meta](https://privacycenter.instagram.com/policy).
 
 ---
 

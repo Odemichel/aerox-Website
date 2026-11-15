@@ -3,7 +3,7 @@ title: 'Privacy Policy'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Last updated_: October 15, 2026
+_Last updated_: November 15, 2026
 
 This Privacy Policy describes our practices regarding the collection, use, and protection of your personal data when you use the **AeroX** service.  
 It also explains your rights and how the law protects you.
@@ -104,6 +104,24 @@ We never sell your personal data.
 
 Your data may be processed outside the European Union (for example: cloud services, payment providers).  
 In such cases, we ensure appropriate safeguards (standard contractual clauses, GDPR compliance) are in place.
+
+---
+
+## Instagram Data
+
+AeroX runs its own Instagram professional account, **@aerox_befaster**, with an internal tool connected to the Instagram API (Meta). This tool is used only by the AeroX team and only for our own account.
+
+**What we process**: when you comment on one of our posts or send a direct message to @aerox_befaster, we may process your Instagram username, your Instagram user ID (assigned by Meta), the text of your comment or message, and its date.
+
+**Why**: to answer your request. For example, when you comment a keyword such as "CDA" under a Reel, we send you the requested resource (guide, calculator or link) in one private message, and we may post a short public reply. We also view the aggregated statistics of our own posts (views, likes, shares) to choose our next topics.
+
+**Legal basis**: our legitimate interest in answering the requests you send us (Article 6(1)(f) GDPR).
+
+**What we do not do**: we do not send unsolicited or bulk messages, we do not sell your data, we do not use it for advertising, and we do not share it with anyone except Meta (which operates Instagram) and our technical service providers.
+
+**Retention**: comment and message text is read at the moment of processing and is not copied into our systems. We keep only the identifier of the comment or conversation and the date of our reply, so that we never answer you twice, for up to 12 months.
+
+**Deleting your Instagram data**: send an email to contact@aeroxbefaster.com with the subject "Instagram data deletion" and your Instagram username. We delete all data related to you within 30 days and confirm it by email. You can also delete your comment or message directly in Instagram at any time. Data held by Meta is governed by [Meta's Privacy Policy](https://privacycenter.instagram.com/policy).
 
 ---
 

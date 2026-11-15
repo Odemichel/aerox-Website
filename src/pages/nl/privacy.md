@@ -3,7 +3,7 @@ title: 'Privacybeleid'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Laatste update_: 15 oktober 2026
+_Laatste update_: 15 november 2026
 
 Dit Privacybeleid beschrijft onze praktijken met betrekking tot het verzamelen, gebruiken en beschermen van uw persoonsgegevens wanneer u de dienst **AeroX** gebruikt.
 Het verduidelijkt ook uw rechten en de manier waarop de wet u beschermt.
@@ -104,6 +104,24 @@ Wij verkopen uw persoonsgegevens nooit.
 
 Uw gegevens kunnen buiten de Europese Unie worden verwerkt (bijvoorbeeld: clouddiensten, betalingsdienstverleners).
 In dat geval zorgen wij ervoor dat passende waarborgen (modelcontractbepalingen, AVG-conformiteit) aanwezig zijn.
+
+---
+
+## Instagram-gegevens
+
+AeroX beheert een eigen professioneel Instagram-account, **@aerox_befaster**, met een interne tool die is gekoppeld aan de Instagram-API (Meta). Deze tool wordt alleen door het AeroX-team gebruikt en alleen voor ons eigen account.
+
+**Wat wij verwerken**: wanneer u reageert op een van onze berichten of een direct bericht stuurt naar @aerox_befaster, kunnen wij uw Instagram-gebruikersnaam, uw Instagram-ID (toegekend door Meta), de tekst van uw reactie of bericht en de datum ervan verwerken.
+
+**Waarom**: om uw verzoek te beantwoorden. Als u bijvoorbeeld een trefwoord zoals "CDA" onder een Reel plaatst, sturen wij u de gevraagde bron (gids, calculator of link) in een privébericht en kunnen wij een korte openbare reactie plaatsen. Daarnaast bekijken wij de geaggregeerde statistieken van onze eigen berichten (weergaven, likes, delen) om onze volgende onderwerpen te kiezen.
+
+**Rechtsgrond**: ons gerechtvaardigd belang om de verzoeken die u ons stuurt te beantwoorden (artikel 6, lid 1, onder f, AVG).
+
+**Wat wij niet doen**: wij sturen geen ongevraagde berichten of massaberichten, verkopen uw gegevens niet, gebruiken ze niet voor reclame en delen ze met niemand behalve Meta (exploitant van Instagram) en onze technische dienstverleners.
+
+**Bewaring**: de tekst van reacties en berichten wordt gelezen op het moment van verwerking en niet naar onze systemen gekopieerd. Wij bewaren alleen de ID van de reactie of het gesprek en de datum van ons antwoord, zodat wij u nooit twee keer antwoorden, gedurende maximaal 12 maanden.
+
+**Uw Instagram-gegevens verwijderen**: stuur een e-mail naar contact@aeroxbefaster.com met als onderwerp "Verwijdering Instagram-gegevens" en uw Instagram-gebruikersnaam. Wij verwijderen alle gegevens over u binnen 30 dagen en bevestigen dit per e-mail. U kunt uw reactie of bericht ook op elk moment rechtstreeks in Instagram verwijderen. Gegevens die Meta bewaart, vallen onder het [Privacybeleid van Meta](https://privacycenter.instagram.com/policy).
 
 ---
 

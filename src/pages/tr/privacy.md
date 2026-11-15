@@ -3,7 +3,7 @@ title: 'Gizlilik Politikası'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Son güncelleme_: 15 Ekim 2026
+_Son güncelleme_: 15 Kasım 2026
 
 Bu Gizlilik Politikası, **AeroX** hizmetini kullanırken kişisel verilerinizin toplanması, kullanılması ve korunmasına ilişkin uygulamalarımızı açıklamaktadır.
 Ayrıca haklarınızı ve yasaların sizi nasıl koruduğunu belirtmektedir.
@@ -104,6 +104,24 @@ Kişisel verilerinizi asla satmayız.
 
 Verileriniz Avrupa Birliği dışında işlenebilir (örneğin: bulut hizmetleri, ödeme hizmet sağlayıcıları).
 Bu durumda, uygun güvencelerin (standart sözleşme maddeleri, GDPR uyumluluğu) mevcut olmasını sağlarız.
+
+---
+
+## Instagram Verileri
+
+AeroX, kendi profesyonel Instagram hesabı **@aerox_befaster**'ı, Instagram API'sine (Meta) bağlı dahili bir araçla yönetir. Bu araç yalnızca AeroX ekibi tarafından ve yalnızca kendi hesabımız için kullanılır.
+
+**İşlediğimiz veriler**: Gönderilerimizden birine yorum yaptığınızda veya @aerox_befaster'a doğrudan mesaj gönderdiğinizde Instagram kullanıcı adınızı, Instagram kimliğinizi (Meta tarafından atanır), yorumunuzun veya mesajınızın metnini ve tarihini işleyebiliriz.
+
+**Neden**: Talebinize yanıt vermek için. Örneğin bir Reel'in altına "CDA" gibi bir anahtar kelime yazdığınızda, istediğiniz kaynağı (rehber, hesaplayıcı veya bağlantı) size özel bir mesajla gönderir ve kısa bir herkese açık yanıt paylaşabiliriz. Ayrıca sonraki konularımızı seçmek için kendi gönderilerimizin toplu istatistiklerini (görüntülenme, beğeni, paylaşım) inceleriz.
+
+**Hukuki dayanak**: Bize ilettiğiniz taleplere yanıt verme konusundaki meşru menfaatimiz (GDPR madde 6(1)(f)).
+
+**Yapmadıklarımız**: İstenmeyen veya toplu mesaj göndermeyiz, verilerinizi satmayız, reklam amacıyla kullanmayız ve Meta (Instagram'ın işletmecisi) ile teknik hizmet sağlayıcılarımız dışında kimseyle paylaşmayız.
+
+**Saklama**: Yorum ve mesaj metinleri işleme anında okunur ve sistemlerimize kopyalanmaz. Size asla iki kez yanıt vermemek için yalnızca yorumun veya konuşmanın tanımlayıcısını ve yanıt tarihimizi en fazla 12 ay saklarız.
+
+**Instagram verilerinizin silinmesi**: "Instagram verilerinin silinmesi" konulu ve Instagram kullanıcı adınızı içeren bir e-postayı contact@aeroxbefaster.com adresine gönderin. Sizinle ilgili tüm verileri 30 gün içinde siler ve e-postayla onaylarız. Yorumunuzu veya mesajınızı istediğiniz zaman doğrudan Instagram'dan da silebilirsiniz. Meta'nın elindeki veriler [Meta Gizlilik İlkesi](https://privacycenter.instagram.com/policy)'ne tabidir.
 
 ---
 
