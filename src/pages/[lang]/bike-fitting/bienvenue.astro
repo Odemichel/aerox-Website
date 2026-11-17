@@ -1,6 +1,7 @@
 ---
-// Onboarding bike fitter : installer l'app, calibrer, analyser, choisir une
-// offre. Page publique (aucune donnée de compte), liée depuis l'espace
+// Onboarding bike fitter, dans l'ordre du parcours : offre et carte dans
+// l'espace, application, installation du poste (début des 14 jours d'essai),
+// analyses. Page publique (aucune donnée de compte), liée depuis l'espace
 // bike fitter et l'e-mail de bienvenue.
 import type { GetStaticPaths } from 'astro';
 import { Icon } from 'astro-icon/components';
@@ -23,7 +24,12 @@ const metadata = {
   robots: { index: false, follow: true },
 };
 
-const steps = [1, 2, 3, 4].map((i) => ({ i, title: t(dict, `onb.s${i}.title`), desc: t(dict, `onb.s${i}.desc`) }));
+const steps = (['offer', 'app', 'setup', 'analyze'] as const).map((id, n) => ({
+  id,
+  i: n + 1,
+  title: t(dict, `onb.${id}.title`),
+  desc: t(dict, `onb.${id}.desc`),
+}));
 ---
 
 <Layout metadata={metadata} audience="bike-fitter">
@@ -42,24 +48,34 @@ const steps = [1, 2, 3, 4].map((i) => ({ i, title: t(dict, `onb.s${i}.title`), d
               <h2 class="text-lg font-semibold">{s.title}</h2>
               <p class="mt-1 text-muted">{s.desc}</p>
 
-              {s.i === 1 && (
+              {s.id === 'offer' && (
+                <a
+                  href={`/${lang}/inscription/dashboard/#abonnement`}
+                  data-astro-reload
+                  class="btn-primary mt-4 inline-flex justify-center"
+                >
+                  {t(dict, 'onb.offer.cta')}
+                </a>
+              )}
+
+              {s.id === 'app' && (
                 <div class="mt-4">
                   <DownloadGate lang={lang} trialNote="always">
                     <div class="flex flex-col sm:flex-row gap-3">
                       <a href={DOWNLOADS.mac} class="btn-primary justify-center" download>
                         <Icon name="tabler:brand-apple" class="h-5 w-5" />
-                        {t(dict, 'onb.s1.mac')}
+                        {t(dict, 'onb.app.mac')}
                       </a>
                       <a href={DOWNLOADS.windows} class="btn-primary justify-center" download>
                         <Icon name="tabler:brand-windows" class="h-5 w-5" />
-                        {t(dict, 'onb.s1.win')}
+                        {t(dict, 'onb.app.win')}
                       </a>
                     </div>
                   </DownloadGate>
                 </div>
               )}
 
-              {s.i === 2 && CALIBRATION_VIDEO_URL && (
+              {s.id === 'setup' && CALIBRATION_VIDEO_URL && (
                 <a
                   href={CALIBRATION_VIDEO_URL}
                   target="_blank"
@@ -67,13 +83,7 @@ const steps = [1, 2, 3, 4].map((i) => ({ i, title: t(dict, `onb.s${i}.title`), d
                   class="btn-secondary mt-4 inline-flex justify-center"
                 >
                   <Icon name="tabler:player-play" class="h-5 w-5" />
-                  {t(dict, 'onb.s2.video')}
-                </a>
-              )}
-
-              {s.i === 4 && (
-                <a href={`/${lang}/bike-fitting/#tarifs`} class="btn-secondary mt-4 inline-flex justify-center">
-                  {t(dict, 'onb.s4.cta')}
+                  {t(dict, 'onb.setup.video')}
                 </a>
               )}
             </div>
