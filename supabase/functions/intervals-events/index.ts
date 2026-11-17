@@ -4,11 +4,18 @@
 // étape 2) : événements `WORKOUT` entre deux dates locales de l'athlète,
 // chacun avec son fichier Zwift (.zwo) que l'app convertit en blocs AeroX.
 //
-// Corps : { oldest: 'yyyy-MM-dd', newest: 'yyyy-MM-dd' } (14 jours max).
+// Corps :
+// - { oldest, newest } ('yyyy-MM-dd', 14 jours max) : séances avec leur .zwo
+//   (accueil, bibliothèque) ;
+// - { oldest, newest, with_zwo: false } (62 jours max) : métadonnées seules,
+//   pour le calendrier (feat-training-calendar) ;
+// - { event_id } : une seule séance avec son .zwo (lancement depuis le
+//   calendrier).
 // Réponse : { status: 'ok', events: [{ id, name, start_date_local,
-//             description, zwo }] } | { status: 'not_connected' } |
-//           { status: 'error', error }
-// `zwo` vaut null pour une séance non convertible (autre sport, texte seul).
+//             description, type, paired_activity_id, zwo }] } |
+//           { status: 'not_connected' } | { status: 'error', error }
+// `zwo` vaut null pour une séance non convertible (autre sport, texte seul)
+// ou non demandée.
 //
 //   supabase functions deploy intervals-events
 import { adminClient, callerId, json } from '../_shared/strava.ts';
@@ -25,12 +32,15 @@ import {
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const MAX_DAYS = 14;
+/** Plage du calendrier (métadonnées seules) : mois affiché ± 1 semaine. */
+const MAX_DAYS_NO_ZWO = 62;
 /** Fichiers téléchargés par appel (quota de 100 appels / jour). */
 const MAX_EVENTS = 10;
 const MAX_ZWO_CHARS = 200_000;
 
 interface IntervalsEvent {
   id?: number | string;
+  paired_activity_id?: number | string | null;
   category?: string;
   type?: string;
   name?: string;
@@ -50,12 +60,18 @@ Deno.serve(async (req) => {
   } catch {
     return json({ error: 'bad_request' }, 400);
   }
-  const { oldest, newest } = body;
-  if (typeof oldest !== 'string' || typeof newest !== 'string' || !DATE.test(oldest) || !DATE.test(newest)) {
-    return json({ error: 'bad_request' }, 400);
+  const { oldest, newest, event_id: eventId } = body;
+  const withZwo = body.with_zwo !== false;
+  const single = eventId !== undefined;
+  if (single) {
+    if (!isIntervalsId(String(eventId))) return json({ error: 'bad_request' }, 400);
+  } else {
+    if (typeof oldest !== 'string' || typeof newest !== 'string' || !DATE.test(oldest) || !DATE.test(newest)) {
+      return json({ error: 'bad_request' }, 400);
+    }
+    const days = (Date.parse(newest) - Date.parse(oldest)) / 86_400_000;
+    if (!(days >= 0 && days <= (withZwo ? MAX_DAYS : MAX_DAYS_NO_ZWO))) return json({ error: 'bad_request' }, 400);
   }
-  const days = (Date.parse(newest) - Date.parse(oldest)) / 86_400_000;
-  if (!(days >= 0 && days <= MAX_DAYS)) return json({ error: 'bad_request' }, 400);
 
   const integration = await loadIntegration(db, userId);
   if (!integration || !hasScope(grantedScopes(integration.scope), 'CALENDAR:READ')) {
@@ -63,23 +79,32 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const query = new URLSearchParams({ oldest, newest });
-    const res = await intervalsFetch(integration.access_token, `/athlete/0/events?${query}`);
-    if (!res.ok) {
-      console.warn('intervals events HTTP', res.status);
-      return json({ status: 'error', error: 'events_failed' });
+    let workouts: IntervalsEvent[];
+    if (single) {
+      const res = await intervalsFetch(integration.access_token, `/athlete/0/events/${eventId}`);
+      if (!res.ok) return json({ status: 'error', error: 'events_failed' });
+      const e: IntervalsEvent = await res.json().catch(() => ({}));
+      workouts = e.category === 'WORKOUT' ? [e] : [];
+    } else {
+      const query = new URLSearchParams({ oldest: oldest as string, newest: newest as string });
+      const res = await intervalsFetch(integration.access_token, `/athlete/0/events?${query}`);
+      if (!res.ok) {
+        console.warn('intervals events HTTP', res.status);
+        return json({ status: 'error', error: 'events_failed' });
+      }
+      const all: IntervalsEvent[] = await res.json().catch(() => []);
+      workouts = (Array.isArray(all) ? all : [])
+        .filter((e) => e.category === 'WORKOUT' && isIntervalsId(String(e.id ?? '')))
+        .sort((a, b) => (a.start_date_local ?? '').localeCompare(b.start_date_local ?? ''));
+      // Fichiers téléchargés seulement pour une courte plage (quota).
+      if (withZwo) workouts = workouts.slice(0, MAX_EVENTS);
     }
-    const all: IntervalsEvent[] = await res.json().catch(() => []);
-    const workouts = (Array.isArray(all) ? all : [])
-      .filter((e) => e.category === 'WORKOUT' && isIntervalsId(String(e.id ?? '')))
-      .sort((a, b) => (a.start_date_local ?? '').localeCompare(b.start_date_local ?? ''))
-      .slice(0, MAX_EVENTS);
 
     const events = [];
     for (const e of workouts) {
       let zwo: string | null = null;
       // Vélo seulement : AeroX joue les séances sur home trainer.
-      if (!e.type || /ride/i.test(e.type)) {
+      if (withZwo && (!e.type || /ride/i.test(e.type))) {
         const file = await intervalsFetch(integration.access_token, `/athlete/0/events/${e.id}/download.zwo`);
         if (file.ok) {
           const text = await file.text();
@@ -91,6 +116,8 @@ Deno.serve(async (req) => {
         name: e.name ?? '',
         start_date_local: e.start_date_local ?? null,
         description: e.description ?? '',
+        type: e.type ?? null,
+        paired_activity_id: e.paired_activity_id ? String(e.paired_activity_id) : null,
         zwo,
       });
     }
