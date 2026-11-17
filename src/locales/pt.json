@@ -1364,5 +1364,14 @@
   "strava.error.title": "Falha na conexão",
   "strava.error.text": "O link expirou ou o Strava não respondeu. Refaça a conexão pelo AeroX.",
   "strava.ok.account": "Conta AeroX conectada:",
-  "strava.ok.notYou": "Não é sua conta AeroX? Remova o acesso do AeroX no Strava (Configurações → Meus aplicativos) e nos avise."
+  "strava.ok.notYou": "Não é sua conta AeroX? Remova o acesso do AeroX no Strava (Configurações → Meus aplicativos) e nos avise.",
+  "intervals.meta.title": "Conexão com o Intervals.icu",
+  "intervals.ok.title": "O Intervals.icu está conectado ✅",
+  "intervals.ok.text": "Suas sessões AeroX serão enviadas ao Intervals.icu e seus treinos planejados aparecerão no AeroX. Você pode fechar esta página e voltar ao AeroX.",
+  "intervals.denied.title": "Conexão recusada",
+  "intervals.denied.text": "O AeroX precisa de pelo menos a permissão «Atividades» ou «Calendário». Inicie a conexão novamente pelo AeroX e deixe essas caixas marcadas.",
+  "intervals.error.title": "Conexão impossível",
+  "intervals.error.text": "O link expirou ou o Intervals.icu não respondeu. Inicie a conexão novamente pelo AeroX.",
+  "intervals.ok.account": "Conta AeroX conectada:",
+  "intervals.ok.notYou": "Não é a sua conta AeroX? Remova o acesso do AeroX no Intervals.icu (Settings → Connected apps) e nos avise."
 }

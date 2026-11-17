@@ -1364,5 +1364,14 @@
   "strava.error.title": "Verbindung fehlgeschlagen",
   "strava.error.text": "Der Link ist abgelaufen oder Strava hat nicht geantwortet. Starte die Verbindung erneut in AeroX.",
   "strava.ok.account": "Verbundenes AeroX-Konto:",
-  "strava.ok.notYou": "Nicht dein AeroX-Konto? Entziehe AeroX in Strava den Zugriff (Einstellungen → Meine Apps) und sag uns Bescheid."
+  "strava.ok.notYou": "Nicht dein AeroX-Konto? Entziehe AeroX in Strava den Zugriff (Einstellungen → Meine Apps) und sag uns Bescheid.",
+  "intervals.meta.title": "Verbindung mit Intervals.icu",
+  "intervals.ok.title": "Intervals.icu ist verbunden ✅",
+  "intervals.ok.text": "Deine AeroX-Einheiten werden an Intervals.icu gesendet und deine geplanten Workouts erscheinen in AeroX. Du kannst diese Seite schließen und zu AeroX zurückkehren.",
+  "intervals.denied.title": "Verbindung abgelehnt",
+  "intervals.denied.text": "AeroX braucht mindestens die Berechtigung „Aktivitäten“ oder „Kalender“. Starte die Verbindung erneut in AeroX und lass diese Kästchen aktiviert.",
+  "intervals.error.title": "Verbindung fehlgeschlagen",
+  "intervals.error.text": "Der Link ist abgelaufen oder Intervals.icu hat nicht geantwortet. Starte die Verbindung erneut in AeroX.",
+  "intervals.ok.account": "Verbundenes AeroX-Konto:",
+  "intervals.ok.notYou": "Nicht dein AeroX-Konto? Entziehe AeroX den Zugriff in Intervals.icu (Settings → Connected apps) und sag uns Bescheid."
 }

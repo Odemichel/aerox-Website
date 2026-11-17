@@ -1364,5 +1364,14 @@
   "strava.error.title": "Koppelen mislukt",
   "strava.error.text": "De link is verlopen of Strava reageerde niet. Start de koppeling opnieuw vanuit AeroX.",
   "strava.ok.account": "Gekoppeld AeroX-account:",
-  "strava.ok.notYou": "Niet jouw AeroX-account? Trek de toegang van AeroX in via Strava (Instellingen → Mijn apps) en laat het ons weten."
+  "strava.ok.notYou": "Niet jouw AeroX-account? Trek de toegang van AeroX in via Strava (Instellingen → Mijn apps) en laat het ons weten.",
+  "intervals.meta.title": "Verbinding met Intervals.icu",
+  "intervals.ok.title": "Intervals.icu is verbonden ✅",
+  "intervals.ok.text": "Je AeroX-sessies worden naar Intervals.icu gestuurd en je geplande trainingen verschijnen in AeroX. Je kunt deze pagina sluiten en teruggaan naar AeroX.",
+  "intervals.denied.title": "Verbinding geweigerd",
+  "intervals.denied.text": "AeroX heeft minstens de toestemming „Activiteiten” of „Kalender” nodig. Start de verbinding opnieuw vanuit AeroX en laat die vakjes aangevinkt.",
+  "intervals.error.title": "Verbinding mislukt",
+  "intervals.error.text": "De link is verlopen of Intervals.icu reageerde niet. Start de verbinding opnieuw vanuit AeroX.",
+  "intervals.ok.account": "Verbonden AeroX-account:",
+  "intervals.ok.notYou": "Niet jouw AeroX-account? Trek de toegang van AeroX in Intervals.icu in (Settings → Connected apps) en laat het ons weten."
 }

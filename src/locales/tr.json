@@ -1364,5 +1364,14 @@
   "strava.error.title": "Bağlantı kurulamadı",
   "strava.error.text": "Bağlantının süresi doldu ya da Strava yanıt vermedi. Bağlantıyı AeroX'ten yeniden başlat.",
   "strava.ok.account": "Bağlanan AeroX hesabı:",
-  "strava.ok.notYou": "Senin AeroX hesabın değil mi? Strava'da (Ayarlar → Uygulamalarım) AeroX erişimini kaldır ve bize haber ver."
+  "strava.ok.notYou": "Senin AeroX hesabın değil mi? Strava'da (Ayarlar → Uygulamalarım) AeroX erişimini kaldır ve bize haber ver.",
+  "intervals.meta.title": "Intervals.icu bağlantısı",
+  "intervals.ok.title": "Intervals.icu bağlandı ✅",
+  "intervals.ok.text": "AeroX seansların Intervals.icu'ya gönderilecek ve planlanan antrenmanların AeroX'te görünecek. Bu sayfayı kapatıp AeroX'e dönebilirsin.",
+  "intervals.denied.title": "Bağlantı reddedildi",
+  "intervals.denied.text": "AeroX'in en azından «Aktiviteler» veya «Takvim» iznine ihtiyacı var. Bağlantıyı AeroX'ten yeniden başlat ve bu kutuları işaretli bırak.",
+  "intervals.error.title": "Bağlantı kurulamadı",
+  "intervals.error.text": "Bağlantının süresi doldu veya Intervals.icu yanıt vermedi. Bağlantıyı AeroX'ten yeniden başlat.",
+  "intervals.ok.account": "Bağlı AeroX hesabı:",
+  "intervals.ok.notYou": "Bu senin AeroX hesabın değil mi? Intervals.icu'da (Settings → Connected apps) AeroX'in erişimini kaldır ve bize haber ver."
 }

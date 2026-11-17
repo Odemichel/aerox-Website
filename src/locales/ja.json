@@ -1364,5 +1364,14 @@
   "strava.error.title": "連携できませんでした",
   "strava.error.text": "リンクの有効期限が切れたか、Stravaから応答がありませんでした。AeroXから再度連携してください。",
   "strava.ok.account": "連携したAeroXアカウント：",
-  "strava.ok.notYou": "ご自身のAeroXアカウントではありませんか？Strava（設定 → マイアプリ）でAeroXのアクセスを取り消し、ご連絡ください。"
+  "strava.ok.notYou": "ご自身のAeroXアカウントではありませんか？Strava（設定 → マイアプリ）でAeroXのアクセスを取り消し、ご連絡ください。",
+  "intervals.meta.title": "Intervals.icu との連携",
+  "intervals.ok.title": "Intervals.icu と連携しました ✅",
+  "intervals.ok.text": "AeroX のセッションが Intervals.icu に送信され、予定しているワークアウトが AeroX に表示されます。このページを閉じて AeroX に戻ってください。",
+  "intervals.denied.title": "連携が拒否されました",
+  "intervals.denied.text": "AeroX には少なくとも「アクティビティ」または「カレンダー」の権限が必要です。AeroX からもう一度連携を開始し、これらのチェックを入れたままにしてください。",
+  "intervals.error.title": "連携できませんでした",
+  "intervals.error.text": "リンクの有効期限が切れたか、Intervals.icu が応答しませんでした。AeroX からもう一度連携を開始してください。",
+  "intervals.ok.account": "連携した AeroX アカウント：",
+  "intervals.ok.notYou": "あなたの AeroX アカウントではありませんか？Intervals.icu（Settings → Connected apps）で AeroX のアクセスを取り消し、ご連絡ください。"
 }

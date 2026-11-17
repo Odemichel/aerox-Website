@@ -1437,5 +1437,14 @@
   "strava.error.title": "Connection failed",
   "strava.error.text": "The link expired or Strava did not respond. Start the connection again from AeroX.",
   "strava.ok.account": "Connected AeroX account:",
-  "strava.ok.notYou": "Not your AeroX account? Revoke AeroX's access in Strava (Settings → My Apps) and let us know."
+  "strava.ok.notYou": "Not your AeroX account? Revoke AeroX's access in Strava (Settings → My Apps) and let us know.",
+  "intervals.meta.title": "Intervals.icu connection",
+  "intervals.ok.title": "Intervals.icu is connected ✅",
+  "intervals.ok.text": "Your AeroX sessions will be sent to Intervals.icu and your planned workouts will show up in AeroX. You can close this page and go back to AeroX.",
+  "intervals.denied.title": "Connection declined",
+  "intervals.denied.text": "AeroX needs at least the “Activities” or “Calendar” permission. Start the connection again from AeroX and leave those boxes checked.",
+  "intervals.error.title": "Connection failed",
+  "intervals.error.text": "The link expired or Intervals.icu did not respond. Start the connection again from AeroX.",
+  "intervals.ok.account": "Connected AeroX account:",
+  "intervals.ok.notYou": "Not your AeroX account? Revoke AeroX's access in Intervals.icu (Settings → Connected apps) and let us know."
 }
