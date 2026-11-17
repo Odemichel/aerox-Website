@@ -31,13 +31,6 @@ export type BillingRow = {
   grace_until: string | null;
   current_period_start: string | null;
   current_period_end: string | null;
-  trial_state:
-    | 'needs_business_id'
-    | 'pending_review'
-    | 'business_id_used'
-    | 'granted'
-    | 'needs_card'
-    | 'card_already_used';
   // Fin de l'essai gratuit Stripe (posée par le webhook). Renseignée = essai
   // déjà utilisé : un nouvel abonnement démarre sans essai.
   trial_ends_at?: string | null;

@@ -388,25 +388,9 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     import { isDiagnosticAvailable } from '~/config/diagnostic';
     import { monthBounds, toMonthCounts, type MyActivity } from '~/lib/account/activity';
 
-    type Business = {
-      kind: 'siren' | 'eu_vat' | 'website' | 'other';
-      id: string;
-      country: string | null;
-      legal_name: string | null;
-      website: string | null;
-      status: 'verified' | 'pending_review';
-    };
     type Summary = {
       plan: Plan | null;
       offer: Offer | null;
-      trial_state:
-        | 'needs_business_id'
-        | 'pending_review'
-        | 'business_id_used'
-        | 'granted'
-        | 'needs_card'
-        | 'card_already_used'
-        | null;
       trial_ends_at: string | null;
       // Offre en attente de l'installation (carte enregistrée, pas encore
       // d'abonnement).
@@ -424,7 +408,6 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       unpaid_invoice_url: string | null;
       has_stripe_customer: boolean | null;
       has_subscription: boolean | null;
-      business: Business | null;
       analyses_in_period: number;
       billable_in_period: number;
     };
@@ -795,11 +778,10 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
     // `bf_profiles` (source unique, lue aussi par le desktop et My Companion),
     // logo `<id>/logo` lu par les cartes de partage et le PDF.
     let studioForm: HTMLElement | null = null;
-    let studioLegal: HTMLElement | null = null;
     function paintStudio() {
       const panel = document.querySelector<HTMLElement>('#studio [data-body]');
       if (!panel) return;
-      panel.replaceChildren(...[studioForm, studioLegal].filter((n): n is HTMLElement => Boolean(n)));
+      panel.replaceChildren(...(studioForm ? [studioForm] : []));
     }
 
     type StudioRow = {
@@ -1300,31 +1282,6 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       }
       billing.replaceChildren(billItems.length ? rows(...billItems) : el('p', 'acct-muted', T['billing.none']));
 
-      // --- Studio : identité légale (lecture seule) sous la fiche modifiable --
-      const items: HTMLElement[] = [];
-      if (s.business) {
-        const b = s.business;
-        const idText =
-          b.kind === 'website'
-            ? (b.website ?? b.id).replace(/^https?:\/\//, '')
-            : b.kind === 'eu_vat' && b.country !== 'FR'
-              ? T['studio.kind.eu_vat'].replace('{id}', `${b.country ?? ''}${b.id}`)
-              : T['studio.kind.siren'].replace('{id}', b.id.replace(/(\d{3})(?=\d)/g, '$1 '));
-        const v = el('span', 'acct-inline');
-        v.append(
-          el('span', '', idText),
-          b.status === 'verified' ? pill('ok', T['studio.verified']) : pill('warn', T['studio.pending'])
-        );
-        items.push(row(T['studio.id'], v));
-        if (b.legal_name) items.push(row(T['studio.legal'], b.legal_name));
-      } else {
-        items.push(row(T['studio.id'], T['studio.none']));
-      }
-      const legal = el('div', 'acct-studio-legal');
-      legal.append(el('h3', 'acct-subtitle', T['studio.legalTitle']), rows(...items));
-      studioLegal = legal;
-      paintStudio();
-
       // Offres BF payables depuis l'espace (onglet Abonnement), tant qu'aucun
       // abonnement n'est en cours.
       // Grille publique masquée une fois l'offre choisie (en attente de
@@ -1351,7 +1308,6 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       const base: Summary = {
         plan: 'trial',
         offer: null,
-        trial_state: null,
         trial_ends_at: null,
         pending_offer: null,
         installed_at: null,
@@ -1367,7 +1323,6 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
         unpaid_invoice_url: null,
         has_stripe_customer: false,
         has_subscription: false,
-        business: null,
         analyses_in_period: 0,
         billable_in_period: 0,
       };
@@ -1775,7 +1730,6 @@ const sections: [string, string, string | [string, string], 'bf' | 'rider' | 'al
       offers.bf = false;
       offers.rider = false;
       studioForm = null;
-      studioLegal = null;
       preview = false;
       realSummary = null;
       nav.addEventListener('click', onNavClick);

@@ -24,8 +24,7 @@ select pg_temp.check((select role from users where id = '00000000-0000-0000-0000
 select pg_temp.check((select is_active from users where id = '00000000-0000-0000-0000-0000000000b1'), 'BF is_active');
 select pg_temp.check((select studio_name from bf_profiles where user_id = '00000000-0000-0000-0000-0000000000b1') = 'Studio 1', 'studio_name repris dans bf_profiles');
 select pg_temp.check((select plan from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1') = 'trial', 'plan trial');
-select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b1'), 'aucune analyse offerte avant l''identifiant');
-select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1') = 'needs_business_id', 'en attente de l''identifiant d''entreprise');
+select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b1'), 'aucune analyse offerte à l''inscription');
 select pg_temp.check((select count(*) from net.calls) = 0, 'pas de notification sans secret');
 
 -- Avec secret : notification « nouveau BF ».
@@ -46,34 +45,9 @@ insert into bf_clients (id, bf_user_id) values ('00000000-0000-0000-0000-0000000
 
 set role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000b1');
-select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'reason' = 'needs_card', 'sans identifiant : refus needs_card (code lu par l''application)');
+select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'reason' = 'needs_card', 'sans abonnement : refus needs_card (code lu par l''application)');
 reset role;
 
--- Identifiant d'entreprise vérifié : la souscription avec essai est autorisée
--- (l'essai démarre avec l'abonnement Stripe). Un identifiant = un compte.
-select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:552032534', 'siren', 'FR', 'DANONE', true) = 'granted', 'identifiant vérifié : essai autorisé');
-select pg_temp.check((select trial_ends_at is null from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1'), 'essai pas démarré sans abonnement');
-select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b1'), 'essai sans crédits : au temps');
-select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b1') = 'granted', 'état granted');
-select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:552032534', 'siren', 'FR', 'DANONE', true) = 'already_granted', 'rejeu : rien de plus');
-select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b2', 'FR:552032534', 'eu_vat', 'FR', 'DANONE', true) = 'already_used', 'même entreprise (TVA), autre compte : refusé');
-select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2') = 'business_id_used', 'état business_id_used');
-select pg_temp.check(not exists (select 1 from bf_credits where user_id = '00000000-0000-0000-0000-0000000000b2'), 'aucun crédit pour l''identifiant réutilisé');
-
--- Site internet : vérification manuelle, notification admin avec lien signé.
-insert into vault.decrypted_secrets values ('billing_hook_secret', 'hook');
-delete from net.calls;
-select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b2', 'WEB:monstudio.ch', 'website', null, '', false, 'https://monstudio.ch', true) = 'pending_review', 'site internet : en vérification');
-select pg_temp.check((select trial_state from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2') = 'pending_review', 'état pending_review');
-select pg_temp.check((select trial_ends_at is null from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2'), 'rien d''ouvert avant validation');
-select pg_temp.check((select count(*) = 1 and bool_and(body -> 'review' ->> 'website' = 'https://monstudio.ch'
-  and body -> 'review' ->> 'email_domain_match' = 'true' and body -> 'review' ->> 'kind' = 'website'
-  and body -> 'review' ->> 'approve_url' like 'https://aeroxbefaster.com/api/billing/approve-business/?u=00000000-0000-0000-0000-0000000000b2&t='
-    || encode(extensions.hmac('00000000-0000-0000-0000-0000000000b2', 'hook', 'sha256'), 'hex'))
-  from net.calls where url like '%/notify-admin-new-bf'), 'admin prévenu, lien de validation signé');
-select pg_temp.check(bf_approve_business_id('00000000-0000-0000-0000-0000000000b2') = 'granted', 'validation admin : essai ouvert');
-select pg_temp.check((select trial_state = 'granted' and trial_ends_at is null from bf_billing where user_id = '00000000-0000-0000-0000-0000000000b2'), 'validation : essai autorisé, pas démarré');
-select pg_temp.check(bf_approve_business_id('00000000-0000-0000-0000-0000000000b2') = 'nothing_pending', 'double validation sans effet');
 -- Crédit d'un autre compte (isolation RLS vérifiée plus bas).
 insert into bf_credits (user_id, granted, remaining, expires_at, source)
 values ('00000000-0000-0000-0000-0000000000b2', 1, 1, now() + interval '1 year', 'isolation');
@@ -81,8 +55,8 @@ values ('00000000-0000-0000-0000-0000000000b2', 1, 1, now() + interval '1 year',
 set role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000b1');
 
--- Entreprise vérifiée mais pas d'abonnement : l'essai n'a pas démarré.
-select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'reason' = 'needs_card', 'vérifiée sans abonnement : needs_card');
+-- Pas d'abonnement : l'essai n'a pas démarré.
+select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000101') ->> 'reason' = 'needs_card', 'sans abonnement : needs_card');
 reset role;
 -- Abonnement Essentiel en essai Stripe (ce qu'écrit le webhook).
 update bf_billing set plan = 'essential', offer = 'essential', stripe_subscription_id = 'sub_test', stripe_customer_id = 'cus_test',
@@ -107,17 +81,8 @@ reset role;
 select pg_temp.check((select billing_mode from bf_analyses where client_id = '00000000-0000-0000-0000-000000000118') = 'essential', 'Essentiel : billing_mode');
 -- Abonnement arrêté (retour au plan d'essai, essai utilisé) : refus no_credits.
 update bf_billing set plan = 'trial', offer = null, stripe_subscription_id = null where user_id = '00000000-0000-0000-0000-0000000000b1';
-select pg_temp.check(bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:552032534', 'siren', 'FR', 'DANONE', true) = 'already_granted', 'essai utilisé : pas de nouvel essai');
 set role authenticated;
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000117') ->> 'reason' = 'no_credits', 'essai utilisé, sans abonnement : refus (no_credits, lu par l''app)');
-do $$ begin
-  perform bf_register_business_id('00000000-0000-0000-0000-0000000000b1', 'FR:1', 'siren', 'FR', '', true);
-  raise exception 'ÉCHEC : bf_register_business_id appelable par authenticated';
-exception when insufficient_privilege then null; end $$;
-do $$ begin
-  perform bf_approve_business_id('00000000-0000-0000-0000-0000000000b1');
-  raise exception 'ÉCHEC : bf_approve_business_id appelable par authenticated';
-exception when insufficient_privilege then null; end $$;
 
 -- Client d'un autre bike fitter.
 select pg_temp.check(register_analysis('00000000-0000-0000-0000-000000000299') ->> 'reason' = 'client_not_found', 'client étranger refusé');

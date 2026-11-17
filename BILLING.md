@@ -149,14 +149,14 @@ Principes :
      Un réabonnement (essai déjà utilisé) reste un Checkout `subscription`.
      **Plus de vérification d'entreprise préalable** (même décision) : le choix
      d'offre est ouvert directement, le studio est vu à l'installation ; un
-     essai par compte (`trial_ends_at`). Le formulaire SIRET / TVA / site est
-     retiré de l'espace ; `/api/billing/business-id/` et
-     `/api/billing/approve-business/` restent en place, hors parcours. Le
-     point 1 du cycle « Essai de 14 jours » ci-dessous est donc historique.
+     essai par compte (`trial_ends_at`). Tout le reste de la vérification
+     d'entreprise (routes `business-id` / `approve-business`, table
+     `bf_business_ids`, colonne `bf_billing.trial_state`, e-mail « Studio à
+     vérifier ») est supprimé depuis le 2026-11-17 (migration
+     `20261117091114_drop_bf_business_id.sql`).
 - **Inscription** (`/inscription/inscription/?profil=bike-fitter`) :
   `handle_email_confirmed` crée l'utilisateur en `bike-fitter` actif, plan
-  `trial` (`trial_state = needs_business_id`, valeur historique que plus rien
-  ne lit). Notification admin par `notify-admin-new-bf`.
+  `trial`. Notification admin par `notify-admin-new-bf`.
 - **Inscription depuis l'app desktop** (2026-11-08, migration
   `20261108095345_bf_role_direct_from_app.sql`) : choisir « bike fitter » à
   l'onboarding appelle `request_bike_fitter_role`, qui donne **`bike-fitter`
@@ -168,32 +168,20 @@ Principes :
   masse). L'app affiche sur l'accueil du BF la carte « Démarrer avec AeroX »
   (offre et carte → installation → essai), d'après `bf_usage_summary()`.
 - **Essai de 14 jours** (décision du 2026-09-27, modèle « à la Zwift ») :
-  1. le BF fait vérifier son entreprise, dans un seul champ de son espace
-     (`/api/billing/business-id/`, `src/lib/billing/businessId.ts`) :
-     SIREN / SIRET (clé de Luhn) → API Recherche d'entreprises, entreprise
-     active exigée ; TVA intracommunautaire → VIES (TVA française ramenée au
-     SIREN) ; sinon le site internet du studio (refusé s'il s'agit d'une
-     messagerie ou d'un réseau social, ou s'il ne répond pas), vérifié à la
-     main : `pending_review`, e-mail admin « Studio à vérifier » avec un lien
-     signé (HMAC, secret `billing_hook_secret` = `BILLING_HOOK_SECRET`) vers
-     `/api/billing/approve-business/` (GET sans effet, POST
-     → `bf_approve_business_id`). Un identifiant ou un domaine = un compte
-     (`business_id_used`). Vérifiée, l'entreprise passe en
-     `trial_state = granted` : la souscription avec essai est autorisée ;
-  2. il choisit son offre (Essentiel par défaut, ou partenaire) et
+  1. le BF choisit son offre (Essentiel par défaut) et
      enregistre sa carte ; l'abonnement et ses 14 jours d'essai naissent à
      l'installation (voir « Essai à l'installation » ci-dessus). Acceptation
      des CGV obligatoire (`consent_collection`, article 5 bis).
-  3. pendant l'essai (Stripe `trialing`, accès complet), les analyses sont
+  2. pendant l'essai (Stripe `trialing`, accès complet), les analyses sont
      comptées en `billing_mode = 'trial'` : rien n'est envoyé au meter ;
-  4. à la fin, Stripe prélève la première échéance (Essentiel : 20 €),
+  3. à la fin, Stripe prélève la première échéance (Essentiel : 20 €),
      sauf résiliation avant (« Résilier l'essai » → fin à la date de fin
      d'essai, aucun prélèvement ; test S26).
      Essai utilisé (`trial_ends_at` renseignée) : un nouvel abonnement démarre
-     sans essai, et l'identifiant ne rouvre rien. Sans abonnement,
+     sans essai. Sans abonnement,
      `register_analysis` répond `needs_card` (essai jamais démarré :
      « démarrez votre essai » dans l'app) ou `no_credits` (essai utilisé :
-     « choisissez une offre »). Tests S1, S8, S24–S26.
+     « choisissez une offre »). Tests S1, S25, S26.
 - **Échec de paiement** : `past_due`, accès complet jusqu'à `grace_until`
   (premier échec + 7 jours, calculé en temps réel par `bf_access_level`), puis
   lecture seule. Paiement régularisé : retour en `active`. Si Stripe résilie
@@ -373,10 +361,9 @@ Chaque étape marquée ⚠ touche la production : à faire sur accord explicite.
    `MAILERLITE_API_KEY` vide (rien n'est écrit dans MailerLite).
 5. `E2E_SUPABASE_URL=… E2E_SUPABASE_ANON_KEY=… E2E_SUPABASE_SERVICE_KEY=… E2E_SITE_URL=http://localhost:4399 E2E_BILLING_HOOK_SECRET=… node --env-file=.env scripts/billing-e2e.ts`
 
-Scénarios : S1 Essentiel (et souscription réservée aux entreprises
-vérifiées), S2/S3 Essentiel 14 analyses et re-tests, S4 places épuisées, S5
-bascule du lancement, S6 impayé et grâce, S7 autoliquidation, S8 vérification de
-l'entreprise (SIRENE, VIES), S9 descente / remontée, S10 annuel, S11 résiliation du lancement
+Scénarios : S1 Essentiel, S2/S3 Essentiel 14 analyses et re-tests, S4 places
+épuisées, S5 bascule du lancement, S6 impayé et grâce, S7 autoliquidation, S9
+descente / remontée, S10 annuel, S11 résiliation du lancement
 (reprise, aucun prélèvement), S12 double abonnement, S13 annuel avant le
 1er novembre (descente programmée puis annulée), S14 places libérées après
 impayé, S15 changement d'offre pendant une résiliation, S16 expiration des

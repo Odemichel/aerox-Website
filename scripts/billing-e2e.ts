@@ -73,7 +73,7 @@ async function waitFor<T>(
 type Bf = { id: string; email: string; client: SupabaseClient; token: string };
 
 /** Bike fitter inscrit comme sur le site : création puis confirmation d'e-mail. */
-async function createBf(tag: string, verified = true): Promise<Bf> {
+async function createBf(tag: string): Promise<Bf> {
   const email = `bf-${tag}-${RUN}@example.com`;
   const password = `Test-${RUN}-A1`;
   const { data, error } = await admin.auth.admin.createUser({
@@ -87,9 +87,6 @@ async function createBf(tag: string, verified = true): Promise<Bf> {
   const client = createClient(SUPABASE_URL, ANON_KEY, { auth: { persistSession: false } });
   const { data: s, error: e2 } = await client.auth.signInWithPassword({ email, password });
   if (e2 || !s.session) throw new Error(`signIn: ${e2?.message}`);
-  // Entreprise vérifiée (SIRET, TVA ou site validé) : la souscription avec
-  // essai est autorisée. S8 et S24 passent par la vraie vérification.
-  if (verified) await admin.from('bf_billing').update({ trial_state: 'granted' }).eq('user_id', data.user.id);
   return { id: data.user.id, email, client, token: s.session.access_token };
 }
 
@@ -256,20 +253,7 @@ async function usageInvoice(bf: Bf, clockId: string, sub: Stripe.Subscription, a
 }
 
 async function s1Essential() {
-  console.log('\nS1 — Essentiel : essai réservé aux entreprises vérifiées ; 3 analyses → 20 € + 3 × 15 € = 65 € HT');
-  const unverified = await createBf('essential-unverified', false);
-  const b0 = await billing(unverified.id);
-  check(
-    b0?.plan === 'trial' && b0?.trial_state === 'needs_business_id',
-    'inscription : compte actif, identifiant d’entreprise attendu'
-  );
-  const blocked = await api('/api/billing/checkout/', unverified, { offer: 'essential', lang: 'fr' });
-  check(
-    blocked.status === 409 && blocked.body.error === 'E_NEEDS_BUSINESS_ID',
-    'entreprise non vérifiée : pas de souscription (E_NEEDS_BUSINESS_ID)',
-    `HTTP ${blocked.status}`
-  );
-
+  console.log('\nS1 — Essentiel : 3 analyses → 20 € + 3 × 15 € = 65 € HT');
   const bf = await createBf('essential');
   const r = await api('/api/billing/checkout/', bf, { offer: 'essential', lang: 'fr' });
   check(r.status === 200 && typeof r.body.url === 'string', 'checkout Essentiel créé par la route', `HTTP ${r.status}`);
@@ -539,117 +523,6 @@ async function s7ReverseCharge() {
     (invoice.customer_tax_ids ?? []).some((t) => t.value === 'DE123456789'),
     'n° de TVA du client sur la facture'
   );
-}
-
-/** Identifiant d'entreprise saisi dans l'espace BF (route réelle, registres officiels). */
-async function submitBusinessId(bf: Bf, id: string) {
-  return api('/api/billing/business-id/', bf, { id });
-}
-
-// Danone SA : SIREN 552 032 534 (actif au registre), TVA FR27552032534.
-const DANONE_SIREN = '552 032 534';
-
-async function s8BusinessId() {
-  console.log('\nS8 — Numéro d’entreprise vérifié : essai autorisé (il démarre avec l’abonnement), un par entreprise');
-  await admin.from('bf_business_ids').delete().neq('id_key', '');
-  const bf = await createBf('biz', false);
-  const [c1] = await createClients(bf, 1);
-  const before = await register(bf, c1);
-  check(
-    before.status === 'refused' && before.reason === 'needs_card',
-    'sans identifiant : analyse refusée (code lu par l’app)'
-  );
-  check((await billing(bf.id))?.trial_state === 'needs_business_id', 'inscription : identifiant d’entreprise attendu');
-
-  const bad = await submitBusinessId(bf, '552 032 535');
-  check(bad.body.result === 'invalid', 'SIREN à la clé fausse : refusé', String(bad.body.result));
-  const unknown = await submitBusinessId(bf, '000 000 000');
-  check(unknown.body.result === 'not_found', 'SIREN inexistant au registre : refusé', String(unknown.body.result));
-  const us = await submitBusinessId(bf, '12-3456789');
-  check(
-    us.body.result === 'invalid',
-    'numéro hors UE : refusé (le site internet est demandé à la place)',
-    String(us.body.result)
-  );
-
-  const ok = await submitBusinessId(bf, DANONE_SIREN);
-  check(
-    ok.status === 200 && ok.body.result === 'granted',
-    'SIREN actif : entreprise vérifiée',
-    `${ok.body.result} ${ok.body.name ?? ''}`
-  );
-  const b = await billing(bf.id);
-  check(b?.trial_state === 'granted' && !b?.trial_ends_at, 'essai autorisé, pas encore démarré (pas d’abonnement)');
-  const still = await register(bf, c1);
-  check(
-    still.status === 'refused' && still.reason === 'needs_card',
-    'sans abonnement : analyse refusée (« démarrez votre essai » dans l’app)'
-  );
-  const go = await api('/api/billing/checkout/', bf, { offer: 'essential', lang: 'fr' });
-  check(go.status === 200, 'la souscription avec essai est ouverte', `HTTP ${go.status}`);
-  const again = await submitBusinessId(bf, DANONE_SIREN);
-  check(again.status === 409, 'entreprise déjà vérifiée : rien de plus', `HTTP ${again.status}`);
-
-  // Même entreprise sous sa forme TVA (VIES), sur un autre compte.
-  const other = await createBf('biz-bis', false);
-  const dup = await submitBusinessId(other, 'FR27552032534');
-  check(
-    dup.body.result === 'already_used',
-    'même entreprise (n° de TVA), autre compte : refusé',
-    String(dup.body.result)
-  );
-  check(!(await billing(other.id))?.trial_ends_at, 'aucun essai pour le second compte');
-}
-
-async function s24ManualReview() {
-  console.log('\nS24 — Site internet : contrôles, vérification manuelle, validation par le lien signé');
-  await admin.from('bf_business_ids').delete().like('id_key', 'WEB:example.%');
-  const bf = await createBf('biz-web', false);
-  const social = await submitBusinessId(bf, 'instagram.com/monstudio');
-  check(social.body.result === 'invalid', 'réseau social : refusé', String(social.body.result));
-  const dead = await submitBusinessId(bf, 'aerox-studio-qui-nexiste-pas-4815.com');
-  check(dead.body.result === 'unreachable', 'site qui ne répond pas : refusé', String(dead.body.result));
-  // createBf crée des e-mails @example.com : même domaine que le site.
-  const r = await submitBusinessId(bf, 'https://www.example.com/');
-  check(r.body.result === 'pending_review', 'site qui répond : en vérification', String(r.body.result));
-  const { data: row } = await admin.from('bf_business_ids').select('*').eq('user_id', bf.id).single();
-  check(
-    row?.id_key === 'WEB:example.com' && row?.email_domain_match === true,
-    'domaine enregistré, e-mail du même domaine signalé'
-  );
-  check((await billing(bf.id))?.trial_state === 'pending_review', 'espace BF : « vérification sous 24 h »');
-  const [c] = await createClients(bf, 1);
-  check((await register(bf, c)).reason === 'needs_card', 'avant validation : analyses fermées');
-
-  const { createHmac } = await import('node:crypto');
-  const token = createHmac('sha256', env('E2E_BILLING_HOOK_SECRET')).update(bf.id).digest('hex');
-  const link = `${SITE}/api/billing/approve-business/?u=${bf.id}&t=${token}`;
-  const forged = await fetch(`${SITE}/api/billing/approve-business/?u=${bf.id}&t=${'0'.repeat(64)}`);
-  check(forged.status === 403, 'lien falsifié : refusé', `HTTP ${forged.status}`);
-  const view = await fetch(link);
-  const html = await view.text();
-  check(
-    view.status === 200 && html.includes('example.com</a>'),
-    'le lien affiche le site à vérifier (rien n’est validé à l’ouverture)'
-  );
-  check((await billing(bf.id))?.trial_state === 'pending_review', 'ouvrir le lien ne valide rien');
-  const post = await fetch(link, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Origin: SITE },
-    body: new URLSearchParams({ u: bf.id, t: token }),
-  });
-  check(
-    post.status === 200 && (await post.text()).includes('validé'),
-    'bouton « Valider » : studio validé',
-    `HTTP ${post.status}`
-  );
-  const b = await billing(bf.id);
-  check(b?.trial_state === 'granted' && !b?.trial_ends_at, 'essai autorisé (il démarre avec l’abonnement)');
-  check((await register(bf, c)).reason === 'needs_card', 'après validation : l’essai démarre avec l’abonnement');
-
-  const other = await createBf('biz-web-bis', false);
-  const dup = await submitBusinessId(other, 'example.com');
-  check(dup.body.result === 'already_used', 'même site, autre compte : refusé', String(dup.body.result));
 }
 
 async function s9Downgrade() {
@@ -972,10 +845,7 @@ async function s17FirstPaymentDeclined() {
   check(Boolean(expired), 'après 23 h : abonnement expiré chez Stripe');
   await sleep(10_000);
   const b2 = await billing(bf.id);
-  check(
-    b2?.plan === 'trial' && b2?.trial_state === 'granted' && !b2?.trial_ends_at,
-    'base inchangée après l’expiration (essai intact)'
-  );
+  check(b2?.plan === 'trial' && !b2?.trial_ends_at, 'base inchangée après l’expiration (essai intact)');
 }
 
 async function s18AuthRequiredThenRecovery() {
@@ -1522,20 +1392,8 @@ async function p6RefundBeforePurchase() {
 }
 
 async function p7BfMultiple() {
-  console.log('\nP7 — Bike fitter : saisies répétées, rôle, corps piégé');
-  await admin.from('bf_business_ids').delete().like('id_key', 'WEB:example.%');
-  const bf = await createBf('biz-twice', false);
-  const first = await submitBusinessId(bf, 'example.org');
-  const second = await submitBusinessId(bf, 'example.net');
-  check(
-    first.body.result === 'pending_review' && second.body.result === 'pending_review',
-    'deux sites saisis, en attente'
-  );
-  const { data: ids } = await admin.from('bf_business_ids').select('id_key').eq('user_id', bf.id);
-  check(
-    ids?.length === 1 && ids[0].id_key === 'WEB:example.net',
-    'un seul identifiant par compte : la dernière saisie remplace l’autre'
-  );
+  console.log('\nP7 — Bike fitter : rôle, corps piégé');
+  const bf = await createBf('bf-tamper');
   const rider = await createRider('not-bf');
   const r = await api('/api/billing/checkout/', rider, { offer: 'essential', lang: 'fr' });
   check(r.status === 403, 'un cycliste ne peut pas souscrire une offre bike fitter', `HTTP ${r.status}`);
@@ -1662,8 +1520,6 @@ async function p8RoleSeparation() {
     const r = await api('/api/billing/checkout/', rider, { offer, lang: 'fr' });
     check(r.status === 403, `cycliste → offre BF « ${offer} » : refusé (403)`, `HTTP ${r.status}`);
   }
-  const t = await api('/api/billing/business-id/', rider, { id: DANONE_SIREN });
-  check(t.status === 403, 'cycliste → analyses offertes BF : refusé (403)', `HTTP ${t.status}`);
 }
 
 async function s23AnchoredUsage() {
@@ -1841,8 +1697,6 @@ async function s26CancelDuringTrial() {
     const cs = await stripe.checkout.sessions.retrieve(sessionId);
     check(!cs.custom_text?.submit, 'sans nouvel essai (pas d’annonce d’essai au paiement)');
   }
-  const biz = await submitBusinessId(bf, DANONE_SIREN);
-  check(biz.status === 409, 'pas de second essai par l’identifiant', `HTTP ${biz.status}`);
 }
 
 async function s27UpgradeNextPeriod() {
@@ -1939,7 +1793,6 @@ const ALL: Record<string, () => Promise<void>> = {
   s5: s5LaunchSwitch,
   s6: s6PaymentFailure,
   s7: s7ReverseCharge,
-  s8: s8BusinessId,
   s9: s9Downgrade,
   s10: s10Annual,
   s11: s11LaunchCancel,
@@ -1955,7 +1808,6 @@ const ALL: Record<string, () => Promise<void>> = {
   s21: s21LaunchAnnual,
   s22: s22LaunchAnnualFull,
   s23: s23AnchoredUsage,
-  s24: s24ManualReview,
   s25: s25TrialEssential,
   s26: s26CancelDuringTrial,
   s27: s27UpgradeNextPeriod,

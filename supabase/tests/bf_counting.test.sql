@@ -8,7 +8,6 @@ begin if cond is not true then raise exception 'ÉCHEC : %', msg; end if; end $$
 insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000d1', 'bfd@example.com', '{"profile_type":"bike-fitter"}');
 update auth.users set email_confirmed_at = now() where id = '00000000-0000-0000-0000-0000000000d1';
-select bf_register_business_id('00000000-0000-0000-0000-0000000000d1', 'DE:TEST000001', 'eu_vat', 'DE', 'Test GmbH', true);
 -- Abonnement en essai Stripe (ce qu'écrit le webhook).
 update bf_billing set plan = 'essential', offer = 'essential', stripe_subscription_id = 'sub_d1',
   trial_ends_at = now() + interval '14 days' where user_id = '00000000-0000-0000-0000-0000000000d1';
