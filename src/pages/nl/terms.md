@@ -7,7 +7,7 @@ layout: '~/layouts/MarkdownLayout.astro'
 
 > **Courtesy translation.** These Terms of Use are provided in English for information purposes only. Only the [French version](/fr/terms/) is legally binding and prevails in the event of any discrepancy.
 
-_Last updated: November 15, 2026_
+_Last updated: November 18, 2026_
 
 Thank you for using **AeroX**, the solution that turns your home trainer into a virtual wind tunnel.  
 These Terms of Use govern access to and use of the AeroX service.  
@@ -39,6 +39,7 @@ These Terms of Use define the rights and obligations of AeroX and the User regar
 - The information provided during registration must be accurate and up to date.
 - **Each account is strictly personal and non-transferable.**  
   👉 Account sharing (loan, resale, or transfer of credentials) is **prohibited** and may result in suspension or deletion of the account.
+- An account can be used on **up to 2 computers**, and on **only one computer at a time**: the application will not open on a computer while it is open on another one with the same account. To change computers beyond this limit, contact AeroX (contact@aeroxbefaster.com).
 
 ---
 
@@ -157,6 +158,7 @@ The User agrees to:
 ## 12. Personal Data
 
 - AeroX collects and processes certain data (e.g. performance metrics, email) to provide the Service.
+- **Camera images**: during a session, your camera feed is analysed on your computer. Since November 18, 2026, images from training sessions (photos and silhouettes) are no longer stored on AeroX servers; those stored before that date are kept to improve measurement accuracy, and you can ask for their deletion at contact@aeroxbefaster.com. Only images taken during an AeroX Diagnostic or a bike fitting (photos and silhouettes of the measured positions) are stored, to produce and keep the report and to improve measurement accuracy. Video clips you choose to create are stored separately and deleted after 7 days.
 - Such data is handled in accordance with our [Privacy Policy](/nl/privacy/).
 
 ---

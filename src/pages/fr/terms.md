@@ -3,7 +3,7 @@ title: 'Conditions Générales d’Utilisation'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Dernière mise à jour : 15 novembre 2026_
+_Dernière mise à jour : 18 novembre 2026_
 
 Merci d’utiliser **AeroX**, la solution qui transforme ton home-trainer en soufflerie virtuelle.  
 Ces Conditions Générales d’Utilisation (CGU) encadrent l’accès et l’usage du service AeroX.  
@@ -35,6 +35,7 @@ Les présentes CGU définissent les droits et obligations d’AeroX et de l’Ut
 - Les informations fournies lors de l’inscription doivent être exactes et à jour.
 - **Chaque compte est strictement personnel et non transférable.**  
   👉 Le partage de compte (prêt, revente, transmission d’identifiants) est **interdit** et pourra entraîner une suspension ou suppression du compte.
+- Un compte peut être utilisé sur **2 ordinateurs au maximum**, et sur **un seul ordinateur à la fois** : l’application refuse de s’ouvrir sur un ordinateur tant qu’elle est ouverte sur un autre avec le même compte. Pour changer d’ordinateur au-delà de cette limite, contacte AeroX (contact@aeroxbefaster.com).
 
 ---
 
@@ -153,6 +154,7 @@ L’Utilisateur s’engage à :
 ## 12. Données personnelles
 
 - AeroX collecte et traite certaines données (ex. mesures sportives, email) pour fournir le Service.
+- **Images de la caméra** : pendant une séance, l’image de ta caméra est analysée sur ton ordinateur. Depuis le 18 novembre 2026, les images des séances d’entraînement (photos et silhouettes) ne sont plus enregistrées sur les serveurs d’AeroX ; celles enregistrées auparavant sont conservées pour améliorer la précision des mesures, et tu peux en demander la suppression à contact@aeroxbefaster.com. Seules les images prises pendant un Diagnostic AeroX ou un fitting (photos et silhouettes des positions mesurées) sont stockées, pour établir et conserver le rapport et améliorer la précision des mesures. Les clips vidéo que tu choisis de créer sont stockés à part et supprimés au bout de 7 jours.
 - Ces données sont traitées conformément à la [Politique de Confidentialité](/fr/privacy/).
 
 ---

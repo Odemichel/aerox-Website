@@ -3,7 +3,7 @@ title: 'Privacybeleid'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Laatste update_: 15 november 2026
+_Laatste update_: 18 november 2026
 
 Dit Privacybeleid beschrijft onze praktijken met betrekking tot het verzamelen, gebruiken en beschermen van uw persoonsgegevens wanneer u de dienst **AeroX** gebruikt.
 Het verduidelijkt ook uw rechten en de manier waarop de wet u beschermt.
@@ -51,6 +51,14 @@ Deze worden automatisch verzameld en kunnen het volgende omvatten:
 - het type en de versie van de browser,
 - de bezochte pagina's en de bezoekduur,
 - informatie over het gebruikte apparaat.
+
+#### Camerabeelden
+
+Tijdens een sessie wordt het beeld van uw camera op uw computer geanalyseerd om uw positie te meten. Wat op onze servers wordt opgeslagen, hangt af van het type sessie:
+
+- **Trainingssessies**: sinds 18 november 2026 wordt geen enkel beeld (foto of silhouet) opgeslagen. Eerder opgeslagen beelden worden bewaard om de nauwkeurigheid van de metingen te verbeteren; u kunt de verwijdering ervan aanvragen via contact@aeroxbefaster.com.
+- **AeroX-diagnose en bikefitting**: foto’s en silhouetten van de gemeten posities worden opgeslagen om het rapport op te stellen en te bewaren en de nauwkeurigheid van de metingen te verbeteren. Ze zijn toegankelijk voor u en, bij een fitting, voor de bikefitter die deze heeft uitgevoerd.
+- **Videoclips**: alleen clips die u zelf maakt worden opgeslagen, en ze worden na 7 dagen verwijderd.
 
 #### Cookies en vergelijkbare technologieën
 

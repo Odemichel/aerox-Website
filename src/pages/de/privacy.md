@@ -3,7 +3,7 @@ title: 'Datenschutzrichtlinie'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Letzte Aktualisierung_: 15. November 2026
+_Letzte Aktualisierung_: 18. November 2026
 
 Diese Datenschutzrichtlinie beschreibt unsere Praktiken hinsichtlich der Erhebung, Nutzung und des Schutzes Ihrer personenbezogenen Daten bei der Nutzung des Dienstes **AeroX**.
 Sie erläutert außerdem Ihre Rechte und wie das Gesetz Sie schützt.
@@ -51,6 +51,14 @@ Diese werden automatisch erhoben und können Folgendes umfassen:
 - den Browsertyp und die -version,
 - die besuchten Seiten und die Besuchsdauer,
 - Informationen über das verwendete Gerät.
+
+#### Kamerabilder
+
+Während einer Einheit wird das Bild Ihrer Kamera auf Ihrem Computer analysiert, um Ihre Position zu messen. Was auf unseren Servern gespeichert wird, hängt von der Art der Einheit ab:
+
+- **Trainingseinheiten**: Seit dem 18. November 2026 wird kein Bild (Foto oder Silhouette) gespeichert. Zuvor gespeicherte Bilder werden zur Verbesserung der Messgenauigkeit aufbewahrt; Sie können ihre Löschung unter contact@aeroxbefaster.com beantragen.
+- **AeroX-Diagnose und Bike-Fitting**: Fotos und Silhouetten der gemessenen Positionen werden gespeichert, um den Bericht zu erstellen und aufzubewahren und die Messgenauigkeit zu verbessern. Sie sind für Sie und, bei einem Fitting, für den durchführenden Bikefitter zugänglich.
+- **Videoclips**: Nur Clips, die Sie selbst erstellen, werden gespeichert und nach 7 Tagen gelöscht.
 
 #### Cookies und ähnliche Technologien
 

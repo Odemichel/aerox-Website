@@ -3,7 +3,7 @@ title: 'Privacy Policy'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Last updated_: November 15, 2026
+_Last updated_: November 18, 2026
 
 This Privacy Policy describes our practices regarding the collection, use, and protection of your personal data when you use the **AeroX** service.  
 It also explains your rights and how the law protects you.
@@ -51,6 +51,14 @@ Collected automatically, it may include:
 - browser type and version,
 - pages visited and duration of visits,
 - device-related information.
+
+#### Camera Images
+
+During a session, your camera feed is analysed on your computer to measure your position. What is stored on our servers depends on the type of session:
+
+- **Training sessions**: since November 18, 2026, no image (photo or silhouette) is stored. Images stored before that date are kept to improve measurement accuracy; you can ask for their deletion at contact@aeroxbefaster.com.
+- **AeroX Diagnostic and bike fitting**: photos and silhouettes of the measured positions are stored to produce and keep the report and to improve measurement accuracy. They are accessible to you and, for a fitting, to the bike fitter who performed it.
+- **Video clips**: only clips you choose to create are stored, and they are deleted after 7 days.
 
 #### Cookies and Similar Technologies
 

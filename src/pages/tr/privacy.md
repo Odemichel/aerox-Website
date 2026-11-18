@@ -3,7 +3,7 @@ title: 'Gizlilik Politikası'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Son güncelleme_: 15 Kasım 2026
+_Son güncelleme_: 18 Kasım 2026
 
 Bu Gizlilik Politikası, **AeroX** hizmetini kullanırken kişisel verilerinizin toplanması, kullanılması ve korunmasına ilişkin uygulamalarımızı açıklamaktadır.
 Ayrıca haklarınızı ve yasaların sizi nasıl koruduğunu belirtmektedir.
@@ -51,6 +51,14 @@ Otomatik olarak toplanan bu veriler şunları içerebilir:
 - tarayıcı türü ve sürümü,
 - ziyaret edilen sayfalar ve ziyaret süresi,
 - kullanılan cihaza ilişkin bilgiler.
+
+#### Kamera görüntüleri
+
+Bir seans sırasında kameranızın görüntüsü, pozisyonunuzu ölçmek için bilgisayarınızda analiz edilir. Sunucularımızda saklananlar seans türüne bağlıdır:
+
+- **Antrenman seansları**: 18 Kasım 2026'dan bu yana hiçbir görüntü (fotoğraf veya siluet) saklanmaz. Daha önce saklanan görüntüler ölçüm doğruluğunu artırmak için tutulur; silinmelerini contact@aeroxbefaster.com adresinden talep edebilirsiniz.
+- **AeroX Teşhisi ve bike fitting**: ölçülen pozisyonların fotoğrafları ve siluetleri, raporu hazırlamak ve saklamak ve ölçüm doğruluğunu artırmak için saklanır. Bunlara siz ve fitting durumunda bunu yapan bike fitter erişebilir.
+- **Video klipler**: yalnızca oluşturmayı seçtiğiniz klipler saklanır ve 7 gün sonra silinir.
 
 #### Çerezler ve benzer teknolojiler
 

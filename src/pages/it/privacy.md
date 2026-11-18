@@ -3,7 +3,7 @@ title: 'Informativa sulla privacy'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Ultimo aggiornamento_: 15 novembre 2026
+_Ultimo aggiornamento_: 18 novembre 2026
 
 La presente Informativa sulla privacy descrive le nostre pratiche di raccolta, utilizzo e protezione dei tuoi dati personali quando utilizzi il servizio **AeroX**.  
 Spiega inoltre i tuoi diritti e come la legge ti tutela.
@@ -51,6 +51,14 @@ Raccolti automaticamente, possono includere:
 - tipo e versione del browser,
 - pagine visitate e durata delle visite,
 - informazioni relative al dispositivo.
+
+#### Immagini della videocamera
+
+Durante una sessione, l’immagine della tua videocamera viene analizzata sul tuo computer per misurare la tua posizione. Ciò che viene salvato sui nostri server dipende dal tipo di sessione:
+
+- **Sessioni di allenamento**: dal 18 novembre 2026 nessuna immagine (foto o silhouette) viene salvata. Le immagini salvate in precedenza sono conservate per migliorare la precisione delle misure; puoi chiederne la cancellazione a contact@aeroxbefaster.com.
+- **Diagnostica AeroX e bike fitting**: le foto e le silhouette delle posizioni misurate vengono salvate per redigere e conservare il report e migliorare la precisione delle misure. Sono accessibili a te e, per un fitting, al bike fitter che lo ha eseguito.
+- **Clip video**: vengono salvate solo le clip che scegli di creare, e vengono eliminate dopo 7 giorni.
 
 #### Cookie e tecnologie simili
 

@@ -3,7 +3,7 @@ title: 'Política de Privacidade'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
-_Última atualização_: 15 de novembro de 2026
+_Última atualização_: 18 de novembro de 2026
 
 Esta Política de Privacidade descreve nossas práticas de coleta, uso e proteção dos seus dados pessoais quando você usa o serviço **AeroX**.  
 Ela também explica os seus direitos e como a lei protege você.
@@ -51,6 +51,14 @@ Coletados automaticamente, podem incluir:
 - tipo e versão do navegador,
 - páginas visitadas e duração das visitas,
 - informações relacionadas ao dispositivo.
+
+#### Imagens da câmera
+
+Durante uma sessão, a imagem da sua câmera é analisada no seu computador para medir sua posição. O que é armazenado em nossos servidores depende do tipo de sessão:
+
+- **Sessões de treino**: desde 18 de novembro de 2026, nenhuma imagem (foto ou silhueta) é armazenada. As imagens armazenadas antes são mantidas para melhorar a precisão das medições; você pode solicitar a exclusão delas em contact@aeroxbefaster.com.
+- **Diagnóstico AeroX e bike fitting**: as fotos e silhuetas das posições medidas são armazenadas para elaborar e manter o relatório e melhorar a precisão das medições. Elas ficam acessíveis a você e, em um fitting, ao bike fitter que o realizou.
+- **Clipes de vídeo**: somente os clipes que você decide criar são armazenados, e são excluídos após 7 dias.
 
 #### Cookies e tecnologias semelhantes
 
