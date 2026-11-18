@@ -111,6 +111,8 @@ Wir verkaufen Ihre personenbezogenen Daten niemals.
 
 ## Übermittlung Ihrer Daten
 
+Die Daten der App (Konto, Einheiten, Positionen, Bilder) werden von Supabase in der Europäischen Union gehostet (Region Paris, Frankreich).
+
 Ihre Daten können außerhalb der Europäischen Union verarbeitet werden (z. B.: Cloud-Dienste, Zahlungsdienstleister).
 In diesem Fall stellen wir sicher, dass geeignete Garantien (Standardvertragsklauseln, DSGVO-Konformität) vorhanden sind.
 
@@ -136,7 +138,7 @@ AeroX betreibt ein eigenes professionelles Instagram-Konto, **@aerox_befaster**,
 
 ## Herkunft Ihrer Anmeldung
 
-Wenn Sie sich auf unserer Website anmelden (Buch, CdA-Rechner, AeroX-Anmeldung, Kontaktformular), speichern wir zusammen mit Ihrer Anmeldung in unserem E-Mail-Tool MailerLite, wie Sie bei diesem Besuch auf die Website gekommen sind: über einen Link, den wir Ihnen geschickt haben (Direktnachricht oder Link in der Instagram-Bio, mit dem betreffenden Beitrag), oder die Art der Website, von der Sie kamen (zum Beispiel „google“, „instagram“, „chatgpt“ oder „direct“). Wir speichern weder die vollständige Adresse der Herkunftsseite noch Ihren Browserverlauf, und dafür wird nichts auf Ihrem Gerät gespeichert: Die Information besteht nur für die Dauer des Besuchs.
+Wenn Sie sich auf unserer Website anmelden (Buch, Aero-Rechner, AeroX-Anmeldung, Kontaktformular), speichern wir zusammen mit Ihrer Anmeldung in unserem E-Mail-Tool MailerLite, wie Sie bei diesem Besuch auf die Website gekommen sind: über einen Link, den wir Ihnen geschickt haben (Direktnachricht oder Link in der Instagram-Bio, mit dem betreffenden Beitrag), oder die Art der Website, von der Sie kamen (zum Beispiel „google“, „instagram“, „chatgpt“ oder „direct“). Wir speichern weder die vollständige Adresse der Herkunftsseite noch Ihren Browserverlauf, und dafür wird nichts auf Ihrem Gerät gespeichert: Die Information besteht nur für die Dauer des Besuchs.
 
 **Zweck und Rechtsgrundlage**: zu erkennen, welche Inhalte und Kanäle Anmeldungen bringen, auf Grundlage unseres berechtigten Interesses. **Speicherdauer**: so lange wie Ihre Anmeldung. **Widerspruch**: Schreiben Sie an contact@aeroxbefaster.com, und wir entfernen diese Information.
 
@@ -144,7 +146,7 @@ Wenn Sie sich auf unserer Website anmelden (Buch, CdA-Rechner, AeroX-Anmeldung, 
 
 Die AeroX-App kann Ihre Einheiten mit zwei Trainingsplattformen von Drittanbietern austauschen, **Strava** und **Intervals.icu**. Es wird nichts ausgetauscht, solange Sie die Plattform nicht selbst unter **Konto → Verbundene Apps** verbunden haben, indem Sie AeroX auf der Website der Plattform autorisieren (OAuth).
 
-**Gesendete Datei**: Am Ende einer Einheit (automatischer Upload, abschaltbar) oder wenn Sie auf die Upload-Schaltfläche klicken, überträgt AeroX eine Aktivitätsdatei (FIT) der Einheit: Datum und Uhrzeit, Dauer, Leistung, Geschwindigkeit, Trittfrequenz, Herzfrequenz und Distanz, sekundengenau, sowie Ihre aerodynamischen Messwerte (CdA, Stirnfläche, Aero-Score, W/m²), mit einem Titel und einer kurzen Beschreibung (durchschnittlicher CdA, Zeit in Aero-Position, Score). Die Datei enthält keine GPS-Position. Ihr Video und Ihre Bilder werden nie gesendet.
+**Gesendete Datei**: Am Ende einer Einheit (automatischer Upload, abschaltbar) oder wenn Sie auf die Upload-Schaltfläche klicken, überträgt AeroX eine Aktivitätsdatei (FIT) der Einheit: Datum und Uhrzeit, Dauer, Leistung, Geschwindigkeit, Trittfrequenz, Herzfrequenz und Distanz, sekundengenau, sowie Ihre aerodynamischen Messwerte (Stirnfläche, Luftwiderstand, Aero-Score, W/m²), mit einem Titel und einer kurzen Beschreibung (durchschnittlicher Luftwiderstand, Zeit in Aero-Position, Score). Die Datei enthält keine GPS-Position. Ihr Video und Ihre Bilder werden nie gesendet.
 
 **Strava**: Wir fordern die Berechtigung an, Aktivitäten hinzuzufügen (`activity:write`) und Ihre Aktivitäten zu lesen (`activity:read_all`). Dieser Lesezugriff wird nur in zwei Fällen genutzt: Wenn Strava meldet, dass die Einheit bereits existiert (zum Beispiel auch von Zwift oder Ihrer Uhr aufgezeichnet), liest AeroX die Beschreibung dieser Aktivität und hängt seine Zusammenfassung am Ende an, ohne etwas zu ersetzen; und wenn Strava uns einen Widerruf des Zugriffs oder die Löschung einer Aktivität meldet, fragt AeroX bei Strava nach (Ihr Profil oder die Aktivität), um das Ereignis zu bestätigen, bevor etwas gelöscht wird. Nichts von dem Gelesenen wird gespeichert. Wir speichern auf unseren Servern die Kennung Ihres Strava-Kontos, die Zugriffstoken und Ihre Einstellung zum automatischen Upload; Ihren Namen speichern wir nicht. Für jede gesendete Einheit werden die Strava-Kennungen des Uploads und der Aktivität 7 Tage nach dem letzten Upload gelöscht; es bleibt nur die Information, dass die Einheit gesendet wurde, damit sie nicht doppelt gesendet wird. Wenn Sie die Aktivität auf Strava löschen, wird dieser Eintrag gelöscht und die Einheit kann erneut gesendet werden.
 

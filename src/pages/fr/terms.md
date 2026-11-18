@@ -1,12 +1,12 @@
 ---
-title: 'Conditions Générales d’Utilisation'
+title: 'Conditions Générales d’Utilisation et de Vente'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
 _Dernière mise à jour : 18 novembre 2026_
 
 Merci d’utiliser **AeroX**, la solution qui transforme ton home-trainer en soufflerie virtuelle.  
-Ces Conditions Générales d’Utilisation (CGU) encadrent l’accès et l’usage du service AeroX.  
+Ces Conditions Générales d’Utilisation et de Vente (CGU) encadrent l’accès au service AeroX, son usage et les achats qui s’y rattachent.  
 En créant un compte ou en utilisant AeroX, tu acceptes pleinement ces conditions.
 
 ---
@@ -67,6 +67,7 @@ Les présentes CGU définissent les droits et obligations d’AeroX et de l’Ut
 Cet article s’applique aux comptes bike fitter. En cas de contradiction, il prévaut sur les articles 4 et 11.
 
 - **Offres** : **Essentiel**, 20 € HT par mois, plus 15 € HT par analyse, facturées à la fin de chaque période mensuelle ; **Illimité**, 99 € HT par mois ou 990 € HT par an. **Offre de lancement**, réservée aux 20 premiers studios et souscrite au plus tard le 31 décembre 2026 : l’Illimité à 69 € HT par mois jusqu’au 31 décembre 2026 puis 99 € HT par mois, ou 690 € HT la première année puis 990 € HT par an. Les prix sont hors taxes ; la TVA est appliquée selon la réglementation en vigueur.
+- **Licence par studio** : un abonnement bike fitter (licence) vaut pour **un seul studio**, c’est-à-dire un seul lieu d’exercice. Un bike fitter qui exerce dans plusieurs studios souscrit une licence par studio. La limite d’ordinateurs de l’article 3 s’applique à chaque compte.
 - **Analyse** : un client analysé avec AeroX, décompté une fois par période glissante de 30 jours. Les nouvelles séances du même client pendant cette période ne sont pas décomptées.
 - **Souscription et installation** : le bike fitter choisit son offre et enregistre un moyen de paiement valide ; **aucun abonnement ne démarre et aucun montant n’est prélevé à ce stade**. L’abonnement démarre le jour de l’installation du setup AeroX chez le bike fitter, réalisée avec l’équipe AeroX, par un essai gratuit. Sans installation, aucun montant n’est jamais prélevé. Avant l’installation, le bike fitter peut changer d’offre ou y renoncer à tout moment depuis l’espace bike fitter (« Abandonner cette offre »).
 - **Essai gratuit** : la première souscription commence par un **essai gratuit de 14 jours, à compter du jour de l’installation**. Il est réservé aux professionnels, à raison d’un essai par studio. **Aucun montant n’est prélevé pendant l’essai**, et les analyses réalisées pendant l’essai ne sont pas facturées.
@@ -75,9 +76,27 @@ Cet article s’applique aux comptes bike fitter. En cas de contradiction, il pr
 - **Résilier pendant l’essai** : à tout moment avant la fin de l’essai, depuis l’espace bike fitter (« Résilier l’essai »). Aucun montant n’est alors prélevé, et l’accès reste ouvert jusqu’à la fin de l’essai.
 - **Durée et résiliation** : les abonnements sont sans engagement de durée et reconduits tacitement par période (mois ou année). Ils se résilient à tout moment depuis l’espace bike fitter ; la résiliation prend effet à la fin de la période en cours, déjà payée, sans remboursement au prorata.
 - **Changement d’offre** : le passage à une offre supérieure est immédiat, la différence étant calculée au prorata ; le passage à une offre inférieure prend effet à la fin de la période en cours.
-- **Défaut de paiement** : en cas d’échec de paiement, l’accès est maintenu 7 jours ; au-delà, le compte passe en lecture seule jusqu’à régularisation. Les sommes dues restent exigibles.
+- **Défaut de paiement** : en cas d’échec de paiement, l’accès est maintenu 7 jours ; au-delà, le compte passe en lecture seule jusqu’à régularisation. Les sommes dues restent exigibles. Conformément à l’article L441-10 du Code de commerce, tout retard de paiement entraîne de plein droit, sans rappel préalable, des pénalités de retard calculées au taux d’intérêt appliqué par la Banque centrale européenne à son opération de refinancement la plus récente, majoré de 10 points, ainsi qu’une indemnité forfaitaire pour frais de recouvrement de 40 € (article D441-5 du même code).
 - **Factures** : disponibles dans l’espace bike fitter (« Gérer ma facturation »).
+- **Exclusivité et accords particuliers** : les présentes CGU n’accordent aucune exclusivité, territoriale ou autre. Une exclusivité ou des conditions particulières ne peuvent résulter que d’un avenant écrit signé par AeroX et le bike fitter ; pour ce qu’il règle, cet avenant prévaut sur les présentes CGU.
 - **Professionnels** : les offres bike fitter sont réservées aux professionnels agissant pour les besoins de leur activité ; le droit de rétractation prévu pour les consommateurs ne s’applique pas.
+
+---
+
+## 5 ter. Données des clients du bike fitter (sous-traitance)
+
+Cet article constitue le contrat de sous-traitance prévu à l’article 28 du Règlement (UE) 2016/679 (RGPD) entre le bike fitter, responsable du traitement des données de ses clients, et AeroX, sous-traitant.
+
+- **Objet et durée** : AeroX traite les données des clients du bike fitter pour lui fournir le Service (mesure et comparaison des positions, rapports de fitting), pendant toute la durée de son abonnement.
+- **Données et personnes concernées** : les clients du bike fitter ; leurs identité et coordonnées saisies par le bike fitter, leurs données morphologiques (taille, poids), leurs mesures (surface frontale, scores, puissance, vitesse), les photos et silhouettes de leurs positions mesurées, ainsi que les notes du bike fitter.
+- **Instructions** : AeroX ne traite ces données que sur instruction documentée du bike fitter, constituée par les présentes CGU et son utilisation du Service. AeroX l’informe si une instruction lui paraît contraire à la réglementation.
+- **Amélioration des mesures** : le bike fitter autorise AeroX à utiliser les photos et silhouettes des positions mesurées, sous forme pseudonymisée, pour améliorer la précision des mesures. Pour ce traitement, AeroX agit en tant que responsable de traitement ; le bike fitter en informe ses clients.
+- **Confidentialité et sécurité** : les personnes autorisées à traiter ces données sont tenues à la confidentialité. AeroX met en œuvre des mesures de sécurité appropriées (article 32 du RGPD), notamment le chiffrement des échanges, un accès limité au compte du bike fitter et l’hébergement des données dans l’Union européenne.
+- **Sous-traitants ultérieurs** : le bike fitter autorise AeroX à recourir à des sous-traitants ultérieurs, notamment Supabase pour l’hébergement de la base de données et des fichiers (Union européenne, région de Paris). AeroX informe le bike fitter par e-mail de tout ajout ou remplacement ; le bike fitter peut s’y opposer en résiliant son abonnement.
+- **Assistance** : AeroX aide le bike fitter à répondre aux demandes d’exercice des droits de ses clients et à respecter ses obligations de sécurité et d’analyse d’impact. Il lui notifie toute violation de données dans les meilleurs délais, et au plus tard 48 heures après en avoir pris connaissance.
+- **Fin du contrat** : à la fin de l’abonnement, et sur demande du bike fitter à contact@aeroxbefaster.com, AeroX supprime les données de ses clients ou les lui restitue, dans un délai de 30 jours, sauf obligation légale de conservation.
+- **Audit** : AeroX met à la disposition du bike fitter les informations nécessaires pour démontrer le respect de cet article et permet des audits, sur demande écrite adressée 30 jours à l’avance, aux frais du bike fitter.
+- **Obligations du bike fitter** : il informe ses clients du traitement de leurs données, en particulier des photos de leurs positions, et dispose d’une base légale pour ce traitement.
 
 ---
 
@@ -85,6 +104,7 @@ Cet article s’applique aux comptes bike fitter. En cas de contradiction, il pr
 
 - AeroX fournit une analyse en temps réel de l’aérodynamisme via webcam et home-trainer connecté.
 - AeroX ne garantit pas une disponibilité permanente du service (maintenance, mises à jour, évolutions).
+- **Pas un dispositif médical** : AeroX est un outil d’entraînement et d’analyse de la position à visée sportive. Ce n’est pas un dispositif médical : il ne pose aucun diagnostic médical (le « Diagnostic AeroX » est une analyse sportive), ne prévient ni ne traite aucune maladie ou blessure, et ne remplace pas l’avis d’un professionnel de santé.
 - L’Utilisateur est responsable de son matériel (home-trainer, vélo, caméra, ordinateur).
 
 ---
@@ -102,7 +122,7 @@ L’Utilisateur s’engage à :
 
 ## 8. Propriété intellectuelle et protection du logiciel
 
-- **Titularité des droits** : le logiciel AeroX (applications de bureau macOS et Windows, application web et mobile compagnon, dans toutes leurs versions et mises à jour), ses modèles d’intelligence artificielle (notamment les modèles de segmentation et d’estimation de pose, leurs poids, leurs architectures entraînées et leurs paramètres), les jeux de données d’entraînement, les algorithmes de calcul (surface frontale, CdA, calibration), la documentation, les marques, logos et dénominations AeroX ainsi que les contenus du site et de l’application appartiennent exclusivement à la SAS AeroX, titulaire de l’ensemble des droits de propriété intellectuelle qui s’y rattachent. Les données personnelles de l’Utilisateur ne sont pas visées : elles relèvent de l’article 12.
+- **Titularité des droits** : le logiciel AeroX (applications de bureau macOS et Windows, application web et mobile compagnon, dans toutes leurs versions et mises à jour), ses modèles d’intelligence artificielle (notamment les modèles de segmentation et d’estimation de pose, leurs poids, leurs architectures entraînées et leurs paramètres), les jeux de données d’entraînement, les algorithmes de calcul (surface frontale, calibration), la documentation, les marques, logos et dénominations AeroX ainsi que les contenus du site et de l’application appartiennent exclusivement à la SAS AeroX, titulaire de l’ensemble des droits de propriété intellectuelle qui s’y rattachent. Les données personnelles de l’Utilisateur ne sont pas visées : elles relèvent de l’article 12.
 - **Licences** : sous réserve du respect des présentes CGU, l’Utilisateur bénéficie, selon le type de son Compte, de l’une des deux licences suivantes. Chacune est non exclusive, non cessible et non sous-licenciable, et limitée à l’utilisation de l’application dans le cadre prévu par les présentes CGU, pour la durée de l’abonnement ou de l’achat correspondant :
   - **Licence Rider** (compte cycliste) : un droit d’utilisation personnel et non commercial, attaché au Compte de l’Utilisateur ;
   - **Licence Bike Fitter** (compte bike fitter) : un droit d’utilisation professionnel, attaché au compte bike fitter, limité à l’analyse de ses propres clients dans le cadre de son activité de bike fitting. Le bike fitter peut remettre à ses clients les rapports et résultats produits pour eux ; il ne peut ni mettre l’application ou les modèles à la disposition de tiers, ni les revendre.
@@ -135,9 +155,10 @@ L’Utilisateur s’engage à :
 ## 10. Limitation de responsabilité
 
 - AeroX est tenu d’une obligation de moyens : il met en œuvre les moyens raisonnables pour fournir un Service fiable, sans garantir un fonctionnement ininterrompu ni exempt d’erreurs (maintenance, mises à jour, évolutions).
-- Les mesures fournies par AeroX (surface frontale, CdA, scores) sont des estimations. Leur qualité dépend aussi d’éléments qui échappent à AeroX, notamment la caméra, le matériel de l’Utilisateur (ordinateur, home-trainer, capteurs), l’éclairage et l’installation. AeroX n’est pas responsable d’une mauvaise interprétation des résultats, ni d’une utilisation du Service non conforme à sa destination ou aux présentes CGU.
+- Les mesures fournies par AeroX (surface frontale, scores) sont des estimations. Leur qualité dépend aussi d’éléments qui échappent à AeroX, notamment la caméra, le matériel de l’Utilisateur (ordinateur, home-trainer, capteurs), l’éclairage et l’installation. AeroX n’est pas responsable d’une mauvaise interprétation des résultats, ni d’une utilisation du Service non conforme à sa destination ou aux présentes CGU.
 - AeroX n’est pas responsable des dommages indirects.
 - À l’égard d’un Utilisateur professionnel, la responsabilité d’AeroX est limitée au montant payé pour la période en cours.
+- **Force majeure** : aucune partie n’est responsable d’un manquement causé par un cas de force majeure au sens de l’article 1218 du Code civil (notamment panne majeure des réseaux ou de l’hébergeur, catastrophe naturelle, décision d’une autorité). Les obligations concernées sont suspendues pendant sa durée ; si elle dure plus de 30 jours, chaque partie peut résilier le contrat par e-mail, sans indemnité.
 - **Services tiers connectés** (Strava, Intervals.icu) : ces services sont fournis par des tiers, selon leurs propres conditions. Au nom de ces tiers, toute garantie à leur égard est exclue, y compris les garanties implicites de qualité marchande, d'adéquation à un usage particulier et d'absence de contrefaçon, et ces tiers ne sont pas responsables envers l'Utilisateur des dommages indirects, consécutifs, spéciaux ou punitifs liés à l'utilisation de ces services via AeroX.
 - **Clause expresse** : aucune stipulation des présentes CGU n’a pour effet d’écarter ni de limiter la garantie légale de conformité (article 9), la garantie des vices cachés (articles 1641 et suivants du Code civil), la responsabilité d’AeroX en cas de dommage corporel, ni sa responsabilité en cas de faute lourde ou de dol.
 
@@ -155,6 +176,7 @@ L’Utilisateur s’engage à :
 
 - AeroX collecte et traite certaines données (ex. mesures sportives, email) pour fournir le Service.
 - **Images de la caméra** : pendant une séance, l’image de ta caméra est analysée sur ton ordinateur. Depuis le 18 novembre 2026, les images des séances d’entraînement (photos et silhouettes) ne sont plus enregistrées sur les serveurs d’AeroX ; celles enregistrées auparavant sont conservées pour améliorer la précision des mesures, et tu peux en demander la suppression à contact@aeroxbefaster.com. Seules les images prises pendant un Diagnostic AeroX ou un fitting (photos et silhouettes des positions mesurées) sont stockées, pour établir et conserver le rapport et améliorer la précision des mesures. Les clips vidéo que tu choisis de créer sont stockés à part et supprimés au bout de 7 jours.
+- **Données des clients d’un bike fitter** : voir l’article 5 ter.
 - Ces données sont traitées conformément à la [Politique de Confidentialité](/fr/privacy/).
 
 ---

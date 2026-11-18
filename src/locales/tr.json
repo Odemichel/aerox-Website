@@ -335,7 +335,7 @@
   "signup.rgpd.linkText": "Gizlilik Politikası",
   "signup.rgpd.link": "/tr/privacy/",
   "signup.cgv.text": "Kabul ediyorum: ",
-  "signup.cgv.linkText": "Kullanım Koşulları",
+  "signup.cgv.linkText": "Kullanım ve Satış Koşulları",
   "signup.cgv.link": "/tr/terms/",
   "signup.submit": "Hesabımı oluştur",
   "signup.errors.invalidEmail": "Geçersiz e-posta adresi.",

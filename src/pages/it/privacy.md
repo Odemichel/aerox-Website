@@ -111,6 +111,8 @@ Non vendiamo mai i tuoi dati personali.
 
 ## Trasferimento dei tuoi dati
 
+I dati dell’app (account, sessioni, posizioni, immagini) sono ospitati da Supabase nell’Unione europea (regione di Parigi, Francia).
+
 I tuoi dati possono essere trattati al di fuori dell'Unione europea (ad esempio: servizi cloud, fornitori di pagamento).  
 In tali casi, garantiamo l'adozione di garanzie adeguate (clausole contrattuali tipo, conformità al GDPR).
 
@@ -136,7 +138,7 @@ AeroX gestisce il proprio account professionale Instagram, **@aerox_befaster**, 
 
 ## Origine della tua iscrizione
 
-Quando ti iscrivi sul nostro sito (libro, calcolatore di CdA, iscrizione AeroX, modulo di contatto), registriamo insieme alla tua iscrizione, nel nostro strumento di e-mailing MailerLite, come sei arrivato sul sito durante quella visita: un link che ti abbiamo inviato (messaggio privato o link nella bio di Instagram, con il post interessato) o il tipo di sito da cui provenivi (per esempio «google», «instagram», «chatgpt» o «direct»). Non registriamo l’indirizzo completo della pagina di provenienza né la tua cronologia di navigazione, e per questo non viene salvato nulla sul tuo dispositivo: l’informazione esiste solo per la durata della visita.
+Quando ti iscrivi sul nostro sito (libro, calcolatore aero, iscrizione AeroX, modulo di contatto), registriamo insieme alla tua iscrizione, nel nostro strumento di e-mailing MailerLite, come sei arrivato sul sito durante quella visita: un link che ti abbiamo inviato (messaggio privato o link nella bio di Instagram, con il post interessato) o il tipo di sito da cui provenivi (per esempio «google», «instagram», «chatgpt» o «direct»). Non registriamo l’indirizzo completo della pagina di provenienza né la tua cronologia di navigazione, e per questo non viene salvato nulla sul tuo dispositivo: l’informazione esiste solo per la durata della visita.
 
 **Finalità e base giuridica**: sapere quali contenuti e canali portano iscrizioni, sulla base del nostro legittimo interesse. **Conservazione**: per tutta la durata della tua iscrizione. **Opposizione**: scrivi a contact@aeroxbefaster.com e rimuoveremo questa informazione.
 
@@ -144,7 +146,7 @@ Quando ti iscrivi sul nostro sito (libro, calcolatore di CdA, iscrizione AeroX, 
 
 L'app AeroX può scambiare le tue sessioni con due piattaforme di allenamento di terze parti, **Strava** e **Intervals.icu**. Non viene scambiato nulla finché non colleghi tu stesso la piattaforma da **Account → App collegate**, autorizzando AeroX sul sito della piattaforma (OAuth).
 
-**File inviato**: alla fine di una sessione (invio automatico, disattivabile) o quando clicchi sul pulsante di invio, AeroX trasmette un file di attività (FIT) della sessione: data e ora, durata, potenza, velocità, cadenza, frequenza cardiaca e distanza, secondo per secondo, oltre alle tue misure aerodinamiche (CdA, superficie frontale, punteggio aero, W/m²), con un titolo e una breve descrizione (CdA medio, tempo in posizione aero, punteggio). Il file non contiene alcuna posizione GPS. Il tuo video e le tue immagini non vengono mai inviati.
+**File inviato**: alla fine di una sessione (invio automatico, disattivabile) o quando clicchi sul pulsante di invio, AeroX trasmette un file di attività (FIT) della sessione: data e ora, durata, potenza, velocità, cadenza, frequenza cardiaca e distanza, secondo per secondo, oltre alle tue misure aerodinamiche (superficie frontale, resistenza aerodinamica, punteggio aero, W/m²), con un titolo e una breve descrizione (resistenza aerodinamica media, tempo in posizione aero, punteggio). Il file non contiene alcuna posizione GPS. Il tuo video e le tue immagini non vengono mai inviati.
 
 **Strava**: chiediamo il permesso di aggiungere attività (`activity:write`) e di leggere le tue attività (`activity:read_all`). Questa lettura serve solo in due casi: quando Strava segnala che la sessione esiste già (ad esempio registrata anche da Zwift o dal tuo orologio), AeroX legge la descrizione di quell'attività e vi aggiunge il suo riepilogo in fondo, senza sostituire nulla; e quando Strava ci notifica una revoca dell'accesso o l'eliminazione di un'attività, AeroX interroga Strava (il tuo profilo o l'attività) per confermare l'evento prima di cancellare qualsiasi cosa. Nulla di ciò che viene letto è conservato. Conserviamo sui nostri server l'identificativo del tuo account Strava, i token di accesso e la tua impostazione di invio automatico; non conserviamo il tuo nome. Per ogni sessione inviata, gli identificativi Strava dell'invio e dell'attività sono cancellati 7 giorni dopo l'ultimo invio; resta solo il fatto che la sessione è stata inviata, per non inviarla due volte. Se elimini l'attività su Strava, questa traccia viene cancellata e la sessione può essere inviata di nuovo.
 

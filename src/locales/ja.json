@@ -335,7 +335,7 @@
   "signup.rgpd.linkText": "プライバシーポリシー",
   "signup.rgpd.link": "/ja/privacy/",
   "signup.cgv.text": "以下に同意します：",
-  "signup.cgv.linkText": "利用規約",
+  "signup.cgv.linkText": "利用・販売規約",
   "signup.cgv.link": "/ja/terms/",
   "signup.submit": "アカウントを作成",
   "signup.errors.invalidEmail": "無効なメールアドレスです。",

@@ -111,6 +111,8 @@ We never sell your personal data.
 
 ## Transfer of Your Data
 
+App data (account, sessions, positions, images) is hosted by Supabase in the European Union (Paris region, France).
+
 Your data may be processed outside the European Union (for example: cloud services, payment providers).  
 In such cases, we ensure appropriate safeguards (standard contractual clauses, GDPR compliance) are in place.
 
@@ -136,7 +138,7 @@ AeroX runs its own Instagram professional account, **@aerox_befaster**, with an 
 
 ## Origin of Your Sign-up
 
-When you sign up on our website (book, CdA calculator, AeroX sign-up, contact form), we record with your sign-up, in our e-mailing tool MailerLite, how you arrived on the site during that visit: a link we sent you (private message or Instagram bio link, with the post concerned) or the kind of site you came from (for example “google”, “instagram”, “chatgpt” or “direct”). We do not record the full address of the page you came from or your browsing history, and nothing is stored on your device for this: the information only exists for the duration of the visit.
+When you sign up on our website (book, aero calculator, AeroX sign-up, contact form), we record with your sign-up, in our e-mailing tool MailerLite, how you arrived on the site during that visit: a link we sent you (private message or Instagram bio link, with the post concerned) or the kind of site you came from (for example “google”, “instagram”, “chatgpt” or “direct”). We do not record the full address of the page you came from or your browsing history, and nothing is stored on your device for this: the information only exists for the duration of the visit.
 
 **Purpose and legal basis**: knowing which content and channels bring sign-ups, based on our legitimate interest. **Retention**: as long as your sign-up. **Objection**: write to contact@aeroxbefaster.com and we will remove this information.
 
@@ -144,7 +146,7 @@ When you sign up on our website (book, CdA calculator, AeroX sign-up, contact fo
 
 The AeroX app can exchange your sessions with two third-party training platforms, **Strava** and **Intervals.icu**. Nothing is exchanged until you connect the platform yourself from **Account → Connected apps**, by authorizing AeroX on the platform's own website (OAuth).
 
-**File sent**: at the end of a session (automatic upload, which you can turn off) or when you click the upload button, AeroX sends an activity file (FIT) of the session: date and time, duration, power, speed, cadence, heart rate and distance, second by second, plus your aerodynamic measurements (CdA, frontal area, aero score, W/m²), with a title and a short description (average CdA, time in aero position, score). The file contains no GPS location. Your video and images are never sent.
+**File sent**: at the end of a session (automatic upload, which you can turn off) or when you click the upload button, AeroX sends an activity file (FIT) of the session: date and time, duration, power, speed, cadence, heart rate and distance, second by second, plus your aerodynamic measurements (frontal area, aerodynamic drag, aero score, W/m²), with a title and a short description (average aerodynamic drag, time in aero position, score). The file contains no GPS location. Your video and images are never sent.
 
 **Strava**: we request permission to add activities (`activity:write`) and to read your activities (`activity:read_all`). This read access is used in two cases only: when Strava reports that the session already exists (for example also recorded by Zwift or your watch), AeroX reads that activity's description and appends its summary at the end, without replacing anything; and when Strava notifies us of a revoked access or a deleted activity, AeroX queries Strava (your profile or the activity) to confirm the event before deleting anything. Nothing that is read is stored. We keep on our servers your Strava account ID, the access tokens and your automatic upload setting; we do not store your name. For each session sent, the Strava upload and activity IDs are erased 7 days after the last upload; only the fact that the session was sent remains, so that it is not sent twice. If you delete the activity on Strava, this record is erased and the session can be sent again.
 

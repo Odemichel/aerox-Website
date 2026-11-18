@@ -370,7 +370,7 @@
   "signup.rgpd.linkText": "Privacy Policy",
   "signup.rgpd.link": "/en/privacy/",
   "signup.cgv.text": "I accept the ",
-  "signup.cgv.linkText": "Terms and Conditions",
+  "signup.cgv.linkText": "Terms of Use and Sale",
   "signup.cgv.link": "/en/terms/",
   "signup.submit": "Create my account",
   "signup.errors.invalidEmail": "Invalid email address.",

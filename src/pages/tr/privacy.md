@@ -111,6 +111,8 @@ Kişisel verilerinizi asla satmayız.
 
 ## Verilerinizin Aktarılması
 
+Uygulama verileri (hesap, seanslar, pozisyonlar, görüntüler) Supabase tarafından Avrupa Birliği'nde (Paris bölgesi, Fransa) barındırılır.
+
 Verileriniz Avrupa Birliği dışında işlenebilir (örneğin: bulut hizmetleri, ödeme hizmet sağlayıcıları).
 Bu durumda, uygun güvencelerin (standart sözleşme maddeleri, GDPR uyumluluğu) mevcut olmasını sağlarız.
 
@@ -136,7 +138,7 @@ AeroX, kendi profesyonel Instagram hesabı **@aerox_befaster**'ı, Instagram API
 
 ## Kaydınızın Kaynağı
 
-Web sitemizde kayıt olduğunuzda (kitap, CdA hesaplayıcı, AeroX kaydı, iletişim formu), kaydınızla birlikte e-posta aracımız MailerLite'ta bu ziyarette siteye nasıl geldiğinizi kaydederiz: size gönderdiğimiz bir bağlantı (özel mesaj veya Instagram bio bağlantısı, ilgili gönderiyle birlikte) ya da geldiğiniz sitenin türü (örneğin “google”, “instagram”, “chatgpt” veya “direct”). Geldiğiniz sayfanın tam adresini veya tarama geçmişinizi kaydetmeyiz ve bunun için cihazınızda hiçbir şey saklanmaz: bilgi yalnızca ziyaret süresince vardır.
+Web sitemizde kayıt olduğunuzda (kitap, aero hesaplayıcı, AeroX kaydı, iletişim formu), kaydınızla birlikte e-posta aracımız MailerLite'ta bu ziyarette siteye nasıl geldiğinizi kaydederiz: size gönderdiğimiz bir bağlantı (özel mesaj veya Instagram bio bağlantısı, ilgili gönderiyle birlikte) ya da geldiğiniz sitenin türü (örneğin “google”, “instagram”, “chatgpt” veya “direct”). Geldiğiniz sayfanın tam adresini veya tarama geçmişinizi kaydetmeyiz ve bunun için cihazınızda hiçbir şey saklanmaz: bilgi yalnızca ziyaret süresince vardır.
 
 **Amaç ve hukuki dayanak**: hangi içeriklerin ve kanalların kayıt getirdiğini bilmek, meşru menfaatimize dayanarak. **Saklama süresi**: kaydınız sürdüğü müddetçe. **İtiraz**: contact@aeroxbefaster.com adresine yazın, bu bilgiyi kaldıralım.
 
@@ -144,7 +146,7 @@ Web sitemizde kayıt olduğunuzda (kitap, CdA hesaplayıcı, AeroX kaydı, ileti
 
 AeroX uygulaması seanslarınızı iki üçüncü taraf antrenman platformuyla, **Strava** ve **Intervals.icu** ile paylaşabilir. Platformu **Hesap → Bağlı uygulamalar** bölümünden, AeroX'e platformun web sitesinde yetki vererek (OAuth) kendiniz bağlamadığınız sürece hiçbir veri paylaşılmaz.
 
-**Gönderilen dosya**: Bir seansın sonunda (kapatılabilen otomatik yükleme) veya yükleme düğmesine tıkladığınızda AeroX, seansın etkinlik dosyasını (FIT) iletir: tarih ve saat, süre, güç, hız, kadans, kalp atış hızı ve mesafe (saniye saniye) ile aerodinamik ölçümleriniz (CdA, ön yüzey alanı, aero puanı, W/m²); bir başlık ve kısa bir açıklama eklenir (ortalama CdA, aero pozisyonda geçen süre, puan). Dosyada GPS konumu yoktur. Videonuz ve görüntüleriniz asla gönderilmez.
+**Gönderilen dosya**: Bir seansın sonunda (kapatılabilen otomatik yükleme) veya yükleme düğmesine tıkladığınızda AeroX, seansın etkinlik dosyasını (FIT) iletir: tarih ve saat, süre, güç, hız, kadans, kalp atış hızı ve mesafe (saniye saniye) ile aerodinamik ölçümleriniz (ön yüzey alanı, aerodinamik direnç, aero puanı, W/m²); bir başlık ve kısa bir açıklama eklenir (ortalama aerodinamik direnç, aero pozisyonda geçen süre, puan). Dosyada GPS konumu yoktur. Videonuz ve görüntüleriniz asla gönderilmez.
 
 **Strava**: Etkinlik ekleme (`activity:write`) ve etkinliklerinizi okuma (`activity:read_all`) iznini isteriz. Bu okuma yalnızca iki durumda kullanılır: Strava seansın zaten var olduğunu bildirdiğinde (örneğin Zwift veya saatiniz tarafından da kaydedildiyse) AeroX o etkinliğin açıklamasını okur ve hiçbir şeyi değiştirmeden özetini sonuna ekler; Strava bize erişimin iptal edildiğini veya bir etkinliğin silindiğini bildirdiğinde ise AeroX herhangi bir şeyi silmeden önce olayı doğrulamak için Strava'ya (profilinize veya etkinliğe) sorar. Okunan hiçbir şey saklanmaz. Sunucularımızda Strava hesap kimliğinizi, erişim belirteçlerini ve otomatik yükleme ayarınızı saklarız; adınızı saklamayız. Gönderilen her seans için yüklemenin ve etkinliğin Strava kimlikleri son gönderimden 7 gün sonra silinir; seansın iki kez gönderilmemesi için yalnızca gönderildiği bilgisi kalır. Etkinliği Strava'da silerseniz bu kayıt da silinir ve seans yeniden gönderilebilir.
 

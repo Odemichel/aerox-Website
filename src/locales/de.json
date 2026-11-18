@@ -335,7 +335,7 @@
   "signup.rgpd.linkText": "Datenschutzrichtlinie",
   "signup.rgpd.link": "/de/privacy/",
   "signup.cgv.text": "Ich akzeptiere die ",
-  "signup.cgv.linkText": "Allgemeinen Geschäftsbedingungen",
+  "signup.cgv.linkText": "Allgemeinen Nutzungs- und Verkaufsbedingungen",
   "signup.cgv.link": "/de/terms/",
   "signup.submit": "Konto erstellen",
   "signup.errors.invalidEmail": "Ungültige E-Mail-Adresse.",

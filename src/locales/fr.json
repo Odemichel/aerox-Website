@@ -376,7 +376,7 @@
   "signup.rgpd.linkText": "politique de confidentialité",
   "signup.rgpd.link": "/fr/privacy/",
   "signup.cgv.text": "J’accepte les ",
-  "signup.cgv.linkText": "Conditions Générales de Vente",
+  "signup.cgv.linkText": "Conditions Générales d’Utilisation et de Vente",
   "signup.cgv.link": "/fr/terms/",
   "signup.submit": "Créer mon compte",
   "signup.errors.invalidEmail": "Email invalide.",

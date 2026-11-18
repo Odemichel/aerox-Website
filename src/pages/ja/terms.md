@@ -1,16 +1,16 @@
 ---
-title: '利用規約'
+title: '利用・販売規約'
 layout: '~/layouts/MarkdownLayout.astro'
 ---
 
 <div lang="en">
 
-> **Courtesy translation.** These Terms of Use are provided in English for information purposes only. Only the [French version](/fr/terms/) is legally binding and prevails in the event of any discrepancy.
+> **Courtesy translation.** These Terms of Use and Sale are provided in English for information purposes only. Only the [French version](/fr/terms/) is legally binding and prevails in the event of any discrepancy.
 
 _Last updated: November 18, 2026_
 
 Thank you for using **AeroX**, the solution that turns your home trainer into a virtual wind tunnel.  
-These Terms of Use govern access to and use of the AeroX service.  
+These Terms of Use and Sale govern access to the AeroX service, its use and related purchases.  
 By creating an account or using AeroX, you fully accept these terms.
 
 ---
@@ -71,6 +71,7 @@ These Terms of Use define the rights and obligations of AeroX and the User regar
 This section applies to bike fitter accounts. Where it conflicts with sections 4 and 11, it prevails.
 
 - **Plans**: **Essential**, €20 excl. VAT per month plus €15 excl. VAT per analysis, billed at the end of each monthly period; **Unlimited**, €99 excl. VAT per month or €990 excl. VAT per year. **Launch offer**, reserved for the first 20 studios and subscribed by 31 December 2026: Unlimited at €69 excl. VAT per month until 31 December 2026, then €99 excl. VAT per month, or €690 excl. VAT for the first year, then €990 excl. VAT per year. Prices exclude taxes; VAT is applied under the rules in force.
+- **One licence per studio**: a bike fitter subscription (licence) covers **a single studio**, i.e. a single place of business. A bike fitter working in several studios takes out one licence per studio. The computer limit of Article 3 applies to each account.
 - **Analysis**: one client analysed with AeroX, counted once per rolling 30-day period. Further sessions with the same client during that period are not counted.
 - **Subscription and installation**: the bike fitter chooses a plan and saves a valid payment method; **no subscription starts and nothing is charged at this stage**. The subscription starts on the day the AeroX setup is installed at the bike fitter’s premises with the AeroX team, with a free trial. Without installation, nothing is ever charged. Before installation, the bike fitter can change plan or drop it at any time from the bike fitter account (“Drop this plan”).
 - **Free trial**: the first subscription starts with a **14-day free trial, from the day of installation**. It is reserved for professionals, one trial per studio. **Nothing is charged during the trial**, and analyses made during the trial are not billed.
@@ -79,9 +80,27 @@ This section applies to bike fitter accounts. Where it conflicts with sections 4
 - **Cancelling during the trial**: at any time before the trial ends, from the bike fitter account (“Cancel the trial”). Nothing is then charged, and access remains open until the end of the trial.
 - **Term and cancellation**: subscriptions have no minimum term and renew automatically for each period (month or year). They can be cancelled at any time from the bike fitter account; cancellation takes effect at the end of the current, already paid period, with no prorated refund.
 - **Changing plans**: moving to a higher plan is immediate, with the difference prorated; moving to a lower plan takes effect at the end of the current period.
-- **Failed payment**: if a payment fails, access is kept for 7 days; after that, the account becomes read-only until payment is made. Amounts due remain payable.
+- **Failed payment**: if a payment fails, access is kept for 7 days; after that, the account becomes read-only until payment is made. Amounts due remain payable. In accordance with Article L441-10 of the French Commercial Code, any late payment automatically incurs, without prior reminder, late-payment penalties at the interest rate applied by the European Central Bank to its most recent refinancing operation plus 10 percentage points, as well as a fixed compensation for recovery costs of €40 (Article D441-5 of the same code).
 - **Invoices**: available in the bike fitter account (“Manage billing”).
+- **Exclusivity and specific agreements**: these Terms grant no exclusivity, territorial or otherwise. Exclusivity or specific conditions can only result from a written amendment signed by AeroX and the bike fitter; for the matters it covers, that amendment prevails over these Terms.
 - **Professionals**: bike fitter plans are reserved for professionals acting for the purposes of their business; the right of withdrawal provided for consumers does not apply.
+
+---
+
+## 5b. Bike fitter clients’ data (data processing)
+
+This article constitutes the data processing agreement required by Article 28 of Regulation (EU) 2016/679 (GDPR) between the bike fitter, controller of its clients’ data, and AeroX, processor.
+
+- **Subject matter and duration**: AeroX processes the bike fitter’s clients’ data to provide the Service (measuring and comparing positions, fitting reports), for the whole duration of the subscription.
+- **Data and data subjects**: the bike fitter’s clients; their identity and contact details entered by the bike fitter, morphological data (height, weight), measurements (frontal area, scores, power, speed), photos and silhouettes of their measured positions, and the bike fitter’s notes.
+- **Instructions**: AeroX processes this data only on the bike fitter’s documented instructions, consisting of these Terms and its use of the Service. AeroX informs the bike fitter if an instruction appears to infringe data protection law.
+- **Improving measurements**: the bike fitter authorises AeroX to use photos and silhouettes of measured positions, in pseudonymised form, to improve measurement accuracy. For this processing AeroX acts as a controller; the bike fitter informs its clients.
+- **Confidentiality and security**: persons authorised to process this data are bound by confidentiality. AeroX implements appropriate security measures (Article 32 GDPR), including encrypted communications, access restricted to the bike fitter’s account and data hosting in the European Union.
+- **Sub-processors**: the bike fitter authorises AeroX to use sub-processors, including Supabase for hosting the database and files (European Union, Paris region). AeroX informs the bike fitter by email of any addition or replacement; the bike fitter may object by cancelling its subscription.
+- **Assistance**: AeroX assists the bike fitter in responding to its clients’ requests to exercise their rights and in meeting its security and impact assessment obligations. It notifies any personal data breach without undue delay, and no later than 48 hours after becoming aware of it.
+- **End of contract**: at the end of the subscription, and on the bike fitter’s request to contact@aeroxbefaster.com, AeroX deletes or returns its clients’ data within 30 days, unless retention is required by law.
+- **Audit**: AeroX makes available to the bike fitter the information needed to demonstrate compliance with this article and allows audits, on written request 30 days in advance, at the bike fitter’s expense.
+- **Bike fitter’s obligations**: the bike fitter informs its clients of the processing of their data, in particular photos of their positions, and has a legal basis for it.
 
 ---
 
@@ -89,6 +108,7 @@ This section applies to bike fitter accounts. Where it conflicts with sections 4
 
 - AeroX provides real-time aerodynamic analysis via webcam and connected home trainer.
 - AeroX does not guarantee uninterrupted service availability (maintenance, updates, improvements).
+- **Not a medical device**: AeroX is a training and position analysis tool for sports purposes. It is not a medical device: it makes no medical diagnosis (the “AeroX Diagnostic” is a sports analysis), does not prevent or treat any disease or injury, and does not replace the advice of a health professional.
 - The User is responsible for their own equipment (home trainer, bike, camera, computer).
 
 ---
@@ -106,7 +126,7 @@ The User agrees to:
 
 ## 8. Intellectual Property and Software Protection
 
-- **Ownership**: the AeroX software (macOS and Windows desktop applications, web and mobile companion application, in all their versions and updates), its artificial intelligence models (in particular the segmentation and pose estimation models, their weights, trained architectures and parameters), the training datasets, the calculation algorithms (frontal area, CdA, calibration), the documentation, the AeroX trademarks, logos and names, and the content of the website and the application belong exclusively to SAS AeroX, which holds all the related intellectual property rights. The User’s personal data is not covered: it is governed by Section 12.
+- **Ownership**: the AeroX software (macOS and Windows desktop applications, web and mobile companion application, in all their versions and updates), its artificial intelligence models (in particular the segmentation and pose estimation models, their weights, trained architectures and parameters), the training datasets, the calculation algorithms (frontal area, calibration), the documentation, the AeroX trademarks, logos and names, and the content of the website and the application belong exclusively to SAS AeroX, which holds all the related intellectual property rights. The User’s personal data is not covered: it is governed by Section 12.
 - **Licences**: subject to compliance with these Terms of Use, the User is granted, depending on the type of Account, one of the following two licences. Each is non-exclusive, non-transferable and non-sublicensable, and limited to using the application within the scope provided for by these Terms of Use, for the term of the corresponding subscription or purchase:
   - **Rider Licence** (rider account): a personal, non-commercial right of use, attached to the User’s Account;
   - **Bike Fitter Licence** (bike fitter account): a professional right of use, attached to the bike fitter account, limited to analysing their own clients as part of their bike fitting business. The bike fitter may give their clients the reports and results produced for them; they may not make the application or the models available to third parties, nor resell them.
@@ -139,9 +159,10 @@ The User agrees to:
 ## 10. Limitation of Liability
 
 - AeroX is bound by an obligation of means: it makes reasonable efforts to provide a reliable Service, without guaranteeing uninterrupted or error-free operation (maintenance, updates, improvements).
-- The measurements provided by AeroX (frontal area, CdA, scores) are estimates. Their quality also depends on factors beyond AeroX’s control, in particular the camera, the User’s equipment (computer, home trainer, sensors), lighting and setup. AeroX is not liable for any misinterpretation of the results, nor for any use of the Service that does not comply with its intended purpose or with these Terms of Use.
+- The measurements provided by AeroX (frontal area, scores) are estimates. Their quality also depends on factors beyond AeroX’s control, in particular the camera, the User’s equipment (computer, home trainer, sensors), lighting and setup. AeroX is not liable for any misinterpretation of the results, nor for any use of the Service that does not comply with its intended purpose or with these Terms of Use.
 - AeroX is not liable for indirect damage.
 - Towards a User acting as a professional, AeroX’s liability is limited to the amount paid for the current period.
+- **Force majeure**: neither party is liable for a failure caused by force majeure within the meaning of Article 1218 of the French Civil Code (including major network or hosting outages, natural disasters, decisions of public authorities). The affected obligations are suspended for its duration; if it lasts more than 30 days, either party may terminate the contract by email, without compensation.
 - **Connected third-party services** (Strava, Intervals.icu): these services are provided by third parties, under their own terms. On behalf of these third parties, all warranties regarding them are disclaimed, including implied warranties of merchantability, fitness for a particular purpose and non-infringement, and these third parties are not liable to the User for any indirect, consequential, special or punitive damages arising from the use of these services through AeroX.
 - **Express clause**: no provision of these Terms of Use excludes or limits the legal guarantee of conformity (Section 9), the warranty against hidden defects (Articles 1641 et seq. of the French Civil Code), AeroX’s liability for personal injury, or its liability for gross negligence or wilful misconduct.
 
@@ -159,6 +180,7 @@ The User agrees to:
 
 - AeroX collects and processes certain data (e.g. performance metrics, email) to provide the Service.
 - **Camera images**: during a session, your camera feed is analysed on your computer. Since November 18, 2026, images from training sessions (photos and silhouettes) are no longer stored on AeroX servers; those stored before that date are kept to improve measurement accuracy, and you can ask for their deletion at contact@aeroxbefaster.com. Only images taken during an AeroX Diagnostic or a bike fitting (photos and silhouettes of the measured positions) are stored, to produce and keep the report and to improve measurement accuracy. Video clips you choose to create are stored separately and deleted after 7 days.
+- **Bike fitter clients’ data**: see Article 5b.
 - Such data is handled in accordance with our [Privacy Policy](/ja/privacy/).
 
 ---

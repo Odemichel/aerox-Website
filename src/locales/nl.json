@@ -335,7 +335,7 @@
   "signup.rgpd.linkText": "Privacybeleid",
   "signup.rgpd.link": "/nl/privacy/",
   "signup.cgv.text": "Ik accepteer de ",
-  "signup.cgv.linkText": "Algemene Voorwaarden",
+  "signup.cgv.linkText": "Algemene Gebruiks- en Verkoopvoorwaarden",
   "signup.cgv.link": "/nl/terms/",
   "signup.submit": "Mijn account aanmaken",
   "signup.errors.invalidEmail": "Ongeldig e-mailadres.",

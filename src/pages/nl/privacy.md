@@ -111,6 +111,8 @@ Wij verkopen uw persoonsgegevens nooit.
 
 ## Overdracht van uw Gegevens
 
+De gegevens van de app (account, sessies, posities, beelden) worden door Supabase gehost in de Europese Unie (regio Parijs, Frankrijk).
+
 Uw gegevens kunnen buiten de Europese Unie worden verwerkt (bijvoorbeeld: clouddiensten, betalingsdienstverleners).
 In dat geval zorgen wij ervoor dat passende waarborgen (modelcontractbepalingen, AVG-conformiteit) aanwezig zijn.
 
@@ -136,7 +138,7 @@ AeroX beheert een eigen professioneel Instagram-account, **@aerox_befaster**, me
 
 ## Herkomst van uw inschrijving
 
-Wanneer u zich op onze website inschrijft (boek, CdA-calculator, AeroX-inschrijving, contactformulier), registreren we bij uw inschrijving, in onze e-mailtool MailerLite, hoe u tijdens dat bezoek op de site bent gekomen: via een link die wij u hebben gestuurd (privébericht of link in de Instagram-bio, met het betreffende bericht) of het soort site waar u vandaan kwam (bijvoorbeeld „google”, „instagram”, „chatgpt” of „direct”). We registreren niet het volledige adres van de pagina van herkomst of uw browsegeschiedenis, en hiervoor wordt niets op uw apparaat opgeslagen: de informatie bestaat alleen tijdens het bezoek.
+Wanneer u zich op onze website inschrijft (boek, aerocalculator, AeroX-inschrijving, contactformulier), registreren we bij uw inschrijving, in onze e-mailtool MailerLite, hoe u tijdens dat bezoek op de site bent gekomen: via een link die wij u hebben gestuurd (privébericht of link in de Instagram-bio, met het betreffende bericht) of het soort site waar u vandaan kwam (bijvoorbeeld „google”, „instagram”, „chatgpt” of „direct”). We registreren niet het volledige adres van de pagina van herkomst of uw browsegeschiedenis, en hiervoor wordt niets op uw apparaat opgeslagen: de informatie bestaat alleen tijdens het bezoek.
 
 **Doel en rechtsgrond**: weten welke inhoud en kanalen inschrijvingen opleveren, op basis van ons gerechtvaardigd belang. **Bewaartermijn**: zolang uw inschrijving bestaat. **Bezwaar**: schrijf naar contact@aeroxbefaster.com en wij verwijderen deze informatie.
 
@@ -144,7 +146,7 @@ Wanneer u zich op onze website inschrijft (boek, CdA-calculator, AeroX-inschrijv
 
 De AeroX-app kan uw sessies uitwisselen met twee trainingsplatforms van derden, **Strava** en **Intervals.icu**. Er wordt niets uitgewisseld zolang u het platform niet zelf hebt gekoppeld via **Account → Gekoppelde apps**, door AeroX toestemming te geven op de website van het platform (OAuth).
 
-**Verstuurd bestand**: aan het einde van een sessie (automatisch uploaden, uit te schakelen) of wanneer u op de uploadknop klikt, verstuurt AeroX een activiteitenbestand (FIT) van de sessie: datum en tijd, duur, vermogen, snelheid, cadans, hartslag en afstand, per seconde, plus uw aerodynamische metingen (CdA, frontaal oppervlak, aeroscore, W/m²), met een titel en een korte beschrijving (gemiddelde CdA, tijd in aerohouding, score). Het bestand bevat geen GPS-locatie. Uw video en beelden worden nooit verstuurd.
+**Verstuurd bestand**: aan het einde van een sessie (automatisch uploaden, uit te schakelen) of wanneer u op de uploadknop klikt, verstuurt AeroX een activiteitenbestand (FIT) van de sessie: datum en tijd, duur, vermogen, snelheid, cadans, hartslag en afstand, per seconde, plus uw aerodynamische metingen (frontaal oppervlak, luchtweerstand, aeroscore, W/m²), met een titel en een korte beschrijving (gemiddelde luchtweerstand, tijd in aerohouding, score). Het bestand bevat geen GPS-locatie. Uw video en beelden worden nooit verstuurd.
 
 **Strava**: we vragen het recht om activiteiten toe te voegen (`activity:write`) en om uw activiteiten te lezen (`activity:read_all`). Dit leesrecht wordt alleen in twee gevallen gebruikt: wanneer Strava meldt dat de sessie al bestaat (bijvoorbeeld ook opgenomen door Zwift of uw horloge), leest AeroX de beschrijving van die activiteit en voegt het zijn samenvatting aan het einde toe, zonder iets te vervangen; en wanneer Strava ons een intrekking van de toegang of de verwijdering van een activiteit meldt, vraagt AeroX dit na bij Strava (uw profiel of de activiteit) om de gebeurtenis te bevestigen voordat er iets wordt gewist. Niets van wat wordt gelezen, wordt opgeslagen. We bewaren op onze servers de ID van uw Strava-account, de toegangstokens en uw instelling voor automatisch uploaden; uw naam slaan we niet op. Voor elke verstuurde sessie worden de Strava-ID's van de upload en de activiteit 7 dagen na de laatste upload gewist; alleen het feit dat de sessie is verstuurd blijft bewaard, zodat ze niet twee keer wordt verstuurd. Als u de activiteit op Strava verwijdert, wordt deze registratie gewist en kan de sessie opnieuw worden verstuurd.
 
