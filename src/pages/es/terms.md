@@ -179,7 +179,7 @@ The User agrees to:
 ## 12. Personal Data
 
 - AeroX collects and processes certain data (e.g. performance metrics, email) to provide the Service.
-- **Camera images**: during a session, your camera feed is analysed on your computer. Since November 18, 2026, images from training sessions (photos and silhouettes) are no longer stored on AeroX servers; those stored before that date are kept to improve measurement accuracy, and you can ask for their deletion at contact@aeroxbefaster.com. Only images taken during an AeroX Diagnostic or a bike fitting (photos and silhouettes of the measured positions) are stored, to produce and keep the report and to improve measurement accuracy. Video clips you choose to create are stored separately and deleted after 7 days.
+- **Camera images**: during a session, your camera feed is analysed on your computer. Until April 2027, images taken during sessions (training, AeroX Diagnostic, bike fitting: photos and silhouettes) may be stored on AeroX servers to improve measurement accuracy; you can ask for their deletion at contact@aeroxbefaster.com. Images from an AeroX Diagnostic or a bike fitting are also kept to produce and keep the report. Video clips you choose to create are stored separately and deleted after 7 days.
 - **Bike fitter clients’ data**: see Article 5b.
 - Such data is handled in accordance with our [Privacy Policy](/es/privacy/).
 

@@ -56,7 +56,7 @@ Collected automatically, it may include:
 
 During a session, your camera feed is analysed on your computer to measure your position. What is stored on our servers depends on the type of session:
 
-- **Training sessions**: since November 18, 2026, no image (photo or silhouette) is stored. Images stored before that date are kept to improve measurement accuracy; you can ask for their deletion at contact@aeroxbefaster.com.
+- **All sessions (training, AeroX Diagnostic, bike fitting)**: until April 2027, images (photos and silhouettes) may be stored to improve measurement accuracy; you can ask for their deletion at contact@aeroxbefaster.com.
 - **AeroX Diagnostic and bike fitting**: photos and silhouettes of the measured positions are stored to produce and keep the report and to improve measurement accuracy. They are accessible to you and, for a fitting, to the bike fitter who performed it.
 - **Video clips**: only clips you choose to create are stored, and they are deleted after 7 days.
 

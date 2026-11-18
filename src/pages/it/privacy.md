@@ -56,7 +56,7 @@ Raccolti automaticamente, possono includere:
 
 Durante una sessione, l’immagine della tua videocamera viene analizzata sul tuo computer per misurare la tua posizione. Ciò che viene salvato sui nostri server dipende dal tipo di sessione:
 
-- **Sessioni di allenamento**: dal 18 novembre 2026 nessuna immagine (foto o silhouette) viene salvata. Le immagini salvate in precedenza sono conservate per migliorare la precisione delle misure; puoi chiederne la cancellazione a contact@aeroxbefaster.com.
+- **Tutte le sessioni (allenamento, Diagnostica AeroX, bike fitting)**: fino ad aprile 2027, possono essere salvate immagini (foto e silhouette) per migliorare la precisione delle misure; puoi chiederne la cancellazione a contact@aeroxbefaster.com.
 - **Diagnostica AeroX e bike fitting**: le foto e le silhouette delle posizioni misurate vengono salvate per redigere e conservare il report e migliorare la precisione delle misure. Sono accessibili a te e, per un fitting, al bike fitter che lo ha eseguito.
 - **Clip video**: vengono salvate solo le clip che scegli di creare, e vengono eliminate dopo 7 giorni.
 

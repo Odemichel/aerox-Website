@@ -56,7 +56,7 @@ Collectées automatiquement, elles peuvent inclure :
 
 Pendant une séance, l’image de votre caméra est analysée sur votre ordinateur pour mesurer votre position. Ce qui est enregistré sur nos serveurs dépend du type de séance :
 
-- **Séances d’entraînement** : depuis le 18 novembre 2026, aucune image (photo ou silhouette) n’est enregistrée. Les images enregistrées auparavant sont conservées pour améliorer la précision des mesures ; vous pouvez en demander la suppression à contact@aeroxbefaster.com.
+- **Toutes les séances (entraînement, Diagnostic AeroX, fitting)** : jusqu’en avril 2027, des images (photos et silhouettes) peuvent être enregistrées pour améliorer la précision des mesures ; vous pouvez en demander la suppression à contact@aeroxbefaster.com.
 - **Diagnostic AeroX et fitting** : les photos et silhouettes des positions mesurées sont enregistrées pour établir et conserver le rapport et pour améliorer la précision des mesures. Elles sont accessibles à vous et, pour un fitting, au bike fitter qui l’a réalisé.
 - **Clips vidéo** : seuls les clips que vous choisissez de créer sont stockés, et ils sont supprimés au bout de 7 jours.
 

@@ -56,7 +56,7 @@ Coletados automaticamente, podem incluir:
 
 Durante uma sessão, a imagem da sua câmera é analisada no seu computador para medir sua posição. O que é armazenado em nossos servidores depende do tipo de sessão:
 
-- **Sessões de treino**: desde 18 de novembro de 2026, nenhuma imagem (foto ou silhueta) é armazenada. As imagens armazenadas antes são mantidas para melhorar a precisão das medições; você pode solicitar a exclusão delas em contact@aeroxbefaster.com.
+- **Todas as sessões (treino, Diagnóstico AeroX, bike fitting)**: até abril de 2027, imagens (fotos e silhuetas) podem ser armazenadas para melhorar a precisão das medições; você pode solicitar a exclusão delas em contact@aeroxbefaster.com.
 - **Diagnóstico AeroX e bike fitting**: as fotos e silhuetas das posições medidas são armazenadas para elaborar e manter o relatório e melhorar a precisão das medições. Elas ficam acessíveis a você e, em um fitting, ao bike fitter que o realizou.
 - **Clipes de vídeo**: somente os clipes que você decide criar são armazenados, e são excluídos após 7 dias.
 

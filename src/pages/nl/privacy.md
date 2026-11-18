@@ -56,7 +56,7 @@ Deze worden automatisch verzameld en kunnen het volgende omvatten:
 
 Tijdens een sessie wordt het beeld van uw camera op uw computer geanalyseerd om uw positie te meten. Wat op onze servers wordt opgeslagen, hangt af van het type sessie:
 
-- **Trainingssessies**: sinds 18 november 2026 wordt geen enkel beeld (foto of silhouet) opgeslagen. Eerder opgeslagen beelden worden bewaard om de nauwkeurigheid van de metingen te verbeteren; u kunt de verwijdering ervan aanvragen via contact@aeroxbefaster.com.
+- **Alle sessies (training, AeroX-diagnose, bikefitting)**: tot april 2027 kunnen beelden (foto’s en silhouetten) worden opgeslagen om de nauwkeurigheid van de metingen te verbeteren; u kunt de verwijdering ervan aanvragen via contact@aeroxbefaster.com.
 - **AeroX-diagnose en bikefitting**: foto’s en silhouetten van de gemeten posities worden opgeslagen om het rapport op te stellen en te bewaren en de nauwkeurigheid van de metingen te verbeteren. Ze zijn toegankelijk voor u en, bij een fitting, voor de bikefitter die deze heeft uitgevoerd.
 - **Videoclips**: alleen clips die u zelf maakt worden opgeslagen, en ze worden na 7 dagen verwijderd.
 

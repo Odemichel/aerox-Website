@@ -56,7 +56,7 @@ Otomatik olarak toplanan bu veriler şunları içerebilir:
 
 Bir seans sırasında kameranızın görüntüsü, pozisyonunuzu ölçmek için bilgisayarınızda analiz edilir. Sunucularımızda saklananlar seans türüne bağlıdır:
 
-- **Antrenman seansları**: 18 Kasım 2026'dan bu yana hiçbir görüntü (fotoğraf veya siluet) saklanmaz. Daha önce saklanan görüntüler ölçüm doğruluğunu artırmak için tutulur; silinmelerini contact@aeroxbefaster.com adresinden talep edebilirsiniz.
+- **Tüm seanslar (antrenman, AeroX Teşhisi, bike fitting)**: Nisan 2027'ye kadar, ölçüm doğruluğunu artırmak için görüntüler (fotoğraflar ve siluetler) saklanabilir; silinmelerini contact@aeroxbefaster.com adresinden talep edebilirsiniz.
 - **AeroX Teşhisi ve bike fitting**: ölçülen pozisyonların fotoğrafları ve siluetleri, raporu hazırlamak ve saklamak ve ölçüm doğruluğunu artırmak için saklanır. Bunlara siz ve fitting durumunda bunu yapan bike fitter erişebilir.
 - **Video klipler**: yalnızca oluşturmayı seçtiğiniz klipler saklanır ve 7 gün sonra silinir.
 

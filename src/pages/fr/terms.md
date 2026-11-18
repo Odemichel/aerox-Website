@@ -175,7 +175,7 @@ L’Utilisateur s’engage à :
 ## 12. Données personnelles
 
 - AeroX collecte et traite certaines données (ex. mesures sportives, email) pour fournir le Service.
-- **Images de la caméra** : pendant une séance, l’image de ta caméra est analysée sur ton ordinateur. Depuis le 18 novembre 2026, les images des séances d’entraînement (photos et silhouettes) ne sont plus enregistrées sur les serveurs d’AeroX ; celles enregistrées auparavant sont conservées pour améliorer la précision des mesures, et tu peux en demander la suppression à contact@aeroxbefaster.com. Seules les images prises pendant un Diagnostic AeroX ou un fitting (photos et silhouettes des positions mesurées) sont stockées, pour établir et conserver le rapport et améliorer la précision des mesures. Les clips vidéo que tu choisis de créer sont stockés à part et supprimés au bout de 7 jours.
+- **Images de la caméra** : pendant une séance, l’image de ta caméra est analysée sur ton ordinateur. Jusqu’en avril 2027, des images prises pendant les séances (entraînement, Diagnostic AeroX, fitting : photos et silhouettes) peuvent être enregistrées sur les serveurs d’AeroX pour améliorer la précision des mesures ; tu peux en demander la suppression à contact@aeroxbefaster.com. Les images d’un Diagnostic AeroX ou d’un fitting sont aussi conservées pour établir et garder le rapport. Les clips vidéo que tu choisis de créer sont stockés à part et supprimés au bout de 7 jours.
 - **Données des clients d’un bike fitter** : voir l’article 5 ter.
 - Ces données sont traitées conformément à la [Politique de Confidentialité](/fr/privacy/).
 
